@@ -6,6 +6,8 @@ import HeroList from "./HeroList";
 import Progress from "./Progress";
 /* global Word */
 
+import { getReport } from "../../zoho/zoho";
+
 export default class App extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -15,34 +17,26 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      listItems: [
-        {
-          icon: "Ribbon",
-          primaryText: "Achieve more with Office integration",
-        },
-        {
-          icon: "Unlock",
-          primaryText: "Unlock features and functionality",
-        },
-        {
-          icon: "Design",
-          primaryText: "Create and visualize like a pro",
-        },
-      ],
-    });
+    this.setState({});
   }
 
   click = async () => {
     return Word.run(async (context) => {
-      /**
-       * Insert your Word code here
-       */
+      let names = [];
 
-      // insert a paragraph at the end of the document.
-      const paragraph = context.document.body.insertParagraph("Hello World", Word.InsertLocation.end);
+      try {
+        let clients = await getReport("All_Clients");
+        console.log(clients);
+        clients.forEach((c) => {
+          names.push(c.Name.display_value);
+        });
+      } catch (e) {
+        //e.printStackTrace();
+      }
 
-      // change the paragraph color to blue.
+      let namesStr = names.join(" - ");
+
+      const paragraph = context.document.body.insertParagraph(namesStr, Word.InsertLocation.end);
       paragraph.font.color = "blue";
 
       await context.sync();
@@ -60,20 +54,14 @@ export default class App extends React.Component {
 
     return (
       <div className="ms-welcome">
-        <Header logo="assets/logo-filled.png" title={this.props.title} message="Welcome" />
-        <HeroList message="Discover what Office Add-ins can do for you today!" items={this.state.listItems}>
-          <p className="ms-font-l">
-            Modify the source files, then click <b>Run</b>.
-          </p>
-          <Button
-            className="ms-welcome__action"
-            buttonType={ButtonType.hero}
-            iconProps={{ iconName: "ChevronRight" }}
-            onClick={this.click}
-          >
-            Run
-          </Button>
-        </HeroList>
+        <Button
+          className="ms-welcome__action"
+          buttonType={ButtonType.hero}
+          iconProps={{ iconName: "ChevronRight" }}
+          onClick={this.click}
+        >
+          Insert all client names
+        </Button>
       </div>
     );
   }
