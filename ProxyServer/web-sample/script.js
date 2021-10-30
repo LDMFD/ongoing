@@ -15,7 +15,7 @@ function getReport(report) {
     let query = new FormData();
     query.append('report', report);
 
-    axios.post(`http://${URL}:8080`, query, options)
+    axios.post(URL, query, options)
         .then(function (response) {
             console.log("response",response.statusText);
             
