@@ -2,7 +2,42 @@
 	clientID = testparam.toLong();
 	clientName = Clients[ID == clientID].Name;
 	// get first name, to insert in after policy numbers in objectives section?
+	firstName = Clients[ID == clientID];
+	firstNameVar = firstName.Name.first_name;
 	pols = Clients[ID == clientID].Policies;
+	// get list of policytypes which are serviced:
+	servicedPolTypesList = List:Int();
+	for each  s in Policy_types
+	{
+		if(s.Serviced == "Serviced policy")
+		{
+			servicedPolTypesList.add(s.ID);
+		}
+	}
+	// then remove from policy list any which are not of a type which is serviced
+	for each  p in pols
+	{
+		onList = False;
+		thisPolTypeNo = Policies[ID == p].Policy_type;
+		current = Policies[ID == p].Current.contains("Tick if current");
+		%>
+</br><%=current%>
+<%
+		for each  polType in servicedPolTypesList
+		{
+			if(thisPolTypeNo == polType && current == True)
+			{
+				onList = True;
+			}
+		}
+		if(onList == False)
+		{
+			%>
+</br>remove</br>
+<%
+			pols.removeElement(p);
+		}
+	}
 	AvivaID = Providers[Provider_name == "Aviva Wrap"].ID;
 	portfolios = Policies[ID == pols].Portfolios;
 	providers = Policies[ID == pols].Providers;
@@ -41,9 +76,6 @@
 		}
 	}
 	%>
-Here's your ist:
-	<%=portfolioList%>
-
 <!DOCTYPE html>
 	<head>
 	<style>
@@ -333,7 +365,7 @@ In your case, we have appointed more than one Model Portfolio Service provider t
 </br>
 		
 		 
-<b class="arialNarrow"><%=Providers[ID == Policies[ID == p].Providers].Provider_name%> <%=Policy_types[ID == Policies[ID == p].Policy_type].Policy_type%> <%=Policies[ID == p].Policy_number%></b>
+<b class="arialNarrow"><%=Providers[ID == Policies[ID == p].Providers].Provider_name%> <%=Policy_types[ID == Policies[ID == p].Policy_type].Policy_type%> <%=Policies[ID == p].Policy_number%> (<%=firstNameVar%>)</b>
 </br></br>
 The policy is designed to meet the following objective(s):</br></br>
 	<ul style="list-style-type:disc;">
