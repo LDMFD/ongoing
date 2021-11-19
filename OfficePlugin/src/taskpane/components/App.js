@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 import * as React from "react";
 import PropTypes from "prop-types";
 // import { Button, ButtonType } from "office-ui-fabric-react";
@@ -8,8 +10,10 @@ import Progress from "./Progress";
 
 import ReactDOMServer from "react-dom/server";
 
-import { getReport } from "../../zoho/zoho";
+import { ZohoRequest } from "../../zoho/zoho";
 import OngoingReport from "./Report/Report";
+
+// import './App.css';
 
 export default class App extends React.Component {
   constructor(props, context) {
@@ -30,20 +34,15 @@ export default class App extends React.Component {
         progress: "loading",
       });
 
-      let providers = await getReport("All_Providers");
-      let clients = await getReport("All_Clients");
-      let policies = await getReport("All_Policies");
+      let clients = await ZohoRequest("report", "All_Clients");
 
       this.setState({
         progress: "loaded",
       });
 
       let db = {
-        providers,
         clients,
-        policies,
       };
-      console.log(db);
 
       this.setState({
         db: db,
@@ -57,24 +56,79 @@ export default class App extends React.Component {
   _generate = async () => {
     return Word.run(async (context) => {
       try {
-        let report = <OngoingReport db={this.state.db} clientId={this.state.clientId} client={this.state.client} />;
+        await this._calculate(this.state.client);
+
+        let report = <OngoingReport db={this.state} />;
         let html = ReactDOMServer.renderToStaticMarkup(report);
+        console.log(html);
+
         context.document.body.clear();
         const paragraph = context.document.body.insertParagraph("", Word.InsertLocation.end);
         paragraph.insertHtml(html, "End");
       } catch (e) {
-        console.log(`Exception: ${e}`);
+        console.log(`Exception: ${e.stack}`);
         alert("Unable to load data from cloud");
       }
       await context.sync();
     });
   };
 
+  _calculate = async (client) => {
+    let t = await ZohoRequest("report", `All_Providers/3341259000000415039`);
+    console.log("t", t);
+
+    if (!client.Policies) {
+      return;
+    }
+
+    let services = new Map();
+    let providerIDs = new Set();
+    let portfolios = [];
+
+    await Promise.all(
+      client.Policies.map(async (p, ix) => {
+        let policyDetail = await ZohoRequest("report", `All_Policies/${p.ID}`);
+        policyDetail.MPS_Providers.map(async mps => {
+          let mpsDetail = await ZohoRequest("report", `MPS_Providers_Report/${mps.ID}`);
+          services.set(mps.ID, mpsDetail);
+        });
+        policyDetail.Portfolios.map(async p => {
+          let portfolioDetail = await ZohoRequest("report", `All_Portfolios/${p.ID}`);
+          if (!portfolios.some(p => p.ID == portfolioDetail.ID)) {
+            portfolios.push(portfolioDetail);
+          }
+        });
+        policyDetail.Policy_type.Detail = await ZohoRequest("report", `All_Policy_Types/${policyDetail.Policy_type.ID}`);
+        providerIDs.add(policyDetail.Providers.ID);
+        client.Policies[ix].Detail = policyDetail;
+      })
+    );
+
+    // TODO sort portfolios
+
+    let providers = [];
+
+    await Promise.all(
+      Array.from(providerIDs).map(async (providerID) => {
+        let providerDetail = await ZohoRequest("report", `All_Providers/${providerID}`);
+        providers.push(providerDetail);
+      })
+    );
+
+    this.setState({
+      client,
+      providers,
+      services,
+      portfolios,
+    });
+  };
+
   _handleSelect(event) {
     let clientId = event.target.value;
+    let client = this.state.db.clients.find((c) => c.ID == clientId);
     this.setState({
       clientId,
-      client: this.state.db.clients.find((c) => c.ID == clientId),
+      client,
     });
   }
 
@@ -87,27 +141,34 @@ export default class App extends React.Component {
       );
     }
 
-    return this.state.db ? (
-      <div>
+    if (!this.state.db || !this.state.db.clients) {
+      return (
+        <>
+          <button onClick={this._load}>{this.state.progress == "loading" ? "Loading" : "Load"}</button>
+        </>
+      );
+    }
+
+    let clients = this.state.db.clients;
+    clients.sort((c1, c2) =>
+      c1.Name.display_value > c2.Name.display_value ? 1 : c1.Name.display_value < c2.Name.display_value ? -1 : 0
+    );
+
+    return (
+      <div className="app">
         <select onChange={this._handleSelect}>
-          {this.state.db.clients.map((c) => {
+          {clients.map((c) => {
             let id = c.ID;
-            let name = c.Name.display_value;
-            return (
+            return c.Name.display_value ? (
               <option value={id} key={id}>
-                {name}
+                {c.Name.last_name}, {c.Name.first_name}
               </option>
-            );
+            ) : null;
           })}
         </select>
 
         <button onClick={this._generate}>Generate</button>
       </div>
-    ) : (
-      <>
-        <button onClick={this._load}>Load</button>
-        {this.state.progress}
-      </>
     );
   }
 }

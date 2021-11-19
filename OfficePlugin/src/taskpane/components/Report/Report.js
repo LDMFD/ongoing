@@ -1,44 +1,34 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable prettier/prettier */
+/* eslint-disable react/jsx-key */
+
 import * as React from "react";
-import ReactDOMServer from "react-dom/server";
 
-class InvestmentPerformance extends React.Component {
-  render() {
-    console.log("clientId", this.props.clientId, "client", this.props.client);
-    let clientPolicyIds = this.props.client.Policies.map((p) => p.ID);
-    return (
-      <p>
-        <h2>Investment Performance</h2>
-        <p>You have been investing into the following Model Portfolio Service(s):</p>
-        <ol>
-          {clientPolicyIds.map((clientPolicyId) =>
-            this.props.db.policies
-              .filter((p) => p.ID == clientPolicyId)
-              .map((policy) => {
-                return policy.MPS_Providers
-                  ? policy.MPS_Providers.map((provider) => <li key={provider.ID}>{provider.display_value}</li>)
-                  : null;
-              })
-          )}
-        </ol>
-      </p>
-    );
-  }
-}
-
-class Dump extends React.Component {
-  render() {
-    console.log(this.props);
-    return <p>{JSON.stringify(this.props.db)}</p>;
-  }
-}
+import { ActionPoints } from "./Sections/ActionPoints";
+import { Advice } from "./Sections/Advice";
+import { DueDiligence } from "./Sections/DueDiligence";
+import { Fees } from "./Sections/Fees";
+import { InvestmentPerformance } from "./Sections/InvestmentPerformance";
+import { OngoingSuitability } from "./Sections/OngoingSuitability";
 
 export default class OngoingReport extends React.Component {
   render() {
+    let { db } = this.props,
+        { client } = db,
+        ix = 1;
+
     return (
       <>
+        <p><i>{client.Name.display_value} - {client.ID}</i></p>
+
         <h1>Ongoing Suitability</h1>
-        <InvestmentPerformance db={this.props.db} clientId={this.props.clientId} client={this.props.client} />
-        {/* <Dump db={this.props.db} /> */}
+
+        <InvestmentPerformance ix={ix++} db={db} />
+        <Fees                  ix={ix++} db={db} />
+        <Advice                ix={ix++} />
+        <DueDiligence          ix={ix++} db={db} />
+        <OngoingSuitability    ix={ix++} db={db} />
+        <ActionPoints          ix={ix++} db={db} />
       </>
     );
   }
