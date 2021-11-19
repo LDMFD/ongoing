@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const ACCOUNT = "";
-const APP = "";
-const URL = "";
-const SECRET = "";
+const ACCOUNT = "zoho_paul1886";
+const APP = "ongoing-suitability";
+const URL = "https://ndsvlr9sv4.execute-api.us-east-1.amazonaws.com/ongoing-prod/ongoing-gateway";
+const SECRET = "4502a7a2fbcb11eb9d54df6f79480ef2";
 
-export function getReport(report) {
+export function ZohoRequest(objectType, objectName) {
   const options = {
     headers: {
       "X-Ongoing-Account": ACCOUNT,
@@ -15,12 +15,14 @@ export function getReport(report) {
   };
 
   let query = new FormData();
-  query.append("report", report);
+  query.append(objectType, objectName);
+
+  console.log(`Fetching ${query}`);
 
   return axios
-    .post(`http://${URL}:8080`, query, options)
+    .post(URL, query, options)
     .then(function (response) {
-      console.log("response", response.statusText);
+      console.log("response", response);
 
       if (response.data.data) {
         return response.data.data;
