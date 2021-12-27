@@ -1,0 +1,16 @@
+[
+  {
+    "maxAgeSeconds": 20,
+    "method": [
+      "GET",
+      "POST"
+    ],
+    "origin": [
+      "http://ongoing.tp1.org:3000"
+    ],
+    "responseHeader": [
+      "Cache-Control",
+      "Content-Disposition"
+    ]
+  }
+]
