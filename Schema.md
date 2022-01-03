@@ -1,3 +1,12 @@
+Clients				  # TODO couple/families
+Id						int, primary key
+FirstNames					string
+FamilyName					string
+RiskScore					float
+QuestionnaireID				int
+Objectives					text  // rich text
+SuitabilityReasons				text
+
 Questionnaires
 Id						int
 ... 						TODO
@@ -36,32 +45,23 @@ PlatformDiscount				float
 #FundId
 #PolicyId
 
-ModelPortfolioServices
+Portfolios
 Id						int, primary key
-Name						string,   e.g. “IBOSS MPS PORTFOLIO 2
-DiscretionaryInvestmentManagerId	int   # MPS is run by a DIM
+Name						string,   e.g. “IBOSS MPS PORTFOLIO 2”
+DiscretionaryInvestmentManagerId	int,null   # MPS is run by a DIM. If not null, this Portfolio is an MPS.
 WeightedOCF					float
 ExAnteFee					float
 
-#ModelPortfolioServiceFunds
+#PortfolioFunds
 #FundId
 #ModelPortfolioServicesId
 
-ModelPortfolioServiceFactsheets
+PortfolioFactsheets
 Id
-ModelPortfolioServiceId
+PortfolioId
 Updated					datetime
 Filename					string
 Factsheet					string  # UUID -> document   # TODO needs to be list
-
-Clients				  # TODO couple/families
-Id						int, primary key
-FirstNames					string
-FamilyName					string
-RiskScore					float
-QuestionnaireID				int
-Objectives					text  // rich text
-SuitabilityReasons				text
 
 # List of client policy portfolios - “join table”
 ClientPortfolios
