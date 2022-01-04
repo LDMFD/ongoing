@@ -1,4 +1,4 @@
-Clients				  # TODO couple/families
+# Clients				  # TODO couple/families
 Id						int, primary key
 FirstNames					string
 FamilyName					string
@@ -6,21 +6,28 @@ RiskScore					float
 QuestionnaireID				int
 Objectives					text  // rich text
 SuitabilityReasons				text
+AdviceFee					float
 
-Questionnaires
+# Questionnaires
 Id						int
 ... 						TODO
 
-DiscretionaryInvestmentManagers
+# PortfolioOperator
 Id						int, primary key
-Name						string  # e.g. Tatton, LGT Vestra, IBOSS
+ManagerType				enum( "DIM", "Firm", "Individual", "None")
+Name					string  # e.g. Tatton, LGT Vestra, IBOSS
 Fee						float
 
-PolicyTypes
+> None 		 - Paul recommended the client invest in 3 funds
+> Individual - portfolio saved on Paul's backend system to be used by multiple clients
+> Firm       - Integral Advice model (other advisors in your firm), saved in Paul's backend system
+> DIM  		 - 3rd-party
+
+# PolicyTypes
 Id						int, primary key
 Name						string  # SIPP (a pension), PP (personal pension), Equity ISA
 
-PolicyProviders
+# PolicyProviders
 Id						int, primary key
 Name						string   e.g. Aviva
 PricingStructure				text
@@ -32,7 +39,7 @@ PricingStructure				text
 #WeightedOCF					float
 #ExAnteFee					float
 
-Policies
+# Policies
 Id						int, primary key
 ClientId
 ExternalId					string # foreign key to external system, AV1234-001
@@ -45,28 +52,27 @@ PlatformDiscount				float
 #FundId
 #PolicyId
 
-Portfolios
-Id						int, primary key
-Name						string,   e.g. “IBOSS MPS PORTFOLIO 2”
-DiscretionaryInvestmentManagerId	int,null   # MPS is run by a DIM. If not null, this Portfolio is an MPS.
-WeightedOCF					float
-ExAnteFee					float
+# Portfolios
+Id							int, primary key
+Name				    	string,   e.g. “IBOSS MPS PORTFOLIO 2”
+PortfolioOperatorId	     	int,null   # (MPS is run by a DIM). If not null, this Portfolio is an MPS.
+WeightedOCF				    float
+ExAnteFee				    float
 
 #PortfolioFunds
 #FundId
 #ModelPortfolioServicesId
 
-PortfolioFactsheets
+# PortfolioFactsheets
 Id
 PortfolioId
 Updated					datetime
 Filename					string
 Factsheet					string  # UUID -> document   # TODO needs to be list
 
-# List of client policy portfolios - “join table”
-ClientPortfolios
+# ClientPortfolios          # List of client policy portfolios - “join table”
 PolicyId
-ModelPortfolioServiceId
+PortfolioId
 Proportion					float  # or null
 
 Joe Smith has two policies, a pension and an ISA, both with Aviva (policy provider).

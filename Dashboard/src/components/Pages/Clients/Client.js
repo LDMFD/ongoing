@@ -17,7 +17,7 @@ const Client = () => {
     const [ state, dispatch ] = useContext(Context);
 
     const getClients = useCallback(() => {
-        window.ApiClient.get("/clients").then(res => {
+        return window.ApiClient.get("/clients").then(res => {
             dispatch({
                 type: SET_CLIENTS,
                 payload: res.data,
@@ -26,7 +26,7 @@ const Client = () => {
     }, [ dispatch ]);
 
     const getClientDetail = useCallback(() => {
-        window.ApiClient.get(`/clients/${clientId}`).then(res => {
+        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
             dispatch({
                 type: POPULATE_CLIENT,
                 payload: res.data,
@@ -35,14 +35,16 @@ const Client = () => {
     }, [ dispatch, clientId ]);
 
     useEffect(() => {
-        getClients();
-        getClientDetail();
+        getClients().then(() => {
+            getClientDetail();
+        });
     }, [ getClients, getClientDetail ]);
 
     const addReview = () => {
         window.ApiClient.post(`/clients/${client.Id}/reviews`).then(_ => {
-            getClients();
-            getClientDetail();
+            getClients().then(() => {
+                getClientDetail();
+            });
         });
     };
 

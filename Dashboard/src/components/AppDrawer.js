@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from "react";
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -18,8 +18,11 @@ import {
     Link
 } from "react-router-dom";
 
-import './AppDrawer.css';
+import { Context } from '../Store';
 import Routes from './Routes';
+import AuthControl from './AuthControl';
+
+import './AppDrawer.css';
 
 const drawerWidth = 240;
 
@@ -41,50 +44,59 @@ const DrawerStyles = {
 };
 
 export default function PermanentDrawerLeft() {
-  return (
-    <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
+    const [state] = useContext(Context);
 
-        <AppBar position = "fixed"
-                sx       = {{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
-            <Toolbar>
-                <Typography variant="h6" noWrap component="div">
-                    Ongoing Suitability
-                </Typography>
-            </Toolbar>
-        </AppBar>
-        <Drawer sx      = {DrawerStyles}
-                variant = "permanent"
-                anchor  = "left">
+    return state.auth ? (
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
 
-        <Toolbar />
-        <Divider />
-        
-        <List>
-            {DrawerItems.map((iconSpec, index) => (
-                <Link to={iconSpec.link} key={iconSpec.label}>
-                    <ListItem button>
-                        <ListItemIcon>
-                            {iconSpec.icon}
-                        </ListItemIcon>
+            <AppBar position = "fixed"
+                    sx       = {{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
+                <Toolbar>
+                    <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+                        Ongoing Suitability
+                    </Typography>
+                    
+                    <AuthControl />
+                </Toolbar>
+            </AppBar>
+            <Drawer sx      = {DrawerStyles}
+                    variant = "permanent"
+                    anchor  = "left">
 
-                        <ListItemText primary={
-                            iconSpec.label
-                        } />
-                    </ListItem>
-                </Link>
-            ))}
-        </List>
-        
-        </Drawer>
+            <Toolbar />
+            <Divider />
+            
+            <List>
+                {DrawerItems.map((iconSpec, index) => (
+                    <Link to={iconSpec.link} key={iconSpec.label}>
+                        <ListItem button>
+                            <ListItemIcon>
+                                {iconSpec.icon}
+                            </ListItemIcon>
 
-        <Box component = "main"
-             sx        = {{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
+                            <ListItemText primary={
+                                iconSpec.label
+                            } />
+                        </ListItem>
+                    </Link>
+                ))}
+            </List>
+            
+            </Drawer>
 
-        <Toolbar />
+            <Box component = "main"
+                 sx        = {{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
 
-        {Routes}
-      </Box>
-    </Box>
-  );
+                <Toolbar />
+
+                {Routes}
+            </Box>
+        </Box>
+    ) : (
+        <>
+            <br /><br /><br /><br /><br /><br />
+            <AuthControl />
+        </>
+    );
 }

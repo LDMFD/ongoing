@@ -49,6 +49,8 @@ func (s *ApiServer) ListenAndServe() error {
 
 	r.Use(AuthMiddleware())
 
+	r.GET("/user", s.getUser)
+
 	r.GET("/clients", s.getClients)
 	r.GET("/clients/:ClientId", s.getClient)
 	r.POST("/clients", s.createClient)

@@ -35,18 +35,6 @@ const ClientList = () => {
         getClients();
     }, [getClients]);
 
-    if (!state.clients) {
-        return 'No data';
-    }
-
-    // const refresh = () => {
-    //     getClients();
-    // };
-
-    // let historyState = {
-    //     background: location,
-    // };
-
     return (
         <div className='Clients'>
             <Breadcrumbs aria-label="breadcrumb">
