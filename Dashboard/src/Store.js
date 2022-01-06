@@ -6,6 +6,7 @@ const initialState = {
     auth: null, // or { token, name, photoURL }
     clients: [],
     operators: [],
+    policyTypes: [],
 };
   
 const Store = ({children}) => {

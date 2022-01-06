@@ -5,6 +5,7 @@ export const SET_CLIENTS        = 'SET_CLIENTS';
 export const POPULATE_CLIENT    = 'POPULATE_CLIENT';
 
 export const SET_OPERATORS      = 'SET_OPERATORS';
+export const SET_POLICY_TYPES   = 'SET_POLICY_TYPES';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -40,7 +41,7 @@ const Reducer = (state, action) => {
                 ))
             }
 
-        // Operators
+        // Funds
 
         case SET_OPERATORS:
             return {
@@ -48,7 +49,13 @@ const Reducer = (state, action) => {
                 operators: action.payload.Operators,
             }
 
-            default:
+        case SET_POLICY_TYPES:
+            return {
+                ...state,
+                policyTypes: action.payload.PolicyTypes,
+            }
+    
+        default:
             return state;
     }
 };

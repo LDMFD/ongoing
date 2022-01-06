@@ -38,6 +38,11 @@ const DrawerItems = [
         icon: <SearchIcon />,
         link: '/operators',
     },
+    {
+        label: 'Policy Types',
+        icon: <SearchIcon />,
+        link: '/policy-types',
+    },
 ];
 
 const DrawerStyles = {

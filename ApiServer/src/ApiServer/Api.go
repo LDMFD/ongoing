@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Clients"
+	"ongoing/ApiServer/PolicyTypes"
 	"os"
 	"time"
 
@@ -72,6 +73,7 @@ func (s *ApiServer) ListenAndServe() error {
 
 	Clients.AddRoutes(r.Group("/clients"))
 	Operators.AddRoutes(r.Group("/operators"))
+	PolicyTypes.AddRoutes(r.Group("/policy-types"))
 
 	r.GET("/user", s.getUser)
 	r.GET("/download", s.requestDownload)
