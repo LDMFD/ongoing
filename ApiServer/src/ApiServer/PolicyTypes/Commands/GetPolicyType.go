@@ -22,14 +22,14 @@ func GetPolicyType(c *gin.Context) {
 		return
 	}
 
-	var policytype = Models.PolicyType{Id: uri.PolicyTypeId}
+	var policyType = Models.PolicyType{Id: uri.PolicyTypeId}
 	if err := db.NewSelect().
-		Model(&policytype).
+		Model(&policyType).
 		WherePK().
 		Scan(c); err != nil {
 		panic(err)
 	}
 	c.JSON(200, gin.H{
-		"PolicyType": policytype,
+		"PolicyType": policyType,
 	})
 }

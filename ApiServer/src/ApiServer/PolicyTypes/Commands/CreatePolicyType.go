@@ -27,13 +27,13 @@ func CreatePolicyType(c *gin.Context) {
 		return
 	}
 
-	var policytype = Models.PolicyType{
+	var policyType = Models.PolicyType{
 		Name: req.Name,
 	}
-	if _, err := db.NewInsert().Model(&policytype).Exec(c); err != nil {
+	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {
 		panic(err)
 	}
 	c.JSON(200, gin.H{
-		"PolicyType": policytype,
+		"PolicyType": policyType,
 	})
 }

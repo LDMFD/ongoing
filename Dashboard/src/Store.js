@@ -7,6 +7,7 @@ const initialState = {
     clients: [],
     operators: [],
     policyTypes: [],
+    policyProviders: [],
 };
   
 const Store = ({children}) => {

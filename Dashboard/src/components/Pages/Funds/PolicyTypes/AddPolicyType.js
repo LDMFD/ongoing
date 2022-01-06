@@ -41,7 +41,7 @@ const AddPolicyType = () => {
     return (
         <div className="modal" >
             <Dialog open={true} onClose={back}>
-                <DialogTitle>Add PolicyType</DialogTitle>
+                <DialogTitle>Add Policy Type</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Enter policy type

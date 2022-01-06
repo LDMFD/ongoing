@@ -18,8 +18,6 @@ const EditPolicyType = () => {
     const [ , dispatch] = useContext(Context);
     let [ policyType, setPolicyType ] = useState({
         Name: '',
-        Type: '',
-        Fee: 0,
     });
 
     let { policyTypeId } = useParams();

@@ -1,11 +1,10 @@
-export const LOGIN              = 'LOGIN';
-export const LOGOUT             = 'LOGOUT';
-
-export const SET_CLIENTS        = 'SET_CLIENTS';
-export const POPULATE_CLIENT    = 'POPULATE_CLIENT';
-
-export const SET_OPERATORS      = 'SET_OPERATORS';
-export const SET_POLICY_TYPES   = 'SET_POLICY_TYPES';
+export const LOGIN                  = 'LOGIN';
+export const LOGOUT                 = 'LOGOUT';
+export const SET_CLIENTS            = 'SET_CLIENTS';
+export const POPULATE_CLIENT        = 'POPULATE_CLIENT';
+export const SET_OPERATORS          = 'SET_OPERATORS';
+export const SET_POLICY_TYPES       = 'SET_POLICY_TYPES';
+export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -53,6 +52,13 @@ const Reducer = (state, action) => {
             return {
                 ...state,
                 policyTypes: action.payload.PolicyTypes,
+        }
+
+        case SET_POLICY_PROVIDERS:
+            console.log('setting')
+            return {
+                ...state,
+                policyProviders: action.payload.PolicyProviders,
             }
     
         default:
