@@ -1,11 +1,15 @@
 export const LOGIN              = 'LOGIN';
 export const LOGOUT             = 'LOGOUT';
-export const USER_LOGGED_IN     = 'USER_LOGGED_IN';
+
 export const SET_CLIENTS        = 'SET_CLIENTS';
 export const POPULATE_CLIENT    = 'POPULATE_CLIENT';
 
+export const SET_OPERATORS      = 'SET_OPERATORS';
+
 const Reducer = (state, action) => {
     switch (action.type) {
+        // User session
+
         case LOGIN:
             return {
                 ...state,
@@ -17,6 +21,8 @@ const Reducer = (state, action) => {
                 ...state,
                 auth: null,
             }
+
+        // Clients
 
         case SET_CLIENTS:
             return {
@@ -32,6 +38,14 @@ const Reducer = (state, action) => {
                         ...action.payload.Client
                     } : c
                 ))
+            }
+
+        // Operators
+
+        case SET_OPERATORS:
+            return {
+                ...state,
+                operators: action.payload.Operators,
             }
 
             default:

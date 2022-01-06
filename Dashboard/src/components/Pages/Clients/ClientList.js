@@ -20,8 +20,6 @@ import { SET_CLIENTS } from '../../../Reducer';
 const ClientList = () => {
     const [state, dispatch] = useContext(Context);
 
-    // let location = useLocation();
-
     const getClients = useCallback(() => {
         window.ApiClient.get("/clients").then(res => {
             dispatch({

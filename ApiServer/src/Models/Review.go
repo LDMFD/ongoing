@@ -14,5 +14,5 @@ type Review struct {
 	State     	string `bun:"state,notnull,default:DRAFT"`
 	Timestamp   time.Time	`bun:",nullzero,notnull,default:current_timestamp"`
 
-	Files 	[]*File `bun:"rel:has-many,join:id=review_id"`
+	//Files 	[]*File `bun:"rel:has-many,join:id=review_id"`
 }

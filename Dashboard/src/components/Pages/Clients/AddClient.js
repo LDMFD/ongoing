@@ -15,6 +15,7 @@ import { SET_CLIENTS } from '../../../Reducer';
 const AddClient = () => {
     let history = useHistory();
     const [ , dispatch] = useContext(Context);
+
     let [ surname, setSurname ] = useState('');
     let [ forenames, setForenames ] = useState('');
 

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useLocation } from "react-router-dom";
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -8,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -32,6 +33,11 @@ const DrawerItems = [
         icon: <SearchIcon />,
         link: '/clients',
     },
+    {
+        label: 'Operators',
+        icon: <SearchIcon />,
+        link: '/operators',
+    },
 ];
 
 const DrawerStyles = {
@@ -45,6 +51,8 @@ const DrawerStyles = {
 
 export default function PermanentDrawerLeft() {
     const [state] = useContext(Context);
+
+    let location = useLocation();
 
     return state.auth ? (
         <Box sx={{ display: 'flex' }}>
@@ -70,7 +78,7 @@ export default function PermanentDrawerLeft() {
             <List>
                 {DrawerItems.map((iconSpec, index) => (
                     <Link to={iconSpec.link} key={iconSpec.label}>
-                        <ListItem button>
+                        <ListItemButton selected={location.pathname.startsWith(iconSpec.link)}>
                             <ListItemIcon>
                                 {iconSpec.icon}
                             </ListItemIcon>
@@ -78,7 +86,7 @@ export default function PermanentDrawerLeft() {
                             <ListItemText primary={
                                 iconSpec.label
                             } />
-                        </ListItem>
+                        </ListItemButton>
                     </Link>
                 ))}
             </List>

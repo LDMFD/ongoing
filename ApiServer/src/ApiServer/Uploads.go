@@ -35,7 +35,7 @@ type SignalUploadRequest struct {
 	Uid      string		`binding:"required"`
 	Filename string		`binding:"required"`
 	Size     int64		`binding:"required"`
-	ReviewId int64		`binding:"required"`
+	//ReviewId int64		`binding:"required"`
 }
 
 func (s *ApiServer) signalUpload(c *gin.Context) {
@@ -49,7 +49,6 @@ func (s *ApiServer) signalUpload(c *gin.Context) {
 		Uid:       req.Uid,
 		Filename:  req.Filename,
 		Size:      req.Size,
-		ReviewId:  req.ReviewId,
 	}
 
 	if _, err := s.db.NewInsert().Model(&file).Exec(c); err != nil {

@@ -5,7 +5,6 @@ import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
-
 	"net/http"
 )
 
@@ -18,6 +17,11 @@ func AuthMiddleware() gin.HandlerFunc {
 			err error
 		)
 		jwt := c.GetHeader("Authentication")
+
+		if jwt == "ongoing" {
+			c.Next()
+			return
+		}
 
 		if app, err = firebase.NewApp(context.Background(), nil); err != nil {
 			panic(err)

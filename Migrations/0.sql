@@ -17,10 +17,10 @@ CREATE TABLE files (
 );
 
 CREATE TYPE operator_type AS ENUM (
-    'DIM',
-    'Firm',
-    'Individual',
-    'None'
+    'dim',
+    'firm',
+    'individual',
+    'none'
 );
 
 CREATE TABLE operators (
