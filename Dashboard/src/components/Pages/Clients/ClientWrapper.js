@@ -36,15 +36,15 @@ const ClientWrapper = ({ children }) => {
         });
     }, [ dispatch, clientId ]);
 
-    const getClient = useCallback(async () => {
+    const getDependencies = useCallback(async () => {
         await getClients();
         await getClientDetail();
         setLoaded(true);
     }, [ getClients, getClientDetail ]);
 
     useEffect(() => {
-        getClient();
-    }, [ getClient ]);
+        getDependencies();
+    }, [ getDependencies ]);
 
     const addReview = () => {
         window.ApiClient.post(`/clients/${client.Id}/reviews`).then(_ => {

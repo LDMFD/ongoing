@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import OperatorList from './OperatorList';
-import Operator from './Operator';
+// import Operator from './Operator';
 import AddOperator from './AddOperator';
 import EditOperator from './EditOperator';
 
@@ -16,9 +16,9 @@ const OperatorRoutes = () => {
     return (
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
-                <Route path={`${path}/id/:operatorId`}>
+                {/* <Route path={`${path}/id/:operatorId`}>
                     <Operator />
-                </Route>
+                </Route> */}
 
                 <Route path={path}>
                     <OperatorList />

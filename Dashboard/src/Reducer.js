@@ -5,7 +5,7 @@ export const POPULATE_CLIENT        = 'POPULATE_CLIENT';
 export const SET_OPERATORS          = 'SET_OPERATORS';
 export const SET_POLICY_TYPES       = 'SET_POLICY_TYPES';
 export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
-// export const SET_CLIENT_POLICIES      = 'SET_CLIENT_POLICIES';
+export const SET_PORTFOLIOS         = 'SET_PORTFOLIOS';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -61,16 +61,11 @@ const Reducer = (state, action) => {
                 ))
             }
 
-        // case SET_CLIENT_POLICIES:
-        //     return {
-        //         ...state,
-        //         clients: state.clients.map(c => (
-        //             c.Id === action.payload.Client.Id ? {
-        //                 ...c,
-        //                 policies: [ ...c.policies, action.payload.Client.Policy ]
-        //             } : c
-        //         ))
-        //     }
+        case SET_PORTFOLIOS:
+            return {
+                ...state,
+                portfolios: action.payload.Portfolios,
+            }
         
         default:
             return state;

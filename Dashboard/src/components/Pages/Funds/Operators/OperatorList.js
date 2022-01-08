@@ -59,7 +59,7 @@ const OperatorList = () => {
                             return (
                                 <TableRow key={operator.Id}>
                                     <TableCell>
-                                        <Link to={`/operators/id/${operator.Id}`} key={operator.Id}>
+                                        <Link to={`/operators/id/${operator.Id}/edit`} key={operator.Id}>
                                             {operator.Name}
                                         </Link>
                                     </TableCell>

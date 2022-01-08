@@ -56,7 +56,7 @@ const PolicyTypeList = () => {
                             return (
                                 <TableRow key={policyType.Id}>
                                     <TableCell>
-                                        <Link to={`/policy-types/id/${policyType.Id}`} key={policyType.Id}>
+                                        <Link to={`/policy-types/id/${policyType.Id}/edit`} key={policyType.Id}>
                                             {policyType.Name}
                                         </Link>
                                     </TableCell>

@@ -39,6 +39,11 @@ const DrawerItems = [
         link: '/operators',
     },
     {
+        label: 'Portfolios',
+        icon: <SearchIcon />,
+        link: '/portfolios',
+    },
+    {
         label: 'Policy Types',
         icon: <SearchIcon />,
         link: '/policy-types',

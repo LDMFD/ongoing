@@ -6,6 +6,7 @@ import (
 	"ongoing/ApiServer/Clients"
 	"ongoing/ApiServer/PolicyProviders"
 	"ongoing/ApiServer/PolicyTypes"
+	"ongoing/ApiServer/Portfolios"
 	"os"
 	"time"
 
@@ -74,6 +75,7 @@ func (s *ApiServer) ListenAndServe() error {
 
 	Clients.AddRoutes(r.Group("/clients"))
 	Operators.AddRoutes(r.Group("/operators"))
+	Portfolios.AddRoutes(r.Group("/portfolios"))
 	PolicyTypes.AddRoutes(r.Group("/policy-types"))
 	PolicyProviders.AddRoutes(r.Group("/policy-providers"))
 
