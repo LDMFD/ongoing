@@ -2,17 +2,17 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
 
-import { Context } from '../../../../Store'
-import { SET_OPERATORS } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_OPERATORS } from 'Reducer';
 
 const AddOperator = () => {
     let history = useHistory();

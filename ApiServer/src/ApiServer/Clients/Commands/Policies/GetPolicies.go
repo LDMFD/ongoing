@@ -1,4 +1,4 @@
-package Commands
+package Policies
 
 import (
 	"net/http"
@@ -9,29 +9,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetClientQuery struct {
+type GetPoliciesRequestPath struct {
 	ClientId int64 `binding:"required"`
 }
 
-func GetClient(c *gin.Context) {
+func GetPolicies(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var uri GetClientQuery
-	if err := c.ShouldBindUri(&uri); err != nil {
+	var path GetPoliciesRequestPath
+	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var client = Models.Client{Id: uri.ClientId}
+	var policies []Models.Policy
 	if err := db.NewSelect().
-		Model(&client).
-		Relation("Reviews").
-		//Relation("Reviews.Files").
-		WherePK().
+		Model(&policies).
+		Where("client_id = ?", path.ClientId).
+		OrderExpr("id ASC").
 		Scan(c); err != nil {
 		panic(err)
 	}
 	c.JSON(200, gin.H{
-		"Client": client,
+		"Policies": policies,
 	})
 }

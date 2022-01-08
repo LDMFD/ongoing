@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateOperatorRequest struct {
+type CreateOperatorRequestBody struct {
 	Name string `binding:"required"`
 	Type string `binding:"required,oneof=dim firm individual none"`
 	Fee  float64 `binding:"required"`
@@ -22,7 +22,7 @@ func CreateOperator(c *gin.Context) {
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
-	var req CreateOperatorRequest
+	var req CreateOperatorRequestBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

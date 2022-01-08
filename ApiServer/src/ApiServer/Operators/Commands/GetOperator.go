@@ -9,20 +9,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetOperatorQuery struct {
+type GetOperatorRequestPath struct {
 	OperatorId int64 `binding:"required"`
 }
 
 func GetOperator(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var uri GetOperatorQuery
-	if err := c.ShouldBindUri(&uri); err != nil {
+	var path GetOperatorRequestPath
+	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var operator = Models.Operator{Id: uri.OperatorId}
+	var operator = Models.Operator{Id: path.OperatorId}
 	if err := db.NewSelect().
 		Model(&operator).
 		WherePK().

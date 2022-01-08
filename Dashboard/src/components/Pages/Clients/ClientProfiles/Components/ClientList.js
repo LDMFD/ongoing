@@ -14,8 +14,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Day from 'dayjs';
 import { Link } from "react-router-dom";
 
-import { Context } from '../../../Store'
-import { SET_CLIENTS } from '../../../Reducer';
+import { Context } from 'Store'
+import { SET_CLIENTS } from 'Reducer';
 
 const ClientList = () => {
     const [state, dispatch] = useContext(Context);

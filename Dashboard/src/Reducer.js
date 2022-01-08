@@ -5,6 +5,7 @@ export const POPULATE_CLIENT        = 'POPULATE_CLIENT';
 export const SET_OPERATORS          = 'SET_OPERATORS';
 export const SET_POLICY_TYPES       = 'SET_POLICY_TYPES';
 export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
+// export const SET_CLIENT_POLICIES      = 'SET_CLIENT_POLICIES';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -20,6 +21,26 @@ const Reducer = (state, action) => {
             return {
                 ...state,
                 auth: null,
+            }
+
+        // Funds
+
+        case SET_OPERATORS:
+            return {
+                ...state,
+                operators: action.payload.Operators,
+            }
+
+        case SET_POLICY_TYPES:
+            return {
+                ...state,
+                policyTypes: action.payload.PolicyTypes,
+        }
+
+        case SET_POLICY_PROVIDERS:
+            return {
+                ...state,
+                policyProviders: action.payload.PolicyProviders,
             }
 
         // Clients
@@ -40,27 +61,17 @@ const Reducer = (state, action) => {
                 ))
             }
 
-        // Funds
-
-        case SET_OPERATORS:
-            return {
-                ...state,
-                operators: action.payload.Operators,
-            }
-
-        case SET_POLICY_TYPES:
-            return {
-                ...state,
-                policyTypes: action.payload.PolicyTypes,
-        }
-
-        case SET_POLICY_PROVIDERS:
-            console.log('setting')
-            return {
-                ...state,
-                policyProviders: action.payload.PolicyProviders,
-            }
-    
+        // case SET_CLIENT_POLICIES:
+        //     return {
+        //         ...state,
+        //         clients: state.clients.map(c => (
+        //             c.Id === action.payload.Client.Id ? {
+        //                 ...c,
+        //                 policies: [ ...c.policies, action.payload.Client.Policy ]
+        //             } : c
+        //         ))
+        //     }
+        
         default:
             return state;
     }

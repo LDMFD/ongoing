@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -9,56 +9,76 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { Context } from '../../../Store'
-import { SET_CLIENTS } from '../../../Reducer';
+import { Context } from 'Store'
+import { POPULATE_CLIENT } from 'Reducer';
 
-const AddClient = () => {
+const EditClient = () => {
     let history = useHistory();
-    const [ , dispatch] = useContext(Context);
 
-    let [ surname, setSurname ] = useState('');
-    let [ forenames, setForenames ] = useState('');
+    const [ state, dispatch] = useContext(Context);
+    let [ client, setClient ] = useState(null);
+
+    let { clientId } = useParams();
+    clientId = parseInt(clientId);
+
+    if (client == null) {
+        let c = state.clients.find(c => c.Id === clientId);
+        if (c) {
+            setClient(c);
+            return;
+        }
+    }
 
     const handleChangeSurname = (event) => {
-        setSurname(event.target.value);
+        setClient({
+            ...client,
+            Surname: event.target.value,
+        });
     }
     const handleChangeForenames = (event) => {
-        setForenames(event.target.value);
+        setClient({
+            ...client,
+            Forenames: event.target.value,
+        });
     }
 
     let back = e => {
         if (e) {
-            // TODO either use location to see if we came from this site or not,
-            // or just change strategy to strip last path element regardless.
+            console.log(e);
             e.stopPropagation();
         }
         history.goBack();
     };
 
-    const submit = () => {
-        window.ApiClient.post("/clients", {
-            Surname: surname,
-            Forenames: forenames,
-        }).then(_ => {
-            window.ApiClient.get("/clients").then(res => {
-                dispatch({
-                    type: SET_CLIENTS,
-                    payload: res.data,
-                })
-            }).then(back);;
+    const getClientDetail = async () => {
+        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
+            dispatch({
+                type: POPULATE_CLIENT,
+                payload: res.data,
+            });
         });
     };
 
-    return (
+    const submit = () => {
+        window.ApiClient.put(`/clients/${client.Id}`, {
+            Surname: client.Surname,
+            Forenames: client.Forenames,
+        }).then(async () => {
+            await getClientDetail();
+            back();
+        });
+    };
+
+    return client && (
         <div className="modal" >
             <Dialog open={true} onClose={back}>
-                <DialogTitle>Add Client</DialogTitle>
+                <DialogTitle>Edit Client</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Enter client details
                     </DialogContentText>
 
-                    <TextField value    = {surname}
+                    <TextField value    = {client.Surname}
                                onChange = {handleChangeSurname}
                                margin   = "dense"
                                id       = "surname"
@@ -68,7 +88,7 @@ const AddClient = () => {
                                autoFocus
                                fullWidth />
 
-                    <TextField value    = {forenames}
+                    <TextField value    = {client.Forenames}
                                onChange = {handleChangeForenames}
                                margin  = "dense"
                                id      = "forenames"
@@ -80,11 +100,11 @@ const AddClient = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={back}>Cancel</Button>
-                    <Button onClick={submit}>Add</Button>
+                    <Button onClick={submit}>Update</Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
 
-export default AddClient;
+export default EditClient;

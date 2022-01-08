@@ -1,4 +1,4 @@
-package Commands
+package ClientProfile
 
 import (
 	"net/http"
@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateClientRequest struct {
+type CreateClientRequstBody struct {
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
 }
@@ -22,7 +22,7 @@ func CreateClient(c *gin.Context) {
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
-	var req CreateClientRequest
+	var req CreateClientRequstBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

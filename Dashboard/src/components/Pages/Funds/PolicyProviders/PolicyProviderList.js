@@ -13,15 +13,14 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { Link } from "react-router-dom";
 
-import { Context } from '../../../../Store'
-import { SET_POLICY_PROVIDERS } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_POLICY_PROVIDERS } from 'Reducer';
 
 const PolicyProviderList = () => {
     const [state, dispatch] = useContext(Context);
 
     const getPolicyProviders = useCallback(() => {
         window.ApiClient.get("/policy-providers").then(res => {
-            console.log(res.data);
             dispatch({
                 type: SET_POLICY_PROVIDERS,
                 payload: res.data,
@@ -32,8 +31,6 @@ const PolicyProviderList = () => {
     useEffect(() => {
         getPolicyProviders();
     }, [ getPolicyProviders ]);
-    
-    console.log(state);
     
     return (
         <div className='PolicyProviders'>
@@ -60,7 +57,7 @@ const PolicyProviderList = () => {
                             return (
                                 <TableRow key={policyProvider.Id}>
                                     <TableCell>
-                                        <Link to={`/policy-providers/id/${policyProvider.Id}`} key={policyProvider.Id}>
+                                        <Link to={`/policy-providers/id/${policyProvider.Id}/edit`} key={policyProvider.Id}>
                                             {policyProvider.Name}
                                         </Link>
                                     </TableCell>

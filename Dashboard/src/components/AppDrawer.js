@@ -72,7 +72,7 @@ export default function PermanentDrawerLeft() {
                     sx       = {{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        Ongoing Suitability
+                        Ongoing Backend
                     </Typography>
                     
                     <AuthControl />

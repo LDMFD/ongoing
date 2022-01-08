@@ -1,4 +1,4 @@
-package Commands
+package ClientProfile
 
 import (
 	"net/http"
@@ -9,11 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UpdateClientQuery struct {
+type UpdateClientRequestPath struct {
 	ClientId int64 `binding:"required"`
 }
 
-type UpdateClientRequest struct {
+type UpdateClientRequestBody struct {
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
 }
@@ -21,22 +21,22 @@ type UpdateClientRequest struct {
 func UpdateClient(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var uri UpdateClientQuery
-	if err := c.ShouldBindUri(&uri); err != nil {
+	var path UpdateClientRequestPath
+	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var req UpdateClientRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var body UpdateClientRequestBody
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	var client = Models.Client{
-		Id:        uri.ClientId,
-		Forenames: req.Forenames,
-		Surname:   req.Surname,
+		Id:        path.ClientId,
+		Forenames: body.Forenames,
+		Surname:   body.Surname,
 	}
 	if _, err := db.NewUpdate().Model(&client).WherePK().
 		Column("forenames").

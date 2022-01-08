@@ -4,7 +4,7 @@ import Day from 'dayjs';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 
-import FileInput from '../../Widgets/FileUploader';
+import FileInput from 'components/Widgets/FileUploader';
 
 const Review = ({ review }) => {
     const download = (uid) => {

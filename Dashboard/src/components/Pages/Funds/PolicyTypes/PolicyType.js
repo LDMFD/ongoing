@@ -12,8 +12,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 
-import { Context } from '../../../../Store'
-import { SET_POLICY_TYPES } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_POLICY_TYPES } from 'Reducer';
 
 const PolicyType = () => {
     let { policyTypeId } = useParams();

@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import PolicyProviderList from './PolicyProviderList';
-import PolicyProvider from './PolicyProvider';
+// import PolicyProvider from './PolicyProvider';
 import AddPolicyProvider from './AddPolicyProvider';
 import EditPolicyProvider from './EditPolicyProvider';
 
@@ -16,9 +16,9 @@ const PolicyProviderRoutes = () => {
     return (
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
-                <Route path={`${path}/id/:policyProviderId`}>
+                {/* <Route path={`${path}/id/:policyProviderId`}>
                     <PolicyProvider />
-                </Route>
+                </Route> */}
 
                 <Route path={path}>
                     <PolicyProviderList />

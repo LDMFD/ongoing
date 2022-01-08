@@ -9,11 +9,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UpdateOperatorQuery struct {
+type UpdateOperatorRequestPath struct {
 	OperatorId int64 `binding:"required"`
 }
 
-type UpdateOperatorRequest struct {
+type UpdateOperatorRequestBody struct {
 	Name string `binding:"required"`
 	Type string `binding:"required,oneof=dim firm individual none"`
 	Fee  float64 `binding:"required"`
@@ -22,23 +22,23 @@ type UpdateOperatorRequest struct {
 func UpdateOperator(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var uri UpdateOperatorQuery
-	if err := c.ShouldBindUri(&uri); err != nil {
+	var path UpdateOperatorRequestPath
+	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var req UpdateOperatorRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var body UpdateOperatorRequestBody
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	var operator = Models.Operator{
-		Id:        uri.OperatorId,
-		Type:      req.Type,
-		Name:      req.Name,
-		Fee:       req.Fee,
+		Id:        path.OperatorId,
+		Type:      body.Type,
+		Name:      body.Name,
+		Fee:       body.Fee,
 	}
 	if _, err := db.NewUpdate().Model(&operator).WherePK().
 		Column("type").

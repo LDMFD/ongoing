@@ -1,15 +1,25 @@
 package Clients
 
 import (
+	"ongoing/ApiServer/Clients/Commands/ClientProfile"
+	"ongoing/ApiServer/Clients/Commands/Policies"
+	"ongoing/ApiServer/Clients/Commands/Reviews"
+
 	"github.com/gin-gonic/gin"
-	"ongoing/ApiServer/Clients/Commands"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
-	r.GET("", Commands.GetClients)
-	r.POST("", Commands.CreateClient)
-	r.GET("/:ClientId", Commands.GetClient)
-	r.PUT("/:ClientId", Commands.UpdateClient)
+	r.GET("", ClientProfile.GetClients)
+	r.POST("", ClientProfile.CreateClient)
+	r.GET("/:ClientId", ClientProfile.GetClient)
+	r.PUT("/:ClientId", ClientProfile.UpdateClient)
 
-	r.POST("/:ClientId/reviews", Commands.CreateReview)
+	reviewGroup := r.Group("/:ClientId/reviews")
+	reviewGroup.POST("", Reviews.CreateReview)
+
+	policyGroup := r.Group("/:ClientId/policies")
+	policyGroup.GET("", Policies.GetPolicies)
+	policyGroup.POST("", Policies.CreatePolicy)
+	policyGroup.GET("/:PolicyId", Policies.GetPolicy)
+	policyGroup.PUT("/:PolicyId", Policies.UpdatePolicy)
 }

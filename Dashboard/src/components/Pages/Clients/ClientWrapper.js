@@ -1,20 +1,22 @@
-import React, { useEffect, useContext, useCallback } from 'react';
+import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 
-import { Context } from '../../../Store'
-import { POPULATE_CLIENT, SET_CLIENTS } from '../../../Reducer';
+import { Context } from 'Store'
+import { POPULATE_CLIENT, SET_CLIENTS } from 'Reducer';
 
-import Review from './Review';
+// import Review from './Review';
 
-const Client = () => {
+const ClientWrapper = ({ children }) => {
     let { clientId } = useParams();
     clientId = parseInt(clientId);
     
     const [ state, dispatch ] = useContext(Context);
+
+    let [ loaded, setLoaded ] = useState(false);
 
     const getClients = useCallback(() => {
         return window.ApiClient.get("/clients").then(res => {
@@ -34,11 +36,15 @@ const Client = () => {
         });
     }, [ dispatch, clientId ]);
 
-    useEffect(() => {
-        getClients().then(() => {
-            getClientDetail();
-        });
+    const getClient = useCallback(async () => {
+        await getClients();
+        await getClientDetail();
+        setLoaded(true);
     }, [ getClients, getClientDetail ]);
+
+    useEffect(() => {
+        getClient();
+    }, [ getClient ]);
 
     const addReview = () => {
         window.ApiClient.post(`/clients/${client.Id}/reviews`).then(_ => {
@@ -50,7 +56,7 @@ const Client = () => {
 
     let client = state.clients.find(c => c.Id === clientId);
 
-    return client ? (
+    return loaded ? (
         <div className='reviews'>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" to='/clients'>
@@ -62,19 +68,14 @@ const Client = () => {
             </Breadcrumbs>
 
             <Toolbar className="breadcrumb-action">
+                <Link to={{ pathname: `/clients/id/${client.Id}/policies/add` }}><Button>Add policy</Button></Link>
                 <Button onClick={addReview}>Add review</Button>
                 <Link to={{ pathname: `/clients/id/${client.Id}/edit` }}><Button>Edit client</Button></Link>
             </Toolbar>
 
-            <br /><br /><br />
-            {client.Reviews ? client.Reviews.map(review => (
-                <div key={review.Id}>
-                    <Review review={review} />
-                    <br />
-                </div>
-            )) : 'No reviews'}
+            {children}
         </div>
     ) : null;
 }
 
-export default Client;
+export default ClientWrapper;

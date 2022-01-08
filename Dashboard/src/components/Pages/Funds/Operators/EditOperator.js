@@ -11,8 +11,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { Context } from '../../../../Store'
-import { SET_OPERATORS } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_OPERATORS } from 'Reducer';
 
 const EditOperator = () => {
     let history = useHistory();

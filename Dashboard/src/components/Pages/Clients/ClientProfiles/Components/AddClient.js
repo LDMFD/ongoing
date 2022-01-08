@@ -1,5 +1,5 @@
-import React, { useEffect, useContext, useCallback, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { useHistory } from "react-router-dom";
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -9,59 +9,36 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { Context } from '../../../Store'
-import { SET_CLIENTS } from '../../../Reducer';
+import { Context } from 'Store'
+import { SET_CLIENTS } from 'Reducer';
 
-const EditClient = () => {
+const AddClient = () => {
     let history = useHistory();
-
     const [ , dispatch] = useContext(Context);
-    let [ client, setClient ] = useState({
-        Surname: '',
-        Forenames: '',
-    });
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
-    const getClients = useCallback(() => {
-        window.ApiClient.get("/clients").then(res => {
-            dispatch({
-                type: SET_CLIENTS,
-                payload: res.data,
-            });
-            setClient(res.data.Clients.find(c => c.Id === clientId));
-        });
-     }, [ clientId, dispatch ]);
-
-    useEffect(() => {
-        getClients();
-    }, [ getClients ]);
+    let [ surname, setSurname ] = useState('');
+    let [ forenames, setForenames ] = useState('');
 
     const handleChangeSurname = (event) => {
-        setClient({
-            ...client,
-            Surname: event.target.value,
-        });
+        setSurname(event.target.value);
     }
     const handleChangeForenames = (event) => {
-        setClient({
-            ...client,
-            Forenames: event.target.value,
-        });
+        setForenames(event.target.value);
     }
 
     let back = e => {
         if (e) {
+            // TODO either use location to see if we came from this site or not,
+            // or just change strategy to strip last path element regardless.
             e.stopPropagation();
         }
         history.goBack();
     };
 
     const submit = () => {
-        window.ApiClient.put(`/clients/${client.Id}`, {
-            Surname: client.Surname,
-            Forenames: client.Forenames,
+        window.ApiClient.post("/clients", {
+            Surname: surname,
+            Forenames: forenames,
         }).then(_ => {
             window.ApiClient.get("/clients").then(res => {
                 dispatch({
@@ -75,13 +52,13 @@ const EditClient = () => {
     return (
         <div className="modal" >
             <Dialog open={true} onClose={back}>
-                <DialogTitle>Edit Client</DialogTitle>
+                <DialogTitle>Add Client</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Enter client details
                     </DialogContentText>
 
-                    <TextField value    = {client.Surname}
+                    <TextField value    = {surname}
                                onChange = {handleChangeSurname}
                                margin   = "dense"
                                id       = "surname"
@@ -91,7 +68,7 @@ const EditClient = () => {
                                autoFocus
                                fullWidth />
 
-                    <TextField value    = {client.Forenames}
+                    <TextField value    = {forenames}
                                onChange = {handleChangeForenames}
                                margin  = "dense"
                                id      = "forenames"
@@ -103,11 +80,11 @@ const EditClient = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={back}>Cancel</Button>
-                    <Button onClick={submit}>Update</Button>
+                    <Button onClick={submit}>Add</Button>
                 </DialogActions>
             </Dialog>
         </div>
     );
 }
 
-export default EditClient;
+export default AddClient;

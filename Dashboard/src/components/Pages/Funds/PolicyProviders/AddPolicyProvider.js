@@ -9,8 +9,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { Context } from '../../../../Store'
-import { SET_POLICY_PROVIDERS } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_POLICY_PROVIDERS } from 'Reducer';
 
 const AddPolicyProvider = () => {
     let history = useHistory();
@@ -63,7 +63,7 @@ const AddPolicyProvider = () => {
                                id       = "pricing"
                                label    = "Pricing"
                                provider = "text"
-                               autoFocus fullWidth />
+                               fullWidth />
 
                 </DialogContent>
                 <DialogActions>

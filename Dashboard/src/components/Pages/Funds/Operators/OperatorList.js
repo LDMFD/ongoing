@@ -13,8 +13,8 @@ import Toolbar from '@mui/material/Toolbar';
 
 import { Link } from "react-router-dom";
 
-import { Context } from '../../../../Store'
-import { SET_OPERATORS } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_OPERATORS } from 'Reducer';
 import { OPERATOR_TYPES } from './Operator';
 
 const OperatorList = () => {

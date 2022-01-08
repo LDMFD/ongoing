@@ -12,8 +12,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Toolbar from '@mui/material/Toolbar';
 
-import { Context } from '../../../../Store'
-import { SET_OPERATORS } from '../../../../Reducer';
+import { Context } from 'Store'
+import { SET_OPERATORS } from 'Reducer';
 
 export const OPERATOR_TYPES = {
     'dim':        'DIM',

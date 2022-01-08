@@ -23,7 +23,7 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
         console.log(err.response.data.error);
         alert(err.response.data.error);
     }
-    throw err;  // get "VM4912:2 Uncaught ReferenceError: process is not defined" without this
+    // throw err;  // [at some point we were getting] "VM4912:2 Uncaught ReferenceError: process is not defined" without this
 });
 
 function App() {

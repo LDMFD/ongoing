@@ -79,7 +79,7 @@ CREATE TABLE policies (
 );
 
 -- Inside the Client page, add a new row, choosing the policy, portfolio & split (split required if a policy has > 1 portfolios ?)
-CREATE TABLE client_portfolios (
+CREATE TABLE holdings (
     "id"                      int primary key generated always as identity,
     "client_id"               int not null,
     "policy_id"               int not null,
