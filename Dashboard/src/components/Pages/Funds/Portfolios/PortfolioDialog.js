@@ -12,13 +12,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
 import { Context } from 'Store'
-
-export const GoBack = history => e => {
-    if (e) {
-        e.stopPropagation();
-    }
-    history.goBack();
-};
+import { GoBack } from 'Utils';
 
 export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -88,7 +82,7 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button onClick={handlers.Submit}>{submitLabel}</Button>
+                    <Button onClick={submitHandler}>{submitLabel}</Button>
                 </DialogActions>
             </Dialog>
         </div>

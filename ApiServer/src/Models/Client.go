@@ -14,6 +14,7 @@ type Client struct {
 	Surname    	string `bun:"surname,notnull"`
 	Timestamp   time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
+	Holdings 	[]*Holding `bun:"rel:has-many,join:id=client_id"`
 	Policies 	[]*Policy `bun:"rel:has-many,join:id=client_id"`
 	Reviews 	[]*Review `bun:"rel:has-many,join:id=client_id"`
 }

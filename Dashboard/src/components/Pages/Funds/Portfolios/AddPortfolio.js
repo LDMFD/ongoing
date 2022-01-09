@@ -4,7 +4,8 @@ import { useHistory } from "react-router-dom";
 import { Context } from 'Store'
 import { SET_PORTFOLIOS } from 'Reducer';
 import { DefaultPortfolio } from './Portfolio';
-import PortfolioDialog, { GoBack } from './PortfolioDialog';
+import PortfolioDialog from './PortfolioDialog';
+import { GoBack } from 'Utils';
 
 const AddPortfolio = () => {
     let history = useHistory();

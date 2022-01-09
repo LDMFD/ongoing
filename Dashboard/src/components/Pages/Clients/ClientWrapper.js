@@ -1,12 +1,22 @@
 import React, { useEffect, useContext, useCallback, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Button from '@mui/material/Button';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 
+import {
+    POPULATE_CLIENT,
+    SET_CLIENTS,
+    SET_OPERATORS,
+    SET_PORTFOLIOS,
+    SET_POLICY_TYPES,
+    SET_POLICY_PROVIDERS,
+} from 'Reducer';
 import { Context } from 'Store'
-import { POPULATE_CLIENT, SET_CLIENTS } from 'Reducer';
+import { RouteMatch } from 'Utils';
 
 // import Review from './Review';
 
@@ -36,25 +46,86 @@ const ClientWrapper = ({ children }) => {
         });
     }, [ dispatch, clientId ]);
 
+    const getOperators = useCallback(() => {
+        return window.ApiClient.get("/operators").then(res => {
+            dispatch({
+                type: SET_OPERATORS,
+                payload: res.data,
+            });
+        });
+    }, [ dispatch ]);
+
+    const getPolicyProviders = useCallback(() => {
+        return window.ApiClient.get("/policy-providers").then(res => {
+            dispatch({
+                type: SET_POLICY_PROVIDERS,
+                payload: res.data,
+            });
+        });
+    }, [ dispatch ]);
+
+    const getPolicyTypes = useCallback(() => {
+        return window.ApiClient.get("/policy-types").then(res => {
+            dispatch({
+                type: SET_POLICY_TYPES,
+                payload: res.data,
+            });
+        });
+    }, [ dispatch ]);
+
+    const getPortfolios = useCallback(() => {
+        return window.ApiClient.get("/portfolios").then(res => {
+            dispatch({
+                type: SET_PORTFOLIOS,
+                payload: res.data,
+            });
+        });
+    }, [ dispatch ]);
+
+
     const getDependencies = useCallback(async () => {
+        await getOperators();
+        await getPolicyProviders();
+        await getPolicyTypes();
+        await getPortfolios();
+
         await getClients();
         await getClientDetail();
+
         setLoaded(true);
-    }, [ getClients, getClientDetail ]);
+    }, [
+        getOperators,
+        getPolicyProviders,
+        getPolicyTypes,
+        getPortfolios,
+
+        getClients,
+        getClientDetail,
+    ]);
 
     useEffect(() => {
         getDependencies();
     }, [ getDependencies ]);
 
-    const addReview = () => {
-        window.ApiClient.post(`/clients/${client.Id}/reviews`).then(_ => {
-            getClients().then(() => {
-                getClientDetail();
-            });
-        });
-    };
-
     let client = state.clients.find(c => c.Id === clientId);
+
+    const { pathname } = useLocation();
+
+    function ClientTabs() {
+        const routeMatch = RouteMatch(pathname, [
+            '/clients/id/:clientId/policies',
+            '/clients/id/:clientId/reviews',
+            '/clients/id/:clientId',
+        ]);
+        const currentTab = routeMatch?.path;
+        return (
+            <Tabs value={currentTab}>
+                <Tab label="Holdings" value="/clients/id/:clientId"          to={`/clients/id/${clientId}`}          component={Link} />
+                <Tab label="Policies" value="/clients/id/:clientId/policies" to={`/clients/id/${clientId}/policies`} component={Link} />
+                <Tab label="Reviews"  value="/clients/id/:clientId/reviews"  to={`/clients/id/${clientId}/reviews`}  component={Link} />
+            </Tabs>
+        );
+    }
 
     return loaded ? (
         <div className='reviews'>
@@ -68,10 +139,10 @@ const ClientWrapper = ({ children }) => {
             </Breadcrumbs>
 
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/policies/add` }}><Button>Add policy</Button></Link>
-                <Button onClick={addReview}>Add review</Button>
                 <Link to={{ pathname: `/clients/id/${client.Id}/edit` }}><Button>Edit client</Button></Link>
             </Toolbar>
+
+            <ClientTabs />
 
             {children}
         </div>

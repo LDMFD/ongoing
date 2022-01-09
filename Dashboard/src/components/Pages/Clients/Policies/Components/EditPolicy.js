@@ -48,7 +48,6 @@ const EditPolicy = () => {
     };
 
     const submit = () => {
-        console.log(policy);
         window.ApiClient.put(`/clients/${clientId}/policies/${policyId}`, {
             ...policy
         }).then(async () => {

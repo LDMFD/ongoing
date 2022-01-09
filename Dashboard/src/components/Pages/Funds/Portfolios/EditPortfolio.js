@@ -3,7 +3,8 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { Context } from 'Store'
 import { SET_PORTFOLIOS } from 'Reducer';
-import PortfolioDialog, { GoBack } from './PortfolioDialog';
+import PortfolioDialog from './PortfolioDialog';
+import { GoBack } from 'Utils';
 
 const EditPortfolio = () => {
     let history = useHistory();

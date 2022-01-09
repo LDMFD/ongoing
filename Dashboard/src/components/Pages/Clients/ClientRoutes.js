@@ -1,15 +1,17 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import AddClient from './ClientProfiles/Components/AddClient';
-import AddPolicy from './Policies/Components/AddPolicy';
 import ClientWrapper from './ClientWrapper';
-import ClientList from './ClientProfiles/Components/ClientList';
-import EditClient from './ClientProfiles/Components/EditClient';
-import EditPolicy from './Policies/Components/EditPolicy';
-import PolicyWrapper from './Policies/Components/PolicyWrapper';
-import PolicyList from './Policies/Components/PolicyList';
-import ReviewList from './Reviews/ReviewList';
+import HoldingList   from './Holdings/HoldingList';
+import AddHolding    from './Holdings/AddHolding';
+import EditHolding   from './Holdings/EditHolding';
+import AddClient     from './ClientProfiles/Components/AddClient';
+import ClientList    from './ClientProfiles/Components/ClientList';
+import EditClient    from './ClientProfiles/Components/EditClient';
+import AddPolicy     from './Policies/Components/AddPolicy';
+import EditPolicy    from './Policies/Components/EditPolicy';
+import PolicyList    from './Policies/Components/PolicyList';
+import ReviewList    from './Reviews/ReviewList';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();
@@ -26,12 +28,15 @@ const ClientRoutes = () => {
                     <ClientWrapper>
                         <Switch>
                             <Route path={`${path}/id/:clientId/reviews`} component={ReviewList} />
-                            <Route path={`${path}/id/:clientId`} component={PolicyList} />
+                            <Route path={`${path}/id/:clientId/policies`} component={PolicyList} />
+                            <Route path={`${path}/id/:clientId`} component={HoldingList} />
                         </Switch>
-                        <PolicyWrapper>
-                            <Route path={`${path}/id/:clientId/policies/add`} component={AddPolicy} />
-                            <Route path={`${path}/id/:clientId/policies/id/:policyId/edit`} component={EditPolicy} />
-                        </PolicyWrapper>
+                        
+                        <Route path={`${path}/id/:clientId/holdings/add`} component={AddHolding} />
+                        <Route path={`${path}/id/:clientId/holdings/id/:holdingId/edit`} component={EditHolding} />
+
+                        <Route path={`${path}/id/:clientId/policies/add`} component={AddPolicy} />
+                        <Route path={`${path}/id/:clientId/policies/id/:policyId/edit`} component={EditPolicy} />
                     </ClientWrapper>
                 </Route>
                 <Route path={path} component={ClientList} />
