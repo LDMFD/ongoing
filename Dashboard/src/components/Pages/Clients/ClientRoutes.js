@@ -5,12 +5,12 @@ import ClientWrapper from './ClientWrapper';
 import HoldingList   from './Holdings/HoldingList';
 import AddHolding    from './Holdings/AddHolding';
 import EditHolding   from './Holdings/EditHolding';
-import AddClient     from './ClientProfiles/Components/AddClient';
-import ClientList    from './ClientProfiles/Components/ClientList';
-import EditClient    from './ClientProfiles/Components/EditClient';
-import AddPolicy     from './Policies/Components/AddPolicy';
-import EditPolicy    from './Policies/Components/EditPolicy';
-import PolicyList    from './Policies/Components/PolicyList';
+import AddClient     from './ClientProfiles/AddClient';
+import ClientList    from './ClientProfiles/ClientList';
+import EditClient    from './ClientProfiles/EditClient';
+import AddPolicy     from './Policies/AddPolicy';
+import EditPolicy    from './Policies/EditPolicy';
+import PolicyList    from './Policies/PolicyList';
 import ReviewList    from './Reviews/ReviewList';
 
 const ClientRoutes = () => {

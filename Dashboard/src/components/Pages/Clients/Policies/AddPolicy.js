@@ -70,7 +70,7 @@ const AddPolicy = () => {
                                 onChange = {(e) => setExternalId(e.target.value)}
                                 margin   = "dense"
                                 id       = "externalId"
-                                label    = "ExternalId"
+                                label    = "Policy number"
                                 type     = "text"
                                 autoFocus fullWidth />
 

@@ -25,7 +25,7 @@ const HoldingList = () => {
         <div>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: `/clients/id/${client.Id}/holdings/add` }}>
-                    <Button>Add holding</Button>
+                    <Button>Add asset</Button>
                 </Link>
             </Toolbar>
 

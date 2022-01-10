@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { Context } from 'Store'
 import { SET_PORTFOLIOS } from 'Reducer';
-import { DefaultPortfolio } from './Portfolio';
+import { DefaultPortfolio } from './DefaultPortfolio';
 import PortfolioDialog from './PortfolioDialog';
 import { GoBack } from 'Utils';
 

@@ -34,14 +34,14 @@ const DrawerItems = [
         link: '/clients',
     },
     {
-        label: 'Operators',
-        icon: <SearchIcon />,
-        link: '/operators',
-    },
-    {
         label: 'Portfolios',
         icon: <SearchIcon />,
         link: '/portfolios',
+    },
+    {
+        label: 'Operators',
+        icon: <SearchIcon />,
+        link: '/operators',
     },
     {
         label: 'Policy Types',

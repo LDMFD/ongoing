@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'Store'
 import { POPULATE_CLIENT } from 'Reducer';
-import { DefaultHolding } from './Holding';
+import { DefaultHolding } from './DefaultHolding';
 import HoldingDialog from './HoldingDialog';
 import { GoBack } from 'Utils';
 

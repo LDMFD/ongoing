@@ -74,7 +74,7 @@ const EditPolicy = () => {
                                onChange = {onEditExternalId}
                                margin   = "dense"
                                id       = "externalId"
-                               label    = "ExternalId"
+                               label    = "Policy number"
                                type     = "text"
                                autoFocus fullWidth />
 
