@@ -18,11 +18,12 @@ const AddHolding = () => {
 
     let [ holding, setHolding ] = useState(DefaultHolding);
 
-    const submitHandler = () => {
+    const submitHandler = (e) => {
+        e.preventDefault();
         if (holding.Proportion === '') {
             holding.Proportion = 1;
         }
-        return window.ApiClient.post(`/clients/${clientId}/holdings`, {
+        window.ApiClient.post(`/clients/${clientId}/holdings`, {
             ...holding
         }).then(_ => {
             return window.ApiClient.get(`/clients/${clientId}`).then(res => {
@@ -32,6 +33,7 @@ const AddHolding = () => {
                 })
             }).then(goBack);;
         });
+        return false;
     };
 
     return (

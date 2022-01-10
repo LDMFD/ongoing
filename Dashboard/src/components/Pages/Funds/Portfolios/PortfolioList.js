@@ -38,6 +38,7 @@ const PortfolioList = () => {
                             <TableCell>Operator</TableCell>
                             <TableCell>Weighted OCF</TableCell>
                             <TableCell>Ex Ante Fee</TableCell>
+                            <TableCell>Factsheet</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -58,6 +59,9 @@ const PortfolioList = () => {
                                     </TableCell>
                                     <TableCell>
                                         {p.ExAnteFee}
+                                    </TableCell>
+                                    <TableCell>
+                                        {p.File?.Filename}
                                     </TableCell>
                                 </TableRow>
                             );

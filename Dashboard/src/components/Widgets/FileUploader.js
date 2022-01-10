@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 
-// let upload_count = 0;
+const File = ({ file, completionCallback }) => {
+    let [ uploaded, setUploaded ] = useState(false);
 
-const File = ({ reviewId, file }) => {
-    useEffect(() => {
-        console.log("uploading", file);
-
-        // Prevent page unload whilst files are still uploading
-        // ++upload_count;
+    const upload = useCallback((file, completionCallback) => {
+        let fileSpec = {
+            Uid: '',
+            Filename: '',
+            Size: 0,
+        };
 
         window.ApiClient.get(`/upload?Filename=${file.name}`).then(res => {
             let postData = new FormData();
@@ -28,21 +29,34 @@ const File = ({ reviewId, file }) => {
                     "Content-Disposition": `attachment; filename=${file.Filename}`,
                 },
             }).then(_ => {
-                window.ApiClient.post('/upload', {
-                    Uid: res.data.Fields['key'],
+                fileSpec = {
+                    Uid:      res.data.Fields['key'],
                     Filename: file.name,
-                    Size: file.size,
-                    ReviewId: reviewId,
+                    Size:     file.size,
+                };
+
+                window.ApiClient.post('/upload', fileSpec)
+                .then(() => {
+                    setUploaded(true);
+                    completionCallback(fileSpec);
                 })
-                .catch(function (error) {
-                    alert(error.response.data.error);  // https://stackoverflow.com/questions/49967779/axios-handling-errors
+                .catch((error) => {
+                    console.log('error',error);
+                    alert(error?.response?.data?.error);  // https://stackoverflow.com/questions/49967779/axios-handling-errors
                 })
             })
             .catch(response => {
                 console.log('error',response);
             });
         });
-    });
+    }, []);
+
+    // Prevent upload loop due to completionCallback
+    useEffect(() => {
+        if (!uploaded) {
+            upload(file, completionCallback);
+        }
+    }, [ uploaded, upload, file, completionCallback ])
 
     return (
         <div>
@@ -51,34 +65,39 @@ const File = ({ reviewId, file }) => {
     );
 }
 
-const FileInput = ({ reviewId }) => {
-    const [ files, setFiles ] = useState(null);
+const FileInput = ({ completionCallback }) => {
+    const [ file, setFile ] = useState(null);
 
     let input = React.createRef();
 
-    const handleSubmit = (event) => {
+    const triggerUpload = (event) => {
         event.preventDefault();
-        setFiles(Array.from(input.current.files));
+        setFile(Array.from(input.current.files)[0]);
     };
 
     return (
         <Paper>
-            <form onSubmit={handleSubmit}>
+            {/* <form onSubmit={handleSubmit}> */}
                 <label>
                     Upload file:
                     <input type="file" multiple ref={input} />
                 </label>
                 <br />
-                <button type="submit">Submit</button>
-            </form>
+                <button onClick={triggerUpload}>Submit</button>
 
-            {files && (
+                {file &&
+                    <File file               = {file}
+                          completionCallback = {completionCallback} />
+                }
+            {/* </form> */}
+
+            {/* {files && (
                 <ul>
                     {files.map((f, ix) => (
                         <File key={ix} reviewId={reviewId} file={f} />
                     ))}
                 </ul>
-            )}
+            )} */}
         </Paper>
     );
 }

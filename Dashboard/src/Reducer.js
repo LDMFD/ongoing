@@ -64,7 +64,7 @@ const Reducer = (state, action) => {
         case SET_PORTFOLIOS:
             return {
                 ...state,
-                portfolios: action.payload.Portfolios,
+                portfolios: action.payload.Portfolios || [],
             }
         
         default:

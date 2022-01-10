@@ -35,7 +35,6 @@ type SignalUploadRequest struct {
 	Uid      string		`binding:"required"`
 	Filename string		`binding:"required"`
 	Size     int64		`binding:"required"`
-	//ReviewId int64		`binding:"required"`
 }
 
 func (s *ApiServer) signalUpload(c *gin.Context) {

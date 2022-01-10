@@ -29,18 +29,20 @@ CREATE TABLE portfolios (
     "operator_id"             int not null,     -- (MPS is run by a DIM, etc.)
     "weighted_ocf"            decimal not null,
     "ex_ante_fee"             decimal not null,
+    "file_id"                 int,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_operator          FOREIGN KEY(operator_id)       REFERENCES operators(id)          ON DELETE CASCADE
+    CONSTRAINT fk_operator          FOREIGN KEY(operator_id)       REFERENCES operators(id)          ON DELETE CASCADE,
+    CONSTRAINT fk_file              FOREIGN KEY(file_id)           REFERENCES files(id)              ON DELETE CASCADE
 );
 
-CREATE TABLE portfolio_factsheets (
-    "id"                      int primary key generated always as identity,
-    "portfolio_id"            int not null,
-    "file_id"                 int not null,
-    "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_portfolio         FOREIGN KEY(portfolio_id) REFERENCES portfolios(id)     ON DELETE CASCADE,
-    CONSTRAINT fk_file              FOREIGN KEY(file_id)      REFERENCES files(id)          ON DELETE CASCADE
-);
+-- CREATE TABLE portfolio_factsheets (
+--     "id"                      int primary key generated always as identity,
+--     "portfolio_id"            int not null,
+--     "file_id"                 int not null,
+--     "timestamp"               timestamp default current_timestamp,
+--     CONSTRAINT fk_portfolio         FOREIGN KEY(portfolio_id) REFERENCES portfolios(id)     ON DELETE CASCADE,
+--     CONSTRAINT fk_file              FOREIGN KEY(file_id)      REFERENCES files(id)          ON DELETE CASCADE
+-- );
 
 CREATE TABLE policy_types (
     "id"                      int primary key generated always as identity,

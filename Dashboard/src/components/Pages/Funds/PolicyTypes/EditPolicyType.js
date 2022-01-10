@@ -11,9 +11,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Context } from 'Store'
 import { SET_POLICY_TYPES } from 'Reducer';
+import { GoBack } from 'Utils';
 
 const EditPolicyType = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
 
     const [ , dispatch] = useContext(Context);
     let [ policyType, setPolicyType ] = useState({
@@ -44,48 +46,49 @@ const EditPolicyType = () => {
         });
     }
 
-    let back = e => {
-        if (e) {
-            e.stopPropagation();
-        }
-        history.goBack();
-    };
-
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
         window.ApiClient.put(`/policy-types/${policyType.Id}`, {
             ...policyType
-        }).then(_ => {
+        })
+        .then(() => {
+            goBack();
+        })
+        .then(_ => {
             window.ApiClient.get("/policy-types").then(res => {
                 dispatch({
                     type: SET_POLICY_TYPES,
                     payload: res.data,
                 })
-            }).then(back);
+            });
         });
+        return false;
     };
 
     return (
         <div className="modal" >
-            <Dialog open={true} onClose={back}>
-                <DialogTitle>Edit Policy Type</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Enter policy type
-                    </DialogContentText>
+            <Dialog open={true} onClose={goBack}>
+                <form onSubmit={submit}>
+                    <DialogTitle>Edit Policy Type</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Enter policy type
+                        </DialogContentText>
 
-                    <TextField value    = {policyType.Name}
-                               onChange = {handleChangeName}
-                               margin   = "dense"
-                               id       = "name"
-                               label    = "Name"
-                               type     = "text"
-                               autoFocus fullWidth />
+                        <TextField value    = {policyType.Name}
+                                onChange = {handleChangeName}
+                                margin   = "dense"
+                                id       = "name"
+                                label    = "Name"
+                                type     = "text"
+                                autoFocus fullWidth />
 
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={back}>Cancel</Button>
-                    <Button onClick={submit}>Update</Button>
-                </DialogActions>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={goBack}>Cancel</Button>
+                        <Button type='submit'>Update</Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         </div>
     );

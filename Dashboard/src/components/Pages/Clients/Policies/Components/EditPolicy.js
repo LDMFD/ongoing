@@ -13,9 +13,11 @@ import Select from '@mui/material/Select';
 
 import { Context } from 'Store'
 import { POPULATE_CLIENT } from 'Reducer';
+import { GoBack } from 'Utils';
 
 const EditPolicy = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
     let [ policy, setPolicy ] = useState(null);
@@ -31,13 +33,6 @@ const EditPolicy = () => {
         return;
     }
 
-    let back = e => {
-        if (e) {
-            e.stopPropagation();
-        }
-        history.goBack();
-    };
-
     const getClientDetail = async () => {
         return window.ApiClient.get(`/clients/${clientId}`).then(res => {
             dispatch({
@@ -47,13 +42,18 @@ const EditPolicy = () => {
         });
     };
 
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
         window.ApiClient.put(`/clients/${clientId}/policies/${policyId}`, {
             ...policy
-        }).then(async () => {
+        })
+        .then(() => {
+            goBack();
+        })
+        .then(async () => {
             await getClientDetail();
-            back();
         });
+        return false;
     };
 
     const onEditExternalId   = (event) => { setPolicy({ ...policy, ExternalId:          event.target.value }); }
@@ -63,7 +63,7 @@ const EditPolicy = () => {
 
     return (
         <div className="modal" >
-            <Dialog open={true} onClose={back}>
+            <Dialog open={true} onClose={goBack}>
                 <DialogTitle>Edit Policy Type</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -118,7 +118,7 @@ const EditPolicy = () => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={back}>Cancel</Button>
+                    <Button onClick={goBack}>Cancel</Button>
                     <Button onClick={submit}>Update</Button>
                 </DialogActions>
             </Dialog>

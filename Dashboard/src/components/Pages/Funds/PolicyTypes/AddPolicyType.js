@@ -11,21 +11,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Context } from 'Store'
 import { SET_POLICY_TYPES } from 'Reducer';
+import { GoBack } from 'Utils';
 
 const AddPolicyType = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
+
     const [ , dispatch] = useContext(Context);
 
     let [ name, setName ] = useState('');
 
-    let back = e => {
-        if (e) {
-            e.stopPropagation();
-        }
-        history.goBack();
-    };
-
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
         window.ApiClient.post("/policy-types", {
             Name: name,
         }).then(_ => {
@@ -34,13 +31,16 @@ const AddPolicyType = () => {
                     type: SET_POLICY_TYPES,
                     payload: res.data,
                 })
-            }).then(back);;
+            }).then(() => {
+                goBack();
+            });
         });
+        return false;
     };
 
     return (
         <div className="modal" >
-            <Dialog open={true} onClose={back}>
+            <Dialog open={true} onClose={goBack}>
                 <DialogTitle>Add Policy Type</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -57,7 +57,7 @@ const AddPolicyType = () => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={back}>Cancel</Button>
+                    <Button onClick={goBack}>Cancel</Button>
                     <Button onClick={submit}>Add</Button>
                 </DialogActions>
             </Dialog>

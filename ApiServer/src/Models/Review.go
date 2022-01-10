@@ -16,5 +16,4 @@ type Review struct {
 
 	// TODO add JSON report
 
-	//Files 	[]*File `bun:"rel:has-many,join:id=review_id"`
 }

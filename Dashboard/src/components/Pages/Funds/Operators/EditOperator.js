@@ -13,9 +13,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Context } from 'Store'
 import { SET_OPERATORS } from 'Reducer';
+import { GoBack } from 'Utils';
 
 const EditOperator = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
 
     const [ , dispatch] = useContext(Context);
     let [ operator, setOperator ] = useState({
@@ -61,14 +63,8 @@ const EditOperator = () => {
         });
     }
 
-    let back = e => {
-        if (e) {
-            e.stopPropagation();
-        }
-        history.goBack();
-    };
-
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
         window.ApiClient.put(`/operators/${operator.Id}`, {
             ...operator
         }).then(_ => {
@@ -77,13 +73,16 @@ const EditOperator = () => {
                     type: SET_OPERATORS,
                     payload: res.data,
                 })
-            }).then(back);
+            }).then(() => {
+                goBack();
+            });
         });
+        return false;
     };
 
     return (
         <div className="modal" >
-            <Dialog open={true} onClose={back}>
+            <Dialog open={true} onClose={goBack}>
                 <DialogTitle>Edit Operator</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -121,7 +120,7 @@ const EditOperator = () => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={back}>Cancel</Button>
+                    <Button onClick={goBack}>Cancel</Button>
                     <Button onClick={submit}>Update</Button>
                 </DialogActions>
             </Dialog>

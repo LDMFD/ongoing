@@ -120,8 +120,8 @@ const ClientWrapper = ({ children }) => {
         const currentTab = routeMatch?.path;
         return (
             <Tabs value={currentTab}>
-                <Tab label="Holdings" value="/clients/id/:clientId"          to={`/clients/id/${clientId}`}          component={Link} />
                 <Tab label="Policies" value="/clients/id/:clientId/policies" to={`/clients/id/${clientId}/policies`} component={Link} />
+                <Tab label="Assets" value="/clients/id/:clientId"          to={`/clients/id/${clientId}`}          component={Link} />
                 <Tab label="Reviews"  value="/clients/id/:clientId/reviews"  to={`/clients/id/${clientId}/reviews`}  component={Link} />
             </Tabs>
         );

@@ -15,17 +15,24 @@ const AddPortfolio = () => {
 
     let [ portfolio, setPortfolio ] = useState(DefaultPortfolio);
 
-    const submitHandler = () => {
+    const submitHandler = (e) => {
+        e.preventDefault();
         window.ApiClient.post("/portfolios", {
-            ...portfolio
-        }).then(_ => {
+            ...portfolio,
+            FileUid: portfolio?.File?.Uid,
+        })
+        .then(() => {
+            goBack();
+        })
+        .then(_ => {
             window.ApiClient.get("/portfolios").then(res => {
                 dispatch({
                     type: SET_PORTFOLIOS,
                     payload: res.data,
                 })
-            }).then(goBack);;
+            })
         });
+        return false;
     };
 
     return (

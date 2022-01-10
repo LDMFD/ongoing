@@ -22,11 +22,12 @@ const EditHolding = () => {
         setHolding(client.Holdings.find(h => h.Id === holdingId))
         return;
     }
-    const submitHandler = () => {
+    const submitHandler = (e) => {
+        e.preventDefault();
         if (holding.Proportion === '') {
             holding.Proportion = 1;
         }
-        return window.ApiClient.put(`/clients/${clientId}/holdings/${holdingId}`, {
+        window.ApiClient.put(`/clients/${clientId}/holdings/${holdingId}`, {
             ...holding
         }).then(_ => {
             return window.ApiClient.get(`/clients/${clientId}`).then(res => {
@@ -36,6 +37,7 @@ const EditHolding = () => {
                 })
             }).then(goBack);;
         });
+        return false;
     };
 
     return (

@@ -17,28 +17,39 @@ const EditPortfolio = () => {
     portfolioId = parseInt(portfolioId);
 
     if (!portfolio) {
-        setPortfolio(state.portfolios.find(p => p.Id === portfolioId))
+        let p = state.portfolios.find(p => p.Id === portfolioId);
+        if (!p) {
+            return <>Portfolio not found</>;
+        }
+        setPortfolio(p)
         return;
     }
 
-    const submitHandler = () => {
+    const submitHandler = (e) => {
+        e.preventDefault();
         window.ApiClient.put(`/portfolios/${portfolio.Id}`, {
-            ...portfolio
-        }).then(_ => {
+            ...portfolio,
+            FileUid: portfolio?.File?.Uid,
+        })
+        .then(() => {
+            goBack();
+        })
+        .then(_ => {
             window.ApiClient.get("/portfolios").then(res => {
                 dispatch({
                     type: SET_PORTFOLIOS,
                     payload: res.data,
                 })
-            }).then(goBack);;
+            })
         });
+        return false;
     };
 
     return (
         <PortfolioDialog portfolio     = {portfolio}
                          setPortfolio  = {setPortfolio}
                          submitLabel   = 'Update'
-                         submitHandler = {submitHandler}  />
+                         submitHandler = {submitHandler} />
     );
 }
 

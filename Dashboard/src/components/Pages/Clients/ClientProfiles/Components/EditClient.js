@@ -11,9 +11,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Context } from 'Store'
 import { POPULATE_CLIENT } from 'Reducer';
+import { GoBack } from 'Utils';
 
 const EditClient = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
     let [ client, setClient ] = useState(null);
@@ -42,14 +44,6 @@ const EditClient = () => {
         });
     }
 
-    let back = e => {
-        if (e) {
-            console.log(e);
-            e.stopPropagation();
-        }
-        history.goBack();
-    };
-
     const getClientDetail = async () => {
         return window.ApiClient.get(`/clients/${clientId}`).then(res => {
             dispatch({
@@ -59,49 +53,55 @@ const EditClient = () => {
         });
     };
 
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
         window.ApiClient.put(`/clients/${client.Id}`, {
             Surname: client.Surname,
             Forenames: client.Forenames,
         }).then(async () => {
             await getClientDetail();
-            back();
+        })
+        .then(() => {
+            goBack();
         });
-    };
+        return false;
+   };
 
     return client && (
         <div className="modal" >
-            <Dialog open={true} onClose={back}>
-                <DialogTitle>Edit Client</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Enter client details
-                    </DialogContentText>
+            <Dialog open={true} onClose={goBack}>
+                <form onSubmit={submit}>
+                    <DialogTitle>Edit Client</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Enter client details
+                        </DialogContentText>
 
-                    <TextField value    = {client.Surname}
-                               onChange = {handleChangeSurname}
-                               margin   = "dense"
-                               id       = "surname"
-                               label    = "Surname"
-                               type     = "text"
-                               variant  = "standard"
-                               autoFocus
-                               fullWidth />
+                        <TextField value    = {client.Surname}
+                                onChange = {handleChangeSurname}
+                                margin   = "dense"
+                                id       = "surname"
+                                label    = "Surname"
+                                type     = "text"
+                                variant  = "standard"
+                                autoFocus
+                                fullWidth />
 
-                    <TextField value    = {client.Forenames}
-                               onChange = {handleChangeForenames}
-                               margin  = "dense"
-                               id      = "forenames"
-                               label   = "Forenames"
-                               type    = "text"
-                               variant = "standard"
-                               fullWidth />
+                        <TextField value    = {client.Forenames}
+                                onChange = {handleChangeForenames}
+                                margin  = "dense"
+                                id      = "forenames"
+                                label   = "Forenames"
+                                type    = "text"
+                                variant = "standard"
+                                fullWidth />
 
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={back}>Cancel</Button>
-                    <Button onClick={submit}>Update</Button>
-                </DialogActions>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={goBack}>Cancel</Button>
+                        <Button type='submit'>Update</Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         </div>
     );

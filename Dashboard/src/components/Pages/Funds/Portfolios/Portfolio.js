@@ -3,4 +3,5 @@ export const DefaultPortfolio = {
     OperatorId: 'select',
     WeightedFee: '',
     ExAnteFee: '',
+    FileUid: null,
 };

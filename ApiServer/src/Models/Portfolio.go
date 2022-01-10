@@ -13,5 +13,8 @@ type Portfolio struct {
 	OperatorId  int64 		`bun:"operator_id,notnull"`
 	WeightedFee	float64     `bun:"weighted_ocf,notnull"`
 	ExAnteFee	float64     `bun:"ex_ante_fee,notnull"`
+	FileId      *int64      `bun:"file_id"`
 	Timestamp   time.Time	`bun:",nullzero,notnull,default:current_timestamp"`
+
+	File	 	*File 		`bun:"rel:has-one,join:file_id=id"`
 }

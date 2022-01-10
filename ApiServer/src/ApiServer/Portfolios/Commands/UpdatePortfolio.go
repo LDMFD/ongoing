@@ -13,13 +13,6 @@ type UpdatePortfolioRequestPath struct {
 	PortfolioId int64 `binding:"required"`
 }
 
-type UpdatePortfolioRequestBody struct {
-	Name        string  `binding:"required"`
-	OperatorId  int64   `binding:"required"`
-	WeightedFee float64 `binding:"required"`
-	ExAnteFee   float64 `binding:"required"`
-}
-
 func UpdatePortfolio(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
@@ -29,10 +22,22 @@ func UpdatePortfolio(c *gin.Context) {
 		return
 	}
 
-	var body UpdatePortfolioRequestBody
+	var body CreateOrUpdatePortfolioRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	var fileId *int64
+	if body.FileUid != nil {
+		var file Models.File
+		if count, err := db.NewSelect().Model(&file).Where("uid = ?", *body.FileUid).ScanAndCount(c); err != nil {
+			panic(err)
+		} else if count == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
+			return
+		}
+		fileId = &file.Id
 	}
 
 	var portfolio = Models.Portfolio{
@@ -41,12 +46,15 @@ func UpdatePortfolio(c *gin.Context) {
 		OperatorId:  body.OperatorId,
 		WeightedFee: body.WeightedFee,
 		ExAnteFee: 	 body.ExAnteFee,
+		FileId:      fileId,
 	}
 	if _, err := db.NewUpdate().Model(&portfolio).WherePK().
 		Column("name").
 		Column("operator_id").
 		Column("weighted_ocf").
-		Column("ex_ante_fee").Exec(c); err != nil {
+		Column("ex_ante_fee").
+		Column("file_id").
+		Exec(c); err != nil {
 		panic(err)
 	}
 

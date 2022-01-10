@@ -14,7 +14,7 @@ import TextField from '@mui/material/TextField';
 import { Context } from 'Store'
 import { GoBack } from 'Utils';
 
-export const PortfolioDialog = ({ holding, setHolding, submitLabel, submitHandler }) => {
+export const HoldingDialog = ({ holding, setHolding, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
@@ -24,6 +24,11 @@ export const PortfolioDialog = ({ holding, setHolding, submitLabel, submitHandle
     const [ state ] = useContext(Context);
 
     let client = state.clients.find(c => c.Id === clientId);
+
+    // TODO fix-me
+    if (client.Policies == null) {
+        client.Policies = [];
+    }
 
     const handlers = {
         SetPolicyId:     (event) => { setHolding({ ...holding, PolicyId:    parseInt(event.target.value), }); },
@@ -92,4 +97,4 @@ export const PortfolioDialog = ({ holding, setHolding, submitLabel, submitHandle
     );
 };
 
-export default PortfolioDialog;
+export default HoldingDialog;

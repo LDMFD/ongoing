@@ -11,9 +11,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { Context } from 'Store'
 import { SET_POLICY_PROVIDERS } from 'Reducer';
+import { GoBack } from 'Utils';
 
 const EditPolicyProvider = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
 
     const [ , dispatch] = useContext(Context);
     let [ policyProvider, setPolicyProvider ] = useState({
@@ -52,14 +54,8 @@ const EditPolicyProvider = () => {
         });
     }
 
-    let back = e => {
-        if (e) {
-            e.stopPropagation();
-        }
-        history.goBack();
-    };
-
-    const submit = () => {
+    const submit = (e) => {
+        e.preventDefault();
         window.ApiClient.put(`/policy-providers/${policyProvider.Id}`, {
             ...policyProvider
         }).then(_ => {
@@ -68,13 +64,16 @@ const EditPolicyProvider = () => {
                     type: SET_POLICY_PROVIDERS,
                     payload: res.data,
                 })
-            }).then(back);
+            }).then(() => {
+                goBack();
+            });
         });
+        return false;
     };
 
     return (
         <div className="modal" >
-            <Dialog open={true} onClose={back}>
+            <Dialog open={true} onClose={goBack}>
                 <DialogTitle>Edit Policy Provider</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -99,7 +98,7 @@ const EditPolicyProvider = () => {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={back}>Cancel</Button>
+                    <Button onClick={goBack}>Cancel</Button>
                     <Button onClick={submit}>Update</Button>
                 </DialogActions>
             </Dialog>

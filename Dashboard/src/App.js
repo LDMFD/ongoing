@@ -19,11 +19,12 @@ window.ApiClient = axios.create({
 
 // TODO check https://stackoverflow.com/a/59693754
 window.ApiClient.interceptors.response.use((response) => response, (err) => {
+    console.log(err);
     if (err.response && err.response.data) {
         console.log(err.response.data.error);
         alert(err.response.data.error);
     }
-    // throw err;  // [at some point we were getting] "VM4912:2 Uncaught ReferenceError: process is not defined" without this
+    throw err;  // prevent goBack() on error
 });
 
 function App() {

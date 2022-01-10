@@ -12,7 +12,10 @@ func GetPortfolios(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var portfolios []Models.Portfolio
-	if err := db.NewSelect().Model(&portfolios).OrderExpr("id ASC").Scan(c); err != nil {
+	if err := db.NewSelect().
+		Model(&portfolios).
+		Relation("File").
+		OrderExpr("id ASC").Scan(c); err != nil {
 		panic(err)
 	}
 	c.JSON(200, gin.H{
