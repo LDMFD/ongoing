@@ -83,16 +83,17 @@ CREATE TABLE policies (
     CONSTRAINT fk_policy_provider   FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE CASCADE
 );
 
--- Funds attached to a policy but no model
+-- Funds attached to a policy, no model
 CREATE TABLE policy_funds (
     "id"                      int primary key generated always as identity,
+    "client_id"               int not null,
     "fund_id"                 int not null,
     "policy_id"               int not null,
     CONSTRAINT fk_fund              FOREIGN KEY(fund_id)             REFERENCES funds(id)             ON DELETE CASCADE,
     CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE CASCADE
 );
 
--- Policy + Model
+-- Policy + model
 CREATE TABLE portfolios (   -- was "Holdings"
     "id"                      int primary key generated always as identity,
     "client_id"               int not null,
