@@ -2,7 +2,7 @@ package Commands
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 	"strings"
 
 	"github.com/uptrace/bun"
@@ -27,7 +27,7 @@ func CreatePolicyType(c *gin.Context) {
 		return
 	}
 
-	var policyType = Models.PolicyType{
+	var policyType = Entities.PolicyType{
 		Name: req.Name,
 	}
 	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {

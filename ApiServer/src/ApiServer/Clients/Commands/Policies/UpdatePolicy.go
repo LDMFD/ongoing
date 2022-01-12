@@ -2,7 +2,7 @@ package Policies
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -36,7 +36,7 @@ func UpdatePolicy(c *gin.Context) {
 		return
 	}
 
-	var policy = Models.Policy{Id: path.PolicyId}
+	var policy = Entities.Policy{Id: path.PolicyId}
 	if err := db.NewSelect().
 		Model(&policy).
 		WherePK().

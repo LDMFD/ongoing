@@ -3,7 +3,7 @@ package Commands
 import (
 	"github.com/uptrace/bun"
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +28,7 @@ func CreateOperator(c *gin.Context) {
 		return
 	}
 
-	var operator = Models.Operator{
+	var operator = Entities.Operator{
 		Type:      req.Type,
 		Name:      req.Name,
 		Fee:       req.Fee,

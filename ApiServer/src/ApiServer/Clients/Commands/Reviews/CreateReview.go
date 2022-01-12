@@ -2,7 +2,7 @@ package Reviews
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +26,7 @@ func CreateReview(c *gin.Context) {
 		return
 	}
 
-	var review = Models.Review{
+	var review = Entities.Review{
 		ClientId: path.ClientId,
 		State:    "DRAFT",
 		Uid:      uid,

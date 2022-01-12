@@ -2,9 +2,9 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ClientWrapper from './ClientWrapper';
-import HoldingList   from './Holdings/HoldingList';
-import AddHolding    from './Holdings/AddHolding';
-import EditHolding   from './Holdings/EditHolding';
+import PortfolioList   from './Portfolios/PortfolioList';
+import AddPortfolio    from './Portfolios/AddPortfolio';
+import EditPortfolio   from './Portfolios/EditPortfolio';
 import AddClient     from './ClientProfiles/AddClient';
 import ClientList    from './ClientProfiles/ClientList';
 import EditClient    from './ClientProfiles/EditClient';
@@ -29,11 +29,11 @@ const ClientRoutes = () => {
                         <Switch>
                             <Route path={`${path}/id/:clientId/reviews`} component={ReviewList} />
                             <Route path={`${path}/id/:clientId/policies`} component={PolicyList} />
-                            <Route path={`${path}/id/:clientId`} component={HoldingList} />
+                            <Route path={`${path}/id/:clientId`} component={PortfolioList} />
                         </Switch>
                         
-                        <Route path={`${path}/id/:clientId/holdings/add`} component={AddHolding} />
-                        <Route path={`${path}/id/:clientId/holdings/id/:holdingId/edit`} component={EditHolding} />
+                        <Route path={`${path}/id/:clientId/portfolios/add`} component={AddPortfolio} />
+                        <Route path={`${path}/id/:clientId/portfolios/id/:portfolioId/edit`} component={EditPortfolio} />
 
                         <Route path={`${path}/id/:clientId/policies/add`} component={AddPolicy} />
                         <Route path={`${path}/id/:clientId/policies/id/:policyId/edit`} component={EditPolicy} />

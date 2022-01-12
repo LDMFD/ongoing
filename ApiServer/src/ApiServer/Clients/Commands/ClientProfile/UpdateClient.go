@@ -2,7 +2,7 @@ package ClientProfile
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -33,7 +33,7 @@ func UpdateClient(c *gin.Context) {
 		return
 	}
 
-	var client = Models.Client{
+	var client = Entities.Client{
 		Id:        path.ClientId,
 		Forenames: body.Forenames,
 		Surname:   body.Surname,

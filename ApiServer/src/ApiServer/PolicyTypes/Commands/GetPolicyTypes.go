@@ -1,7 +1,7 @@
 package Commands
 
 import (
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -11,7 +11,7 @@ import (
 func GetPolicyTypes(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var policytypes []Models.PolicyType
+	var policytypes []Entities.PolicyType
 	if err := db.NewSelect().Model(&policytypes).OrderExpr("id ASC").Scan(c); err != nil {
 		panic(err)
 	}

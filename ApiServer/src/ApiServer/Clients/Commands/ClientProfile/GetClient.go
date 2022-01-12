@@ -2,7 +2,7 @@ package ClientProfile
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -22,14 +22,14 @@ func GetClient(c *gin.Context) {
 		return
 	}
 
-	var client = Models.Client{Id: path.ClientId}
+	var client = Entities.Client{Id: path.ClientId}
 	if err := db.NewSelect().
 		Model(&client).
 		Relation("Reviews").
 		Relation("Policies").
-		Relation("Holdings").
-		//Relation("Holdings.Policy").
-		//Relation("Holdings.Portfolio").
+		Relation("Portfolios").
+		//Relation("Portfolios.Policy").
+		//Relation("Portfolios.Model").
 		//Relation("Reviews.Files").
 		WherePK().
 		Scan(c); err != nil {

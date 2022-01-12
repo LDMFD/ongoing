@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 	"strings"
 )
 
@@ -44,7 +44,7 @@ func (s *ApiServer) signalUpload(c *gin.Context) {
 		return
 	}
 
-	var file = Models.File{
+	var file = Entities.File{
 		Uid:       req.Uid,
 		Filename:  req.Filename,
 		Size:      req.Size,

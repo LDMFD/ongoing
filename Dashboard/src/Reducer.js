@@ -5,7 +5,7 @@ export const POPULATE_CLIENT        = 'POPULATE_CLIENT';
 export const SET_OPERATORS          = 'SET_OPERATORS';
 export const SET_POLICY_TYPES       = 'SET_POLICY_TYPES';
 export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
-export const SET_PORTFOLIOS         = 'SET_PORTFOLIOS';
+export const SET_MODELS             = 'SET_MODELS';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -61,10 +61,10 @@ const Reducer = (state, action) => {
                 ))
             }
 
-        case SET_PORTFOLIOS:
+        case SET_MODELS:
             return {
                 ...state,
-                portfolios: action.payload.Portfolios || [],
+                models: action.payload.Models || [],
             }
         
         default:

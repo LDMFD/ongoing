@@ -2,7 +2,7 @@ package Commands
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -34,7 +34,7 @@ func UpdateOperator(c *gin.Context) {
 		return
 	}
 
-	var operator = Models.Operator{
+	var operator = Entities.Operator{
 		Id:        path.OperatorId,
 		Type:      body.Type,
 		Name:      body.Name,

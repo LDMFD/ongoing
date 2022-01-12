@@ -2,7 +2,7 @@ package Commands
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -22,7 +22,7 @@ func GetOperator(c *gin.Context) {
 		return
 	}
 
-	var operator = Models.Operator{Id: path.OperatorId}
+	var operator = Entities.Operator{Id: path.OperatorId}
 	if err := db.NewSelect().
 		Model(&operator).
 		WherePK().

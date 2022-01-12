@@ -34,9 +34,9 @@ const DrawerItems = [
         link: '/clients',
     },
     {
-        label: 'Portfolios',
+        label: 'Models',
         icon: <SearchIcon />,
-        link: '/portfolios',
+        link: '/models',
     },
     {
         label: 'Operators',

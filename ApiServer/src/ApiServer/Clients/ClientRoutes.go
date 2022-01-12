@@ -2,8 +2,8 @@ package Clients
 
 import (
 	"ongoing/ApiServer/Clients/Commands/ClientProfile"
-	"ongoing/ApiServer/Clients/Commands/Holdings"
 	"ongoing/ApiServer/Clients/Commands/Policies"
+	"ongoing/ApiServer/Clients/Commands/Portfolios"
 	"ongoing/ApiServer/Clients/Commands/Reviews"
 
 	"github.com/gin-gonic/gin"
@@ -24,7 +24,7 @@ func AddRoutes(r *gin.RouterGroup) {
 	//policyGroup.GET("/:PolicyId", Policies.GetPolicy)
 	policyGroup.PUT("/:PolicyId", Policies.UpdatePolicy)
 
-	holdingGroup := r.Group("/:ClientId/holdings")
-	holdingGroup.POST("", Holdings.CreateHolding)
-	holdingGroup.PUT("/:HoldingId", Holdings.UpdateHolding)
+	portfolioGroup := r.Group("/:ClientId/portfolios")
+	portfolioGroup.POST("", Portfolios.CreatePortfolio)
+	portfolioGroup.PUT("/:PortfolioId", Portfolios.UpdatePortfolio)
 }

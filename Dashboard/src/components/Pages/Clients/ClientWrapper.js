@@ -11,7 +11,7 @@ import {
     POPULATE_CLIENT,
     SET_CLIENTS,
     SET_OPERATORS,
-    SET_PORTFOLIOS,
+    SET_MODELS,
     SET_POLICY_TYPES,
     SET_POLICY_PROVIDERS,
 } from 'Reducer';
@@ -73,10 +73,10 @@ const ClientWrapper = ({ children }) => {
         });
     }, [ dispatch ]);
 
-    const getPortfolios = useCallback(() => {
-        return window.ApiClient.get("/portfolios").then(res => {
+    const getModels = useCallback(() => {
+        return window.ApiClient.get("/models").then(res => {
             dispatch({
-                type: SET_PORTFOLIOS,
+                type: SET_MODELS,
                 payload: res.data,
             });
         });
@@ -87,7 +87,7 @@ const ClientWrapper = ({ children }) => {
         await getOperators();
         await getPolicyProviders();
         await getPolicyTypes();
-        await getPortfolios();
+        await getModels();
 
         await getClients();
         await getClientDetail();
@@ -97,7 +97,7 @@ const ClientWrapper = ({ children }) => {
         getOperators,
         getPolicyProviders,
         getPolicyTypes,
-        getPortfolios,
+        getModels,
 
         getClients,
         getClientDetail,
@@ -120,9 +120,9 @@ const ClientWrapper = ({ children }) => {
         const currentTab = routeMatch?.path;
         return (
             <Tabs value={currentTab}>
-                <Tab label="Policies" value="/clients/id/:clientId/policies" to={`/clients/id/${clientId}/policies`} component={Link} />
-                <Tab label="Assets" value="/clients/id/:clientId"          to={`/clients/id/${clientId}`}          component={Link} />
-                <Tab label="Reviews"  value="/clients/id/:clientId/reviews"  to={`/clients/id/${clientId}/reviews`}  component={Link} />
+                <Tab label="Policies"   value="/clients/id/:clientId/policies" to={`/clients/id/${clientId}/policies`} component={Link} />
+                <Tab label="Portfolios" value="/clients/id/:clientId"          to={`/clients/id/${clientId}`}          component={Link} />
+                <Tab label="Reviews"    value="/clients/id/:clientId/reviews"  to={`/clients/id/${clientId}/reviews`}  component={Link} />
             </Tabs>
         );
     }

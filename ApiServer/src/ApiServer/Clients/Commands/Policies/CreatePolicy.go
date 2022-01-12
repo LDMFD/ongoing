@@ -2,7 +2,7 @@ package Policies
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -35,7 +35,7 @@ func CreatePolicy(c *gin.Context) {
 		return
 	}
 
-	var policy = Models.Policy{
+	var policy = Entities.Policy{
 		ClientId:         path.ClientId,
 		ExternalId:       body.ExternalId,
 		PlatformDiscount: body.PlatformDiscount,

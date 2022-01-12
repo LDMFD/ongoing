@@ -2,7 +2,7 @@ package Policies
 //
 //import (
 //	"net/http"
-//	"ongoing/Models"
+//	"ongoing/Entities"
 //
 //	"github.com/uptrace/bun"
 //
@@ -22,7 +22,7 @@ package Policies
 //		return
 //	}
 //
-//	var policies []Models.Policy
+//	var policies []Entities.Policy
 //	if err := db.NewSelect().
 //		Model(&policies).
 //		Where("client_id = ?", path.ClientId).

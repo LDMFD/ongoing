@@ -1,7 +1,7 @@
 package Commands
 
 import (
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -11,7 +11,7 @@ import (
 func GetOperators(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var operators []Models.Operator
+	var operators []Entities.Operator
 	if err := db.NewSelect().Model(&operators).OrderExpr("id ASC").Scan(c); err != nil {
 		panic(err)
 	}

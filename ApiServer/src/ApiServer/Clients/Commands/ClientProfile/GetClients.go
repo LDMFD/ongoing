@@ -1,7 +1,7 @@
 package ClientProfile
 
 import (
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -11,7 +11,7 @@ import (
 func GetClients(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var clients []Models.Client
+	var clients []Entities.Client
 	if err := db.NewSelect().Model(&clients).OrderExpr("id ASC").Scan(c); err != nil {
 		panic(err)
 	}

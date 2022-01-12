@@ -3,7 +3,7 @@ package ApiServer
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 )
 
 type RequestDownloadRequest struct {
@@ -17,7 +17,7 @@ func (s *ApiServer) requestDownload(c *gin.Context) {
 		return
 	}
 
-	var file = Models.File{}
+	var file = Entities.File{}
 	if err := s.db.NewSelect().Model(&file).Where("uid = ?", req.Uid).Scan(c); err != nil {
 		panic(err)
 	}

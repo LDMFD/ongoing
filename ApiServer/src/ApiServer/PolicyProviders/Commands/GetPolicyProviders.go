@@ -1,7 +1,7 @@
 package Commands
 
 import (
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -11,7 +11,7 @@ import (
 func GetPolicyProviders(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var policyProviders []Models.PolicyProvider
+	var policyProviders []Entities.PolicyProvider
 	if err := db.NewSelect().Model(&policyProviders).OrderExpr("id ASC").Scan(c); err != nil {
 		panic(err)
 	}

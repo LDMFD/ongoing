@@ -2,7 +2,7 @@ package Commands
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -22,7 +22,7 @@ func GetPolicyType(c *gin.Context) {
 		return
 	}
 
-	var policyType = Models.PolicyType{Id: uri.PolicyTypeId}
+	var policyType = Entities.PolicyType{Id: uri.PolicyTypeId}
 	if err := db.NewSelect().
 		Model(&policyType).
 		WherePK().

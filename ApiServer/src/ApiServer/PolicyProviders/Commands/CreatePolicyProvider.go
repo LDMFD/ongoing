@@ -2,7 +2,7 @@ package Commands
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 	"strings"
 
 	"github.com/uptrace/bun"
@@ -28,7 +28,7 @@ func CreatePolicyProvider(c *gin.Context) {
 		return
 	}
 
-	var policyProvider = Models.PolicyProvider{
+	var policyProvider = Entities.PolicyProvider{
 		Name: req.Name,
 		Pricing: req.Pricing,
 	}

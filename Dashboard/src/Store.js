@@ -6,7 +6,7 @@ const initialState = {
     auth: null, // or { token, name, photoURL }
     clients: [],
     operators: [],
-    portfolios: [],
+    models: [],
     policyTypes: [],
     policyProviders: [],
 };

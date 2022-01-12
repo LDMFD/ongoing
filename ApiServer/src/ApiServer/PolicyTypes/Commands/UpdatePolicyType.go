@@ -2,7 +2,7 @@ package Commands
 
 import (
 	"net/http"
-	"ongoing/Models"
+	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
 
@@ -32,7 +32,7 @@ func UpdatePolicyType(c *gin.Context) {
 		return
 	}
 
-	var policyType = Models.PolicyType{
+	var policyType = Entities.PolicyType{
 		Id:   uri.PolicyTypeId,
 		Name: req.Name,
 	}
