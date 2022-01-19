@@ -1,16 +1,17 @@
 import React, { useEffect, useContext, useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
-
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Button from '@mui/material/Button';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Toolbar from '@mui/material/Toolbar';
+import {
+    Breadcrumbs,
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Toolbar,
+} from '@mui/material';
 
 import { Context } from 'Store'
 import { SET_OPERATORS } from 'Reducer';

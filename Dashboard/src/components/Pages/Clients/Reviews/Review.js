@@ -1,8 +1,9 @@
 import React, {  } from 'react';
 import Day from 'dayjs';
-
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
+import {
+    Paper,
+    Button
+} from '@mui/material';
 
 import FileInput from 'components/Widgets/FileUploader';
 

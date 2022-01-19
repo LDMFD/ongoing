@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import Paper from '@mui/material/Paper';
+import { Paper } from '@mui/material';
 import axios from 'axios';
 
 const File = ({ file, completionCallback }) => {

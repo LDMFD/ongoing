@@ -4,7 +4,6 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import FundList from './FundList';
 import AddFund from './AddFund';
 import EditFund from './EditFund';
-// import FundWrapper from './FundWrapper';
 
 const FundRoutes = () => {
     let { path } = useRouteMatch();
@@ -15,24 +14,18 @@ const FundRoutes = () => {
 
     return (
         <div style={{ position: "relative"}}>
-            {/* <FundWrapper> */}
-                <Switch location={background || location}>
-                    {/* <Route path={`${path}/id/:FundId`}>
-                        <Fund />
-                    </Route> */}
+            <Switch location={background || location}>
+                <Route path={path}>
+                    <FundList />
+                </Route>
+            </Switch>
 
-                    <Route path={path}>
-                        <FundList />
-                    </Route>
-                </Switch>
-
-                    <Route path={`${path}/add`}>
-                        <AddFund />
-                    </Route>
-                    <Route path={`${path}/id/:fundId/edit`}>
-                        <EditFund />
-                    </Route>
-            {/* </FundWrapper> */}
+            <Route path={`${path}/add`}>
+                <AddFund />
+            </Route>
+            <Route path={`${path}/id/:fundId/edit`}>
+                <EditFund />
+            </Route>
         </div>
     );
 }

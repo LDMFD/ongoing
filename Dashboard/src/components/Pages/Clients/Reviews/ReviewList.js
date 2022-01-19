@@ -1,8 +1,9 @@
 import React, { useContext, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-
-import Button from '@mui/material/Button';
-import Toolbar from '@mui/material/Toolbar';
+import {
+    Button,
+    Toolbar,
+} from '@mui/material';
 
 import { Context } from 'Store'
 import { POPULATE_CLIENT, SET_CLIENTS } from 'Reducer';

@@ -1,11 +1,12 @@
 import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
-
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Button from '@mui/material/Button';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Toolbar from '@mui/material/Toolbar';
+import {
+    Breadcrumbs,
+    Button,
+    Tab,
+    Tabs,
+    Toolbar,
+} from '@mui/material';
 
 import {
     POPULATE_CLIENT,

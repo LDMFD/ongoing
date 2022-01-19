@@ -1,15 +1,16 @@
 import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import Select from '@mui/material/Select';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import {
+    Button,
+    MenuItem,
+    TextField,
+    Select,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+} from '@mui/material';
 
 import { Context } from 'Store'
 import { SET_OPERATORS } from 'Reducer';

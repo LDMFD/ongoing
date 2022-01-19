@@ -1,15 +1,16 @@
 import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
-
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+    MenuItem,
+    Select,
+} from '@mui/material';
 
 import { Context } from 'Store'
 import { GoBack } from 'Utils';

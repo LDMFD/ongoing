@@ -1,17 +1,18 @@
 import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 import Day from 'dayjs';
-
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    MenuItem,
+    Paper,
+    Select,
+    TextField,
+} from '@mui/material';
 
 import { Context } from 'Store'
 import { GoBack } from 'Utils';
