@@ -6,6 +6,7 @@ import { Context } from '../Store';
 import { Logout, ShowLogin } from '../Auth';
 import { LOGOUT } from '../Reducer';
 
+// <AuthControl /> renders either a login button or a logout button.
 function AuthControl() {
     const [ state, dispatch ] = useContext(Context);
 
@@ -28,22 +29,23 @@ function AuthControl() {
     const loginFn = useCallback((token, name, photoURL) => {
         window.ApiClient.defaults.headers.common['Authentication'] = token;
 
-        window.ApiClient.get(`/user`).catch(e => {
-            _logout();
-            return;
-        });
-
-        dispatch({
-            type: 'LOGIN',
-            payload: {
-                loggedIn: true,
-                auth: {
-                    token,
-                    name,
-                    photoURL,
-                }
-            },
-        });
+        window.ApiClient.get(`/user`)
+            .then(() => {
+                dispatch({
+                    type: 'LOGIN',
+                    payload: {
+                        loggedIn: true,
+                        auth: {
+                            token,
+                            name,
+                            photoURL,
+                        }
+                    },
+                });
+            })
+            .catch(e => {
+                _logout();
+            });
     }, [ dispatch, _logout ]);
 
     useEffect(() => {

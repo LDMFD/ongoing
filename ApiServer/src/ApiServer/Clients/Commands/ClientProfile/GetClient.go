@@ -25,12 +25,10 @@ func GetClient(c *gin.Context) {
 	var client = Entities.Client{Id: path.ClientId}
 	if err := db.NewSelect().
 		Model(&client).
-		Relation("Reviews").
 		Relation("Policies").
+		Relation("PolicyFunds").
 		Relation("Portfolios").
-		//Relation("Portfolios.Policy").
-		//Relation("Portfolios.Model").
-		//Relation("Reviews.Files").
+		Relation("Reviews").
 		WherePK().
 		Scan(c); err != nil {
 		panic(err)

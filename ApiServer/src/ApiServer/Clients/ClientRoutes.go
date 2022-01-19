@@ -3,6 +3,7 @@ package Clients
 import (
 	"ongoing/ApiServer/Clients/Commands/ClientProfile"
 	"ongoing/ApiServer/Clients/Commands/Policies"
+	"ongoing/ApiServer/Clients/Commands/PolicyFunds"
 	"ongoing/ApiServer/Clients/Commands/Portfolios"
 	"ongoing/ApiServer/Clients/Commands/Reviews"
 
@@ -19,12 +20,14 @@ func AddRoutes(r *gin.RouterGroup) {
 	reviewGroup.POST("", Reviews.CreateReview)
 
 	policyGroup := r.Group("/:ClientId/policies")
-	//policyGroup.GET("", Policies.GetPolicies)
 	policyGroup.POST("", Policies.CreatePolicy)
-	//policyGroup.GET("/:PolicyId", Policies.GetPolicy)
 	policyGroup.PUT("/:PolicyId", Policies.UpdatePolicy)
 
 	portfolioGroup := r.Group("/:ClientId/portfolios")
 	portfolioGroup.POST("", Portfolios.CreatePortfolio)
 	portfolioGroup.PUT("/:PortfolioId", Portfolios.UpdatePortfolio)
+
+	policyFundGroup := r.Group("/:ClientId/policy-funds")
+	policyFundGroup.POST("", PolicyFunds.CreatePolicyFund)
+	policyFundGroup.PUT("/:PolicyFundId", PolicyFunds.UpdatePolicyFund)
 }

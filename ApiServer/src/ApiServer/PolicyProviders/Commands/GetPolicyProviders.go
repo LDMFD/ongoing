@@ -12,9 +12,13 @@ func GetPolicyProviders(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var policyProviders []Entities.PolicyProvider
-	if err := db.NewSelect().Model(&policyProviders).OrderExpr("id ASC").Scan(c); err != nil {
+	if err := db.NewSelect().
+		Model(&policyProviders).
+		OrderExpr("name ASC").
+		Scan(c); err != nil {
 		panic(err)
 	}
+
 	c.JSON(200, gin.H{
 		"PolicyProviders": policyProviders,
 	})

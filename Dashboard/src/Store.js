@@ -5,6 +5,7 @@ import Reducer from './Reducer'
 const initialState = {
     auth: null, // or { token, name, photoURL }
     clients: [],
+    funds: [],
     operators: [],
     models: [],
     policyTypes: [],

@@ -21,7 +21,7 @@ const PolicyList = () => {
 
     let client = state.clients.find(c => c.Id === clientId);
 
-    if (!state.policyTypes.length || !state.policyProviders.length) {
+    if (!state.policyTypes?.length || !state.policyProviders?.length) {
         return null;
     }
 
@@ -50,7 +50,7 @@ const PolicyList = () => {
                                 return (
                                     <TableRow key={policy.Id}>
                                         <TableCell>
-                                            <Link to={`/clients/id/${client.Id}/policies/id/${policy.Id}`} key={policy.Id}>
+                                            <Link to={`/clients/id/${client.Id}/policies/id/${policy.Id}/edit`} key={policy.Id}>
                                                 #{policy.Id}
                                             </Link>
                                         </TableCell>

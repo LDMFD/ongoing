@@ -89,7 +89,7 @@ const AddPolicy = () => {
                                 label    = "Type"
                                 type     = "text"
                                 fullWidth>
-                            <MenuItem value='select'>Select policy</MenuItem>
+                            <MenuItem value='select'>Select policy type</MenuItem>
                             {state.policyTypes.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}

@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Clients"
+	"ongoing/ApiServer/Funds"
 	"ongoing/ApiServer/Models"
 	"ongoing/ApiServer/PolicyProviders"
 	"ongoing/ApiServer/PolicyTypes"
@@ -74,6 +75,7 @@ func (s *ApiServer) ListenAndServe() error {
 	r.Use(AuthMiddleware())
 
 	Clients.AddRoutes(r.Group("/clients"))
+	Funds.AddRoutes(r.Group("/funds"))
 	Operators.AddRoutes(r.Group("/operators"))
 	Models.AddRoutes(r.Group("/models"))
 	PolicyTypes.AddRoutes(r.Group("/policy-types"))

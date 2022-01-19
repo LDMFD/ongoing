@@ -6,6 +6,7 @@ export const SET_OPERATORS          = 'SET_OPERATORS';
 export const SET_POLICY_TYPES       = 'SET_POLICY_TYPES';
 export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
 export const SET_MODELS             = 'SET_MODELS';
+export const SET_FUNDS              = 'SET_FUNDS';
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -24,6 +25,12 @@ const Reducer = (state, action) => {
             }
 
         // Funds
+
+        case SET_FUNDS:
+            return {
+                ...state,
+                funds: action.payload.Funds,
+            }
 
         case SET_OPERATORS:
             return {
@@ -52,6 +59,10 @@ const Reducer = (state, action) => {
             }
 
         case POPULATE_CLIENT:
+            let fn = (p, q) => p.Id - q.Id;
+            action.payload.Client.Policies.sort(fn);
+            action.payload.Client.PolicyFunds.sort(fn);
+            action.payload.Client.Portfolios.sort(fn);
             return {
                 ...state,
                 clients: state.clients.map(c => (

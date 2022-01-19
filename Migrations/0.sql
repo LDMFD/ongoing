@@ -56,7 +56,8 @@ CREATE TABLE funds (
     "ex_ante_fee"             decimal not null,
     "sedol_code"              text,
     "isin_number"             text,
-    "citicode"                text
+    "citicode"                text,
+    "timestamp"               timestamp default current_timestamp
 );
 
 -- client-related:
@@ -89,6 +90,7 @@ CREATE TABLE policy_funds (
     "fund_id"                 int not null,
     "policy_id"               int not null,
     "proportion"              decimal not null,
+    "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_fund              FOREIGN KEY(fund_id)             REFERENCES funds(id)             ON DELETE CASCADE,
     CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE CASCADE
 );

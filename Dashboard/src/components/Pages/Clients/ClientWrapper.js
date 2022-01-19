@@ -10,10 +10,11 @@ import Toolbar from '@mui/material/Toolbar';
 import {
     POPULATE_CLIENT,
     SET_CLIENTS,
-    SET_OPERATORS,
+    SET_FUNDS,
     SET_MODELS,
-    SET_POLICY_TYPES,
+    SET_OPERATORS,
     SET_POLICY_PROVIDERS,
+    SET_POLICY_TYPES,
 } from 'Reducer';
 import { Context } from 'Store'
 import { RouteMatch } from 'Utils';
@@ -45,6 +46,15 @@ const ClientWrapper = ({ children }) => {
             });
         });
     }, [ dispatch, clientId ]);
+
+    const getFunds = useCallback(() => {
+        return window.ApiClient.get("/funds").then(res => {
+            dispatch({
+                type: SET_FUNDS,
+                payload: res.data,
+            });
+        });
+    }, [ dispatch ]);
 
     const getOperators = useCallback(() => {
         return window.ApiClient.get("/operators").then(res => {
@@ -84,9 +94,11 @@ const ClientWrapper = ({ children }) => {
 
 
     const getDependencies = useCallback(async () => {
-        await getOperators();
+        await getFunds();
         await getPolicyProviders();
         await getPolicyTypes();
+
+        await getOperators();
         await getModels();
 
         await getClients();
@@ -94,9 +106,11 @@ const ClientWrapper = ({ children }) => {
 
         setLoaded(true);
     }, [
-        getOperators,
+        getFunds,
         getPolicyProviders,
         getPolicyTypes,
+        
+        getOperators,
         getModels,
 
         getClients,
@@ -113,16 +127,18 @@ const ClientWrapper = ({ children }) => {
 
     function ClientTabs() {
         const routeMatch = RouteMatch(pathname, [
-            '/clients/id/:clientId/policies',
+            '/clients/id/:clientId/portfolios',
+            '/clients/id/:clientId/policy-funds',
             '/clients/id/:clientId/reviews',
             '/clients/id/:clientId',
         ]);
         const currentTab = routeMatch?.path;
         return (
             <Tabs value={currentTab}>
-                <Tab label="Policies"   value="/clients/id/:clientId/policies" to={`/clients/id/${clientId}/policies`} component={Link} />
-                <Tab label="Portfolios" value="/clients/id/:clientId"          to={`/clients/id/${clientId}`}          component={Link} />
-                <Tab label="Reviews"    value="/clients/id/:clientId/reviews"  to={`/clients/id/${clientId}/reviews`}  component={Link} />
+                <Tab label="Policies"      value="/clients/id/:clientId"               to={`/clients/id/${clientId}`}               component={Link} />
+                <Tab label="Policy funds"  value="/clients/id/:clientId/policy-funds"  to={`/clients/id/${clientId}/policy-funds`}  component={Link} />
+                <Tab label="Portfolios"    value="/clients/id/:clientId/portfolios"    to={`/clients/id/${clientId}/portfolios`}    component={Link} />
+                <Tab label="Reviews"       value="/clients/id/:clientId/reviews"       to={`/clients/id/${clientId}/reviews`}       component={Link} />
             </Tabs>
         );
     }

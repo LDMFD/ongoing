@@ -12,9 +12,13 @@ func GetPolicyTypes(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var policytypes []Entities.PolicyType
-	if err := db.NewSelect().Model(&policytypes).OrderExpr("id ASC").Scan(c); err != nil {
+	if err := db.NewSelect().
+		Model(&policytypes).
+		OrderExpr("name ASC").
+		Scan(c); err != nil {
 		panic(err)
 	}
+
 	c.JSON(200, gin.H{
 		"PolicyTypes": policytypes,
 	})

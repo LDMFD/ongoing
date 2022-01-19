@@ -15,7 +15,7 @@ func GetModels(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&models).
 		Relation("File").
-		OrderExpr("id ASC").Scan(c); err != nil {
+		OrderExpr("name ASC").Scan(c); err != nil {
 		panic(err)
 	}
 	c.JSON(200, gin.H{
