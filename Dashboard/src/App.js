@@ -23,6 +23,8 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
     if (err.response && err.response.data) {
         console.log(err.response.data.error);
         alert(err.response.data.error);
+    } else {
+        alert(err);
     }
     throw err;  // prevent goBack() on error
 });

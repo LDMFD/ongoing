@@ -22,6 +22,7 @@ func AddRoutes(r *gin.RouterGroup) {
 	policyGroup := r.Group("/:ClientId/policies")
 	policyGroup.POST("", Policies.CreatePolicy)
 	policyGroup.PUT("/:PolicyId", Policies.UpdatePolicy)
+	policyGroup.DELETE("/:PolicyId", Policies.DeletePolicy)
 
 	portfolioGroup := r.Group("/:ClientId/portfolios")
 	portfolioGroup.POST("", Portfolios.CreatePortfolio)

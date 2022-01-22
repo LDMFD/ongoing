@@ -145,7 +145,7 @@ const ClientWrapper = ({ children }) => {
     }
 
     return loaded ? (
-        <div className='reviews'>
+        <div>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" to='/clients'>
                     Clients

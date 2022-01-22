@@ -104,7 +104,7 @@ CREATE TABLE portfolios (   -- was "Holdings"
     "proportion"              decimal not null,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_client            FOREIGN KEY(client_id)           REFERENCES clients(id)           ON DELETE CASCADE,
-    CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE CASCADE,
+    CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE RESTRICT,
     CONSTRAINT fk_model             FOREIGN KEY(model_id)            REFERENCES models(id)            ON DELETE CASCADE
 );
 

@@ -1,80 +1,96 @@
-import React, { useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useContext, useCallback } from 'react';
+import { Link, useParams, useHistory } from 'react-router-dom';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import {
     Button,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'Store';
+import { Context } from 'Store'
+import { POPULATE_CLIENT } from 'Reducer';
+
+import './PolicyList.css';
 
 const PolicyList = () => {
-    const [state, ] = useContext(Context);
+    let history = useHistory();
+
+    const [state, dispatch ] = useContext(Context);
 
     let { clientId } = useParams();
     clientId = parseInt(clientId);
 
     let client = state.clients.find(c => c.Id === clientId);
 
-    if (!state.policyTypes?.length || !state.policyProviders?.length) {
+    const getClientDetail = useCallback(() => {
+        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
+            dispatch({
+                type: POPULATE_CLIENT,
+                payload: res.data,
+            });
+        });
+    }, [ dispatch, clientId ]);
+
+    const deletePolicy = useCallback(params => () => {
+        if (window.confirm(`Delete policy?`)) {
+            window.ApiClient.delete(`/clients/${clientId}/policies/${params.row.id}`)
+            .then(async () => {
+                await getClientDetail();
+            });
+        }        
+    }, [ clientId, getClientDetail ]);
+
+    const editPolicy = useCallback(params => () => {
+        let id = params.row.id;
+        history.push(`/clients/id/${clientId}/policies/id/${id}/edit`);
+    }, [ history, clientId ]);
+
+    if (!state.policyTypes?.length || !state.policyProviders?.length || !client?.Policies?.length) {
         return null;
     }
 
+    const columns = [
+        { field: 'policyNumber',     headerName: 'Policy Number',       flex: 0.1, },
+        { field: 'platformDiscount', headerName: 'Platform Discount',   flex: 0.1, },
+        { field: 'type',             headerName: 'Type',                flex: 0.1, },
+        { field: 'provider',         headerName: 'Provider',            flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .05,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<EditIcon />}   onClick={editPolicy(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />} onClick={deletePolicy(params)} label="Delete" />,
+            ]
+        },
+    ];
+
+    let policies = client.Policies.map(policy => {
+        let type = state.policyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
+        let provider = state.policyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
+        return {
+            id:               policy.Id,
+            policyNumber:     policy.ExternalId,
+            platformDiscount: policy.PlatformDiscount,
+            type,
+            provider,
+        };
+    });
+
+    let data = {
+        rows: policies,
+        columns: columns,
+    }
+
     return (
-        <>
+        <div className='ongoing-policyList'>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: `/clients/id/${client.Id}/policies/add` }}><Button>Add policy</Button></Link>
             </Toolbar>
 
-            {client?.Policies?.length &&
-                <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Policy Number</TableCell>
-                                <TableCell>Platform Discount</TableCell>
-                                <TableCell>Type</TableCell>
-                                <TableCell>Provider</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {client.Policies.map(policy => {
-                                let type = state.policyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
-                                let provider = state.policyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
-                                return (
-                                    <TableRow key={policy.Id}>
-                                        <TableCell>
-                                            <Link to={`/clients/id/${client.Id}/policies/id/${policy.Id}/edit`} key={policy.Id}>
-                                                #{policy.Id}
-                                            </Link>
-                                        </TableCell>
-                                        <TableCell>
-                                            {policy.ExternalId}
-                                        </TableCell>
-                                        <TableCell>
-                                            {policy.PlatformDiscount}
-                                        </TableCell>
-                                        <TableCell>
-                                            {type}
-                                        </TableCell>
-                                        <TableCell>
-                                            {provider}
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            }
-        </>
+            <DataGrid autoHeight {...data} />
+        </div>
     );
 }
 

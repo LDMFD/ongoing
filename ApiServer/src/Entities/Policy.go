@@ -16,4 +16,6 @@ type Policy struct {
 	ExternalId       string    `bun:"external_id,notnull"`
 	PlatformDiscount float64   `bun:"platform_discount,notnull"`
 	Timestamp        time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+
+	Portfolios  []*Portfolio   `bun:"rel:has-many,join:id=client_id"`
 }
