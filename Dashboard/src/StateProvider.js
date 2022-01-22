@@ -3,16 +3,16 @@ import React, {createContext, useReducer } from "react";
 import Reducer from './Reducer'
 
 const initialState = {
-    auth: null, // or { token, name, photoURL }
-    clients: [],
-    funds: [],
-    operators: [],
-    models: [],
-    policyTypes: [],
-    policyProviders: [],
+    Auth: null, // or { token, name, photoURL }
+    Clients: [],
+    Funds: [],
+    Operators: [],
+    Models: [],
+    PolicyTypes: [],
+    PolicyProviders: [],
 };
   
-const Store = ({children}) => {
+const StateProvider = ({children}) => {
     const [state, dispatch] = useReducer(Reducer, initialState);
     return (
         <Context.Provider value={[state, dispatch]}>
@@ -22,4 +22,4 @@ const Store = ({children}) => {
 };
 
 export const Context = createContext(initialState);
-export default Store;
+export default StateProvider;

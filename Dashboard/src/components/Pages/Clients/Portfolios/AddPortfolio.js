@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT } from 'Reducer';
 import { DefaultPortfolio } from './DefaultPortfolio';
 import PortfolioDialog from './PortfolioDialog';
@@ -37,10 +37,10 @@ const AddPortfolio = () => {
     };
 
     return (
-        <PortfolioDialog portfolio       = {portfolio}
-                       setPortfolio    = {setPortfolio}
-                       submitLabel   = 'Add'
-                       submitHandler = {submitHandler}  />
+        <PortfolioDialog portfolio     = {portfolio}
+                         setPortfolio  = {setPortfolio}
+                         submitLabel   = 'Add'
+                         submitHandler = {submitHandler}  />
     );
 }
 

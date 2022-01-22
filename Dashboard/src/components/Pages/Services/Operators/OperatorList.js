@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_OPERATORS } from 'Reducer';
 import { OPERATOR_TYPES } from './Operator';
 

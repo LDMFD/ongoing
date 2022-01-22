@@ -5,7 +5,7 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT, SET_CLIENTS } from 'Reducer';
 
 const ReviewList = () => {
@@ -14,7 +14,7 @@ const ReviewList = () => {
 
     const [ state, dispatch ] = useContext(Context);
 
-    let client = state.clients.find(c => c.Id === clientId);
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const getClients = useCallback(() => {
         return window.ApiClient.get("/clients").then(res => {

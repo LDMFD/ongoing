@@ -17,7 +17,7 @@ import {
     SET_POLICY_PROVIDERS,
     SET_POLICY_TYPES,
 } from 'Reducer';
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { RouteMatch } from 'Utils';
 
 // import Review from './Review';
@@ -122,7 +122,7 @@ const ClientWrapper = ({ children }) => {
         getDependencies();
     }, [ getDependencies ]);
 
-    let client = state.clients.find(c => c.Id === clientId);
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const { pathname } = useLocation();
 

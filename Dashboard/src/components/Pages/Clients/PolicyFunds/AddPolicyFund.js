@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT } from 'Reducer';
 import { DefaultPolicyFund } from './DefaultPolicyFund';
 import PolicyFundDialog from './PolicyFundDialog';

@@ -12,7 +12,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_OPERATORS } from 'Reducer';
 import { GoBack } from 'Utils';
 

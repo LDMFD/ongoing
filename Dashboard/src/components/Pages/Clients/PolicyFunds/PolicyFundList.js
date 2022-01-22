@@ -12,7 +12,7 @@ import {
     Toolbar
 } from '@mui/material';
 
-import { Context } from 'Store';
+import { Context } from 'StateProvider';
 
 const PolicyFundList = () => {
     const [state, ] = useContext(Context);
@@ -20,7 +20,7 @@ const PolicyFundList = () => {
     let { clientId } = useParams();
     clientId = parseInt(clientId);
 
-    let client = state.clients.find(c => c.Id === clientId);
+    let client = state.Clients.find(c => c.Id === clientId);
 
     return (
         <div>
@@ -44,7 +44,7 @@ const PolicyFundList = () => {
                         <TableBody>
                             {client.PolicyFunds.map(policyFund => {
                                 let policy = client.Policies.find(p => p.Id === policyFund.PolicyId);
-                                let fund = state.funds.find(f => f.Id === policyFund.FundId);
+                                let fund = state.Funds.find(f => f.Id === policyFund.FundId);
                                 return (
                                         <TableRow key={policyFund.Id}>
                                             <TableCell>

@@ -20,7 +20,7 @@ import {
     Link
 } from "react-router-dom";
 
-import { Context } from '../Store';
+import { Context } from '../StateProvider';
 import Routes from './Routes';
 import AuthControl from './AuthControl';
 
@@ -75,7 +75,7 @@ export default function PermanentDrawerLeft() {
 
     let location = useLocation();
 
-    return state.auth ? (
+    return state.Auth ? (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
 

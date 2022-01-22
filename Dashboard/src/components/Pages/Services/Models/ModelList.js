@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 
 const ModelList = () => {
     const [state, ] = useContext(Context);
@@ -43,8 +43,8 @@ const ModelList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.models && state.models.map(p => {
-                            let op = state.operators.find(o => o.Id === p.OperatorId);
+                        {state.Models && state.Models.map(p => {
+                            let op = state.Operators.find(o => o.Id === p.OperatorId);
                             return (
                                 <TableRow key={p.Id}>
                                     <TableCell>

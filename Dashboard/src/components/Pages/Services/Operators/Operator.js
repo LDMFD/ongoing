@@ -13,7 +13,7 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_OPERATORS } from 'Reducer';
 
 export const OPERATOR_TYPES = {

@@ -12,7 +12,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { GoBack } from 'Utils';
 
 export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHandler }) => {
@@ -24,12 +24,7 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
 
     const [ state ] = useContext(Context);
 
-    let client = state.clients.find(c => c.Id === clientId);
-
-    // TODO fix-me
-    if (client.Policies == null) {
-        client.Policies = [];
-    }
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const handlers = {
         SetPolicyId:     (event) => { setPortfolio({ ...portfolio, PolicyId:    parseInt(event.target.value), }); },
@@ -73,7 +68,7 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select model</MenuItem>
-                        {state.models.map(t => (
+                        {state.Models.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>

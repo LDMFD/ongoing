@@ -10,7 +10,7 @@ import {
     DialogTitle,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT } from 'Reducer';
 import { GoBack } from 'Utils';
 
@@ -25,7 +25,7 @@ const EditClient = () => {
     clientId = parseInt(clientId);
 
     if (client == null) {
-        let c = state.clients.find(c => c.Id === clientId);
+        let c = state.Clients.find(c => c.Id === clientId);
         if (c) {
             setClient(c);
             return;

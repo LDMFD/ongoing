@@ -4,7 +4,7 @@ import {
     Button,
 } from '@mui/material';
 
-import { Context } from '../Store';
+import { Context } from '../StateProvider';
 import { Logout, ShowLogin } from '../Auth';
 import { LOGOUT } from '../Reducer';
 
@@ -36,8 +36,8 @@ function AuthControl() {
                 dispatch({
                     type: 'LOGIN',
                     payload: {
-                        loggedIn: true,
-                        auth: {
+                        LoggedIn: true,
+                        Auth: {
                             token,
                             name,
                             photoURL,
@@ -57,16 +57,16 @@ function AuthControl() {
     return (
         <div>
             <div id    = "firebaseui-container"
-                 style = {{ display: state.auth ? 'none' : 'block' }} />
+                 style = {{ display: state.Auth ? 'none' : 'block' }} />
 
-            {state.auth &&
+            {state.Auth &&
                 <>
                     <Button onClick={_logout} variant="h6">
                         Log out
                     </Button>
 
-                    <Avatar src     = {state.auth.photoURL}
-                            alt     = {state.auth.name}
+                    <Avatar src     = {state.Auth.photoURL}
+                            alt     = {state.Auth.name}
                             style   = {{ display: 'inline-block', verticalAlign: 'bottom' }} />
                 </>
             }

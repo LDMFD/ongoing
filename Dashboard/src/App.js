@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import AppDrawer from './components/AppDrawer'
-import Store from './Store'
+import StateProvider from './StateProvider'
 
 import './App.css';
 
@@ -31,13 +31,13 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
 
 function App() {
     return (
-        <Store>
+        <StateProvider>
             <div className="app">
                 <Router>
                     <AppDrawer />
                 </Router>
             </div>
-        </Store>
+        </StateProvider>
     );
 }
 

@@ -12,7 +12,7 @@ import {
     Select,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { GoBack } from 'Utils';
 
 export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandler }) => {
@@ -24,7 +24,7 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
 
     const [ state ] = useContext(Context);
 
-    let client = state.clients.find(c => c.Id === clientId);
+    let client = state.Clients.find(c => c.Id === clientId);
 
     // TODO fix-me
     if (client.Policies == null) {

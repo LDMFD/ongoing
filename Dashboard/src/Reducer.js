@@ -65,7 +65,7 @@ const Reducer = (state, action) => {
             action.payload.Client.Portfolios.sort(fn);
             return {
                 ...state,
-                clients: state.clients.map(c => (
+                clients: state.Clients.map(c => (
                     c.Id === action.payload.Client.Id ? {
                         ...action.payload.Client
                     } : c

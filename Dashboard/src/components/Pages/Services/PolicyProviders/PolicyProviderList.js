@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_POLICY_PROVIDERS } from 'Reducer';
 
 const PolicyProviderList = () => {
@@ -54,7 +54,7 @@ const PolicyProviderList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.policyProviders && state.policyProviders.map(policyProvider => {
+                        {state.PolicyProviders && state.PolicyProviders.map(policyProvider => {
                             return (
                                 <TableRow key={policyProvider.Id}>
                                     <TableCell>

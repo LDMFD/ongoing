@@ -14,7 +14,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { GoBack } from 'Utils';
 import FileInput from 'components/Widgets/FileUploader';
 
@@ -24,7 +24,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
 
     const [ state ] = useContext(Context);
 
-    if (!state.operators?.length) {
+    if (!state.Operators?.length) {
         return (
             <Paper>
                 No operators defined
@@ -85,7 +85,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select operator</MenuItem>
-                            {state.operators.map(t => (
+                            {state.Operators.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>

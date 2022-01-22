@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_FUNDS } from 'Reducer';
 import FundDialog from './FundDialog';
 import { GoBack } from 'Utils';
@@ -17,7 +17,7 @@ const EditFund = () => {
     fundId = parseInt(fundId);
 
     if (!fund) {
-        let p = state.funds.find(p => p.Id === fundId);
+        let p = state.Funds.find(p => p.Id === fundId);
         if (!p) {
             return <>Fund not found</>;
         }

@@ -8,8 +8,9 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT } from 'Reducer';
+// import { PolicyHasDependentPortfolios } from 'Errors';
 
 import './PolicyList.css';
 
@@ -21,7 +22,7 @@ const PolicyList = () => {
     let { clientId } = useParams();
     clientId = parseInt(clientId);
 
-    let client = state.clients.find(c => c.Id === clientId);
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const getClientDetail = useCallback(() => {
         return window.ApiClient.get(`/clients/${clientId}`).then(res => {
@@ -46,7 +47,7 @@ const PolicyList = () => {
         history.push(`/clients/id/${clientId}/policies/id/${id}/edit`);
     }, [ history, clientId ]);
 
-    if (!state.policyTypes?.length || !state.policyProviders?.length || !client?.Policies?.length) {
+    if (!state.PolicyTypes?.length || !state.PolicyProviders?.length || !client?.Policies?.length) {
         return null;
     }
 
@@ -67,8 +68,8 @@ const PolicyList = () => {
     ];
 
     let policies = client.Policies.map(policy => {
-        let type = state.policyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
-        let provider = state.policyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
+        let type = state.PolicyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
+        let provider = state.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
         return {
             id:               policy.Id,
             policyNumber:     policy.ExternalId,

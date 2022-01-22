@@ -12,7 +12,7 @@ import {
     Select,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT } from 'Reducer';
 import { GoBack } from 'Utils';
 
@@ -28,7 +28,7 @@ const EditPolicy = () => {
     policyId = parseInt(policyId);
 
     if (!policy) {
-        let client = state.clients.find(c => c.Id === clientId);
+        let client = state.Clients.find(c => c.Id === clientId);
         let p = client.Policies.find(p => p.Id === policyId);
         setPolicy(p);
         return;
@@ -95,7 +95,7 @@ const EditPolicy = () => {
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select policy</MenuItem>
-                        {state.policyTypes.map(t => (
+                        {state.PolicyTypes.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>
@@ -110,7 +110,7 @@ const EditPolicy = () => {
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select provider</MenuItem>
-                        {state.policyProviders.map(t => (
+                        {state.PolicyProviders.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>

@@ -10,7 +10,7 @@ import {
     DialogTitle,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_CLIENTS } from 'Reducer';
 import { GoBack } from 'Utils';
 

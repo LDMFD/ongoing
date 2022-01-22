@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { POPULATE_CLIENT } from 'Reducer';
 import PolicyFundDialog from './PolicyFundDialog';
 import { GoBack } from 'Utils';
@@ -18,7 +18,7 @@ const EditPolicyFund = () => {
     policyFundId = parseInt(policyFundId);
 
     if (!policyFund) {
-        let client = state.clients.find(c => c.Id === clientId);
+        let client = state.Clients.find(c => c.Id === clientId);
         setPolicyFund(client.PolicyFunds.find(h => h.Id === policyFundId))
         return;
     }

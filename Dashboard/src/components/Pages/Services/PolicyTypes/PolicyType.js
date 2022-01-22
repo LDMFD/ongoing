@@ -13,7 +13,7 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_POLICY_TYPES } from 'Reducer';
 
 const PolicyType = () => {
@@ -35,7 +35,7 @@ const PolicyType = () => {
         getPolicyTypes();
     }, [ getPolicyTypes ]);
 
-    let policyType = state.policyTypes.find(c => c.Id === policyTypeId);
+    let policyType = state.PolicyTypes.find(c => c.Id === policyTypeId);
 
     return policyType ? (
         <div>

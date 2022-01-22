@@ -15,7 +15,7 @@ import {
 import Day from 'dayjs';
 import { Link } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_CLIENTS } from 'Reducer';
 
 const ClientList = () => {
@@ -56,7 +56,7 @@ const ClientList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.clients && state.clients.map(client => {
+                        {state.Clients && state.Clients.map(client => {
                             let date = Day(client.Date).toString();
                             return (
                                 <TableRow key={client.Id}>

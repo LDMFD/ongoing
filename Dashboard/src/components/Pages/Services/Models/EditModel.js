@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_MODELS } from 'Reducer';
 import ModelDialog from './ModelDialog';
 import { GoBack } from 'Utils';
@@ -17,7 +17,7 @@ const EditModel = () => {
     modelId = parseInt(modelId);
 
     if (!model) {
-        let p = state.models.find(p => p.Id === modelId);
+        let p = state.Models.find(p => p.Id === modelId);
         if (!p) {
             return <>Model not found</>;
         }

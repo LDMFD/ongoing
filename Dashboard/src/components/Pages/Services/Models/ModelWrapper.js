@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useCallback, useState } from 'react';
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_MODELS, SET_OPERATORS } from 'Reducer';
 
 const ModelWrapper = ({ children }) => {

@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_POLICY_TYPES } from 'Reducer';
 
 const PolicyTypeList = () => {
@@ -53,7 +53,7 @@ const PolicyTypeList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.policyTypes && state.policyTypes.map(policyType => {
+                        {state.PolicyTypes && state.PolicyTypes.map(policyType => {
                             return (
                                 <TableRow key={policyType.Id}>
                                     <TableCell>

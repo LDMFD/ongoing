@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'Store'
+import { Context } from 'StateProvider'
 import { SET_FUNDS } from 'Reducer';
 
 const FundList = () => {
@@ -54,7 +54,7 @@ const FundList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.funds?.map(p => {
+                        {state.Funds?.map(p => {
                             return (
                                 <TableRow key={p.Id}>
                                     <TableCell>
