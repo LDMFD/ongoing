@@ -5,8 +5,8 @@ import {
     BrowserRouter as Router,
 } from "react-router-dom";
 
-import AppDrawer from './components/AppDrawer'
-import StateProvider from './StateProvider'
+import AppDrawer from 'components/AppDrawer'
+import StateProvider from 'State/StateProvider'
 
 import './App.css';
 
@@ -32,11 +32,9 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
 function App() {
     return (
         <StateProvider>
-            <div className="app">
-                <Router>
-                    <AppDrawer />
-                </Router>
-            </div>
+            <Router>
+                <AppDrawer />
+            </Router>
         </StateProvider>
     );
 }

@@ -15,8 +15,8 @@ import {
 import Day from 'dayjs';
 import { Link } from "react-router-dom";
 
-import { Context } from 'StateProvider'
-import { SET_CLIENTS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_CLIENTS } from 'State/Reducer';
 
 const ClientList = () => {
     const [state, dispatch] = useContext(Context);

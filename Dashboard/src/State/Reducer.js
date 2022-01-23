@@ -21,7 +21,7 @@ const Reducer = (state, action) => {
         case LOGOUT:
             return {
                 ...state,
-                auth: null,
+                Auth: null,
             }
 
         // Funds
@@ -29,25 +29,25 @@ const Reducer = (state, action) => {
         case SET_FUNDS:
             return {
                 ...state,
-                funds: action.payload.Funds,
+                Funds: action.payload.Funds,
             }
 
         case SET_OPERATORS:
             return {
                 ...state,
-                operators: action.payload.Operators,
+                Operators: action.payload.Operators,
             }
 
         case SET_POLICY_TYPES:
             return {
                 ...state,
-                policyTypes: action.payload.PolicyTypes,
+                PolicyTypes: action.payload.PolicyTypes,
         }
 
         case SET_POLICY_PROVIDERS:
             return {
                 ...state,
-                policyProviders: action.payload.PolicyProviders,
+                PolicyProviders: action.payload.PolicyProviders,
             }
 
         // Clients
@@ -55,19 +55,28 @@ const Reducer = (state, action) => {
         case SET_CLIENTS:
             return {
                 ...state,
-                clients: action.payload.Clients,
+                Clients: action.payload.Clients,
             }
 
         case POPULATE_CLIENT:
+            let client = action.payload.Client;
+
+            // Server returns nil for empty arrays
+            if (!client.Policies) { client.Policies = []; }
+            if (!client.PolicyFunds) { client.PolicyFunds = []; }
+            if (!client.Portfolios) { client.Portfolios= []; }
+
             let fn = (p, q) => p.Id - q.Id;
-            action.payload.Client.Policies.sort(fn);
-            action.payload.Client.PolicyFunds.sort(fn);
-            action.payload.Client.Portfolios.sort(fn);
+
+            client.Policies.sort(fn);
+            client.PolicyFunds.sort(fn);
+            client.Portfolios.sort(fn);
+
             return {
                 ...state,
-                clients: state.Clients.map(c => (
-                    c.Id === action.payload.Client.Id ? {
-                        ...action.payload.Client
+                Clients: state.Clients.map(c => (
+                    c.Id === client.Id ? {
+                        ...client
                     } : c
                 ))
             }
@@ -75,7 +84,7 @@ const Reducer = (state, action) => {
         case SET_MODELS:
             return {
                 ...state,
-                models: action.payload.Models || [],
+                Models: action.payload.Models || [],
             }
         
         default:

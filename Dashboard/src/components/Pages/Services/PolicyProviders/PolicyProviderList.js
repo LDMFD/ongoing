@@ -14,8 +14,8 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'StateProvider'
-import { SET_POLICY_PROVIDERS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_POLICY_PROVIDERS } from 'State/Reducer';
 
 const PolicyProviderList = () => {
     const [state, dispatch] = useContext(Context);

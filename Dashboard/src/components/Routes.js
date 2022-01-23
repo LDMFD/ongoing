@@ -7,7 +7,7 @@ import ModelRoutes          from './Pages/Services/Models/ModelRoutes';
 import PolicyTypeRoutes     from './Pages/Services/PolicyTypes/PolicyTypeRoutes';
 import PolicyProviderRoutes from './Pages/Services/PolicyProviders/PolicyProviderRoutes';
   
-export default (
+const routes = () => (
     <Switch>
         <Route path="/clients"          component={ClientRoutes} />
         <Route path="/operators"        component={OperatorRoutes} />
@@ -18,3 +18,4 @@ export default (
         <Route path="/" />
     </Switch>
 );
+export default routes;

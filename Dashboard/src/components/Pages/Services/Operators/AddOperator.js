@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
-import { Context } from 'StateProvider'
-import { SET_OPERATORS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_OPERATORS } from 'State/Reducer';
 import { GoBack } from 'Utils';
 import { DefaultOperator } from './DefaultOperator';
 import OperatorDialog from './OperatorDialog';
@@ -12,7 +12,6 @@ const AddOperator = () => {
     let goBack = GoBack(history);
 
     const [ , dispatch] = useContext(Context);
-
     let [ operator, setOperator ] = useState(DefaultOperator);
 
     const submitHandler = (e) => {

@@ -14,7 +14,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
+import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils';
 import FileInput from 'components/Widgets/FileUploader';
 

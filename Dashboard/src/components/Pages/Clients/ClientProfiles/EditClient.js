@@ -10,8 +10,8 @@ import {
     DialogTitle,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { POPULATE_CLIENT } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { POPULATE_CLIENT } from 'State/Reducer';
 import { GoBack } from 'Utils';
 
 const EditClient = () => {

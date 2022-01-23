@@ -14,8 +14,8 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'StateProvider'
-import { SET_FUNDS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_FUNDS } from 'State/Reducer';
 
 const FundList = () => {
     const [ state, dispatch ] = useContext(Context);

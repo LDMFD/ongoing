@@ -5,8 +5,8 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { POPULATE_CLIENT, SET_CLIENTS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { POPULATE_CLIENT, SET_CLIENTS } from 'State/Reducer';
 
 const ReviewList = () => {
     let { clientId } = useParams();

@@ -8,9 +8,8 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { POPULATE_CLIENT } from 'Reducer';
-// import { PolicyHasDependentPortfolios } from 'Errors';
+import { Context } from 'State/StateProvider'
+import { POPULATE_CLIENT } from 'State/Reducer';
 
 import './PolicyList.css';
 
@@ -46,10 +45,6 @@ const PolicyList = () => {
         let id = params.row.id;
         history.push(`/clients/id/${clientId}/policies/id/${id}/edit`);
     }, [ history, clientId ]);
-
-    if (!state.PolicyTypes?.length || !state.PolicyProviders?.length || !client?.Policies?.length) {
-        return null;
-    }
 
     const columns = [
         { field: 'policyNumber',     headerName: 'Policy Number',       flex: 0.1, },

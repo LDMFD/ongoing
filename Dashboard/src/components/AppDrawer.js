@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
     Box,
     Drawer,
@@ -13,18 +13,14 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material';
-
 import SearchIcon from '@mui/icons-material/Search';
 
-import {
-    Link
-} from "react-router-dom";
+import './AppDrawer.css';
 
-import { Context } from '../StateProvider';
 import Routes from './Routes';
 import AuthControl from './AuthControl';
-
-import './AppDrawer.css';
+import { Context } from 'State/StateProvider';
+import InitialStateLoader from "State/InitialStateLoader";
 
 const drawerWidth = 240;
 
@@ -119,7 +115,9 @@ export default function PermanentDrawerLeft() {
 
                 <Toolbar />
 
-                {Routes}
+                <InitialStateLoader>
+                    <Routes />
+                </InitialStateLoader>
             </Box>
         </Box>
     ) : (

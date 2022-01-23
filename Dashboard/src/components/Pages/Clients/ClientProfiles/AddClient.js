@@ -10,8 +10,8 @@ import {
     DialogTitle,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { SET_CLIENTS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_CLIENTS } from 'State/Reducer';
 import { GoBack } from 'Utils';
 
 const AddClient = () => {

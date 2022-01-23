@@ -4,9 +4,9 @@ import {
     Button,
 } from '@mui/material';
 
-import { Context } from '../StateProvider';
-import { Logout, ShowLogin } from '../Auth';
-import { LOGOUT } from '../Reducer';
+import { Context } from 'State/StateProvider';
+import { Logout, ShowLogin } from 'Auth';
+import { LOGOUT } from 'State/Reducer';
 
 // <AuthControl /> renders either a login button or a logout button.
 function AuthControl() {
@@ -36,7 +36,6 @@ function AuthControl() {
                 dispatch({
                     type: 'LOGIN',
                     payload: {
-                        LoggedIn: true,
                         Auth: {
                             token,
                             name,

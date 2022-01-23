@@ -14,7 +14,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'StateProvider'
+import { Context } from 'State/StateProvider'
 
 const ModelList = () => {
     const [state, ] = useContext(Context);

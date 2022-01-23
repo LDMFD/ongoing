@@ -13,8 +13,8 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { SET_POLICY_PROVIDERS } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_POLICY_PROVIDERS } from 'State/Reducer';
 
 const PolicyProvider = () => {
     let { policyProviderId } = useParams();
@@ -37,8 +37,8 @@ const PolicyProvider = () => {
 
     let policyProvider = state.PolicyProviders.find(c => c.Id === policyProviderId);
 
-    return policyProvider ? (
-        <div>
+    return (
+        <>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" to='/policy-providers'>
                     Policy Providers
@@ -73,7 +73,7 @@ const PolicyProvider = () => {
                 </Table>
             </TableContainer>
             
-        </div>
+        </>
     ) : null;
 }
 

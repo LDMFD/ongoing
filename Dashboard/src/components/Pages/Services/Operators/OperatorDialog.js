@@ -69,7 +69,7 @@ export const OperatorDialog = ({ operator, setOperator, submitLabel, submitHandl
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={goBack}>Cancel</Button>
-                        <Button onClick={submitHandler}>{submitLabel}</Button>
+                        <Button type='submit' onClick={submitHandler}>{submitLabel}</Button>
                     </DialogActions>
                 </form>
             </Dialog>

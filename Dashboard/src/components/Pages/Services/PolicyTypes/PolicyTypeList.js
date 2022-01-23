@@ -14,8 +14,8 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { Context } from 'StateProvider'
-import { SET_POLICY_TYPES } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_POLICY_TYPES } from 'State/Reducer';
 
 const PolicyTypeList = () => {
     const [state, dispatch] = useContext(Context);

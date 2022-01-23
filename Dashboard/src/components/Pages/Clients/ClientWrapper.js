@@ -8,19 +8,9 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import {
-    POPULATE_CLIENT,
-    SET_CLIENTS,
-    SET_FUNDS,
-    SET_MODELS,
-    SET_OPERATORS,
-    SET_POLICY_PROVIDERS,
-    SET_POLICY_TYPES,
-} from 'Reducer';
-import { Context } from 'StateProvider'
+import { POPULATE_CLIENT } from 'State/Reducer';
+import { Context } from 'State/StateProvider'
 import { RouteMatch } from 'Utils';
-
-// import Review from './Review';
 
 const ClientWrapper = ({ children }) => {
     let { clientId } = useParams();
@@ -29,15 +19,6 @@ const ClientWrapper = ({ children }) => {
     const [ state, dispatch ] = useContext(Context);
 
     let [ loaded, setLoaded ] = useState(false);
-
-    const getClients = useCallback(() => {
-        return window.ApiClient.get("/clients").then(res => {
-            dispatch({
-                type: SET_CLIENTS,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
 
     const getClientDetail = useCallback(() => {
         return window.ApiClient.get(`/clients/${clientId}`).then(res => {
@@ -48,73 +29,11 @@ const ClientWrapper = ({ children }) => {
         });
     }, [ dispatch, clientId ]);
 
-    const getFunds = useCallback(() => {
-        return window.ApiClient.get("/funds").then(res => {
-            dispatch({
-                type: SET_FUNDS,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
-
-    const getOperators = useCallback(() => {
-        return window.ApiClient.get("/operators").then(res => {
-            dispatch({
-                type: SET_OPERATORS,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
-
-    const getPolicyProviders = useCallback(() => {
-        return window.ApiClient.get("/policy-providers").then(res => {
-            dispatch({
-                type: SET_POLICY_PROVIDERS,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
-
-    const getPolicyTypes = useCallback(() => {
-        return window.ApiClient.get("/policy-types").then(res => {
-            dispatch({
-                type: SET_POLICY_TYPES,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
-
-    const getModels = useCallback(() => {
-        return window.ApiClient.get("/models").then(res => {
-            dispatch({
-                type: SET_MODELS,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
-
-
     const getDependencies = useCallback(async () => {
-        await getFunds();
-        await getPolicyProviders();
-        await getPolicyTypes();
-
-        await getOperators();
-        await getModels();
-
-        await getClients();
         await getClientDetail();
 
         setLoaded(true);
     }, [
-        getFunds,
-        getPolicyProviders,
-        getPolicyTypes,
-        
-        getOperators,
-        getModels,
-
-        getClients,
         getClientDetail,
     ]);
 

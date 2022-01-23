@@ -10,8 +10,8 @@ import {
     DialogTitle,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { SET_POLICY_TYPES } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_POLICY_TYPES } from 'State/Reducer';
 import { GoBack } from 'Utils';
 
 const AddPolicyType = () => {

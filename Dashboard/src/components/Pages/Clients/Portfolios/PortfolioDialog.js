@@ -12,7 +12,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
+import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils';
 
 export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHandler }) => {
@@ -28,7 +28,7 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
 
     const handlers = {
         SetPolicyId:     (event) => { setPortfolio({ ...portfolio, PolicyId:    parseInt(event.target.value), }); },
-        SetModelId:  (event) => { setPortfolio({ ...portfolio, ModelId: parseInt(event.target.value), }); },
+        SetModelId:      (event) => { setPortfolio({ ...portfolio, ModelId: parseInt(event.target.value), }); },
         EditProportion:  (event) => {
             let p = parseFloat(event.target.value);
             p = isNaN(p) ? '' : p;

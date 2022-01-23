@@ -13,8 +13,8 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
-import { SET_POLICY_TYPES } from 'Reducer';
+import { Context } from 'State/StateProvider'
+import { SET_POLICY_TYPES } from 'State/Reducer';
 
 const PolicyType = () => {
     let { policyTypeId } = useParams();
@@ -37,8 +37,8 @@ const PolicyType = () => {
 
     let policyType = state.PolicyTypes.find(c => c.Id === policyTypeId);
 
-    return policyType ? (
-        <div>
+    return (
+        <>
             <Breadcrumbs aria-label="breadcrumb">
                 <Link underline="hover" color="inherit" to='/policy-types'>
                     Policy Types
@@ -68,9 +68,8 @@ const PolicyType = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            
-        </div>
-    ) : null;
+        </>
+    );
 }
 
 export default PolicyType;

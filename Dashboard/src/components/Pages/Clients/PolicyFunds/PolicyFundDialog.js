@@ -12,7 +12,7 @@ import {
     Select,
 } from '@mui/material';
 
-import { Context } from 'StateProvider'
+import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils';
 
 export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandler }) => {
@@ -25,11 +25,6 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
     const [ state ] = useContext(Context);
 
     let client = state.Clients.find(c => c.Id === clientId);
-
-    // TODO fix-me
-    if (client.Policies == null) {
-        client.Policies = [];
-    }
 
     const handlers = {
         SetFundId:       (event) => { setPolicyFund({ ...policyFund, FundId:   parseInt(event.target.value), }); },
@@ -73,7 +68,7 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select fund</MenuItem>
-                        {state?.funds?.map(t => (
+                        {state.Funds.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>
