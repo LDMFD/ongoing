@@ -13,3 +13,7 @@ func PolicyProviderHasDependentPolicies(policies string) string {
 func PolicyTypeHasDependentPolicies(policies string) string {
 	return fmt.Sprintf("Policy type has dependent policies: [ %v ]", policies)
 }
+
+func OperatorHasDependentModels(models string) string {
+	return fmt.Sprintf("Operator has dependent models: [ %s ]", models)
+}

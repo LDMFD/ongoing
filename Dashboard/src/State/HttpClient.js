@@ -2,11 +2,11 @@ import {
     SET_CLIENTS,
     SET_FUNDS,
     SET_MODELS,
-    SET_OPERATORS,
 } from './Reducer';
 
 import PolicyTypes     from './HttpClientCommands/Global/PolicyTypes';
 import PolicyProviders from './HttpClientCommands/Global/PolicyProviders';
+import Operators       from './HttpClientCommands/Global/Operators';
 
 const GetClients = (dispatch) => {
     return window.ApiClient.get("/clients").then(res => {
@@ -35,22 +35,12 @@ const GetModels = (dispatch) => {
     });
 }
 
-const GetOperators = (dispatch) => {
-    return window.ApiClient.get("/operators").then(res => {
-        dispatch({
-            type: SET_OPERATORS,
-            payload: res.data,
-        });
-    });
-
-}
-
 const exports = {
     GetClients,
     GetFunds,
     GetModels,
-    GetOperators,
  
+    Operators,
     PolicyProviders,
     PolicyTypes,
 };

@@ -1,82 +1,79 @@
 import React, { useEffect, useContext, useCallback } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
-    Breadcrumbs,
     Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
     Toolbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
-import { Link } from "react-router-dom";
-
-import { Context } from 'State/StateProvider'
-import { SET_OPERATORS } from 'State/Reducer';
+import { Context, Client } from 'State'
 import { OPERATOR_TYPES } from './OperatorTypes';
 
 const OperatorList = () => {
-    const [state, dispatch] = useContext(Context);
+    let history = useHistory();
+    const [ state, dispatch] = useContext(Context);
 
     const getOperators = useCallback(() => {
-        window.ApiClient.get("/operators").then(res => {
-            dispatch({
-                type: SET_OPERATORS,
-                payload: res.data,
-            });
-        });
+        Client.Operators.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
         getOperators();
     }, [ getOperators ]);
     
+    const onDelete = useCallback(params => () => {
+        if (window.confirm(`Delete operator?`)) {
+            window.ApiClient.delete(`/operators/${params.row.id}`)
+            .then(async () => {
+                await Client.Operators.Read(dispatch);
+            });
+        }        
+    }, [ dispatch ]);
+
+    const onEdit = useCallback(params => () => {
+        let id = params.row.id;
+        history.push(`/operators/id/${id}/edit`);
+    }, [ history ]);
+
+    const columns = [
+        { field: 'name', headerName: 'Name', flex: 0.1, },
+        { field: 'type', headerName: 'Type', flex: 0.1, },
+        { field: 'fee',  headerName: 'Fee',  flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .05,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
+            ]
+        },
+    ];
+
+    let operators = state.Operators.map(p => {
+        return {
+            id:       p.Id,
+            name:     p.Name,
+            type:     OPERATOR_TYPES[p.Type],
+            fee:      p.Fee,
+        };
+    });
+
+    let data = {
+        rows: operators,
+        columns: columns,
+    }
+
     return (
-        <div className='Operators'>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to={window.location}>
-                    Operators
-                </Link>
-            </Breadcrumbs>
-        
+        <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: '/operators/add' }}><Button>Add new operator</Button></Link>
             </Toolbar>
 
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Operator</TableCell>
-                            <TableCell>Type</TableCell>
-                            <TableCell>Fee</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {state.Operators && state.Operators.map(operator => {
-                            return (
-                                <TableRow key={operator.Id}>
-                                    <TableCell>
-                                        <Link to={`/operators/id/${operator.Id}/edit`} key={operator.Id}>
-                                            {operator.Name}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        {OPERATOR_TYPES[operator.Type]}
-                                    </TableCell>
-                                    <TableCell>
-                                        {operator.Fee}
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+            <DataGrid autoHeight {...data} />
+        </>
     );
 }
 

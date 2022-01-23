@@ -11,4 +11,5 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.POST("", Commands.CreateOperator)
 	r.GET("/:OperatorId", Commands.GetOperator)
 	r.PUT("/:OperatorId", Commands.UpdateOperator)
+	r.DELETE("/:OperatorId", Commands.DeleteOperator)
 }

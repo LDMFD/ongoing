@@ -13,5 +13,6 @@ type Operator struct {
 	Name  	 	string 		`bun:"name,notnull"`
 	Fee			float64     `bun:"fee,notnull"`
 	Timestamp   time.Time	`bun:",nullzero,notnull,default:current_timestamp"`
-}
 
+	Models    []*Model      `bun:"rel:has-many,join:id=operator_id"`
+}
