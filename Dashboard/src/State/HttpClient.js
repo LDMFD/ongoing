@@ -1,26 +1,17 @@
 import {
     SET_CLIENTS,
-    SET_FUNDS,
     SET_MODELS,
 } from './Reducer';
 
+import Funds           from './HttpClientCommands/Global/Funds';
+import Operators       from './HttpClientCommands/Global/Operators';
 import PolicyTypes     from './HttpClientCommands/Global/PolicyTypes';
 import PolicyProviders from './HttpClientCommands/Global/PolicyProviders';
-import Operators       from './HttpClientCommands/Global/Operators';
 
 const GetClients = (dispatch) => {
     return window.ApiClient.get("/clients").then(res => {
         dispatch({
             type: SET_CLIENTS,
-            payload: res.data,
-        });
-    });
-}
-
-const GetFunds = (dispatch) => {
-    return window.ApiClient.get("/funds").then(res => {
-        dispatch({
-            type: SET_FUNDS,
             payload: res.data,
         });
     });
@@ -37,9 +28,9 @@ const GetModels = (dispatch) => {
 
 const exports = {
     GetClients,
-    GetFunds,
     GetModels,
  
+    Funds,
     Operators,
     PolicyProviders,
     PolicyTypes,

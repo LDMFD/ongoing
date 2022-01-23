@@ -14,5 +14,7 @@ type PolicyFund struct {
 	PolicyId     int64     `bun:"policy_id,notnull""`
 	Proportion   float64   `bun:"proportion,notnull"`
 	Timestamp    time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+
+	Client      *Client        `bun:"rel:has-one,join:client_id=id"`
 }
 

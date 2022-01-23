@@ -23,8 +23,8 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
     };
     
     return (
-        <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack}>
+            <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Holding</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -60,10 +60,10 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button onClick={submitHandler}>{submitLabel}</Button>
+                    <Button type='submit' onClick={submitHandler}>{submitLabel}</Button>
                 </DialogActions>
-            </Dialog>
-        </div>
+            </form>
+        </Dialog>
     );
 };
 

@@ -17,3 +17,7 @@ func PolicyTypeHasDependentPolicies(policies string) string {
 func OperatorHasDependentModels(models string) string {
 	return fmt.Sprintf("Operator has dependent models: [ %s ]", models)
 }
+
+func FundHasDependentModels(models string) string {
+	return fmt.Sprintf("Fund has dependent models: [ %s ]", models)
+}
