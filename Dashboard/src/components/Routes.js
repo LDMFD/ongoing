@@ -1,11 +1,11 @@
 import { Switch, Route } from "react-router-dom";
 
 import ClientRoutes         from './Pages/Clients/ClientRoutes';
-import OperatorRoutes       from './Pages/Services/Operators/OperatorRoutes';
-import FundRoutes           from './Pages/Services/Funds/FundRoutes';
-import ModelRoutes          from './Pages/Services/Models/ModelRoutes';
-import PolicyTypeRoutes     from './Pages/Services/PolicyTypes/PolicyTypeRoutes';
-import PolicyProviderRoutes from './Pages/Services/PolicyProviders/PolicyProviderRoutes';
+import OperatorRoutes       from './Pages/Global/Operators/OperatorRoutes';
+import FundRoutes           from './Pages/Global/Funds/FundRoutes';
+import ModelRoutes          from './Pages/Global/Models/ModelRoutes';
+import PolicyTypeRoutes     from './Pages/Global/PolicyTypes/PolicyTypeRoutes';
+import PolicyProviderRoutes from './Pages/Global/PolicyProviders/PolicyProviderRoutes';
   
 const routes = () => (
     <Switch>
