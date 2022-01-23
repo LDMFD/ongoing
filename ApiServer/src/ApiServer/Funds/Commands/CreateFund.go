@@ -35,8 +35,10 @@ func CreateFund(c *gin.Context) {
 		ExAnteFee:   body.ExAnteFee,
 	}
 	if _, err := db.NewInsert().Model(&fund).Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
+
 	c.JSON(200, gin.H{
 		"Fund": fund,
 	})

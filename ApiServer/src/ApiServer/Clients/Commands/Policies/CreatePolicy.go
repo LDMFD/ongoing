@@ -43,7 +43,8 @@ func CreatePolicy(c *gin.Context) {
 		PolicyProviderId: body.PolicyProviderId,
 	}
 	if _, err := db.NewInsert().Model(&policy).Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"Policy": policy,

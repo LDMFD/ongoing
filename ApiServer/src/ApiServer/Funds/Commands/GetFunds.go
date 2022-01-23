@@ -1,6 +1,7 @@
 package Commands
 
 import (
+	"net/http"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -15,7 +16,8 @@ func GetFunds(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&funds).
 		OrderExpr("name ASC").Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	
 	c.JSON(200, gin.H{

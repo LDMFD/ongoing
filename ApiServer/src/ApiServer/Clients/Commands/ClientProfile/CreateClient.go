@@ -34,7 +34,8 @@ func CreateClient(c *gin.Context) {
 		Surname:   req.Surname,
 	}
 	if _, err := db.NewInsert().Model(&client).Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"Client": client,

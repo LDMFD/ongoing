@@ -34,7 +34,8 @@ func CreatePolicyFund(c *gin.Context) {
 		Proportion: body.Proportion,
 	}
 	if _, err := db.NewInsert().Model(&policyFund).Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"PolicyFund": policyFund,

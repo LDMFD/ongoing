@@ -31,7 +31,8 @@ func GetClient(c *gin.Context) {
 		Relation("Reviews").
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"Client": client,

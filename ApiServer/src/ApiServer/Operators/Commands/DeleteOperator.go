@@ -31,7 +31,8 @@ func DeleteOperator(c *gin.Context) {
 		Relation("Models").
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if len(operator.Models) > 0 {
@@ -48,7 +49,8 @@ func DeleteOperator(c *gin.Context) {
 		Model(&operator).
 		WherePK().
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{})

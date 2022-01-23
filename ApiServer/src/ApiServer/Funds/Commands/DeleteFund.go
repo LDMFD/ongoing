@@ -32,7 +32,8 @@ func DeleteFund(c *gin.Context) {
 		Relation("PolicyFunds.Client").
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if len(fund.PolicyFunds) > 0 {
@@ -50,7 +51,8 @@ func DeleteFund(c *gin.Context) {
 		Model(&fund).
 		WherePK().
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{})

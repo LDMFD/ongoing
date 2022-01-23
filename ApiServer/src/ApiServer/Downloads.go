@@ -19,7 +19,8 @@ func (s *ApiServer) requestDownload(c *gin.Context) {
 
 	var file = Entities.File{}
 	if err := s.db.NewSelect().Model(&file).Where("uid = ?", req.Uid).Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	url := GenerateSignedGetUrl("/Users/darren/dev/p/ongoing/Config/Storage/Credentials/Storage.pem", "ongoing-test-docs", file.Uid)

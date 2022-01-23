@@ -40,7 +40,8 @@ func UpdatePortfolio(c *gin.Context) {
 		Model(&portfolio).
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if portfolio.ClientId != path.ClientId {
@@ -58,7 +59,8 @@ func UpdatePortfolio(c *gin.Context) {
 		Column("model_id").
 		Column("proportion").
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{

@@ -41,11 +41,13 @@ func UpdatePolicy(c *gin.Context) {
 		Model(&policy).
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if policy.ClientId != path.ClientId {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy does not belong to client"})
+		return
 	}
 
 	policy.ExternalId = body.ExternalId
@@ -61,7 +63,8 @@ func UpdatePolicy(c *gin.Context) {
 		Column("policy_type_id").
 		Column("policy_provider_id").
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{

@@ -27,7 +27,8 @@ func GetPolicyProvider(c *gin.Context) {
 		Model(&policyProvider).
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"PolicyProvider": policyProvider,

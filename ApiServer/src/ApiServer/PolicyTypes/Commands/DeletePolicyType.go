@@ -31,7 +31,8 @@ func DeletePolicyType(c *gin.Context) {
 		Relation("Policies.Client").
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if len(policyType.Policies) > 0 {
@@ -49,7 +50,8 @@ func DeletePolicyType(c *gin.Context) {
 		Model(&policyType).
 		WherePK().
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{})

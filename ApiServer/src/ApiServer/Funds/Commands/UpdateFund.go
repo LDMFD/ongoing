@@ -39,7 +39,8 @@ func UpdateFund(c *gin.Context) {
 		Column("weighted_ocf").
 		Column("ex_ante_fee").
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{

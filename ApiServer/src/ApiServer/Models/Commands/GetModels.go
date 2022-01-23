@@ -1,6 +1,7 @@
 package Commands
 
 import (
+	"net/http"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -16,7 +17,8 @@ func GetModels(c *gin.Context) {
 		Model(&models).
 		Relation("File").
 		OrderExpr("name ASC").Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"Models": models,

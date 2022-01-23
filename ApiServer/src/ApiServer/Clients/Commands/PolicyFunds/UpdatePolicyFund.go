@@ -40,7 +40,8 @@ func UpdatePolicyFund(c *gin.Context) {
 		Model(&policyFund).
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if policyFund.ClientId != path.ClientId {
@@ -58,7 +59,8 @@ func UpdatePolicyFund(c *gin.Context) {
 		Column("policy_id").
 		Column("proportion").
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{

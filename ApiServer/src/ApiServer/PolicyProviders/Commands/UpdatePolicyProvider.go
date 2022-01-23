@@ -41,7 +41,8 @@ func UpdatePolicyProvider(c *gin.Context) {
 	if _, err := db.NewUpdate().Model(&policyProvider).WherePK().
 		Column("name").
 		Column("pricing").Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{

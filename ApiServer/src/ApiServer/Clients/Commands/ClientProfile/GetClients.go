@@ -1,6 +1,7 @@
 package ClientProfile
 
 import (
+	"net/http"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -13,7 +14,8 @@ func GetClients(c *gin.Context) {
 
 	var clients []Entities.Client
 	if err := db.NewSelect().Model(&clients).OrderExpr("id ASC").Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"Clients": clients,

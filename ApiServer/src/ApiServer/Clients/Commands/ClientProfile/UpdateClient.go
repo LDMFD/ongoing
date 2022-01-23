@@ -41,7 +41,7 @@ func UpdateClient(c *gin.Context) {
 	if _, err := db.NewUpdate().Model(&client).WherePK().
 		Column("forenames").
 		Column("surname").Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
 	c.JSON(200, gin.H{

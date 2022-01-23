@@ -30,7 +30,8 @@ func DeletePolicy(c *gin.Context) {
 		Relation("Portfolios").
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	if policy.ClientId != path.ClientId {
@@ -47,7 +48,8 @@ func DeletePolicy(c *gin.Context) {
 		Model(&policy).
 		WherePK().
 		Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(200, gin.H{})

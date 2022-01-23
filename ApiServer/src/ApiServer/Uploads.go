@@ -51,6 +51,7 @@ func (s *ApiServer) signalUpload(c *gin.Context) {
 	}
 
 	if _, err := s.db.NewInsert().Model(&file).Exec(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 }

@@ -27,7 +27,8 @@ func GetOperator(c *gin.Context) {
 		Model(&operator).
 		WherePK().
 		Scan(c); err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(200, gin.H{
 		"Operator": operator,
