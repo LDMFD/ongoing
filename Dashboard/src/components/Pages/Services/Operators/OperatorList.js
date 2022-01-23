@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 import { Context } from 'StateProvider'
 import { SET_OPERATORS } from 'Reducer';
-import { OPERATOR_TYPES } from './Operator';
+import { OPERATOR_TYPES } from './OperatorTypes';
 
 const OperatorList = () => {
     const [state, dispatch] = useContext(Context);
@@ -56,7 +56,7 @@ const OperatorList = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {state.operators && state.operators.map(operator => {
+                        {state.Operators && state.Operators.map(operator => {
                             return (
                                 <TableRow key={operator.Id}>
                                     <TableCell>

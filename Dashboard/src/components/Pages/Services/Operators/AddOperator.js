@@ -1,20 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    MenuItem,
-    Select,
-    TextField,
-} from '@mui/material';
 
 import { Context } from 'StateProvider'
 import { SET_OPERATORS } from 'Reducer';
 import { GoBack } from 'Utils';
+import { DefaultOperator } from './DefaultOperator';
+import OperatorDialog from './OperatorDialog';
 
 const AddOperator = () => {
     let history = useHistory();
@@ -22,16 +13,12 @@ const AddOperator = () => {
 
     const [ , dispatch] = useContext(Context);
 
-    let [ name, setName ] = useState('');
-    let [ type, setType ] = useState('');
-    let [ fee, setFee ] = useState(0.0);
+    let [ operator, setOperator ] = useState(DefaultOperator);
 
-    const submit = (e) => {
+    const submitHandler = (e) => {
         e.preventDefault();
         window.ApiClient.post("/operators", {
-            Name: name,
-            Type: type,
-            Fee: fee,
+            ...operator
         })
         .then(() => {
             goBack();
@@ -47,58 +34,11 @@ const AddOperator = () => {
         return false;
     };
 
-    let handleFeeChange = (v) => {
-        let fee = parseFloat(v);
-        setFee(fee);
-    }
-
     return (
-        <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
-                <form onSubmit={submit}>
-                    <DialogTitle>Add Operator</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Enter operator details
-                        </DialogContentText>
-
-                        <TextField value    = {name}
-                                onChange = {(e) => setName(e.target.value)}
-                                margin   = "dense"
-                                id       = "name"
-                                label    = "Name"
-                                type     = "text"
-                                autoFocus fullWidth />
-
-                        <Select value    = {type}
-                                onChange = {(e) => setType(e.target.value)}
-                                margin   = "dense"
-                                id       = "type"
-                                label    = "Type"
-                                type     = "text"
-                                fullWidth>
-                            <MenuItem value='dim'>DIM</MenuItem>
-                            <MenuItem value='firm'>Firm</MenuItem>
-                            <MenuItem value='individual'>Individual</MenuItem>
-                            <MenuItem value='none'>None</MenuItem>
-                        </Select>
-
-                        <TextField value    = {fee}
-                                onChange = {(e) => handleFeeChange(e.target.value)}
-                                margin   = "dense"
-                                id       = "fee"
-                                label    = "Fee"
-                                type     = "number"
-                                fullWidth />
-
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={goBack}>Cancel</Button>
-                        <Button type='submit'>Add</Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        </div>
+        <OperatorDialog operator      = {operator}
+                        setOperator   = {setOperator}
+                        submitLabel   = 'Add'
+                        submitHandler = {submitHandler} />
     );
 }
 
