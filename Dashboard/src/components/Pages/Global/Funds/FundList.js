@@ -8,14 +8,14 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 
 const FundList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
     const getFunds = useCallback(() => {
-        Client.Funds.Read(dispatch)
+        Api.Global.Funds.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const FundList = () => {
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete fund?`)) {
             await window.ApiClient.delete(`/funds/${params.row.id}`)
-            await Client.Funds.Read(dispatch);
+            await Api.Global.Funds.Read(dispatch);
         }        
     }, [ dispatch ]);
 

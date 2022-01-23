@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import Client from 'State/HttpClient';
+import { Api } from 'State';
 import { GoBack } from 'Utils';
 import PolicyProviderDialog from './PolicyProviderDialog';
 
@@ -24,12 +24,12 @@ const EditPolicyProvider = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        Client.PolicyProviders.Update(policyProvider)
+        Api.Global.PolicyProviders.Update(policyProvider)
         .then(() => {
             goBack();
         })
         .then(() => {
-            Client.PolicyProviders.Read(dispatch)
+            Api.Global.PolicyProviders.Read(dispatch)
         });
         return false;
     };

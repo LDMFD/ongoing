@@ -5,7 +5,7 @@ import { Context } from 'State/StateProvider'
 import { DefaultPortfolio } from './DefaultPortfolio';
 import PortfolioDialog from './PortfolioDialog';
 import { GoBack } from 'Utils';
-import { Client } from 'State';
+import { Api } from 'State';
 
 const AddPortfolio = () => {
     let history = useHistory();
@@ -20,12 +20,12 @@ const AddPortfolio = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        Client.Client.Portfolios.Create(clientId, portfolio)
+        Api.Clients.Portfolios.Create(clientId, portfolio)
             .then(() => {
                 goBack();
             })
             .then(async () => {
-                await Client.Client.ClientDetail.Read(dispatch, clientId);
+                await Api.Clients.ClientDetail.Read(dispatch, clientId);
             });
         return false;
     };

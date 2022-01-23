@@ -8,14 +8,14 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 
 const ModelList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
     const getModels = useCallback(() => {
-        Client.Models.Read(dispatch)
+        Api.Global.Models.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const ModelList = () => {
         if (window.confirm(`Delete model?`)) {
             window.ApiClient.delete(`/models/${params.row.id}`)
             .then(async () => {
-                await Client.Models.Read(dispatch);
+                await Api.Global.Models.Read(dispatch);
             });
         }        
     }, [ dispatch ]);

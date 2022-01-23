@@ -2,18 +2,20 @@ import {
     SET_CLIENTS
 } from "State/Reducer";
 
-const Create = (clients) => {
-    return window.ApiClient.post(`/clients`, {
-        ...clients,
-    });
-}
-
+// Read all clients
 const Read = (dispatch) => {
     return window.ApiClient.get(`/clients`).then(res => {
         dispatch({
             type: SET_CLIENTS,
             payload: res.data,
         });
+    });
+}
+
+// These should be moved to ClientDetail?
+const Create = (clients) => {
+    return window.ApiClient.post(`/clients`, {
+        ...clients,
     });
 }
 

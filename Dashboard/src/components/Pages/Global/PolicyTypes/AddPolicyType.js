@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import Client from 'State/HttpClient';
+import { Api } from 'State';
 import { GoBack } from 'Utils';
 import { DefaultPolicyType } from './DefaultPolicyType';
 import PolicyTypeDialog from './PolicyTypeDialog';
@@ -17,12 +17,12 @@ const AddPolicyType = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        Client.PolicyTypes.Create(policyType)
+        Api.Global.PolicyTypes.Create(policyType)
         .then(() => {
             goBack();
         })
         .then(() => {
-            Client.PolicyTypes.Read(dispatch)
+            Api.Global.PolicyTypes.Read(dispatch)
         });
             return false;
     };

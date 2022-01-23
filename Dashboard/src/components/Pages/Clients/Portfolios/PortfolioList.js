@@ -8,7 +8,7 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 
 const PortfolioList = () => {
     let history = useHistory();
@@ -22,8 +22,8 @@ const PortfolioList = () => {
 
     const deletePortfolio = useCallback(params => async () => {
         if (window.confirm(`Delete portfolio?`)) {
-            await Client.Client.Portfolios.Delete(clientId, params.row.id);
-            await Client.Client.ClientDetail.Read(dispatch, clientId);
+            await Api.Clients.Portfolios.Delete(clientId, params.row.id);
+            await Api.Clients.ClientDetail.Read(dispatch, clientId);
         }        
     }, [ dispatch, clientId ]);
 

@@ -8,14 +8,14 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 
 const PolicyProviderList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
     const getPolicyProviders = useCallback(() => {
-        Client.PolicyProviders.Read(dispatch)
+        Api.Global.PolicyProviders.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const PolicyProviderList = () => {
         if (window.confirm(`Delete policy provider?`)) {
             window.ApiClient.delete(`/policy-providers/${params.row.id}`)
             .then(async () => {
-                await Client.PolicyProviders.Read(dispatch);
+                await Api.Global.PolicyProviders.Read(dispatch);
             });
         }        
     }, [ dispatch ]);

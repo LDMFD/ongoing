@@ -8,7 +8,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 
 const ClientList = () => {
     let history = useHistory();
@@ -16,8 +16,8 @@ const ClientList = () => {
 
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete client?`)) {
-            await Client.Clients.Delete(params.row.id)
-            await Client.Clients.Read(dispatch);
+            await Api.Clients.Clients.Delete(params.row.id)
+            await Api.Clients.Clients.Read(dispatch);
         }        
     }, [ dispatch ]);
 

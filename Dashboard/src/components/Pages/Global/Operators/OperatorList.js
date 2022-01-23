@@ -8,7 +8,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 import { OPERATOR_TYPES } from './OperatorTypes';
 
 const OperatorList = () => {
@@ -16,7 +16,7 @@ const OperatorList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getOperators = useCallback(() => {
-        Client.Operators.Read(dispatch)
+        Api.Global.Operators.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const OperatorList = () => {
         if (window.confirm(`Delete operator?`)) {
             window.ApiClient.delete(`/operators/${params.row.id}`)
             .then(async () => {
-                await Client.Operators.Read(dispatch);
+                await Api.Global.Operators.Read(dispatch);
             });
         }        
     }, [ dispatch ]);

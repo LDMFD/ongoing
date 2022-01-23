@@ -8,7 +8,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Client } from 'State'
+import { Context, Api } from 'State'
 
 const PolicyTypeList = () => {
     let history = useHistory();
@@ -16,8 +16,8 @@ const PolicyTypeList = () => {
 
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete policy type?`)) {
-            await Client.PolicyTypes.Delete(params.row.id)
-            await Client.PolicyTypes.Read(dispatch);
+            await Api.Global.PolicyTypes.Delete(params.row.id)
+            await Api.Global.PolicyTypes.Read(dispatch);
         }        
     }, [ dispatch ]);
 

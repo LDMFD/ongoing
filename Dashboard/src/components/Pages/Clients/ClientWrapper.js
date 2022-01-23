@@ -10,7 +10,7 @@ import {
 
 import { Context } from 'State/StateProvider'
 import { RouteMatch } from 'Utils';
-import { Client } from 'State';
+import { Api } from 'State';
 
 const ClientWrapper = ({ children }) => {
     let { clientId } = useParams();
@@ -21,7 +21,7 @@ const ClientWrapper = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     const getDependencies = useCallback(async () => {
-        await Client.Client.ClientDetail.Read(dispatch, clientId);
+        await Api.Clients.ClientDetail.Read(dispatch, clientId);
         setLoaded(true);
     }, [ dispatch, clientId ]);
 
