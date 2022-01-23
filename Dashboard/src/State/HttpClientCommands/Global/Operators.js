@@ -23,8 +23,8 @@ const Update = (operators) => {
     })
 }
 
-const Delete = (operatorsId) => {
-    return window.ApiClient.delete(`/operators/${operatorsId}`)
+const Delete = (operatorId) => {
+    return window.ApiClient.delete(`/operators/${operatorId}`)
 }
 
 const exports = {

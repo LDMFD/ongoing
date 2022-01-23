@@ -77,19 +77,17 @@ const FileInput = ({ completionCallback }) => {
 
     return (
         <Paper>
-            {/* <form onSubmit={handleSubmit}> */}
-                <label>
-                    Upload file:
-                    <input type="file" multiple ref={input} />
-                </label>
-                <br />
-                <button onClick={triggerUpload}>Submit</button>
+            <label>
+                Upload file:
+                <input type="file" multiple onChange={triggerUpload} ref={input} />
+            </label>
+            <br />
+            {/* <button onClick={triggerUpload}>Submit</button> */}
 
-                {file &&
-                    <File file               = {file}
-                          completionCallback = {completionCallback} />
-                }
-            {/* </form> */}
+            {file &&
+                <File file               = {file}
+                        completionCallback = {completionCallback} />
+            }
 
             {/* {files && (
                 <ul>

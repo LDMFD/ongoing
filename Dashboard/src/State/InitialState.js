@@ -10,11 +10,11 @@ const InitialState = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     const getClients         = useCallback(() => { return Client.GetClients(dispatch); },           [ dispatch ]);
-    const getFunds           = useCallback(() => { return Client.Funds.Read(dispatch); },             [ dispatch ]);
+    const getFunds           = useCallback(() => { return Client.Funds.Read(dispatch); },           [ dispatch ]);
     const getOperators       = useCallback(() => { return Client.Operators.Read(dispatch); },       [ dispatch ]);
     const getPolicyProviders = useCallback(() => { return Client.PolicyProviders.Read(dispatch); }, [ dispatch ]);
     const getPolicyTypes     = useCallback(() => { return Client.PolicyTypes.Read(dispatch); },     [ dispatch ]);
-    const getModels          = useCallback(() => { return Client.GetModels(dispatch); },            [ dispatch ]);
+    const getModels          = useCallback(() => { return Client.Models.Read(dispatch); },          [ dispatch ]);
     
     const getDependencies = useCallback(async () => {
         await getFunds();  // TODO parallelize

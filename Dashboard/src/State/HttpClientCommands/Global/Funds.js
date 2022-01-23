@@ -23,8 +23,8 @@ const Update = (funds) => {
     })
 }
 
-const Delete = (fundsId) => {
-    return window.ApiClient.delete(`/funds/${fundsId}`)
+const Delete = (fundId) => {
+    return window.ApiClient.delete(`/funds/${fundId}`)
 }
 
 const exports = {

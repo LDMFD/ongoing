@@ -21,3 +21,7 @@ func OperatorHasDependentModels(models string) string {
 func FundHasDependentModels(models string) string {
 	return fmt.Sprintf("Fund has dependent models: [ %s ]", models)
 }
+
+func ModelHasDependentPortfolios(models string) string {
+	return fmt.Sprintf("Model has dependent portfolios: [ %s ]", models)
+}
