@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import PolicyTypeList from './PolicyTypeList';
-import PolicyType from './PolicyType';
 import AddPolicyType from './AddPolicyType';
 import EditPolicyType from './EditPolicyType';
 
@@ -16,10 +15,6 @@ const PolicyTypeRoutes = () => {
     return (
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
-                <Route path={`${path}/id/:policyTypeId`}>
-                    <PolicyType />
-                </Route>
-
                 <Route path={path}>
                     <PolicyTypeList />
                 </Route>

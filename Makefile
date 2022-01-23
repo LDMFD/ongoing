@@ -3,7 +3,7 @@ SHELL := /bin/bash
 
 include Makefiles/Environment.mak
 include Makefiles/Firebase.mak
-include Makefiles/Migrations.mak
+include Makefiles/Database.mak
 include Makefiles/Node.mak
 include Makefiles/Storage.mak
 

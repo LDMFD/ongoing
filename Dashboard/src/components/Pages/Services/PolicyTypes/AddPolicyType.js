@@ -1,18 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import {
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from '@mui/material';
 
 import { Context } from 'State/StateProvider'
-import { SET_POLICY_TYPES } from 'State/Reducer';
+import Client from 'State/HttpClient';
 import { GoBack } from 'Utils';
+import { DefaultPolicyType } from './DefaultPolicyType';
+import PolicyTypeDialog from './PolicyTypeDialog';
 
 const AddPolicyType = () => {
     let history = useHistory();
@@ -20,49 +13,25 @@ const AddPolicyType = () => {
 
     const [ , dispatch] = useContext(Context);
 
-    let [ name, setName ] = useState('');
+    let [ policyType, setPolicyType ] = useState(DefaultPolicyType);
 
-    const submit = (e) => {
+    const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.post("/policy-types", {
-            Name: name,
-        }).then(_ => {
-            window.ApiClient.get("/policy-types").then(res => {
-                dispatch({
-                    type: SET_POLICY_TYPES,
-                    payload: res.data,
-                })
-            }).then(() => {
-                goBack();
-            });
+        Client.PolicyTypes.Create(policyType)
+        .then(() => {
+            goBack();
+        })
+        .then(() => {
+            Client.PolicyTypes.Read(dispatch)
         });
-        return false;
+            return false;
     };
 
     return (
-        <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
-                <DialogTitle>Add Policy Type</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Enter policy type
-                    </DialogContentText>
-
-                    <TextField value    = {name}
-                               onChange = {(e) => setName(e.target.value)}
-                               margin   = "dense"
-                               id       = "name"
-                               label    = "Name"
-                               type     = "text"
-                               autoFocus fullWidth />
-
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={goBack}>Cancel</Button>
-                    <Button onClick={submit}>Add</Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+        <PolicyTypeDialog policyType      = {policyType}
+                          setPolicyType   = {setPolicyType}
+                          submitLabel     = 'Add'
+                          submitHandler   = {submitHandler} />
     );
 }
 

@@ -65,7 +65,7 @@ const EditPolicy = () => {
     return (
         <div className="modal" >
             <Dialog open={true} onClose={goBack}>
-                <DialogTitle>Edit Policy Type</DialogTitle>
+                <DialogTitle>Edit Policy</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Edit policy

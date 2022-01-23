@@ -14,3 +14,10 @@ _db_migrate:
 
 db-up:
 	make _db_migrate MIGRATION=0
+
+# Run this, then `make db-up`
+db-clean:
+	docker-compose stop postgres
+	docker-compose rm -f postgres
+	docker volume rm -f ongoing_postgres
+	docker-compose up postgres

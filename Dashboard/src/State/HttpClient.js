@@ -3,9 +3,10 @@ import {
     SET_FUNDS,
     SET_MODELS,
     SET_OPERATORS,
-    SET_POLICY_PROVIDERS,
-    SET_POLICY_TYPES,
 } from './Reducer';
+
+import PolicyTypes     from './HttpClientCommands/Global/PolicyTypes';
+import PolicyProviders from './HttpClientCommands/Global/PolicyProviders';
 
 const GetClients = (dispatch) => {
     return window.ApiClient.get("/clients").then(res => {
@@ -44,43 +45,13 @@ const GetOperators = (dispatch) => {
 
 }
 
-const GetPolicyProviders = (dispatch) => {
-    window.ApiClient.get("/policy-providers").then(res => {
-        dispatch({
-            type: SET_POLICY_PROVIDERS,
-            payload: res.data,
-        });
-    });
-}
-
-const UpdatePolicyProvider = (policyProvider) => {
-    window.ApiClient.put(`/policy-providers/${policyProvider.Id}`, {
-        ...policyProvider
-    })
-}
-
-const GetPolicyTypes = (dispatch) => {
-    return window.ApiClient.get("/policy-types").then(res => {
-        dispatch({
-            type: SET_POLICY_TYPES,
-            payload: res.data,
-        });
-    });
-
-}
-
 const exports = {
     GetClients,
- 
     GetFunds,
- 
     GetModels,
- 
     GetOperators,
  
-    GetPolicyProviders,
-    UpdatePolicyProvider,
-
-    GetPolicyTypes,
+    PolicyProviders,
+    PolicyTypes,
 };
 export default exports;

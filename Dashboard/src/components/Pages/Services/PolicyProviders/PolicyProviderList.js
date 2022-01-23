@@ -15,7 +15,7 @@ const PolicyProviderList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getPolicyProviders = useCallback(() => {
-        Client.GetPolicyProviders(dispatch)
+        Client.PolicyProviders.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const PolicyProviderList = () => {
         if (window.confirm(`Delete policy provider?`)) {
             window.ApiClient.delete(`/policy-providers/${params.row.id}`)
             .then(async () => {
-                await Client.GetPolicyProviders(dispatch);
+                await Client.PolicyProviders.Read(dispatch);
             });
         }        
     }, [ dispatch ]);

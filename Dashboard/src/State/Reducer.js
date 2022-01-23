@@ -8,6 +8,8 @@ export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
 export const SET_MODELS             = 'SET_MODELS';
 export const SET_FUNDS              = 'SET_FUNDS';
 
+// The various "|| []" in this file are due to the server returning nil for empty arrays.
+
 const Reducer = (state, action) => {
     switch (action.type) {
         // User session
@@ -29,19 +31,19 @@ const Reducer = (state, action) => {
         case SET_FUNDS:
             return {
                 ...state,
-                Funds: action.payload.Funds,
+                Funds: action.payload.Funds || [],
             }
 
         case SET_OPERATORS:
             return {
                 ...state,
-                Operators: action.payload.Operators,
+                Operators: action.payload.Operators || [],
             }
 
         case SET_POLICY_TYPES:
             return {
                 ...state,
-                PolicyTypes: action.payload.PolicyTypes,
+                PolicyTypes: action.payload.PolicyTypes || [],
         }
 
         case SET_POLICY_PROVIDERS:
@@ -55,20 +57,15 @@ const Reducer = (state, action) => {
         case SET_CLIENTS:
             return {
                 ...state,
-                Clients: action.payload.Clients,
+                Clients: action.payload.Clients || [],
             }
 
         case POPULATE_CLIENT:
             let client = action.payload.Client;
 
-            // Server returns nil for empty arrays
             client.Policies    ||= [];
             client.PolicyFunds ||= [];
             client.Portfolios  ||= [];
-            console.log(client);
-            // if (!client.Policies) { client.Policies = []; }
-            // if (!client.PolicyFunds) { client.PolicyFunds = []; }
-            // if (!client.Portfolios) { client.Portfolios= []; }
 
             let fn = (p, q) => p.Id - q.Id;
 

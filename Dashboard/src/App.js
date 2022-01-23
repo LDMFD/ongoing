@@ -19,13 +19,17 @@ window.ApiClient = axios.create({
 
 // TODO check https://stackoverflow.com/a/59693754
 window.ApiClient.interceptors.response.use((response) => response, (err) => {
-    console.log(err);
-    if (err.response && err.response.data) {
-        console.log(err.response.data.error);
-        alert(err.response.data.error);
+    console.log(`error: ${err}`);
+
+    const str = err.toString();
+    const responseError = err?.response?.data;
+
+    if (typeof responseError == 'object') {  // explicit error returned from command handler
+        alert(responseError.error);
     } else {
-        alert(err);
+        alert(str);
     }
+
     throw err;  // prevent goBack() on error
 });
 

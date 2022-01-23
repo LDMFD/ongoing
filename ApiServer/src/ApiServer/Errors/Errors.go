@@ -9,3 +9,7 @@ var PolicyHasDependentPortfolios = "Unable to delete - policy has dependent port
 func PolicyProviderHasDependentPolicies(policies string) string {
 	return fmt.Sprintf("Policy provider has dependent policies: [ %v ]", policies)
 }
+
+func PolicyTypeHasDependentPolicies(policies string) string {
+	return fmt.Sprintf("Policy type has dependent policies: [ %v ]", policies)
+}

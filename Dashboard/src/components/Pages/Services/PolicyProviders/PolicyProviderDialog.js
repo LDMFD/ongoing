@@ -17,7 +17,7 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
     let goBack = GoBack(history);
 
     const handlers = {
-        SetName: (event) => { setPolicyProvider({ ...policyProvider, Name: event.target.value, }); },
+        SetName:    (event) => { setPolicyProvider({ ...policyProvider, Name: event.target.value, }); },
         SetPricing: (event) => { setPolicyProvider({ ...policyProvider, Pricing: event.target.value, }); },
     };
     
@@ -28,7 +28,7 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                     <DialogTitle>{submitLabel} Portfolio</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Enter policyProvider details
+                            Enter policy provider details
                         </DialogContentText>
 
                         <TextField value    = {policyProvider.Name}

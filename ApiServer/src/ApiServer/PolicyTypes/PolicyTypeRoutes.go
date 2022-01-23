@@ -11,4 +11,5 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.POST("", Commands.CreatePolicyType)
 	r.GET("/:PolicyTypeId", Commands.GetPolicyType)
 	r.PUT("/:PolicyTypeId", Commands.UpdatePolicyType)
+	r.DELETE("/:PolicyTypeId", Commands.DeletePolicyType)
 }

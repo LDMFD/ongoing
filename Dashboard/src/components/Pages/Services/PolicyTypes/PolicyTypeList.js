@@ -1,73 +1,63 @@
-import React, { useEffect, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
-    Breadcrumbs,
     Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
     Toolbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
-import { Link } from "react-router-dom";
-
-import { Context } from 'State/StateProvider'
-import { SET_POLICY_TYPES } from 'State/Reducer';
+import { Context, Client } from 'State'
 
 const PolicyTypeList = () => {
-    const [state, dispatch] = useContext(Context);
+    let history = useHistory();
+    const [ state, dispatch] = useContext(Context);
 
-    const getPolicyTypes = useCallback(() => {
-        window.ApiClient.get("/policy-types").then(res => {
-            dispatch({
-                type: SET_POLICY_TYPES,
-                payload: res.data,
-            });
-        });
+    const onDelete = useCallback(params => async () => {
+        if (window.confirm(`Delete policy type?`)) {
+            await Client.PolicyTypes.Delete(params.row.id)
+            await Client.PolicyTypes.Read(dispatch);
+        }        
     }, [ dispatch ]);
 
-    useEffect(() => {
-        getPolicyTypes();
-    }, [ getPolicyTypes ]);
-    
+    const onEdit = useCallback(params => () => {
+        history.push(`/policy-types/id/${params.row.id}/edit`);
+    }, [ history ]);
+
+    const columns = [
+        { field: 'name',     headerName: 'Name',       flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .01,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
+            ]
+        },
+    ];
+
+    let policyTypes = state.PolicyTypes.map(p => {
+        return {
+            id:       p.Id,
+            name:     p.Name,
+        };
+    });
+
+    let data = {
+        rows: policyTypes,
+        columns: columns,
+    }
+
     return (
-        <div className='PolicyTypes'>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to={window.location}>
-                    Policy Types
-                </Link>
-            </Breadcrumbs>
-        
+        <>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/policy-types/add' }}><Button>Add new policy type</Button></Link>
+                <Link to={{ pathname: '/policy-Types/add' }}><Button>Add new policy type</Button></Link>
             </Toolbar>
 
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Policy Type</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {state.PolicyTypes && state.PolicyTypes.map(policyType => {
-                            return (
-                                <TableRow key={policyType.Id}>
-                                    <TableCell>
-                                        <Link to={`/policy-types/id/${policyType.Id}/edit`} key={policyType.Id}>
-                                            {policyType.Name}
-                                        </Link>
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+            <DataGrid autoHeight {...data} />
+        </>
     );
 }
 
