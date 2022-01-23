@@ -17,5 +17,6 @@ type Policy struct {
 	PlatformDiscount float64   `bun:"platform_discount,notnull"`
 	Timestamp        time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
+	Client      *Client        `bun:"rel:has-one,join:client_id=id"`
 	Portfolios  []*Portfolio   `bun:"rel:has-many,join:id=client_id"`
 }

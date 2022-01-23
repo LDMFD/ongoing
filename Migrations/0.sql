@@ -44,8 +44,8 @@ CREATE TABLE models (   -- was "Portfolios"
     "ex_ante_fee"             decimal not null,
     "file_id"                 int,              -- factsheet
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_operator          FOREIGN KEY(operator_id)       REFERENCES operators(id)          ON DELETE CASCADE,
-    CONSTRAINT fk_file              FOREIGN KEY(file_id)           REFERENCES files(id)              ON DELETE CASCADE
+    CONSTRAINT fk_operator          FOREIGN KEY(operator_id)       REFERENCES operators(id)          ON DELETE RESTRICT,
+    CONSTRAINT fk_file              FOREIGN KEY(file_id)           REFERENCES files(id)              ON DELETE RESTRICT
 );
 
 -- For individually managed policy funds (no model)
@@ -78,9 +78,9 @@ CREATE TABLE policies (
     "policy_type_id"          int not null,
     "policy_provider_id"      int not null,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_client            FOREIGN KEY(client_id)          REFERENCES clients(id)          ON DELETE CASCADE,
-    CONSTRAINT fk_policy_type       FOREIGN KEY(policy_type_id)     REFERENCES policy_types(id)     ON DELETE CASCADE,
-    CONSTRAINT fk_policy_provider   FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE CASCADE
+    CONSTRAINT fk_client            FOREIGN KEY(client_id)          REFERENCES clients(id)          ON DELETE RESTRICT,
+    CONSTRAINT fk_policy_type       FOREIGN KEY(policy_type_id)     REFERENCES policy_types(id)     ON DELETE RESTRICT,
+    CONSTRAINT fk_policy_provider   FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE RESTRICT
 );
 
 -- Funds attached to a policy, no model
@@ -91,8 +91,8 @@ CREATE TABLE policy_funds (
     "policy_id"               int not null,
     "proportion"              decimal not null,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_fund              FOREIGN KEY(fund_id)             REFERENCES funds(id)             ON DELETE CASCADE,
-    CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE CASCADE
+    CONSTRAINT fk_fund              FOREIGN KEY(fund_id)             REFERENCES funds(id)             ON DELETE RESTRICT,
+    CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE RESTRICT
 );
 
 -- Policy + model
@@ -103,9 +103,9 @@ CREATE TABLE portfolios (   -- was "Holdings"
     "model_id"                int not null,
     "proportion"              decimal not null,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_client            FOREIGN KEY(client_id)           REFERENCES clients(id)           ON DELETE CASCADE,
+    CONSTRAINT fk_client            FOREIGN KEY(client_id)           REFERENCES clients(id)           ON DELETE RESTRICT,
     CONSTRAINT fk_policy            FOREIGN KEY(policy_id)           REFERENCES policies(id)          ON DELETE RESTRICT,
-    CONSTRAINT fk_model             FOREIGN KEY(model_id)            REFERENCES models(id)            ON DELETE CASCADE
+    CONSTRAINT fk_model             FOREIGN KEY(model_id)            REFERENCES models(id)            ON DELETE RESTRICT
 );
 
 CREATE TYPE review_state AS ENUM (
@@ -121,5 +121,5 @@ CREATE TABLE reviews (
     "state"                   review_state default 'DRAFT' not null,
     "report"                  json not null,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_client            FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE CASCADE
+    CONSTRAINT fk_client            FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT
 );

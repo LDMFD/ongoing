@@ -91,7 +91,7 @@ const AddPolicy = () => {
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select policy type</MenuItem>
-                            {state.PolicyTypes.map(t => (
+                            {state.PolicyTypes?.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>
@@ -106,7 +106,7 @@ const AddPolicy = () => {
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select provider</MenuItem>
-                            {state.PolicyProviders.map(t => (
+                            {state.PolicyProviders?.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>

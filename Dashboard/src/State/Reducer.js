@@ -47,7 +47,7 @@ const Reducer = (state, action) => {
         case SET_POLICY_PROVIDERS:
             return {
                 ...state,
-                PolicyProviders: action.payload.PolicyProviders,
+                PolicyProviders: action.payload.PolicyProviders || [],
             }
 
         // Clients
@@ -62,9 +62,13 @@ const Reducer = (state, action) => {
             let client = action.payload.Client;
 
             // Server returns nil for empty arrays
-            if (!client.Policies) { client.Policies = []; }
-            if (!client.PolicyFunds) { client.PolicyFunds = []; }
-            if (!client.Portfolios) { client.Portfolios= []; }
+            client.Policies    ||= [];
+            client.PolicyFunds ||= [];
+            client.Portfolios  ||= [];
+            console.log(client);
+            // if (!client.Policies) { client.Policies = []; }
+            // if (!client.PolicyFunds) { client.PolicyFunds = []; }
+            // if (!client.Portfolios) { client.Portfolios= []; }
 
             let fn = (p, q) => p.Id - q.Id;
 

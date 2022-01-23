@@ -20,7 +20,7 @@ import './AppDrawer.css';
 import Routes from './Routes';
 import AuthControl from './AuthControl';
 import { Context } from 'State/StateProvider';
-import InitialStateLoader from "State/InitialStateLoader";
+import InitialState from "State/InitialState";
 
 const drawerWidth = 240;
 
@@ -115,9 +115,9 @@ export default function PermanentDrawerLeft() {
 
                 <Toolbar />
 
-                <InitialStateLoader>
+                <InitialState>
                     <Routes />
-                </InitialStateLoader>
+                </InitialState>
             </Box>
         </Box>
     ) : (

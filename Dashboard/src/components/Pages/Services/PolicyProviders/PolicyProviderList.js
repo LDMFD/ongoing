@@ -1,77 +1,76 @@
 import React, { useEffect, useContext, useCallback } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
-    Breadcrumbs,
     Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
     Toolbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
-import { Link } from "react-router-dom";
-
-import { Context } from 'State/StateProvider'
-import { SET_POLICY_PROVIDERS } from 'State/Reducer';
+import { Context, Client } from 'State'
 
 const PolicyProviderList = () => {
-    const [state, dispatch] = useContext(Context);
+    let history = useHistory();
+    const [ state, dispatch] = useContext(Context);
 
     const getPolicyProviders = useCallback(() => {
-        window.ApiClient.get("/policy-providers").then(res => {
-            dispatch({
-                type: SET_POLICY_PROVIDERS,
-                payload: res.data,
-            });
-        });
+        Client.GetPolicyProviders(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
         getPolicyProviders();
     }, [ getPolicyProviders ]);
     
+    const onDelete = useCallback(params => () => {
+        if (window.confirm(`Delete policy provider?`)) {
+            window.ApiClient.delete(`/policy-providers/${params.row.id}`)
+            .then(async () => {
+                await Client.GetPolicyProviders(dispatch);
+            });
+        }        
+    }, [ dispatch ]);
+
+    const onEdit = useCallback(params => () => {
+        let id = params.row.id;
+        history.push(`/policy-providers/id/${id}/edit`);
+    }, [ history ]);
+
+    const columns = [
+        { field: 'name',     headerName: 'Name',       flex: 0.1, },
+        { field: 'pricing',  headerName: 'Pricing',   flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .05,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
+            ]
+        },
+    ];
+
+    let policyProviders = state.PolicyProviders.map(p => {
+        return {
+            id:       p.Id,
+            name:     p.Name,
+            pricing:  p.Pricing,
+        };
+    });
+
+    let data = {
+        rows: policyProviders,
+        columns: columns,
+    }
+
     return (
-        <div className='PolicyProviders'>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to={window.location}>
-                    Policy Providers
-                </Link>
-            </Breadcrumbs>
-        
+        <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: '/policy-providers/add' }}><Button>Add new policy provider</Button></Link>
             </Toolbar>
 
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Pricing</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {state.PolicyProviders && state.PolicyProviders.map(policyProvider => {
-                            return (
-                                <TableRow key={policyProvider.Id}>
-                                    <TableCell>
-                                        <Link to={`/policy-providers/id/${policyProvider.Id}/edit`} key={policyProvider.Id}>
-                                            {policyProvider.Name}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        {policyProvider.Pricing}
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+            <DataGrid autoHeight {...data} />
+        </>
     );
 }
 

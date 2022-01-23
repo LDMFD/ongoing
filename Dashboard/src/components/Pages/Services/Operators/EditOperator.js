@@ -44,7 +44,7 @@ const EditOperator = () => {
     return (
         <OperatorDialog operator      = {operator}
                         setOperator   = {setOperator}
-                        submitLabel   = 'Edit'
+                        submitLabel   = 'Update'
                         submitHandler = {submitHandler} />
     );
 }

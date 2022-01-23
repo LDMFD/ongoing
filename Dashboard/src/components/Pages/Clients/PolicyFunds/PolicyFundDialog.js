@@ -53,7 +53,7 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select policy</MenuItem>
-                        {client.Policies.map(t => (
+                        {client.Policies?.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.ExternalId}
                             </MenuItem>
@@ -68,7 +68,7 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select fund</MenuItem>
-                        {state.Funds.map(t => (
+                        {state.Funds?.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>
