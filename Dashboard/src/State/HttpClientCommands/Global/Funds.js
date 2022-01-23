@@ -27,10 +27,10 @@ const Delete = (fundId) => {
     return window.ApiClient.delete(`/funds/${fundId}`)
 }
 
-const exports = {
+const defaults = {
     Create,
     Read,
     Update,
     Delete,
 };
-export default exports;
+export default defaults;

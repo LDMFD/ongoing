@@ -27,10 +27,10 @@ const Delete = (operatorId) => {
     return window.ApiClient.delete(`/operators/${operatorId}`)
 }
 
-const exports = {
+const defaults = {
     Create,
     Read,
     Update,
     Delete,
 };
-export default exports;
+export default defaults;

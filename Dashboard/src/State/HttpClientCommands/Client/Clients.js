@@ -19,7 +19,7 @@ const Read = (dispatch) => {
 
 const Update = (client) => {
     return window.ApiClient.put(`/clients/${client.Id}`, {
-        ...clients
+        ...client
     })
 }
 
@@ -27,10 +27,10 @@ const Delete = (clientId) => {
     return window.ApiClient.delete(`/clients/${clientId}`)
 }
 
-const exports = {
+const defaults = {
     Create,
     Read,
     Update,
     Delete,
 };
-export default exports;
+export default defaults;

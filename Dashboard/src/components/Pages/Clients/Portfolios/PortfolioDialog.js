@@ -37,8 +37,8 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
     };
     
     return (
-        <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack}>
+            <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Portfolio</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -81,15 +81,15 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             id       = "proportion"
                             label    = "Proportion"
                             type     = "number"
-                            fullWidth />
+                            fullWidth autoFocus />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button onClick={submitHandler}>{submitLabel}</Button>
+                    <Button type='submit' onClick={submitHandler}>{submitLabel}</Button>
                 </DialogActions>
-            </Dialog>
-        </div>
+            </form>
+        </Dialog>
     );
 };
 

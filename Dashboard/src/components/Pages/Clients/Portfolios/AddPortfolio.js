@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { POPULATE_CLIENT } from 'State/Reducer';
 import { DefaultPortfolio } from './DefaultPortfolio';
 import PortfolioDialog from './PortfolioDialog';
 import { GoBack } from 'Utils';
+import { Client } from 'State';
 
 const AddPortfolio = () => {
     let history = useHistory();
@@ -20,22 +20,16 @@ const AddPortfolio = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        if (portfolio.Proportion === '') {
-            portfolio.Proportion = 1;
-        }
-        window.ApiClient.post(`/clients/${clientId}/portfolios`, {
-            ...portfolio
-        }).then(_ => {
-            return window.ApiClient.get(`/clients/${clientId}`).then(res => {
-                dispatch({
-                    type: POPULATE_CLIENT,
-                    payload: res.data,
-                })
-            }).then(goBack);;
-        });
+        Client.Client.Portfolios.Create(clientId, portfolio)
+            .then(() => {
+                goBack();
+            })
+            .then(async () => {
+                await Client.Client.ClientDetail.Read(dispatch, clientId);
+            });
         return false;
     };
-
+    
     return (
         <PortfolioDialog portfolio     = {portfolio}
                          setPortfolio  = {setPortfolio}

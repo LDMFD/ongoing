@@ -1,16 +1,8 @@
-import Clients         from './HttpClientCommands/Client/Clients';
-import Funds           from './HttpClientCommands/Global/Funds';
-import Operators       from './HttpClientCommands/Global/Operators';
-import PolicyTypes     from './HttpClientCommands/Global/PolicyTypes';
-import PolicyProviders from './HttpClientCommands/Global/PolicyProviders';
-import Models          from './HttpClientCommands/Global/Models';
+import Client from './HttpClientCommands/Client';
+import Global from './HttpClientCommands/Global';
 
-const exports = {
-    Clients,
-    Funds,
-    Models,
-    Operators,
-    PolicyProviders,
-    PolicyTypes,
+const defaults = {
+    Client,
+    Global,
 };
-export default exports;
+export default defaults;

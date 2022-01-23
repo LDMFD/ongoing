@@ -27,10 +27,10 @@ const Delete = (policyProviderId) => {
     return window.ApiClient.delete(`/policy-providers/${policyProviderId}`)
 }
 
-const exports = {
+const defaults = {
     Create,
     Read,
     Update,
     Delete,
 };
-export default exports;
+export default defaults;

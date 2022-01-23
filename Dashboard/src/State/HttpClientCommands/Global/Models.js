@@ -27,10 +27,10 @@ const Delete = (modelId) => {
     return window.ApiClient.delete(`/models/${modelId}`)
 }
 
-const exports = {
+const defaults = {
     Create,
     Read,
     Update,
     Delete,
 };
-export default exports;
+export default defaults;

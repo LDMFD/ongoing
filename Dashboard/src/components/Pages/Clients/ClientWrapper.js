@@ -8,9 +8,9 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { POPULATE_CLIENT } from 'State/Reducer';
 import { Context } from 'State/StateProvider'
 import { RouteMatch } from 'Utils';
+import { Client } from 'State';
 
 const ClientWrapper = ({ children }) => {
     let { clientId } = useParams();
@@ -20,22 +20,10 @@ const ClientWrapper = ({ children }) => {
 
     let [ loaded, setLoaded ] = useState(false);
 
-    const getClientDetail = useCallback(() => {
-        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
-            dispatch({
-                type: POPULATE_CLIENT,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch, clientId ]);
-
     const getDependencies = useCallback(async () => {
-        await getClientDetail();
-
+        await Client.Client.ClientDetail.Read(dispatch, clientId);
         setLoaded(true);
-    }, [
-        getClientDetail,
-    ]);
+    }, [ dispatch, clientId ]);
 
     useEffect(() => {
         getDependencies();

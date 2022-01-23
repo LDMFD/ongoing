@@ -22,12 +22,10 @@ const FundList = () => {
         getFunds();
     }, [ getFunds ]);
     
-    const onDelete = useCallback(params => () => {
+    const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete fund?`)) {
-            window.ApiClient.delete(`/funds/${params.row.id}`)
-            .then(async () => {
-                await Client.Funds.Read(dispatch);
-            });
+            await window.ApiClient.delete(`/funds/${params.row.id}`)
+            await Client.Funds.Read(dispatch);
         }        
     }, [ dispatch ]);
 
