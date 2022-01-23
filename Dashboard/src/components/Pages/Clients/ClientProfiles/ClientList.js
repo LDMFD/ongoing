@@ -1,83 +1,65 @@
-import React, { useEffect, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
-    Breadcrumbs,
     Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
     Toolbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 
-import Day from 'dayjs';
-import { Link } from "react-router-dom";
-
-import { Context } from 'State/StateProvider'
-import { SET_CLIENTS } from 'State/Reducer';
+import { Context, Client } from 'State'
 
 const ClientList = () => {
-    const [state, dispatch] = useContext(Context);
+    let history = useHistory();
+    const [ state, dispatch] = useContext(Context);
 
-    const getClients = useCallback(() => {
-        window.ApiClient.get("/clients").then(res => {
-            dispatch({
-                type: SET_CLIENTS,
-                payload: res.data,
-            });
-        });
+    const onDelete = useCallback(params => async () => {
+        if (window.confirm(`Delete client?`)) {
+            await Client.Clients.Delete(params.row.id)
+            await Client.Clients.Read(dispatch);
+        }        
     }, [ dispatch ]);
 
-    useEffect(() => {
-        getClients();
-    }, [getClients]);
+    const onOpen = useCallback(params => () => {
+        history.push(`/clients/id/${params.row.id}`);
+    }, [ history ]);
+
+    const columns = [
+        { field: 'idLabel',  headerName: 'Client ID',  flex: 0.1, },
+        { field: 'name',     headerName: 'Name',       flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .01,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<MeetingRoomIcon />}   onClick={onOpen(params)}   label="Open" />,
+                <GridActionsCellItem icon={<DeleteIcon />}        onClick={onDelete(params)} label="Delete" />,
+            ]
+        },
+    ];
+
+    let clients = state.Clients.map(c => {
+        return {
+            id:       c.Id,
+            idLabel:  `#${c.Id}`,
+            name:     `${c.Surname}, ${c.Forenames}`,
+        };
+    });
+
+    let data = {
+        rows: clients,
+        columns: columns,
+    }
 
     return (
-        <div className='Clients'>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to={window.location}>
-                    Clients
-                </Link>
-            </Breadcrumbs>
-        
+        <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: '/clients/add' }}><Button>Add new client</Button></Link>
             </Toolbar>
 
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Date</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {state.Clients && state.Clients.map(client => {
-                            let date = Day(client.Date).toString();
-                            return (
-                                <TableRow key={client.Id}>
-                                    <TableCell>
-                                        <Link to={`/clients/id/${client.Id}`} key={client.Id}>
-                                            #{client.Id}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        {client.Surname}, {client.Forenames}
-                                    </TableCell>
-                                    <TableCell>
-                                        {date}
-                                    </TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </div>
+            <DataGrid autoHeight {...data} />
+        </>
     );
 }
 

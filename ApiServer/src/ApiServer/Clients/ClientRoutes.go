@@ -15,6 +15,7 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.POST("", ClientProfile.CreateClient)
 	r.GET("/:ClientId", ClientProfile.GetClient)
 	r.PUT("/:ClientId", ClientProfile.UpdateClient)
+	r.DELETE("/:ClientId", ClientProfile.DeleteClient)
 
 	reviewGroup := r.Group("/:ClientId/reviews")
 	reviewGroup.POST("", Reviews.CreateReview)
