@@ -18,15 +18,11 @@ const AddPortfolio = () => {
 
     let [ portfolio, setPortfolio ] = useState(DefaultPortfolio);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        Api.Clients.Portfolios.Create(clientId, portfolio)
-            .then(() => {
-                goBack();
-            })
-            .then(async () => {
-                await Api.Clients.ClientDetail.Read(dispatch, clientId);
-            });
+        await Api.Clients.Portfolios.Create(clientId, portfolio);
+        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        goBack();
         return false;
     };
     

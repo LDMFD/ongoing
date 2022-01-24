@@ -4,9 +4,9 @@ const Create = (clientId, portfolio) => {
     });
 }
 
-const Update = (client) => {
-    return window.ApiClient.put(`/clients/${client.Id}`, {
-        ...client
+const Update = (clientId, portfolio) => {
+    return window.ApiClient.put(`/clients/${clientId}/portfolios/${portfolio.Id}`, {
+        ...portfolio
     })
 }
 

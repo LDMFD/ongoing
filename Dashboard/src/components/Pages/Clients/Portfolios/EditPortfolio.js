@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { POPULATE_CLIENT } from 'State/Reducer';
 import PortfolioDialog from './PortfolioDialog';
 import { GoBack } from 'Utils';
+import { Api } from 'State';
 
 const EditPortfolio = () => {
     let history = useHistory();
@@ -22,21 +22,14 @@ const EditPortfolio = () => {
         setPortfolio(client.Portfolios.find(h => h.Id === portfolioId))
         return;
     }
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         if (portfolio.Proportion === '') {
             portfolio.Proportion = 1;
         }
-        window.ApiClient.put(`/clients/${clientId}/portfolios/${portfolioId}`, {
-            ...portfolio
-        }).then(_ => {
-            return window.ApiClient.get(`/clients/${clientId}`).then(res => {
-                dispatch({
-                    type: POPULATE_CLIENT,
-                    payload: res.data,
-                })
-            }).then(goBack);;
-        });
+        await Api.Clients.Portfolios.Update(clientId, portfolio)
+        await Api.Clients.ClientDetail.Read(dispatch, clientId)
+        goBack();
         return false;
     };
 

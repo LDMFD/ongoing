@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 
 import { Context } from 'State/StateProvider'
-import { POPULATE_CLIENT } from 'State/Reducer';
 
 import './PolicyList.css';
+import { Api } from 'State';
 
 const PolicyList = () => {
     let history = useHistory();
@@ -23,23 +23,12 @@ const PolicyList = () => {
 
     let client = state.Clients.find(c => c.Id === clientId);
 
-    const getClientDetail = useCallback(() => {
-        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
-            dispatch({
-                type: POPULATE_CLIENT,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch, clientId ]);
-
-    const deletePolicy = useCallback(params => () => {
+    const deletePolicy = useCallback(params => async () => {
         if (window.confirm(`Delete policy?`)) {
-            window.ApiClient.delete(`/clients/${clientId}/policies/${params.row.id}`)
-            .then(async () => {
-                await getClientDetail();
-            });
-        }        
-    }, [ clientId, getClientDetail ]);
+            await Api.Clients.Policies.Delete(clientId, params.row.id);
+            await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        }
+    }, [ dispatch, clientId ]);
 
     const editPolicy = useCallback(params => () => {
         let id = params.row.id;

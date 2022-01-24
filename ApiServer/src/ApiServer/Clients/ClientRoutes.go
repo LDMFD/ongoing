@@ -33,4 +33,5 @@ func AddRoutes(r *gin.RouterGroup) {
 	policyFundGroup := r.Group("/:ClientId/policy-funds")
 	policyFundGroup.POST("", PolicyFunds.CreatePolicyFund)
 	policyFundGroup.PUT("/:PolicyFundId", PolicyFunds.UpdatePolicyFund)
+	policyFundGroup.DELETE("/:PolicyFundId", PolicyFunds.DeletePolicyFund)
 }
