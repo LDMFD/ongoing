@@ -1,0 +1,7 @@
+.text-editor {
+    padding: 0.5rem 0;
+}
+.ql-container.ql-snow {
+    border-radius: 0 0 5px 5px;
+    border-top: none;
+}

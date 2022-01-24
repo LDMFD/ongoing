@@ -11,6 +11,9 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils';
+import RichTextEditor from 'components/Widgets/RichTextEditor';
+
+import './PolicyProviderDialog.css';
 
 export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -18,19 +21,20 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
 
     const handlers = {
         SetName:    (event) => { setPolicyProvider({ ...policyProvider, Name: event.target.value, }); },
-        SetPricing: (event) => { setPolicyProvider({ ...policyProvider, Pricing: event.target.value, }); },
+        SetPricing: (html) => { setPolicyProvider({ ...policyProvider, Pricing: html, }); },
     };
-    
+
     return (
         <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
+            <Dialog open={true} onClose={goBack} fullWidth={true} maxWidth={'md'}>
                 <form onSubmit={submitHandler}>
-                    <DialogTitle>{submitLabel} Portfolio</DialogTitle>
+                    <DialogTitle>{submitLabel} Policy Provider</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Enter policy provider details
                         </DialogContentText>
 
+                        <br />
                         <TextField value    = {policyProvider.Name}
                                    onChange = {handlers.SetName}
                                    margin   = "dense"
@@ -39,13 +43,13 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                                    type     = "text"
                                    autoFocus fullWidth />
 
-                        <TextField value    = {policyProvider.Pricing}
-                                   onChange = {handlers.SetPricing}
-                                   margin   = "dense"
-                                   id       = "fee"
-                                   label    = "Fee"
-                                   type     = "number"
-                                   fullWidth />
+                        &nbsp;
+                        <DialogContentText>
+                            Pricing
+                        </DialogContentText>
+                        
+                        <RichTextEditor initialValue = {policyProvider.Pricing}
+                                        onChange     = {handlers.SetPricing} />
 
                     </DialogContent>
                     <DialogActions>
