@@ -58,7 +58,7 @@ const ModelList = () => {
         return {
             id:          m.Id,
             name:        m.Name,
-            operator:    op.Name,
+            operator:    op,
             weightedFee: m.WeightedFee,
             exAnteFee:   m.ExAnteFee,
             file:        m.File?.Filename,
