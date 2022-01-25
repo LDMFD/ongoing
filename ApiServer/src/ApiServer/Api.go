@@ -3,19 +3,12 @@ package ApiServer
 import (
 	"log"
 	"net/http"
-	"ongoing/ApiServer/Clients"
-	"ongoing/ApiServer/Funds"
-	"ongoing/ApiServer/Models"
-	"ongoing/ApiServer/PolicyProviders"
-	"ongoing/ApiServer/PolicyTypes"
 	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	cors "github.com/rs/cors/wrapper/gin"
 	"github.com/uptrace/bun"
-
-	"ongoing/ApiServer/Operators"
 )
 // TODO https://github.com/gin-gonic/gin#support-lets-encrypt
 
@@ -68,23 +61,11 @@ func (s *ApiServer) ListenAndServe() error {
 	// Recover from panics and respond 500
 	r.Use(gin.Recovery())
 
-	// Also add timing - see custom middleware example
+	// TODO add timing - see custom middleware example
 
 	r.Use(AddDatabaseMiddleware(s.db))
 
-	r.Use(AuthMiddleware())
-
-	Clients.AddRoutes(r.Group("/clients"))
-	Funds.AddRoutes(r.Group("/funds"))
-	Operators.AddRoutes(r.Group("/operators"))
-	Models.AddRoutes(r.Group("/models"))
-	PolicyTypes.AddRoutes(r.Group("/policy-types"))
-	PolicyProviders.AddRoutes(r.Group("/policy-providers"))
-
-	r.GET("/user", s.getUser)
-	r.GET("/download", s.requestDownload)
-	r.GET("/upload", s.requestUpload)
-	r.POST("/upload", s.signalUpload)
+	AddApiRoutes(r)
 
 	r.Run(":8000")
 

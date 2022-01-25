@@ -12,7 +12,7 @@ const File = ({ file, completionCallback }) => {
             Size: 0,
         };
 
-        window.ApiClient.get(`/upload?Filename=${file.name}`).then(res => {
+        window.ApiClient.get(`/storage/upload?Filename=${file.name}`).then(res => {
             let postData = new FormData();
 
             Object.keys(res.data.Fields).forEach(f => {

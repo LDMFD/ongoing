@@ -1,20 +1,20 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import ClientWrapper   from './ClientWrapper';
-import PortfolioList   from './Portfolios/PortfolioList';
-import AddPortfolio    from './Portfolios/AddPortfolio';
-import EditPortfolio   from './Portfolios/EditPortfolio';
-import AddClient       from './ClientProfiles/AddClient';
-import ClientList      from './ClientProfiles/ClientList';
-import EditClient      from './ClientProfiles/EditClient';
-import AddPolicy       from './Policies/AddPolicy';
-import EditPolicy      from './Policies/EditPolicy';
-import PolicyList      from './Policies/PolicyList';
-import ReviewList      from './Reviews/ReviewList';
-import PolicyFundList  from './PolicyFunds/PolicyFundList';
-import AddPolicyFund   from './PolicyFunds/AddPolicyFund';
-import EditPolicyFund  from './PolicyFunds/EditPolicyFund';
+import ClientWrapper     from './ClientWrapper';
+import PortfolioList     from './Portfolios/PortfolioList';
+import AddPortfolio      from './Portfolios/AddPortfolio';
+import EditPortfolio     from './Portfolios/EditPortfolio';
+import AddClient         from './ClientProfiles/AddClient';
+import ClientList        from './ClientProfiles/ClientList';
+import EditClient        from './ClientProfiles/EditClient';
+import AddPolicy         from './Policies/AddPolicy';
+import EditPolicy        from './Policies/EditPolicy';
+import PolicyList        from './Policies/PolicyList';
+import ReviewList        from './Reviews/ReviewList';
+import PolicyFundList    from './PolicyFunds/PolicyFundList';
+import AddPolicyFund     from './PolicyFunds/AddPolicyFund';
+import EditPolicyFund    from './PolicyFunds/EditPolicyFund';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();

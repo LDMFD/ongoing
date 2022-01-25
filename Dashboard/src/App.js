@@ -10,10 +10,10 @@ import StateProvider from 'State/StateProvider'
 
 import './App.css';
 
-const ONGOING_API_URL = 'http://api.ongoing.localhost:8000/';
+const ONGOING_API_URL = 'http://api.ongoing.localhost:8000';
 
 window.ApiClient = axios.create({
-    baseURL: ONGOING_API_URL,
+    baseURL: `${ONGOING_API_URL}/advisor`,
     // withCredentials: true,
 });
 

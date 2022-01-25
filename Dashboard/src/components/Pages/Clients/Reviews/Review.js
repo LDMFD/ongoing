@@ -9,7 +9,7 @@ import FileInput from 'components/Widgets/FileUploader';
 
 const Review = ({ review }) => {
     const download = (uid) => {
-        window.ApiClient.get(`/download?Uid=${uid}`).then(res => {
+        window.ApiClient.get(`/storage/download?Uid=${uid}`).then(res => {
             window.location = res.data.Url;
         })
     };

@@ -8,6 +8,11 @@ import (
 	"net/http"
 )
 
+var users = []string{
+	"darren@tp1.org",
+	"ac@tp1.org",
+}
+
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
@@ -37,11 +42,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		// Restrict to test users
-		if token.Claims["email"].(string) != "darren@tp1.org" {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
+		for _, email := range users {
+			if email == token.Claims["email"].(string) {
+				c.Next()
+			}
 		}
-
-		c.Next()
+		c.AbortWithStatus(http.StatusForbidden)
 	}
 }
