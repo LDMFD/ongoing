@@ -24,7 +24,7 @@ const FundList = () => {
     
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete fund?`)) {
-            await window.ApiClient.delete(`/funds/${params.row.id}`)
+            await window.ApiClient.delete(`advisor/funds/${params.row.id}`)
             await Api.Global.Funds.Read(dispatch);
         }        
     }, [ dispatch ]);

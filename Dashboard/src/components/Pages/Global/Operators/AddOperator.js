@@ -16,14 +16,14 @@ const AddOperator = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.post("/operators", {
+        window.ApiClient.post("advisor/operators", {
             ...operator
         })
         .then(() => {
             goBack();
         })
         .then(_ => {
-            window.ApiClient.get("/operators").then(res => {
+            window.ApiClient.get("advisor/operators").then(res => {
                 dispatch({
                     type: SET_OPERATORS,
                     payload: res.data,

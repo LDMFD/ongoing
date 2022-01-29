@@ -2,6 +2,7 @@ package PolicyFunds
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -45,7 +46,7 @@ func UpdatePolicyFund(c *gin.Context) {
 	}
 
 	if policyFund.ClientId != path.ClientId {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy fund does not belong to client"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyFundDoesNotBelongToClient})
 	}
 
 	policyFund.FundId = body.FundId

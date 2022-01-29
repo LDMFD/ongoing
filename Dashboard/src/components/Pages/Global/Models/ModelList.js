@@ -24,7 +24,7 @@ const ModelList = () => {
     
     const onDelete = useCallback(params => () => {
         if (window.confirm(`Delete model?`)) {
-            window.ApiClient.delete(`/models/${params.row.id}`)
+            window.ApiClient.delete(`advisor/models/${params.row.id}`)
             .then(async () => {
                 await Api.Global.Models.Read(dispatch);
             });

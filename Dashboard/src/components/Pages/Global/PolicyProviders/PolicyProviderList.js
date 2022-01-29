@@ -24,7 +24,7 @@ const PolicyProviderList = () => {
     
     const onDelete = useCallback(params => () => {
         if (window.confirm(`Delete policy provider?`)) {
-            window.ApiClient.delete(`/policy-providers/${params.row.id}`)
+            window.ApiClient.delete(`advisor/policy-providers/${params.row.id}`)
             .then(async () => {
                 await Api.Global.PolicyProviders.Read(dispatch);
             });

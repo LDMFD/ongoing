@@ -13,7 +13,10 @@ func GetClients(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var clients []Entities.Client
-	if err := db.NewSelect().Model(&clients).OrderExpr("id ASC").Scan(c); err != nil {
+	if err := db.NewSelect().
+		Model(&clients).
+		Relation("User").
+		OrderExpr("id ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -3,13 +3,13 @@ import {
 } from "State/Reducer";
 
 const Create = (funds) => {
-    return window.ApiClient.post(`/funds`, {
+    return window.ApiClient.post(`advisor/funds`, {
         ...funds,
     });
 }
 
 const Read = (dispatch) => {
-    return window.ApiClient.get(`/funds`).then(res => {
+    return window.ApiClient.get(`advisor/funds`).then(res => {
         dispatch({
             type: SET_FUNDS,
             payload: res.data,
@@ -18,13 +18,13 @@ const Read = (dispatch) => {
 }
 
 const Update = (funds) => {
-    return window.ApiClient.put(`/funds/${funds.Id}`, {
+    return window.ApiClient.put(`advisor/funds/${funds.Id}`, {
         ...funds
     })
 }
 
 const Delete = (fundId) => {
-    return window.ApiClient.delete(`/funds/${fundId}`)
+    return window.ApiClient.delete(`advisor/funds/${fundId}`)
 }
 
 const defaults = {

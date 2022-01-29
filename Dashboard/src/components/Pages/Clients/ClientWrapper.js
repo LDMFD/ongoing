@@ -35,15 +35,17 @@ const ClientWrapper = ({ children }) => {
 
     function ClientTabs() {
         const routeMatch = RouteMatch(pathname, [
-            '/clients/id/:clientId/portfolios',
+            '/clients/id/:clientId/policies',
             '/clients/id/:clientId/policy-funds',
+            '/clients/id/:clientId/portfolios',
             '/clients/id/:clientId/reviews',
             '/clients/id/:clientId',
         ]);
         const currentTab = routeMatch?.path;
         return (
             <Tabs value={currentTab}>
-                <Tab label="Policies"      value="/clients/id/:clientId"               to={`/clients/id/${clientId}`}               component={Link} />
+                <Tab label="Account"       value="/clients/id/:clientId"               to={`/clients/id/${clientId}`}               component={Link} />
+                <Tab label="Policies"      value="/clients/id/:clientId/policies"      to={`/clients/id/${clientId}/policies`}      component={Link} />
                 <Tab label="Policy funds"  value="/clients/id/:clientId/policy-funds"  to={`/clients/id/${clientId}/policy-funds`}  component={Link} />
                 <Tab label="Portfolios"    value="/clients/id/:clientId/portfolios"    to={`/clients/id/${clientId}/portfolios`}    component={Link} />
                 <Tab label="Reviews"       value="/clients/id/:clientId/reviews"       to={`/clients/id/${clientId}/reviews`}       component={Link} />

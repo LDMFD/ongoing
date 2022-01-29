@@ -24,7 +24,7 @@ import InitialState from "State/InitialState";
 
 const drawerWidth = 240;
 
-const DrawerItems = [
+const advisorItems = [
     {
         label: 'Clients',
         icon: <SearchIcon />,
@@ -57,6 +57,25 @@ const DrawerItems = [
     },
 ];
 
+const Items = {
+    'anonymous': [],
+    'advisor': advisorItems,
+    'admin': advisorItems.concat([
+        {
+            label: 'Users',
+            icon: <SearchIcon />,
+            link: '/clients',
+        },
+    ]),
+    'client': [
+        {
+            label: 'Your Reviews',
+            icon: <SearchIcon />,
+            link: '/reviews',
+        },
+    ],
+};
+
 const DrawerStyles = {
     width: drawerWidth,
     flexShrink: 0,
@@ -71,7 +90,17 @@ export default function PermanentDrawerLeft() {
 
     let location = useLocation();
 
-    return state.Auth ? (
+    if (!state.Auth) {
+        return (
+            <>
+                <br /><br /><br /><br /><br /><br />
+                <AuthControl />
+            </>
+        );
+    }
+    
+    let items = Items[state.Auth.UserType];
+    return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
 
@@ -85,29 +114,28 @@ export default function PermanentDrawerLeft() {
                     <AuthControl />
                 </Toolbar>
             </AppBar>
+
             <Drawer sx      = {DrawerStyles}
                     variant = "permanent"
                     anchor  = "left">
+                <Toolbar />
+                <Divider />
+                
+                <List>
+                    {items.map((iconSpec, index) => (
+                        <Link to={iconSpec.link} key={iconSpec.label}>
+                            <ListItemButton selected={location.pathname.startsWith(iconSpec.link)}>
+                                <ListItemIcon>
+                                    {iconSpec.icon}
+                                </ListItemIcon>
 
-            <Toolbar />
-            <Divider />
-            
-            <List>
-                {DrawerItems.map((iconSpec, index) => (
-                    <Link to={iconSpec.link} key={iconSpec.label}>
-                        <ListItemButton selected={location.pathname.startsWith(iconSpec.link)}>
-                            <ListItemIcon>
-                                {iconSpec.icon}
-                            </ListItemIcon>
-
-                            <ListItemText primary={
-                                iconSpec.label
-                            } />
-                        </ListItemButton>
-                    </Link>
-                ))}
-            </List>
-            
+                                <ListItemText primary={
+                                    iconSpec.label
+                                } />
+                            </ListItemButton>
+                        </Link>
+                    ))}
+                </List>
             </Drawer>
 
             <Box component = "main"
@@ -120,10 +148,5 @@ export default function PermanentDrawerLeft() {
                 </InitialState>
             </Box>
         </Box>
-    ) : (
-        <>
-            <br /><br /><br /><br /><br /><br />
-            <AuthControl />
-        </>
     );
 }

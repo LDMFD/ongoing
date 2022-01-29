@@ -16,5 +16,5 @@ type Portfolio struct {
 	Proportion float64   `bun:"proportion,notnull"`
 	Timestamp  time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Client      *Client        `bun:"rel:has-one,join:client_id=id"`
+	Client      *Client `bun:"rel:has-one,join:client_id=id"`
 }

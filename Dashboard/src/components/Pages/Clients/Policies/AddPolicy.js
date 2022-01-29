@@ -32,7 +32,7 @@ const AddPolicy = () => {
 
     const submit = (e) => {
         e.preventDefault();
-        window.ApiClient.post(`/clients/${clientId}/policies`, {
+        window.ApiClient.post(`advisor/clients/${clientId}/policies`, {
             ExternalId:       externalId,
             PlatformDiscount: platformDiscount,
             PolicyTypeId:     policyTypeId,
@@ -42,7 +42,7 @@ const AddPolicy = () => {
             goBack();
         })
         .then(_ => {
-            window.ApiClient.get(`/clients/${clientId}`).then(res => {
+            window.ApiClient.get(`advisor/clients/${clientId}`).then(res => {
                 dispatch({
                     type: POPULATE_CLIENT,
                     payload: res.data,

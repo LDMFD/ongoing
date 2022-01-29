@@ -1,4 +1,6 @@
-a {
+.MuiDrawer-root a,
+.MuiBreadcrumbs-ol a,
+.MuiToolbar-root a {
     text-decoration: none;
     color: inherit;
 }

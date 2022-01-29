@@ -32,7 +32,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
     };
     
     const download = (uid) => {
-        window.ApiClient.get(`/storage/download?Uid=${uid}`).then(res => {
+        window.ApiClient.get(`advisor/storage/download?Uid=${uid}`).then(res => {
             window.location = res.data.Url;
         })
     };

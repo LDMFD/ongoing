@@ -1,92 +1,33 @@
 import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import {
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-} from '@mui/material';
 
 import { Context } from 'State/StateProvider'
-import { SET_CLIENTS } from 'State/Reducer';
+import { DefaultClient } from './DefaultClient';
+import ClientDialog from './ClientDialog';
 import { GoBack } from 'Utils';
+import { Api } from 'State';
 
 const AddClient = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [ , dispatch] = useContext(Context);
+    const [, dispatch] = useContext(Context);
 
-    let [ surname, setSurname ] = useState('');
-    let [ forenames, setForenames ] = useState('');
+    let [ client, setClient ] = useState(DefaultClient);
 
-    const handleChangeSurname = (event) => {
-        setSurname(event.target.value);
-    }
-    const handleChangeForenames = (event) => {
-        setForenames(event.target.value);
-    }
-
-    const submit = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.post("/clients", {
-            Surname: surname,
-            Forenames: forenames,
-        })
-        .then(() => {
-            goBack();
-        })
-        .then(_ => {
-            window.ApiClient.get("/clients").then(res => {
-                dispatch({
-                    type: SET_CLIENTS,
-                    payload: res.data,
-                })
-            });
-        });
+        await Api.Clients.ClientDetail.Create(client);
+        await Api.Clients.Clients.Read(dispatch);
+        goBack();
         return false;
     };
 
     return (
-        <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
-                <form onSubmit={submit}>
-                    <DialogTitle>Add Client</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Enter client details
-                        </DialogContentText>
-
-                        <TextField value    = {surname}
-                                onChange = {handleChangeSurname}
-                                margin   = "dense"
-                                id       = "surname"
-                                label    = "Surname"
-                                type     = "text"
-                                variant  = "standard"
-                                autoFocus
-                                fullWidth />
-
-                        <TextField value    = {forenames}
-                                onChange = {handleChangeForenames}
-                                margin  = "dense"
-                                id      = "forenames"
-                                label   = "Forenames"
-                                type    = "text"
-                                variant = "standard"
-                                fullWidth />
-
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={goBack}>Cancel</Button>
-                        <Button type='submit'>Add</Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        </div>
+        <ClientDialog client        = {client}
+                      setClient     = {setClient}
+                      submitLabel   = 'Add'
+                      submitHandler = {submitHandler}  />
     );
 }
 

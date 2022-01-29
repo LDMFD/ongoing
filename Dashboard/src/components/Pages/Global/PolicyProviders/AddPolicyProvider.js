@@ -16,7 +16,7 @@ const AddPolicyProvider = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.post("/policy-providers", {
+        window.ApiClient.post("advisor/policy-providers", {
             ...policyProvider
         })
         .then(() => {

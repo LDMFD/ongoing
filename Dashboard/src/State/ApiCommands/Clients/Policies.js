@@ -1,17 +1,17 @@
 const Create = (clientId, policy) => {
-    return window.ApiClient.post(`/clients/${clientId}/policies`, {
+    return window.ApiClient.post(`advisor/clients/${clientId}/policies`, {
         ...policy,
     });
 }
 
 const Update = (clientId, policy) => {
-    return window.ApiClient.put(`/clients/${clientId}/policies/${policy.Id}`, {
+    return window.ApiClient.put(`advisor/clients/${clientId}/policies/${policy.Id}`, {
         ...policy
     })
 }
 
 const Delete = (clientId, policyId) => {
-    return window.ApiClient.delete(`/clients/${clientId}/policies/${policyId}`);
+    return window.ApiClient.delete(`advisor/clients/${clientId}/policies/${policyId}`);
 }
 
 const defaults = {

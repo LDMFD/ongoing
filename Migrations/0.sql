@@ -1,3 +1,20 @@
+CREATE TYPE user_type AS ENUM (
+    'admin',
+    'advisor',
+    'client'
+);
+
+CREATE TABLE users (
+    "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
+    "email"                   text not null unique,
+    "type"                    user_type not null,
+    "timestamp"               timestamp default current_timestamp
+);
+
+INSERT INTO users ("type", "email", "uid") VALUES ('admin',   'darren@tp1.org',           '5f781892e3594e2b9578171de55c18c6');
+INSERT INTO users ("type", "email", "uid") VALUES ('advisor', 'company@tp1.org',          'bcc64c156d5f49df98c249909cd49a42');
+
 -- fund-related:
 
 CREATE TABLE files (
@@ -64,10 +81,11 @@ CREATE TABLE funds (
 
 CREATE TABLE clients (
     "id"                      int primary key generated always as identity,
-    "uid"                     text not null unique,
+    "user_id"                 int not null unique,
     "forenames"               text not null,
     "surname"                 text not null,
-    "timestamp"               timestamp default current_timestamp
+    "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_user            FOREIGN KEY(user_id)          REFERENCES users(id)          ON DELETE RESTRICT
 );
 
 CREATE TABLE policies (

@@ -13,5 +13,5 @@ type PolicyType struct {
 	Name      string    `bun:"name,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Policies  []*Policy  `bun:"rel:has-many,join:id=policy_type_id"`
+	Policies  []*Policy `bun:"rel:has-many,join:id=policy_type_id"`
 }

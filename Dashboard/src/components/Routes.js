@@ -6,6 +6,8 @@ import FundRoutes           from './Pages/Global/Funds/FundRoutes';
 import ModelRoutes          from './Pages/Global/Models/ModelRoutes';
 import PolicyTypeRoutes     from './Pages/Global/PolicyTypes/PolicyTypeRoutes';
 import PolicyProviderRoutes from './Pages/Global/PolicyProviders/PolicyProviderRoutes';
+
+import Reviews from './Pages/ClientSpace/Reviews.js';
   
 const routes = () => (
     <Switch>
@@ -15,6 +17,9 @@ const routes = () => (
         <Route path="/models"           component={ModelRoutes} />
         <Route path="/policy-types"     component={PolicyTypeRoutes} />
         <Route path="/policy-providers" component={PolicyProviderRoutes} />
+
+        <Route path="/reviews" component={Reviews} />
+        
         <Route path="/" />
     </Switch>
 );

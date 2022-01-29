@@ -27,10 +27,10 @@ const EditPolicyFund = () => {
         if (policyFund.Proportion === '') {
             policyFund.Proportion = 1;
         }
-        window.ApiClient.put(`/clients/${clientId}/policy-funds/${policyFundId}`, {
+        window.ApiClient.put(`advisor/clients/${clientId}/policy-funds/${policyFundId}`, {
             ...policyFund
         }).then(_ => {
-            return window.ApiClient.get(`/clients/${clientId}`).then(res => {
+            return window.ApiClient.get(`advisor/clients/${clientId}`).then(res => {
                 dispatch({
                     type: POPULATE_CLIENT,
                     payload: res.data,

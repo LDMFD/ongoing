@@ -12,8 +12,6 @@ import (
 )
 
 func AddRoutes(r *gin.RouterGroup) {
-	r.GET("/user", getUser)
-
 	Clients.AddRoutes(r.Group("/clients"))
 	Funds.AddRoutes(r.Group("/funds"))
 	Operators.AddRoutes(r.Group("/operators"))

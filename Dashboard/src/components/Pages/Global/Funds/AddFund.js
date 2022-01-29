@@ -17,10 +17,10 @@ const AddFund = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.post(`/funds`, {
+        window.ApiClient.post(`advisor/funds`, {
             ...fund
         }).then(_ => {
-            return window.ApiClient.get(`/funds`).then(res => {
+            return window.ApiClient.get(`advisor/funds`).then(res => {
                 dispatch({
                     type: SET_FUNDS,
                     payload: res.data,

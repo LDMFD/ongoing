@@ -2,6 +2,7 @@ package ClientProfile
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"strings"
 
@@ -14,13 +15,11 @@ import (
 type CreateClientRequstBody struct {
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
+	Email     string `binding:"required"`
 }
 
 func CreateClient(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
 
 	var req CreateClientRequstBody
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -28,10 +27,30 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	var client = Entities.Client{
+	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", req.Email).Exists(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	} else if exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.ClientAlreadyExists})
+		return
+	}
+
+	uid := strings.ReplaceAll(uuid.NewString(), "-", "")
+
+	var user = Entities.User{
 		Uid:       uid,
+		Email:     req.Email,
+		Type:      Entities.UserTypeClient,
+	}
+	if _, err := db.NewInsert().Model(&user).Exec(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var client = Entities.Client{
 		Forenames: req.Forenames,
 		Surname:   req.Surname,
+		UserId:    user.Id,
 	}
 	if _, err := db.NewInsert().Model(&client).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

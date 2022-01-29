@@ -17,7 +17,7 @@ const AddModel = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.post("/models", {
+        window.ApiClient.post("advisor/models", {
             ...model,
             FileUid: model?.File?.Uid,
         })
@@ -25,7 +25,7 @@ const AddModel = () => {
             goBack();
         })
         .then(_ => {
-            window.ApiClient.get("/models").then(res => {
+            window.ApiClient.get("advisor/models").then(res => {
                 dispatch({
                     type: SET_MODELS,
                     payload: res.data,

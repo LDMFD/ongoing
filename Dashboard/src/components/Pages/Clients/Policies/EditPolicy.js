@@ -35,7 +35,7 @@ const EditPolicy = () => {
     }
 
     const getClientDetail = async () => {
-        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
+        return window.ApiClient.get(`advisor/clients/${clientId}`).then(res => {
             dispatch({
                 type: POPULATE_CLIENT,
                 payload: res.data,
@@ -45,7 +45,7 @@ const EditPolicy = () => {
 
     const submit = (e) => {
         e.preventDefault();
-        window.ApiClient.put(`/clients/${clientId}/policies/${policyId}`, {
+        window.ApiClient.put(`advisor/clients/${clientId}/policies/${policyId}`, {
             ...policy
         })
         .then(() => {

@@ -25,7 +25,7 @@ const OperatorList = () => {
     
     const onDelete = useCallback(params => () => {
         if (window.confirm(`Delete operator?`)) {
-            window.ApiClient.delete(`/operators/${params.row.id}`)
+            window.ApiClient.delete(`advisor/operators/${params.row.id}`)
             .then(async () => {
                 await Api.Global.Operators.Read(dispatch);
             });

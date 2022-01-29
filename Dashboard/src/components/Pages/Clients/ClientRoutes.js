@@ -7,6 +7,7 @@ import AddPortfolio      from './Portfolios/AddPortfolio';
 import EditPortfolio     from './Portfolios/EditPortfolio';
 import AddClient         from './ClientProfiles/AddClient';
 import ClientList        from './ClientProfiles/ClientList';
+import ClientAccountPage from './ClientProfiles/Account'
 import EditClient        from './ClientProfiles/EditClient';
 import AddPolicy         from './Policies/AddPolicy';
 import EditPolicy        from './Policies/EditPolicy';
@@ -33,9 +34,12 @@ const ClientRoutes = () => {
                             <Route path={`${path}/id/:clientId/reviews`} component={ReviewList} />
                             <Route path={`${path}/id/:clientId/portfolios`} component={PortfolioList} />
                             <Route path={`${path}/id/:clientId/policy-funds`} component={PolicyFundList} />
-                            <Route path={`${path}/id/:clientId`} component={PolicyList} />
+                            <Route path={`${path}/id/:clientId/policies`} component={PolicyList} />
+                            <Route path={`${path}/id/:clientId`} component={ClientAccountPage} />
                         </Switch>
                         
+                        <Route path={`${path}/id/:clientId/edit`} component={EditClient} />
+
                         <Route path={`${path}/id/:clientId/portfolios/add`} component={AddPortfolio} />
                         <Route path={`${path}/id/:clientId/portfolios/id/:portfolioId/edit`} component={EditPortfolio} />
 
@@ -50,7 +54,6 @@ const ClientRoutes = () => {
             </Switch>
     
             <Route path={`${path}/add`} component={AddClient} />
-            <Route path={`${path}/id/:clientId/edit`} component={EditClient} />
         </div>
     );
 }

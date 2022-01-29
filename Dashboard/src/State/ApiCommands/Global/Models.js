@@ -3,13 +3,13 @@ import {
 } from "State/Reducer";
 
 const Create = (models) => {
-    return window.ApiClient.post(`/models`, {
+    return window.ApiClient.post(`advisor/models`, {
         ...models,
     });
 }
 
 const Read = (dispatch) => {
-    return window.ApiClient.get(`/models`).then(res => {
+    return window.ApiClient.get(`advisor/models`).then(res => {
         dispatch({
             type: SET_MODELS,
             payload: res.data,
@@ -18,13 +18,13 @@ const Read = (dispatch) => {
 }
 
 const Update = (models) => {
-    return window.ApiClient.put(`/models/${models.Id}`, {
+    return window.ApiClient.put(`advisor/models/${models.Id}`, {
         ...models
     })
 }
 
 const Delete = (modelId) => {
-    return window.ApiClient.delete(`/models/${modelId}`)
+    return window.ApiClient.delete(`advisor/models/${modelId}`)
 }
 
 const defaults = {

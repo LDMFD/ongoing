@@ -27,10 +27,10 @@ const EditFund = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.put(`/funds/${fundId}`, {
+        window.ApiClient.put(`advisor/funds/${fundId}`, {
             ...fund
         }).then(_ => {
-            return window.ApiClient.get(`/funds`).then(res => {
+            return window.ApiClient.get(`advisor/funds`).then(res => {
                 dispatch({
                     type: SET_FUNDS,
                     payload: res.data,

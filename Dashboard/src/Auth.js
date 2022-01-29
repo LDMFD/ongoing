@@ -11,6 +11,11 @@ const FirebaseUiConfig = {
             provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
             clientId: "861652755190-ofdm15tpmlq7p0bdjh58v1pqjjdu33iu.apps.googleusercontent.com"
         },
+        {
+            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            requireDisplayName: true,
+            signInMethod: 'emailLink', // or 'password'
+        },
     ],
     callbacks: {
         signInSuccessWithAuthResult: () => false,  // don't redirect
@@ -39,7 +44,7 @@ export function ShowLogin(callback) {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             user.getIdToken(/* forceRefresh */ true).then((idToken) => {
-                callback(idToken, user.displayName, user.photoURL);
+                callback(idToken, user.email, user.displayName, user.photoURL);
             }).catch(function (error) {
                 console.log('error', error);
             });

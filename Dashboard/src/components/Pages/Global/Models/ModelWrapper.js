@@ -9,7 +9,7 @@ const ModelWrapper = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     const getModels = useCallback(() => {
-        return window.ApiClient.get("/models").then(res => {
+        return window.ApiClient.get("advisor/models").then(res => {
             dispatch({
                 type: SET_MODELS,
                 payload: res.data,
@@ -18,7 +18,7 @@ const ModelWrapper = ({ children }) => {
     }, [ dispatch ]);
 
     const getOperators = useCallback(() => {
-        return window.ApiClient.get("/operators").then(res => {
+        return window.ApiClient.get("advisor/operators").then(res => {
             dispatch({
                 type: SET_OPERATORS,
                 payload: res.data,

@@ -17,7 +17,7 @@ const ReviewList = () => {
     let client = state.Clients.find(c => c.Id === clientId);
 
     const getClients = useCallback(() => {
-        return window.ApiClient.get("/clients").then(res => {
+        return window.ApiClient.get("advisor/clients").then(res => {
             dispatch({
                 type: SET_CLIENTS,
                 payload: res.data,
@@ -26,7 +26,7 @@ const ReviewList = () => {
     }, [ dispatch ]);
 
     const getClientDetail = useCallback(() => {
-        return window.ApiClient.get(`/clients/${clientId}`).then(res => {
+        return window.ApiClient.get(`advisor/clients/${clientId}`).then(res => {
             dispatch({
                 type: POPULATE_CLIENT,
                 payload: res.data,
@@ -35,7 +35,7 @@ const ReviewList = () => {
     }, [ dispatch, clientId ]);
 
     const addReview = () => {
-        window.ApiClient.post(`/clients/${client.Id}/reviews`).then(_ => {
+        window.ApiClient.post(`advisor/clients/${client.Id}/reviews`).then(_ => {
             getClients().then(() => {
                 getClientDetail();
             });

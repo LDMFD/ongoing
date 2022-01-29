@@ -17,6 +17,6 @@ type Model struct {
 	FileId      *int64    `bun:"file_id"`
 	Timestamp   time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	File        *File         `bun:"rel:has-one,join:file_id=id"`
-	Portfolios  []*Portfolio  `bun:"rel:has-many,join:id=model_id"`
+	File        *File        `bun:"rel:has-one,join:file_id=id"`
+	Portfolios  []*Portfolio `bun:"rel:has-many,join:id=model_id"`
 }

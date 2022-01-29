@@ -24,14 +24,14 @@ const EditOperator = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        window.ApiClient.put(`/operators/${operator.Id}`, {
+        window.ApiClient.put(`advisor/operators/${operator.Id}`, {
             ...operator
         })
         .then(() => {
             goBack();
         })
         .then(_ => {
-            window.ApiClient.get("/operators").then(res => {
+            window.ApiClient.get("advisor/operators").then(res => {
                 dispatch({
                     type: SET_OPERATORS,
                     payload: res.data,

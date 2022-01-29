@@ -4,7 +4,9 @@ import (
 	"fmt"
 )
 
-var PolicyHasDependentPortfolios = "Unable to delete - policy has dependent portfolios"
+const PolicyHasDependentPortfolios = "Unable to delete - policy has dependent portfolios"
+const PolicyFundDoesNotBelongToClient = "Policy fund does not belong to client"
+const ClientAlreadyExists = "Client with this email already exists"
 
 func PolicyProviderHasDependentPolicies(policies string) string {
 	return fmt.Sprintf("Policy provider has dependent policies: [ %v ]", policies)

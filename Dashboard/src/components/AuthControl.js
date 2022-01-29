@@ -8,6 +8,14 @@ import { Context } from 'State/StateProvider';
 import { Logout, ShowLogin } from 'Auth';
 import { LOGOUT } from 'State/Reducer';
 
+// Keep in sync with ApiServer/src/ApiServer/Auth.go
+export const UserType = {
+    UserTypeUnauthenticated: 'unauthenticated',
+    UserTypeAdmin:           'admin',
+    UserTypeAdvisor:         'advisor',
+    UserTypeClient:          'client',
+};
+
 // <AuthControl /> renders either a login button or a logout button.
 function AuthControl() {
     const [ state, dispatch ] = useContext(Context);
@@ -28,25 +36,29 @@ function AuthControl() {
         window.location = '/';
     }, [ dispatch ]);
 
-    const loginFn = useCallback((token, name, photoURL) => {
+    const loginFn = useCallback((token, email, name, photoURL) => {
         window.ApiClient.defaults.headers.common['Authentication'] = token;
 
-        window.ApiClient.get(`/user`)
-            .then(() => {
-                dispatch({
-                    type: 'LOGIN',
-                    payload: {
-                        Auth: {
-                            token,
-                            name,
-                            photoURL,
-                        }
-                    },
-                });
-            })
-            .catch(e => {
-                _logout();
+        window.ApiClient.get(`/common/user`, {
+            baseURL: 'http://api.ongoing.localhost:8000',
+        }).then(res => {
+            console.log(res);
+            dispatch({
+                type: 'LOGIN',
+                payload: {
+                    Auth: {
+                        token,
+                        email,
+                        name,
+                        photoURL,
+                        UserType: res.data.UserType,
+                    }
+                },
             });
+        })
+        .catch(e => {
+            _logout();
+        });
     }, [ dispatch, _logout ]);
 
     useEffect(() => {
@@ -61,7 +73,7 @@ function AuthControl() {
             {state.Auth &&
                 <>
                     <Button onClick={_logout} variant="h6">
-                        Log out
+                        Log out {state.Auth.email}
                     </Button>
 
                     <Avatar src     = {state.Auth.photoURL}

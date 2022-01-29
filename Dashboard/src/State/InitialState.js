@@ -3,20 +3,22 @@ import React, { useEffect, useContext, useCallback, useState } from 'react';
 import Api from './Api';
 
 import { Context } from 'State/StateProvider'
+import { UserType } from 'components/AuthControl';
 
 const InitialState = ({ children }) => {
-    const [ , dispatch ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     let [ loaded, setLoaded ] = useState(false);
 
+    // Advisors
     const getClients         = useCallback(() => { return Api.Clients.Clients.Read(dispatch); },         [ dispatch ]);
-    const getFunds           = useCallback(() => { return Api.Global.Funds.Read(dispatch); },           [ dispatch ]);
-    const getOperators       = useCallback(() => { return Api.Global.Operators.Read(dispatch); },       [ dispatch ]);
-    const getPolicyProviders = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); }, [ dispatch ]);
-    const getPolicyTypes     = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },     [ dispatch ]);
-    const getModels          = useCallback(() => { return Api.Global.Models.Read(dispatch); },          [ dispatch ]);
+    const getFunds           = useCallback(() => { return Api.Global.Funds.Read(dispatch); },            [ dispatch ]);
+    const getOperators       = useCallback(() => { return Api.Global.Operators.Read(dispatch); },        [ dispatch ]);
+    const getPolicyProviders = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); },  [ dispatch ]);
+    const getPolicyTypes     = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },      [ dispatch ]);
+    const getModels          = useCallback(() => { return Api.Global.Models.Read(dispatch); },           [ dispatch ]);
     
-    const getDependencies = useCallback(async () => {
+    const getAdvisorDependencies = useCallback(async () => {
         await getFunds();  // TODO parallelize
         await getPolicyProviders();
         await getPolicyTypes();
@@ -37,6 +39,21 @@ const InitialState = ({ children }) => {
 
         getClients,
     ]);
+
+    // Clients
+    // const getClientDetail    = useCallback(() => { return Api.Clients.ClientDetail.Read(dispatch); },    [ dispatch ]);
+
+    const getClientDependencies = useCallback(async () => {
+        // await getClientDetail();
+        setLoaded(true);
+    }, [
+        // getClientDetail,
+    ]);
+
+    const getDependencies = state.Auth.UserType === UserType.UserTypeAdvisor
+                         || state.Auth.UserType === UserType.UserTypeAdmin
+        ? getAdvisorDependencies
+        : getClientDependencies;
 
     useEffect(() => {
         getDependencies();

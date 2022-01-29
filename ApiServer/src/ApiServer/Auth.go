@@ -5,15 +5,12 @@ import (
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/Entities"
 )
 
-var users = []string{
-	"darren@tp1.org",
-	"ac@tp1.org",
-}
-
-func AuthMiddleware() gin.HandlerFunc {
+func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
 			app *firebase.App
@@ -21,6 +18,8 @@ func AuthMiddleware() gin.HandlerFunc {
 			token *auth.Token
 			err error
 		)
+		db := c.MustGet("DATABASE").(*bun.DB)
+
 		jwt := c.GetHeader("Authentication")
 
 		if jwt == "ongoing" {
@@ -41,12 +40,44 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Restrict to test users
-		for _, email := range users {
-			if email == token.Claims["email"].(string) {
-				c.Next()
-			}
+		var (
+			email = token.Claims["email"].(string)
+			exists bool
+		)
+		user := &Entities.User{}
+
+		if count, err := db.NewSelect().Model(user).Where("email = ?", email).ScanAndCount(c); err != nil {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		} else {
+			exists = count > 0
 		}
-		c.AbortWithStatus(http.StatusForbidden)
+
+		if !exists && typeFilter != nil {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		if !userPassesTypeCheck(user, typeFilter) {
+			c.AbortWithStatus(http.StatusForbidden)
+			return
+		}
+
+		if exists {
+			c.Set("USER", user)
+		}
+		c.Next()
 	}
+}
+
+func userPassesTypeCheck(user *Entities.User, typeFilter *string) bool {
+	if typeFilter == nil {
+		return true
+	}
+
+	if user.Type == Entities.UserTypeAdmin {
+		return true
+	}
+
+	return user.Type == *typeFilter
 }
