@@ -42,7 +42,6 @@ function AuthControl() {
         window.ApiClient.get(`/common/user`, {
             baseURL: 'http://api.ongoing.localhost:8000',
         }).then(res => {
-            console.log(res);
             dispatch({
                 type: 'LOGIN',
                 payload: {

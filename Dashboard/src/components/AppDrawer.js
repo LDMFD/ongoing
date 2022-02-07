@@ -62,9 +62,14 @@ const Items = {
     'advisor': advisorItems,
     'admin': advisorItems.concat([
         {
+            label: 'Due Diligence Templates',
+            icon: <SearchIcon />,
+            link: '/review-config/due-diligence',
+        },
+        {
             label: 'Users',
             icon: <SearchIcon />,
-            link: '/clients',
+            link: '/users',
         },
     ]),
     'client': [

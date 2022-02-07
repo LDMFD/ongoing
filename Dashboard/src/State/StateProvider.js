@@ -10,6 +10,7 @@ const initialState = {
     Models: [],
     PolicyTypes: [],
     PolicyProviders: [],
+    DiligenceTemplates: [],
 };
   
 const StateProvider = ({children}) => {

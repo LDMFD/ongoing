@@ -17,6 +17,7 @@ const InitialState = ({ children }) => {
     const getPolicyProviders = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); },  [ dispatch ]);
     const getPolicyTypes     = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },      [ dispatch ]);
     const getModels          = useCallback(() => { return Api.Global.Models.Read(dispatch); },           [ dispatch ]);
+    const getDiligenceTemplates = useCallback(() => { return Api.Global.DiligenceTemplates.Read(dispatch); }, [ dispatch ]);
     
     const getAdvisorDependencies = useCallback(async () => {
         await getFunds();  // TODO parallelize
@@ -26,6 +27,7 @@ const InitialState = ({ children }) => {
         await getOperators();
         await getModels();
 
+        await getDiligenceTemplates();
         await getClients();
 
         setLoaded(true);
@@ -37,6 +39,7 @@ const InitialState = ({ children }) => {
         getOperators,
         getModels,
 
+        getDiligenceTemplates,
         getClients,
     ]);
 

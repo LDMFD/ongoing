@@ -205,10 +205,12 @@ CREATE TABLE module_presets (
     "text"                    text
 );
 
+-- TODO
 CREATE TABLE diligence_templates (
     "id"                      int primary key generated always as identity,
-    "label"                   int not null,
-    "text"                    int not null
+    "label"                   text not null,
+    "text"                    text not null,
+    "timestamp"               timestamp default current_timestamp
 );
 
 CREATE TYPE review_state AS ENUM (
