@@ -29,7 +29,7 @@ export const OperatorDialog = ({ operator, setOperator, submitLabel, submitHandl
         <div className="modal" >
             <Dialog open={true} onClose={goBack}>
                 <form onSubmit={submitHandler}>
-                    <DialogTitle>{submitLabel} Portfolio</DialogTitle>
+                    <DialogTitle>{submitLabel} Portfolio Operator</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Enter operator details

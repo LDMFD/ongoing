@@ -46,6 +46,7 @@ func UpdatePortfolio(c *gin.Context) {
 
 	if portfolio.ClientId != path.ClientId {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Portfolio does not belong to client"})
+		return
 	}
 
 	portfolio.PolicyId = body.PolicyId

@@ -17,6 +17,7 @@ type User struct {
 	Id 			int64  		`bun:"id,pk,autoincrement"`
 	Uid  	 	string 		`bun:"uid,notnull"`
 	Email  	 	string 		`bun:"email,notnull"`
+	Verified    bool        `bun:"verified,notnull"`
 	Type     	string 		`bun:"type,notnull"`
 	Timestamp   time.Time	`bun:",nullzero,notnull,default:current_timestamp"`
 }

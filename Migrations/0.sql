@@ -8,6 +8,7 @@ CREATE TABLE users (
     "id"                      int primary key generated always as identity,
     "uid"                     text not null unique,
     "email"                   text not null unique,
+    "verified"                bool not null default false,
     "type"                    user_type not null,
     "timestamp"               timestamp default current_timestamp
 );
@@ -81,11 +82,13 @@ CREATE TABLE funds (
 
 -- Attitude To Risk Questionnaire
 
+-- TODO
 CREATE TABLE risk_providers (
     "id"                      int primary key generated always as identity,
     "name"                    text not null unique          -- "Dynamic Planner", "FE Analytics", "Finimetrica"
 );
 
+-- TODO
 CREATE TABLE risk_levels (
     "id"                      int primary key generated always as identity,
     "risk_provider_id"        int,
@@ -97,13 +100,14 @@ CREATE TABLE risk_levels (
 
 -- client-related:
 
+-- TODO
 CREATE TABLE risk_assessment (
     "id"                      int primary key generated always as identity,
     "client_id"               int not null,
     "risk_provider_id"        int not null,
     "risk_level_id"           int not null,
     "file_id"                 int not null,
-    "completed"               timestamp,
+    "completed"               timestamp default null,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_risk_provider FOREIGN KEY(risk_provider_id) REFERENCES risk_providers(id) ON DELETE RESTRICT,
     CONSTRAINT fk_risk_level FOREIGN KEY(risk_level_id) REFERENCES risk_levels(id) ON DELETE RESTRICT
@@ -202,7 +206,8 @@ CREATE TYPE module_type AS ENUM (
 CREATE TABLE module_presets (
     "id"                      int primary key generated always as identity,
     "module_type"             module_type not null,
-    "text"                    text
+    "text"                    text,
+    "timestamp"               timestamp default current_timestamp
 );
 
 -- TODO
@@ -224,7 +229,7 @@ CREATE TABLE reviews (
     "client_id"               int not null,
     "state"                   review_state default 'draft' not null,
     "report"                  json default null,
-    "created"                 timestamp default current_timestamp,
+    "started"                 timestamp default current_timestamp,
     "finalized"               timestamp default null,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT
 );

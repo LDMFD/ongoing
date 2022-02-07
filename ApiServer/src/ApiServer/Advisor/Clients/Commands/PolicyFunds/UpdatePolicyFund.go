@@ -47,6 +47,7 @@ func UpdatePolicyFund(c *gin.Context) {
 
 	if policyFund.ClientId != path.ClientId {
 		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyFundDoesNotBelongToClient})
+		return
 	}
 
 	policyFund.FundId = body.FundId

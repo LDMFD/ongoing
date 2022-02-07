@@ -17,7 +17,13 @@ const EditClient = () => {
     clientId = parseInt(clientId);
 
     if (!client) {
-        setClient(state.Clients.find(c => c.Id === clientId))
+        let c = state.Clients.find(c => c.Id === clientId);
+        setClient({
+            Id: c.Id,
+            Forenames: c.Forenames,
+            Surname: c.Surname,
+            Email: c.User.Email,
+        })
         return;
     }
 

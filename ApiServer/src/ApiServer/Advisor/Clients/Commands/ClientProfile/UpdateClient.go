@@ -16,6 +16,7 @@ type UpdateClientRequestPath struct {
 type UpdateClientRequestBody struct {
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
+	Email     string `binding:"required"`
 }
 
 func UpdateClient(c *gin.Context) {
@@ -40,8 +41,30 @@ func UpdateClient(c *gin.Context) {
 	}
 	if _, err := db.NewUpdate().Model(&client).WherePK().
 		Column("forenames").
-		Column("surname").Exec(c); err != nil {
+		Column("surname").
+		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := db.NewSelect().
+		Model(&client).
+		Relation("User").
+		WherePK().
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if body.Email != client.User.Email {
+		client.User.Email = body.Email
+		client.User.Verified = false
+		if _, err := db.NewUpdate().Model(&client.User).WherePK().
+			Column("email").
+			Exec(c); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 	}
 
 	c.JSON(200, gin.H{

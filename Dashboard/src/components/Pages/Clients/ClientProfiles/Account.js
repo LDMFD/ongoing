@@ -39,7 +39,7 @@ const ClientAccountPage = () => {
         <div>
             <h1>{client.Surname}, {client.Forenames}</h1>
             <p>
-                Email: <a href={`mailto:${client.User.Email}`} target='_blank'>{client.User.Email}</a>
+                Email: <a href={`mailto:${client.User.Email}`} target='_blank' rel='noreferrer'>{client.User.Email}</a>
             </p>
             <p>
                 <Button onClick={SendSignInLink.bind(null, client.User.Email)}>
