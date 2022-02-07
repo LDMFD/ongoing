@@ -67,6 +67,11 @@ const Items = {
             link: '/review-config/due-diligence',
         },
         {
+            label: 'Module Presets',
+            icon: <SearchIcon />,
+            link: '/review-config/module-presets',
+        },
+        {
             label: 'Users',
             icon: <SearchIcon />,
             link: '/users',

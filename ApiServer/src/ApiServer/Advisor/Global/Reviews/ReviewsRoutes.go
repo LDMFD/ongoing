@@ -8,4 +8,5 @@ import (
 
 func AddRoutes(r *gin.RouterGroup) {
 	DiligenceTemplates.AddRoutes(r.Group("/diligence-templates"))
+	ModulePresets.AddRoutes(r.Group("/module-presets"))
 }

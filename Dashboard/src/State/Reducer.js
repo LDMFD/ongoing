@@ -3,6 +3,7 @@ export const LOGOUT                 = 'LOGOUT';
 export const SET_CLIENTS            = 'SET_CLIENTS';
 export const POPULATE_CLIENT        = 'POPULATE_CLIENT';
 export const SET_DILIGENCE_TEMPLATES = 'SET_DILIGENCE_TEMPLATES';
+export const SET_MODULE_PRESETS      = 'SET_MODULE_PRESETS';
 export const SET_OPERATORS          = 'SET_OPERATORS';
 export const SET_POLICY_TYPES       = 'SET_POLICY_TYPES';
 export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';

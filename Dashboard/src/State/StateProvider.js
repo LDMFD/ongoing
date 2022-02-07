@@ -3,14 +3,15 @@ import React, {createContext, useReducer } from "react";
 import Reducer from './Reducer'
 
 const initialState = {
-    Auth: null, // or { token, name, photoURL }
-    Clients: [],
-    Funds: [],
-    Operators: [],
-    Models: [],
-    PolicyTypes: [],
-    PolicyProviders: [],
+    Auth:               null, // or { token, name, photoURL }
+    Clients:            [],
+    Funds:              [],
+    Operators:          [],
+    Models:             [],
+    PolicyTypes:        [],
+    PolicyProviders:    [],
     DiligenceTemplates: [],
+    ModulePresets:      [],
 };
   
 const StateProvider = ({children}) => {

@@ -11,13 +11,14 @@ const InitialState = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     // Advisors
-    const getClients         = useCallback(() => { return Api.Clients.Clients.Read(dispatch); },         [ dispatch ]);
-    const getFunds           = useCallback(() => { return Api.Global.Funds.Read(dispatch); },            [ dispatch ]);
-    const getOperators       = useCallback(() => { return Api.Global.Operators.Read(dispatch); },        [ dispatch ]);
-    const getPolicyProviders = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); },  [ dispatch ]);
-    const getPolicyTypes     = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },      [ dispatch ]);
-    const getModels          = useCallback(() => { return Api.Global.Models.Read(dispatch); },           [ dispatch ]);
+    const getClients            = useCallback(() => { return Api.Clients.Clients.Read(dispatch); },           [ dispatch ]);
+    const getFunds              = useCallback(() => { return Api.Global.Funds.Read(dispatch); },              [ dispatch ]);
+    const getOperators          = useCallback(() => { return Api.Global.Operators.Read(dispatch); },          [ dispatch ]);
+    const getPolicyProviders    = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); },    [ dispatch ]);
+    const getPolicyTypes        = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },        [ dispatch ]);
+    const getModels             = useCallback(() => { return Api.Global.Models.Read(dispatch); },             [ dispatch ]);
     const getDiligenceTemplates = useCallback(() => { return Api.Global.DiligenceTemplates.Read(dispatch); }, [ dispatch ]);
+    const getModulePresets      = useCallback(() => { return Api.Global.ModulePresets.Read(dispatch); },      [ dispatch ]);
     
     const getAdvisorDependencies = useCallback(async () => {
         await getFunds();  // TODO parallelize
@@ -28,6 +29,8 @@ const InitialState = ({ children }) => {
         await getModels();
 
         await getDiligenceTemplates();
+        await getModulePresets();
+
         await getClients();
 
         setLoaded(true);
@@ -40,6 +43,8 @@ const InitialState = ({ children }) => {
         getModels,
 
         getDiligenceTemplates,
+        getModulePresets,
+
         getClients,
     ]);
 
