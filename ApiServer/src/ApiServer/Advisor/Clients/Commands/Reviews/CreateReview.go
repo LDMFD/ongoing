@@ -26,12 +26,20 @@ func CreateReview(c *gin.Context) {
 		return
 	}
 
-	var review = Entities.Review{
-		ClientId: path.ClientId,
-		State:    "DRAFT",
-		Uid:      uid,
+	// Only 1 review in draft state at once
+	if exists, err := db.NewSelect().Model((*Entities.Review)(nil)).Where("state != ?", Entities.ReviewStateFinal).Exists(c); err != nil {
+		panic(err)
+	} else if exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
+		return
 	}
-	if _, err := db.NewInsert().Model(&review).Exec(c); err != nil {
+
+	review := &Entities.Review{
+		Uid:      uid,
+		ClientId: path.ClientId,
+		State:    Entities.ReviewStateDraft,
+	}
+	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

@@ -5,7 +5,7 @@ import (
 	Policies "ongoing/ApiServer/Advisor/Clients/Commands/Policies"
 	PolicyFunds "ongoing/ApiServer/Advisor/Clients/Commands/PolicyFunds"
 	Portfolios "ongoing/ApiServer/Advisor/Clients/Commands/Portfolios"
-	"ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
+	Reviews "ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,9 +16,6 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.GET("/:ClientId", ClientProfile.GetClient)
 	r.PUT("/:ClientId", ClientProfile.UpdateClient)
 	r.DELETE("/:ClientId", ClientProfile.DeleteClient)
-
-	reviewGroup := r.Group("/:ClientId/reviews")
-	reviewGroup.POST("", Reviews.CreateReview)
 
 	policyGroup := r.Group("/:ClientId/policies")
 	policyGroup.POST("", Policies.CreatePolicy)
@@ -34,4 +31,10 @@ func AddRoutes(r *gin.RouterGroup) {
 	policyFundGroup.POST("", PolicyFunds.CreatePolicyFund)
 	policyFundGroup.PUT("/:PolicyFundId", PolicyFunds.UpdatePolicyFund)
 	policyFundGroup.DELETE("/:PolicyFundId", PolicyFunds.DeletePolicyFund)
+
+	reviewGroup := r.Group("/:ClientId/reviews")
+	reviewGroup.POST("", Reviews.CreateReview)
+	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
+	reviewGroup.PUT("/:ReviewId/module/:Module", Reviews.UpdateReviewModule)
+	reviewGroup.DELETE("/:ReviewId/module/:Module", Reviews.DeleteReviewModule)
 }

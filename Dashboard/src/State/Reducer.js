@@ -1,13 +1,13 @@
-export const LOGIN                  = 'LOGIN';
-export const LOGOUT                 = 'LOGOUT';
-export const POPULATE_CLIENT        = 'POPULATE_CLIENT';
+export const LOGIN                   = 'LOGIN';
+export const LOGOUT                  = 'LOGOUT';
+export const POPULATE_CLIENT         = 'POPULATE_CLIENT';
 export const SET_CLIENTS             = 'SET_CLIENTS';
 export const SET_DILIGENCE_TEMPLATES = 'SET_DILIGENCE_TEMPLATES';
 export const SET_FUNDS               = 'SET_FUNDS';
 export const SET_MODELS              = 'SET_MODELS';
 export const SET_MODULE_PRESETS      = 'SET_MODULE_PRESETS';
-export const SET_OPERATORS          = 'SET_OPERATORS';
-export const SET_POLICY_PROVIDERS   = 'SET_POLICY_PROVIDERS';
+export const SET_OPERATORS           = 'SET_OPERATORS';
+export const SET_POLICY_PROVIDERS    = 'SET_POLICY_PROVIDERS';
 export const SET_POLICY_TYPES        = 'SET_POLICY_TYPES';
 
 // The various "|| []" in this file are due to the server returning nil for empty arrays.
@@ -46,7 +46,7 @@ const Reducer = (state, action) => {
             return {
                 ...state,
                 PolicyTypes: action.payload.PolicyTypes || [],
-        }
+            }
 
         case SET_POLICY_PROVIDERS:
             return {
@@ -86,12 +86,14 @@ const Reducer = (state, action) => {
             client.Policies    ||= [];
             client.PolicyFunds ||= [];
             client.Portfolios  ||= [];
+            client.Reviews     ||= [];
 
             let fn = (p, q) => p.Id - q.Id;
 
             client.Policies.sort(fn);
             client.PolicyFunds.sort(fn);
             client.Portfolios.sort(fn);
+            client.Reviews.sort(fn);
 
             return {
                 ...state,

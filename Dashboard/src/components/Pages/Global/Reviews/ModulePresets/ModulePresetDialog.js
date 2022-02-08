@@ -35,7 +35,7 @@ export const ModulePresetDialog = ({ modulePreset, setModulePreset, submitLabel,
                         Enter Module Preset details
                     </DialogContentText>
 
-                    <Select defaultValue = {modulePreset.ModuleType ? modulePreset.ModuleType : 'select'}
+                    <Select value    = {modulePreset.ModuleType ? modulePreset.ModuleType : 'select'}
                             onChange = {handlers.SetModuleType}
                             margin   = "dense"
                             id       = "type"

@@ -1,3 +1,4 @@
+// This list also found in 0.sql and ReviewModule.go
 export const ModuleTypeIntro               = "intro";
 export const ModuleTypeProfile             = "profile";
 export const ModuleTypeFactFind            = "fact-find";
@@ -20,7 +21,7 @@ export const ModuleTypeOngoingSuitability  = "ongoing-suitability";
 export const ModuleTypeActionPoints        = "action-points";
 
 export const ModuleTypeSelectSpec = [
-    { id: "intro",               label: "Intro" },
+    { id: "intro",               label: "Introduction" },
     { id: "profile",             label: "Fact find, Risk profile & Objectives page" },
     { id: "fact-find",           label: "Fact-Find" },
     { id: "risk",                label: "Attitude To Risk Questionnaire" },

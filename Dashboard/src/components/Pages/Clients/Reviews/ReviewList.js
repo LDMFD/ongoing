@@ -1,59 +1,79 @@
 import React, { useContext, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
     Toolbar,
 } from '@mui/material';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Context } from 'State/StateProvider'
-import { POPULATE_CLIENT, SET_CLIENTS } from 'State/Reducer';
+import { Api } from 'State';
 
 const ReviewList = () => {
+    let history = useHistory();
+    const [ state, dispatch] = useContext(Context);
+
     let { clientId } = useParams();
     clientId = parseInt(clientId);
 
-    const [ state, dispatch ] = useContext(Context);
-
     let client = state.Clients.find(c => c.Id === clientId);
 
-    const getClients = useCallback(() => {
-        return window.ApiClient.get("advisor/clients").then(res => {
-            dispatch({
-                type: SET_CLIENTS,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch ]);
-
-    const getClientDetail = useCallback(() => {
-        return window.ApiClient.get(`advisor/clients/${clientId}`).then(res => {
-            dispatch({
-                type: POPULATE_CLIENT,
-                payload: res.data,
-            });
-        });
-    }, [ dispatch, clientId ]);
-
-    const addReview = () => {
-        window.ApiClient.post(`advisor/clients/${client.Id}/reviews`).then(_ => {
-            getClients().then(() => {
-                getClientDetail();
-            });
-        });
+    const addReview = async () => {
+        await Api.Clients.Reviews.Create(clientId);
+        await Api.Clients.ClientDetail.Read(dispatch, clientId);
     };
 
-    return client?.Reviews && (
-        <div>
+    const onEdit = useCallback(params => () => {
+        history.push(`/clients/id/${clientId}/reviews/id/${params.row.id}`);
+    }, [ history, clientId ]);
+
+    const onDelete = useCallback(params => async () => {
+        if (window.confirm(`Delete client review?`)) {
+            await Api.Clients.Reviews.Delete(clientId, params.row.id)
+            await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        }        
+    }, [ dispatch, clientId ]);
+
+    const columns = [
+        { field: 'idLabel',    headerName: 'ID',     flex: 0.1, },
+        { field: 'date',       headerName: 'Date',   flex: 0.1, },
+        { field: 'state',      headerName: 'State',  flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .05,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<InventoryIcon />}   onClick={onEdit(params)}   label="Open" />,
+                <GridActionsCellItem icon={<DeleteIcon />}      onClick={onDelete(params)} label="Delete" />,
+            ]
+        },
+    ];
+
+    let reviews = client.Reviews.map(review => {
+        return {
+            id:         review.Id,
+            idLabel:    `#${review.Id}`,
+            date:       review.Timestamp,
+            state:      review.State,
+        };
+    });
+
+    let data = {
+        rows: reviews,
+        columns: columns,
+    }
+
+    return (
+        <>
             <Toolbar className="breadcrumb-action">
                 <Button onClick={addReview}>Add review</Button>
             </Toolbar>
 
-            {client.Reviews.map(r => (
-                <div key={r.Id}>
-                    id:{r.Id}
-                </div>
-            ))}
-        </div>
+            <DataGrid autoHeight {...data} />
+        </>
     );
 }
 

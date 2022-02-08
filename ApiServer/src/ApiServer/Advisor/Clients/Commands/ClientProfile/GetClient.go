@@ -29,6 +29,7 @@ func GetClient(c *gin.Context) {
 		Relation("PolicyFunds").
 		Relation("Portfolios").
 		Relation("Reviews").
+		Relation("Reviews.Modules").
 		Relation("User").
 		WherePK().
 		Scan(c); err != nil {

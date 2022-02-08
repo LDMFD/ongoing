@@ -170,6 +170,7 @@ CREATE TABLE portfolios (
 
 -- review-related:
 
+-- This list also found in ReviewModule.go and ModuleTypes.js
 CREATE TYPE module_type AS ENUM (
     'intro',                -- "Introduction"; preset intro, valuation
     
@@ -243,7 +244,7 @@ CREATE TABLE review_modules (
     "file_id"                 int,
     UNIQUE ("review_id", "type"),
     CONSTRAINT fk_file FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE RESTRICT
+    CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE CASCADE
 );
 
 CREATE TABLE review_policies (

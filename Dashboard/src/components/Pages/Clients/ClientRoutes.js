@@ -12,10 +12,11 @@ import EditClient        from './ClientProfiles/EditClient';
 import AddPolicy         from './Policies/AddPolicy';
 import EditPolicy        from './Policies/EditPolicy';
 import PolicyList        from './Policies/PolicyList';
-import ReviewList        from './Reviews/ReviewList';
 import PolicyFundList    from './PolicyFunds/PolicyFundList';
 import AddPolicyFund     from './PolicyFunds/AddPolicyFund';
 import EditPolicyFund    from './PolicyFunds/EditPolicyFund';
+import ReviewRoutes from './Reviews/ReviewRoutes';
+import ReviewList from './Reviews/ReviewList';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();
@@ -31,6 +32,9 @@ const ClientRoutes = () => {
                 <Route path={`${path}/id/:clientId`}>
                     <ClientWrapper>
                         <Switch>
+                            <Route path={`${path}/id/:clientId/reviews/id/:reviewId/modules/:module`} component={ReviewRoutes} />
+                            <Route path={`${path}/id/:clientId/reviews/id/:reviewId`} component={ReviewRoutes} />
+
                             <Route path={`${path}/id/:clientId/reviews`} component={ReviewList} />
                             <Route path={`${path}/id/:clientId/portfolios`} component={PortfolioList} />
                             <Route path={`${path}/id/:clientId/policy-funds`} component={PolicyFundList} />
@@ -47,7 +51,7 @@ const ClientRoutes = () => {
                         <Route path={`${path}/id/:clientId/policies/id/:policyId/edit`} component={EditPolicy} />
                         
                         <Route path={`${path}/id/:clientId/policy-funds/add`} component={AddPolicyFund} />
-                        <Route path={`${path}/id/:clientId/policy-funds/id/:policyFundId/edit`} component={EditPolicyFund} />
+                        <Route path={`${path}/id/:clientId/policy-funds/id/:policyFundId/edit`} component={EditPolicyFund} /> 
                     </ClientWrapper>
                 </Route>
                 <Route path={path} component={ClientList} />
