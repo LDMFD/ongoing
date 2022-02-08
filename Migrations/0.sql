@@ -106,11 +106,14 @@ CREATE TABLE risk_assessment (
     "client_id"               int not null,
     "risk_provider_id"        int not null,
     "risk_level_id"           int not null,
-    "file_id"                 int not null,
+    "questionnaire_file_id"   int not null,
+    "fact_find_file_id"       int not null,
     "completed"               timestamp default null,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_risk_provider FOREIGN KEY(risk_provider_id) REFERENCES risk_providers(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_risk_level FOREIGN KEY(risk_level_id) REFERENCES risk_levels(id) ON DELETE RESTRICT
+    CONSTRAINT fk_risk_level FOREIGN KEY(risk_level_id) REFERENCES risk_levels(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_questionnaire FOREIGN KEY(questionnaire_file_id) REFERENCES files(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_fact_find FOREIGN KEY(fact_find_file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE clients (
@@ -132,7 +135,6 @@ CREATE TABLE policies (
     "monthly_contributions"   int not null,    -- 0 for none, null for no data
     "start_value"             int,
     "end_value"               int,
-    "file_id"                 int,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy_type FOREIGN KEY(policy_type_id) REFERENCES policy_types(id) ON DELETE RESTRICT,
@@ -181,21 +183,21 @@ CREATE TYPE module_type AS ENUM (
         'objectives',           -- preset intro, text with button to populate from prevous
     
     -- "Policy Valuations"
-    'policies',             -- preset intro, policy.file. Joined to policy with review_policies
+    'policies',             -- preset intro. Joined to policy with review_policies
         'valuation',            -- (for each policy): preset intro, start + end values, text
         'policy-funds',         -- (for each policy): preset intro, funds file, ocf, ex ante, weighted averages
         'contributions',        -- (for each policy): preset intro, policy.monthly_contributions, text
 
     -- "Portfolios"
     'portfolios',           -- preset intro
-        'portfolio',            -- (for each portfolio): preset intro, ocf + ex ante, mdodel.file, text, weighted averages
+        'portfolio',            -- (for each portfolio): preset intro, ocf + ex ante, model.file, text, weighted averages
 
     -- "Fees"
     'fees',                 -- preset intro
-        'advice-fee',            -- text, file, policy_providers.Pricing, Policy.platform_discount (if not null) embedded in Text from DB
+        'advice-fee',            -- text, policy_providers.Pricing, Policy.platform_discount (if not null) embedded in Text from DB
         'policy-fund-fees',      -- text, file - from policy_funds
         'model-fund-fees',       -- text, file - from models
-        'dim-fee',               -- text, file - from operators table if type DIM
+        'dim-fee',               -- text (from operators table if type DIM)
 
     -- "Suitability and Advice"
     'advice-given',         -- text
@@ -241,10 +243,8 @@ CREATE TABLE review_modules (
     "type"                    module_type not null,
     "intro"                   text not null,
     "text"                    text not null,
-    "file_id"                 int,
     UNIQUE ("review_id", "type"),
-    CONSTRAINT fk_file FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE CASCADE
+    CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE CASCADE  -- TODO check deletion behaviour here
 );
 
 CREATE TABLE review_policies (

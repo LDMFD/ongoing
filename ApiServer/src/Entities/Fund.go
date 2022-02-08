@@ -13,8 +13,9 @@ type Fund struct {
 	Name        string    `bun:"name,notnull"`
 	WeightedFee float64   `bun:"weighted_ocf,notnull"`
 	ExAnteFee   float64   `bun:"ex_ante_fee,notnull"`
+	FileId      *int64    `bun:"file_id"`
 	Timestamp   time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
+	File        *File        `bun:"rel:has-one,join:file_id=id"`
 	PolicyFunds []*PolicyFund `bun:"rel:has-many,join:id=fund_id"`
 }
-
