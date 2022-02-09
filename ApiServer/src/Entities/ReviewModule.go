@@ -36,8 +36,6 @@ type ReviewModule struct {
 	Type     string `bun:"type,notnull"`
 	Intro    string `bun:"intro,notnull"`
 	Text     string `bun:"text,notnull"`
-	FileId   *int64 `bun:"file_id"`
 
-	File   *File   `bun:"rel:has-one,join:file_id=id"`
 	Review *Review `bun:"rel:has-one,join:review_id=id"`
 }

@@ -36,10 +36,11 @@ const PolicyList = () => {
     }, [ history, clientId ]);
 
     const columns = [
-        { field: 'policyNumber',     headerName: 'Policy Number',       flex: 0.1, },
-        { field: 'platformDiscount', headerName: 'Platform Discount',   flex: 0.1, },
-        { field: 'type',             headerName: 'Type',                flex: 0.1, },
-        { field: 'provider',         headerName: 'Provider',            flex: 0.1, },
+        { field: 'policyNumber',     headerName: 'Policy Number',         flex: 0.1, },
+        { field: 'platformDiscount', headerName: 'Platform Discount',     flex: 0.1, },
+        { field: 'monthlies',        headerName: 'Monthly Contributions', flex: 0.1, },
+        { field: 'type',             headerName: 'Type',                  flex: 0.1, },
+        { field: 'provider',         headerName: 'Provider',              flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -58,6 +59,7 @@ const PolicyList = () => {
             id:               policy.Id,
             policyNumber:     policy.ExternalId,
             platformDiscount: policy.PlatformDiscount,
+            monthlies:        policy.MonthlyContributions,
             type,
             provider,
         };

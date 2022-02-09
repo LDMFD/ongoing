@@ -14,13 +14,6 @@ type UpdatePolicyRequestPath struct {
 	PolicyId int64 `binding:"required"`
 }
 
-type UpdatePolicyRequestBody struct {
-	ExternalId       string  `binding:"required"`
-	PlatformDiscount float64 `binding:"required"`
-	PolicyTypeId     int64   `binding:"required"`
-	PolicyProviderId int64   `binding:"required"`
-}
-
 func UpdatePolicy(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
@@ -30,7 +23,7 @@ func UpdatePolicy(c *gin.Context) {
 		return
 	}
 
-	var body UpdatePolicyRequestBody
+	var body CreateOrUpdatePolicyRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -52,6 +45,7 @@ func UpdatePolicy(c *gin.Context) {
 
 	policy.ExternalId = body.ExternalId
 	policy.PlatformDiscount = body.PlatformDiscount
+	policy.MonthlyContributions = body.MonthlyContributions
 	policy.PolicyTypeId = body.PolicyTypeId
 	policy.PolicyProviderId = body.PolicyProviderId
 
@@ -60,6 +54,7 @@ func UpdatePolicy(c *gin.Context) {
 		WherePK().
 		Column("external_id").
 		Column("platform_discount").
+		Column("monthly_contributions").
 		Column("policy_type_id").
 		Column("policy_provider_id").
 		Exec(c); err != nil {

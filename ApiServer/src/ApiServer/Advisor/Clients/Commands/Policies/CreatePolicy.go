@@ -13,11 +13,12 @@ type CreatePolicyRequestPath struct {
 	ClientId int64 `binding:"required"`
 }
 
-type CreatePolicyRequestBody struct {
-	ExternalId       string  `binding:"required"`
-	PlatformDiscount float64 `binding:"required"`
-	PolicyTypeId     int64   `binding:"required"`
-	PolicyProviderId int64   `binding:"required"`
+type CreateOrUpdatePolicyRequestBody struct {
+	ExternalId           string  `binding:"required"`
+	PlatformDiscount     float64 `binding:"required"`
+	MonthlyContributions int64   `binding:"required"`
+	PolicyTypeId         int64   `binding:"required"`
+	PolicyProviderId     int64   `binding:"required"`
 }
 
 func CreatePolicy(c *gin.Context) {
@@ -29,18 +30,19 @@ func CreatePolicy(c *gin.Context) {
 		return
 	}
 
-	var body CreatePolicyRequestBody
+	var body CreateOrUpdatePolicyRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	var policy = Entities.Policy{
-		ClientId:         path.ClientId,
-		ExternalId:       body.ExternalId,
-		PlatformDiscount: body.PlatformDiscount,
-		PolicyTypeId:     body.PolicyTypeId,
-		PolicyProviderId: body.PolicyProviderId,
+		ClientId:             path.ClientId,
+		ExternalId:           body.ExternalId,
+		PlatformDiscount:     body.PlatformDiscount,
+		MonthlyContributions: body.MonthlyContributions,
+		PolicyTypeId:         body.PolicyTypeId,
+		PolicyProviderId:     body.PolicyProviderId,
 	}
 	if _, err := db.NewInsert().Model(&policy).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
