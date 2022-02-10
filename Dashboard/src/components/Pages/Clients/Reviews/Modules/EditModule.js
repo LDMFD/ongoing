@@ -13,6 +13,9 @@ import './EditModule.css';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import { DefaultModule } from './DefaultModule';
+import { ModuleTypePolicies, ModuleTypePortfolios } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import PolicyValuations from './Implementations/PolicyValuations';
+import Portfolios from './Implementations/Portfolios';
 
 const EditModule = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -95,6 +98,9 @@ const EditModule = () => {
                     <br />
                 </CardContent>
             </Card>
+
+            {module === ModuleTypePolicies   && <PolicyValuations />}
+            {module === ModuleTypePortfolios && <Portfolios /> }
         </div>
     );
 }
