@@ -17,7 +17,7 @@ const InitialState = ({ children }) => {
     const getPolicyProviders    = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); },    [ dispatch ]);
     const getPolicyTypes        = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },        [ dispatch ]);
     const getModels             = useCallback(() => { return Api.Global.Models.Read(dispatch); },             [ dispatch ]);
-    const getDiligenceTemplates = useCallback(() => { return Api.Global.DiligenceTemplates.Read(dispatch); }, [ dispatch ]);
+    const getRiskAssessments = useCallback(() => { return Api.Global.RiskAssessments.Read(dispatch); }, [ dispatch ]);
     const getModulePresets      = useCallback(() => { return Api.Global.ModulePresets.Read(dispatch); },      [ dispatch ]);
     
     const getAdvisorDependencies = useCallback(async () => {
@@ -28,7 +28,7 @@ const InitialState = ({ children }) => {
         await getOperators();
         await getModels();
 
-        await getDiligenceTemplates();
+        await getRiskAssessments();
         await getModulePresets();
 
         await getClients();
@@ -42,7 +42,7 @@ const InitialState = ({ children }) => {
         getOperators,
         getModels,
 
-        getDiligenceTemplates,
+        getRiskAssessments,
         getModulePresets,
 
         getClients,

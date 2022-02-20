@@ -214,7 +214,7 @@ CREATE TABLE module_presets (
 );
 
 -- TODO
-CREATE TABLE diligence_templates (
+CREATE TABLE riskassessment_templates (
     "id"                      int primary key generated always as identity,
     "label"                   text not null,
     "text"                    text not null,

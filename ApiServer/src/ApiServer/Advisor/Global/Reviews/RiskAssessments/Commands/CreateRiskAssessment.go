@@ -11,33 +11,33 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateOrUpdateDiligenceTemplateRequestBody struct {
+type CreateOrUpdateRiskAssessmentRequestBody struct {
 	Label string `binding:"required"`
 	Text  string `binding:"required"`
 }
 
-func CreateDiligenceTemplate(c *gin.Context) {
+func CreateRiskAssessment(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
-	var body CreateOrUpdateDiligenceTemplateRequestBody
+	var body CreateOrUpdateRiskAssessmentRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var diligenceTemplate = Entities.DiligenceTemplate{
-		Label:   body.Label,
-		Text:    body.Text,
+	var riskAssessment = Entities.RiskAssessment{
+		//Label: body.Label,
+		//Text:  body.Text,
 	}
-	if _, err := db.NewInsert().Model(&diligenceTemplate).Exec(c); err != nil {
+	if _, err := db.NewInsert().Model(&riskAssessment).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(200, gin.H{
-		"DiligenceTemplate": diligenceTemplate,
+		"RiskAssessments": riskAssessment,
 	})
 }

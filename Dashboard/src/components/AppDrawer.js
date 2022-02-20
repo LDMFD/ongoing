@@ -62,9 +62,9 @@ const Items = {
     'advisor': advisorItems,
     'admin': advisorItems.concat([
         {
-            label: 'Due Diligence Templates',
+            label: 'Risk Assessments',
             icon: <SearchIcon />,
-            link: '/review-config/due-diligence',
+            link: '/review-config/risk-assessment',
         },
         {
             label: 'Module Presets',

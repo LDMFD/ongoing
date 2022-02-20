@@ -1,12 +1,13 @@
 package Reviews
 
 import (
-	"github.com/gin-gonic/gin"
-	"ongoing/ApiServer/Advisor/Global/Reviews/DiligenceTemplates"
 	"ongoing/ApiServer/Advisor/Global/Reviews/ModulePresets"
+	"ongoing/ApiServer/Advisor/Global/Reviews/RiskAssessments"
+
+	"github.com/gin-gonic/gin"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
-	DiligenceTemplates.AddRoutes(r.Group("/diligence-templates"))
+	RiskAssessments.AddRoutes(r.Group("/risk-assessments"))
 	ModulePresets.AddRoutes(r.Group("/module-presets"))
 }

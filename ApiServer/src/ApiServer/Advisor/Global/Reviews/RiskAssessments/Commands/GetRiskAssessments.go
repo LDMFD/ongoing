@@ -9,18 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetDiligenceTemplates(c *gin.Context) {
+func GetRiskAssessments(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var diligenceTemplates []Entities.DiligenceTemplate
+	var riskAssessments []Entities.RiskAssessment
 	if err := db.NewSelect().
-		Model(&diligenceTemplates).
-		OrderExpr("label ASC").Scan(c); err != nil {
+		Model(&riskAssessments).
+		//OrderExpr("label ASC").
+		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(200, gin.H{
-		"DiligenceTemplates": diligenceTemplates,
+		"RiskAssessments": riskAssessments,
 	})
 }

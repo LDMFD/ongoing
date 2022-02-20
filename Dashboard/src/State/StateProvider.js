@@ -10,7 +10,7 @@ const initialState = {
     Models:             [],
     PolicyTypes:        [],
     PolicyProviders:    [],
-    DiligenceTemplates: [],
+    RiskAssessments: [],
     ModulePresets:      [],
 };
   

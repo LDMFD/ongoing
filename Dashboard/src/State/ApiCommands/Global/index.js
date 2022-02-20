@@ -3,7 +3,7 @@ import Models             from './Models';
 import Operators          from './Operators';
 import PolicyProviders    from './PolicyProviders';
 import PolicyTypes        from './PolicyTypes';
-import DiligenceTemplates from './Reviews/DueDiligenceTemplates';
+import RiskAssessments    from './Reviews/RiskAssessments';
 import ModulePresets      from './Reviews/ModulePresets';
 
 const defaults = {
@@ -12,7 +12,7 @@ const defaults = {
     Operators,
     PolicyProviders,
     PolicyTypes,
-    DiligenceTemplates,
+    RiskAssessments,
     ModulePresets,
 };
 export default defaults;

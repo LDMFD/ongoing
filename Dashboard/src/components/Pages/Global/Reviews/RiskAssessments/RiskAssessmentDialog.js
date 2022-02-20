@@ -13,25 +13,25 @@ import {
 import { GoBack } from 'Utils';
 import RichTextEditor from 'components/Widgets/RichTextEditor';
 
-export const DiligenceTemplateDialog = ({ diligenceTemplate, setDiligenceTemplate, submitLabel, submitHandler }) => {
+export const RiskAssessmentDialog = ({ riskAssessment, setRiskAssessment, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetLabel: (event) => { setDiligenceTemplate({ ...diligenceTemplate, Label: event.target.value, }); },
-        SetText:  (html)  => { setDiligenceTemplate({ ...diligenceTemplate, Text:  html, }); },
+        SetLabel: (event) => { setRiskAssessment({ ...riskAssessment, Label: event.target.value, }); },
+        SetText:  (html)  => { setRiskAssessment({ ...riskAssessment, Text:  html, }); },
     };
     
     return (
         <Dialog open={true} onClose={goBack}>
             <form onSubmit={submitHandler}>
-                <DialogTitle>{submitLabel} Diligence Template</DialogTitle>
+                <DialogTitle>{submitLabel} RiskAssessment Template</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter Due Diligence Template details
+                        Enter Risk Assessment details
                     </DialogContentText>
 
-                    <TextField value    = {diligenceTemplate.Label}
+                    <TextField value    = {riskAssessment.Label}
                                onChange = {handlers.SetLabel}
                                margin   = "dense"
                                id       = "label"
@@ -42,9 +42,9 @@ export const DiligenceTemplateDialog = ({ diligenceTemplate, setDiligenceTemplat
                                fullWidth />
 
                     <h4>
-                        Due Diligence template:
+                        Risk Assessment:
                     </h4>
-                    <RichTextEditor initialValue = {diligenceTemplate.Text}
+                    <RichTextEditor initialValue = {riskAssessment.Text}
                                     onChange     = {handlers.SetText} />
 
 
@@ -58,4 +58,4 @@ export const DiligenceTemplateDialog = ({ diligenceTemplate, setDiligenceTemplat
     );
 };
 
-export default DiligenceTemplateDialog;
+export default RiskAssessmentDialog;

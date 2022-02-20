@@ -2,7 +2,7 @@ export const LOGIN                   = 'LOGIN';
 export const LOGOUT                  = 'LOGOUT';
 export const POPULATE_CLIENT         = 'POPULATE_CLIENT';
 export const SET_CLIENTS             = 'SET_CLIENTS';
-export const SET_DILIGENCE_TEMPLATES = 'SET_DILIGENCE_TEMPLATES';
+export const SET_RISKASSESSMENT_TEMPLATES = 'SET_RISKASSESSMENT_TEMPLATES';
 export const SET_FUNDS               = 'SET_FUNDS';
 export const SET_MODELS              = 'SET_MODELS';
 export const SET_MODULE_PRESETS      = 'SET_MODULE_PRESETS';
@@ -54,10 +54,10 @@ const Reducer = (state, action) => {
                 PolicyProviders: action.payload.PolicyProviders || [],
             }
 
-        case SET_DILIGENCE_TEMPLATES:
+        case SET_RISKASSESSMENT_TEMPLATES:
             return {
                 ...state,
-                DiligenceTemplates: action.payload.DiligenceTemplates || [],
+                RiskAssessments: action.payload.RiskAssessments || [],
             }
 
         case SET_MODULE_PRESETS:

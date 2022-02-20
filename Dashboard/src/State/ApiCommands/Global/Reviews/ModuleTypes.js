@@ -16,7 +16,7 @@ export const ModuleTypePolicyFundFees      = "policy-fund-fees";
 export const ModuleTypeModelFundFees       = "model-fund-fees";
 export const ModuleTypeDimFee              = "dim-fee";
 export const ModuleTypeAdviceGiven         = "advice-given";
-export const ModuleTypeDueDigilence        = "due-digilence";
+export const ModuleTypeRiskAssessment        = "risk-assessment";
 export const ModuleTypeOngoingSuitability  = "ongoing-suitability";
 export const ModuleTypeActionPoints        = "action-points";
 
@@ -38,7 +38,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypeModelFundFees,      label: "Fees - Model Fund" },
     { id: ModuleTypeDimFee,             label: "DIM Fee" },
     { id: ModuleTypeAdviceGiven,        label: "Advice Given" },
-    { id: ModuleTypeDueDigilence,       label: "Due Digilence" },
+    { id: ModuleTypeRiskAssessment,       label: "Due Digilence" },
     { id: ModuleTypeOngoingSuitability, label: "Ongoing Suitability" },
     { id: ModuleTypeActionPoints,       label: "Action Points" },   
 ];

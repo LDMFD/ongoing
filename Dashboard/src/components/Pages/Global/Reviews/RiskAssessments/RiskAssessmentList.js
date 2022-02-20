@@ -10,28 +10,28 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
 
-const DiligenceTemplateList = () => {
+const RiskAssessmentList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const getDiligenceTemplates = useCallback(() => {
-        Api.Global.DiligenceTemplates.Read(dispatch)
+    const getRiskAssessments = useCallback(() => {
+        Api.Global.RiskAssessments.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
-        getDiligenceTemplates();
-    }, [ getDiligenceTemplates ]);
+        getRiskAssessments();
+    }, [ getRiskAssessments ]);
     
     const onDelete = useCallback(params => async () => {
-        if (window.confirm(`Delete diligenceTemplate?`)) {
-            await Api.Global.DiligenceTemplates.Delete(params.row.id);
-            await Api.Global.DiligenceTemplates.Read(dispatch);
+        if (window.confirm(`Delete riskAssessment?`)) {
+            await Api.Global.RiskAssessments.Delete(params.row.id);
+            await Api.Global.RiskAssessments.Read(dispatch);
         }        
     }, [ dispatch ]);
 
     const onEdit = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/review-config/due-diligence/id/${id}/edit`);
+        history.push(`/review-config/risk-assessment/id/${id}/edit`);
     }, [ history ]);
 
     const columns = [
@@ -48,7 +48,7 @@ const DiligenceTemplateList = () => {
         },
     ];
 
-    let diligenceTemplates = state.DiligenceTemplates.map(p => {
+    let riskAssessments = state.RiskAssessments.map(p => {
         return {
             id:          p.Id,
             label:       p.Label,
@@ -57,14 +57,14 @@ const DiligenceTemplateList = () => {
     });
 
     let data = {
-        rows: diligenceTemplates,
+        rows: riskAssessments,
         columns: columns,
     }
 
     return (
         <>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/review-config/due-diligence/add' }}><Button>Add new Due Diligence template</Button></Link>
+                <Link to={{ pathname: '/review-config/risk-assessment/add' }}><Button>Add new Risk Assessment</Button></Link>
             </Toolbar>
 
             <DataGrid autoHeight {...data} />
@@ -72,4 +72,4 @@ const DiligenceTemplateList = () => {
     );
 }
 
-export default DiligenceTemplateList;
+export default RiskAssessmentList;

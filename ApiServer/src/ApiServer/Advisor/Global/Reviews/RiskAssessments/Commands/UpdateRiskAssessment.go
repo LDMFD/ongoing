@@ -9,31 +9,31 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UpdateDiligenceTemplateRequestPath struct {
-	DiligenceTemplateId int64 `binding:"required"`
+type UpdateRiskAssessmentRequestPath struct {
+	RiskAssessmentId int64 `binding:"required"`
 }
 
-func UpdateDiligenceTemplate(c *gin.Context) {
+func UpdateRiskAssessment(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var path UpdateDiligenceTemplateRequestPath
+	var path UpdateRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var body CreateOrUpdateDiligenceTemplateRequestBody
+	var body CreateOrUpdateRiskAssessmentRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var diligenceTemplate = Entities.DiligenceTemplate{
-		Id:          path.DiligenceTemplateId,
-		Label:       body.Label,
-		Text:        body.Text,
+	var riskAssessment = Entities.RiskAssessment{
+		Id:    path.RiskAssessmentId,
+		//Label: body.Label,
+		//Text:  body.Text,
 	}
-	if _, err := db.NewUpdate().Model(&diligenceTemplate).WherePK().
+	if _, err := db.NewUpdate().Model(&riskAssessment).WherePK().
 		Column("label").
 		Column("text").
 		Exec(c); err != nil {
@@ -42,6 +42,6 @@ func UpdateDiligenceTemplate(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"DiligenceTemplate": diligenceTemplate,
+		"RiskAssessments": riskAssessment,
 	})
 }

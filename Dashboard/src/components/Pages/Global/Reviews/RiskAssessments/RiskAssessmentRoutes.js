@@ -1,11 +1,11 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import DiligenceTemplateList from './DiligenceTemplateList';
-import AddDiligenceTemplate from './AddDiligenceTemplate';
-import EditDiligenceTemplate from './EditDiligenceTemplate';
+import RiskAssessmentList from './RiskAssessmentList';
+import AddRiskAssessment from './AddRiskAssessment';
+import EditRiskAssessment from './EditRiskAssessment';
 
-const DiligenceTemplateRoutes = () => {
+const RiskAssessmentRoutes = () => {
     let { path } = useRouteMatch();
 
     let location = useLocation();
@@ -16,18 +16,18 @@ const DiligenceTemplateRoutes = () => {
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
                 <Route path={path}>
-                    <DiligenceTemplateList />
+                    <RiskAssessmentList />
                 </Route>
             </Switch>
 
             <Route path={`${path}/add`}>
-                <AddDiligenceTemplate />
+                <AddRiskAssessment />
             </Route>
-            <Route path={`${path}/id/:diligenceTemplateId/edit`}>
-                <EditDiligenceTemplate />
+            <Route path={`${path}/id/:riskAssessmentId/edit`}>
+                <EditRiskAssessment />
             </Route>
         </div>
     );
 }
 
-export default DiligenceTemplateRoutes;
+export default RiskAssessmentRoutes;

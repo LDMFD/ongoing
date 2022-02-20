@@ -23,7 +23,7 @@ var (
 	ModuleTypeModelFundFees      = "model-fund-fees"
 	ModuleTypeDimFee             = "dim-fee"
 	ModuleTypeAdviceGiven        = "advice-given"
-	ModuleTypeDueDigilence       = "due-digilence"
+	ModuleTypeRiskAssessment     = "risk-assessment"
 	ModuleTypeOngoingSuitability = "ongoing-suitability"
 	ModuleTypeActionPoints       = "action-points"
 )

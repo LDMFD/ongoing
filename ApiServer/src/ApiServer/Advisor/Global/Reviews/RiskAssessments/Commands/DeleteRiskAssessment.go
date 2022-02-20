@@ -9,22 +9,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type DeleteDiligenceTemplateRequestPath struct {
-	DiligenceTemplateId int64 `binding:"required"`
+type DeleteRiskAssessmentRequestPath struct {
+	RiskAssessmentId int64 `binding:"required"`
 }
 
-func DeleteDiligenceTemplate(c *gin.Context) {
+func DeleteRiskAssessment(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var path DeleteDiligenceTemplateRequestPath
+	var path DeleteRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var diligenceTemplate = Entities.DiligenceTemplate{Id: path.DiligenceTemplateId}
+	var riskAssessment = Entities.RiskAssessment{Id: path.RiskAssessmentId}
 	if err := db.NewSelect().
-		Model(&diligenceTemplate).
+		Model(&riskAssessment).
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -32,7 +32,7 @@ func DeleteDiligenceTemplate(c *gin.Context) {
 	}
 
 	if _, err := db.NewDelete().
-		Model(&diligenceTemplate).
+		Model(&riskAssessment).
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
