@@ -12,9 +12,9 @@ import (
 )
 
 type CreateOrUpdateFundRequestBody struct {
-	Name        string  `binding:"required"`
-	WeightedFee float64 `binding:"required"`
-	ExAnteFee   float64 `binding:"required"`
+	Name      string  `binding:"required"`
+	OcfFee    float64 `binding:"required"`
+	ExAnteFee float64 `binding:"required"`
 }
 
 func CreateFund(c *gin.Context) {
@@ -30,9 +30,9 @@ func CreateFund(c *gin.Context) {
 	}
 
 	var fund = Entities.Fund{
-		Name:        body.Name,
-		WeightedFee: body.WeightedFee,
-		ExAnteFee:   body.ExAnteFee,
+		Name:      body.Name,
+		OcfFee:    body.OcfFee,
+		ExAnteFee: body.ExAnteFee,
 	}
 	if _, err := db.NewInsert().Model(&fund).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

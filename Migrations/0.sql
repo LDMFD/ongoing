@@ -58,8 +58,8 @@ CREATE TABLE models (
     "id"                      int primary key generated always as identity,
     "name"                    text not null unique,    -- e.g. "IBOSS MPS PORTFOLIO 2"
     "operator_id"             int not null,     -- (MPS is run by a DIM, etc.)
-    "weighted_ocf"            decimal not null,
-    "ex_ante_fee"             decimal not null,
+    "weighted_ocf_fee"        decimal not null,
+    "weighted_ex_ante_fee"    decimal not null,
     "file_id"                 int,              -- factsheet
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_operator FOREIGN KEY(operator_id) REFERENCES operators(id) ON DELETE RESTRICT,
@@ -70,7 +70,7 @@ CREATE TABLE models (
 CREATE TABLE funds (
     "id"                      int primary key generated always as identity,
     "name"                    text not null unique,          -- e.g. Tatton, LGT Vestra, IBOSS
-    "weighted_ocf"            decimal not null,
+    "ocf_fee"                 decimal not null,
     "ex_ante_fee"             decimal not null,
     "sedol_code"              text,
     "isin_number"             text,
@@ -120,6 +120,7 @@ CREATE TABLE clients (
     "id"                      int primary key generated always as identity,
     "user_id"                 int not null unique,
     "forenames"               text not null,
+    "fee"                     decimal not null default 0.75,
     "surname"                 text not null,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE RESTRICT
@@ -147,8 +148,6 @@ CREATE TABLE policy_funds (
     "client_id"               int not null,
     "policy_id"               int not null,
     "fund_id"                 int not null,
-    -- "weighted_ocf"            decimal not null,
-    -- "ex_ante_fee"             decimal not null,
     "proportion"              decimal not null,
     "timestamp"               timestamp default current_timestamp,
     UNIQUE ("client_id", "policy_id", "fund_id"),

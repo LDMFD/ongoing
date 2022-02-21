@@ -26,7 +26,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
 
     const handlers = {
         EditName:        (event) => { setModel({ ...model, Name:        event.target.value }); },
-        EditWeightedFee: (event) => { setModel({ ...model, WeightedFee: parseFloat(event.target.value) }); },
+        EditOcfFee:      (event) => { setModel({ ...model, OcfFee:      parseFloat(event.target.value) }); },
         EditExAnteFee:   (event) => { setModel({ ...model, ExAnteFee:   parseFloat(event.target.value) }); },
         SetOperatorId:   (event) => { setModel({ ...model, OperatorId:  parseInt(event.target.value), }); },
     };
@@ -60,7 +60,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                         Enter model details
                     </DialogContentText>
 
-                    <TextField value    = {model.Name}
+                    <TextField value = {model.Name}
                             onChange = {handlers.EditName}
                             margin   = "dense"
                             id       = "name"
@@ -83,19 +83,19 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                         ))}
                     </Select>
 
-                    <TextField value    = {model.WeightedFee}
-                            onChange = {handlers.EditWeightedFee}
+                    <TextField value = {model.WeightedOcfFee}
+                            onChange = {handlers.EditOcfFee}
                             margin   = "dense"
-                            id       = "weightedFee"
-                            label    = "Weighted OCF"
+                            id       = "ocfFee"
+                            label    = "Weighted OCF Fee"
                             type     = "number"
                             fullWidth />
 
-                    <TextField value    = {model.ExAnteFee}
+                    <TextField value = {model.WeightedExAnteFee}
                             onChange = {handlers.EditExAnteFee}
                             margin   = "dense"
                             id       = "exAnteFee"
-                            label    = "Ex Ante Fee"
+                            label    = "Weighted Ex Ante Fee"
                             type     = "number"
                             fullWidth />
 

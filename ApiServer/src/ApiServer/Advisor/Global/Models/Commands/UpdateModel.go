@@ -42,17 +42,17 @@ func UpdateModel(c *gin.Context) {
 	}
 
 	var model = Entities.Model{
-		Id:          path.ModelId,
-		Name:        body.Name,
-		OperatorId:  body.OperatorId,
-		WeightedFee: body.WeightedFee,
-		ExAnteFee:   body.ExAnteFee,
-		FileId:      fileId,
+		Id:                path.ModelId,
+		Name:              body.Name,
+		OperatorId:        body.OperatorId,
+		WeightedOcfFee:    body.OcfFee,
+		WeightedExAnteFee: body.ExAnteFee,
+		FileId:            fileId,
 	}
 	if _, err := db.NewUpdate().Model(&model).WherePK().
 		Column("name").
 		Column("operator_id").
-		Column("weighted_ocf").
+		Column("ocf_fee").
 		Column("ex_ante_fee").
 		Column("file_id").
 		Exec(c); err != nil {

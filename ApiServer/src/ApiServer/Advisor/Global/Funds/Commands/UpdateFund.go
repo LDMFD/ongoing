@@ -29,14 +29,14 @@ func UpdateFund(c *gin.Context) {
 	}
 
 	var fund = Entities.Fund{
-		Id:          path.FundId,
-		Name:        body.Name,
-		WeightedFee: body.WeightedFee,
-		ExAnteFee:   body.ExAnteFee,
+		Id:        path.FundId,
+		Name:      body.Name,
+		OcfFee:    body.OcfFee,
+		ExAnteFee: body.ExAnteFee,
 	}
 	if _, err := db.NewUpdate().Model(&fund).WherePK().
 		Column("name").
-		Column("weighted_ocf").
+		Column("ocf_fee").
 		Column("ex_ante_fee").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

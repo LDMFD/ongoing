@@ -36,7 +36,7 @@ const FundList = () => {
 
     const columns = [
         { field: 'name',           headerName: 'Name',         flex: 0.3, },
-        { field: 'weightedFee',    headerName: 'Weighted OCF', flex: 0.1, },
+        { field: 'ocfFee',         headerName: 'OCF Fee', flex: 0.1, },
         { field: 'exAnteFee',      headerName: 'Ex Ante Fee',  flex: 0.1, },
         // TODO SEDOL, ISIN, Citicode
         {
@@ -54,7 +54,7 @@ const FundList = () => {
         return {
             id:          p.Id,
             name:        p.Name,
-            weightedFee: p.WeightedFee,
+            ocfFee:      p.OcfFee,
             exAnteFee:   p.ExAnteFee,
         };
     });

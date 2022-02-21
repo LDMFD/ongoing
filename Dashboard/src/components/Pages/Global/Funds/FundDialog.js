@@ -18,7 +18,7 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
 
     const handlers = {
         SetName:         (event) => { setFund({ ...fund, Name:        event.target.value, }); },
-        EditWeightedFee: (event) => { setFund({ ...fund, WeightedFee: parseFloat(event.target.value) }); },
+        EditOcfFee:      (event) => { setFund({ ...fund, OcfFee: parseFloat(event.target.value) }); },
         EditExAnteFee:   (event) => { setFund({ ...fund, ExAnteFee:   parseFloat(event.target.value) }); },
     };
     
@@ -41,11 +41,11 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                autoFocus
                                fullWidth />
 
-                    <TextField value    = {fund.WeightedFee}
-                               onChange = {handlers.EditWeightedFee}
+                    <TextField value    = {fund.OcfFee}
+                               onChange = {handlers.EditOcfFee}
                                margin   = "dense"
-                               id       = "weightedFee"
-                               label    = "Weighted OCF"
+                               id       = "ocfFee"
+                               label    = "OCF Fee"
                                type     = "number"
                                fullWidth />
 

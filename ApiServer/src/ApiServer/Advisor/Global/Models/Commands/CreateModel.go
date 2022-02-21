@@ -12,11 +12,11 @@ import (
 )
 
 type CreateOrUpdateModelRequestBody struct {
-	Name        string  `binding:"required"`
-	OperatorId  int64   `binding:"required"`
-	WeightedFee float64 `binding:"required"`
-	ExAnteFee   float64 `binding:"required"`
-	FileUid     *string
+	Name       string  `binding:"required"`
+	OperatorId int64   `binding:"required"`
+	OcfFee     float64 `binding:"required"`
+	ExAnteFee  float64 `binding:"required"`
+	FileUid    *string
 }
 
 func CreateModel(c *gin.Context) {
@@ -45,11 +45,11 @@ func CreateModel(c *gin.Context) {
 	}
 
 	var model = Entities.Model{
-		Name:        body.Name,
-		OperatorId:  body.OperatorId,
-		WeightedFee: body.WeightedFee,
-		ExAnteFee:   body.ExAnteFee,
-		FileId:      fileId,
+		Name:              body.Name,
+		OperatorId:        body.OperatorId,
+		WeightedOcfFee:    body.OcfFee,
+		WeightedExAnteFee: body.ExAnteFee,
+		FileId:            fileId,
 	}
 	if _, err := db.NewInsert().Model(&model).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

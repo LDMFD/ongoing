@@ -39,7 +39,7 @@ const ModelList = () => {
     const columns = [
         { field: 'name',           headerName: 'Name',         flex: 0.2, },
         { field: 'operator',       headerName: 'Operator',     flex: 0.2, },
-        { field: 'weightedFee',    headerName: 'Weighted OCF', flex: 0.1, },
+        { field: 'ocfFee',         headerName: 'OCF Fee', flex: 0.1, },
         { field: 'exAnteFee',      headerName: 'Ex Ante Fee',  flex: 0.1, },
         { field: 'file',           headerName: 'Factsheet',    flex: 0.2, },
         {
@@ -59,7 +59,7 @@ const ModelList = () => {
             id:          m.Id,
             name:        m.Name,
             operator:    op,
-            weightedFee: m.WeightedFee,
+            ocfFee:      m.OcfFee,
             exAnteFee:   m.ExAnteFee,
             file:        m.File?.Filename,
         };
