@@ -39,6 +39,8 @@ const PolicyList = () => {
         { field: 'policyNumber',     headerName: 'Policy Number',         flex: 0.1, },
         { field: 'platformDiscount', headerName: 'Platform Discount',     flex: 0.1, },
         { field: 'monthlies',        headerName: 'Monthly Contributions', flex: 0.1, },
+        { field: 'startValue',       headerName: 'Start Value',           flex: 0.1, },
+        { field: 'endValue',         headerName: 'End Value',             flex: 0.1, },
         { field: 'type',             headerName: 'Type',                  flex: 0.1, },
         { field: 'provider',         headerName: 'Provider',              flex: 0.1, },
         {
@@ -60,6 +62,8 @@ const PolicyList = () => {
             policyNumber:     policy.ExternalId,
             platformDiscount: policy.PlatformDiscount,
             monthlies:        policy.MonthlyContributions,
+            startValue:       policy.StartValue,
+            endValue:         policy.EndValue,
             type,
             provider,
         };

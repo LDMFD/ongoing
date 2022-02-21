@@ -27,6 +27,8 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
         SetExternalId:   (event) => { setPolicy({ ...policy, ExternalId:           event.target.value }); },
         SetDiscount:     (event) => { setPolicy({ ...policy, PlatformDiscount:     parseFloat(event.target.value), }); },
         SetMonthlies:    (event) => { setPolicy({ ...policy, MonthlyContributions: parseInt(event.target.value), }); },
+        SetStartValue:   (event) => { setPolicy({ ...policy, StartValue:           parseInt(event.target.value), }); },
+        SetEndValue:     (event) => { setPolicy({ ...policy, EndValue:             parseInt(event.target.value), }); },
         SetPolicyTypeId: (event) => { setPolicy({ ...policy, PolicyTypeId:         parseInt(event.target.value), }); },
         SetProviderId:   (event) => { setPolicy({ ...policy, PolicyProviderId:     parseInt(event.target.value), }); },
     };
@@ -61,6 +63,22 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                margin   = "dense"
                                id       = "monthlyContributions"
                                label    = "Monthly Contribution"
+                               type     = "number"
+                               fullWidth />
+
+                    <TextField value    = {policy.StartValue}
+                               onChange = {handlers.SetStartValue}
+                               margin   = "dense"
+                               id       = "startValue"
+                               label    = "Start Value"
+                               type     = "number"
+                               fullWidth />
+
+                    <TextField value    = {policy.EndValue}
+                               onChange = {handlers.SetEndValue}
+                               margin   = "dense"
+                               id       = "endValue"
+                               label    = "End Value"
                                type     = "number"
                                fullWidth />
 

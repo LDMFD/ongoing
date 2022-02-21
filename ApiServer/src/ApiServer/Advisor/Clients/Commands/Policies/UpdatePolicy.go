@@ -46,6 +46,8 @@ func UpdatePolicy(c *gin.Context) {
 	policy.ExternalId = body.ExternalId
 	policy.PlatformDiscount = body.PlatformDiscount
 	policy.MonthlyContributions = body.MonthlyContributions
+	policy.StartValue = body.StartValue
+	policy.EndValue = body.EndValue
 	policy.PolicyTypeId = body.PolicyTypeId
 	policy.PolicyProviderId = body.PolicyProviderId
 
@@ -55,6 +57,8 @@ func UpdatePolicy(c *gin.Context) {
 		Column("external_id").
 		Column("platform_discount").
 		Column("monthly_contributions").
+		Column("start_value").
+		Column("end_value").
 		Column("policy_type_id").
 		Column("policy_provider_id").
 		Exec(c); err != nil {

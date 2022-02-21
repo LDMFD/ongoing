@@ -16,6 +16,8 @@ type Policy struct {
 	ExternalId           string    `bun:"external_id,notnull"`
 	PlatformDiscount     float64   `bun:"platform_discount,notnull"`
 	MonthlyContributions int64     `bun:"monthly_contributions,notnull"`
+	StartValue           int64     `bun:"start_value,notnull"`
+	EndValue             int64     `bun:"end_value,notnull"`
 	Timestamp            time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
 	Client     *Client      `bun:"rel:has-one,join:client_id=id"`

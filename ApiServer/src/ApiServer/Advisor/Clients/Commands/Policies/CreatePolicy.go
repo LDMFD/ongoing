@@ -17,6 +17,8 @@ type CreateOrUpdatePolicyRequestBody struct {
 	ExternalId           string  `binding:"required"`
 	PlatformDiscount     float64 `binding:"required"`
 	MonthlyContributions int64   `binding:"required"`
+	StartValue           int64   `binding:"required"`
+	EndValue             int64   `binding:"required"`
 	PolicyTypeId         int64   `binding:"required"`
 	PolicyProviderId     int64   `binding:"required"`
 }
@@ -41,6 +43,8 @@ func CreatePolicy(c *gin.Context) {
 		ExternalId:           body.ExternalId,
 		PlatformDiscount:     body.PlatformDiscount,
 		MonthlyContributions: body.MonthlyContributions,
+		StartValue:           body.StartValue,
+		EndValue:             body.EndValue,
 		PolicyTypeId:         body.PolicyTypeId,
 		PolicyProviderId:     body.PolicyProviderId,
 	}

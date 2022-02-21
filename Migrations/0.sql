@@ -136,6 +136,8 @@ CREATE TABLE policies (
     "monthly_contributions"   int not null,    -- 0 for none, null for no data
     "start_value"             int,
     "end_value"               int,
+    -- "start_date"              timestamp default null,
+    -- "end_date"                timestamp default null,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy_type FOREIGN KEY(policy_type_id) REFERENCES policy_types(id) ON DELETE RESTRICT,
@@ -231,8 +233,9 @@ CREATE TABLE reviews (
     "client_id"               int not null,
     "state"                   review_state default 'draft' not null,
     "report"                  json default null,
-    "started"                 timestamp default current_timestamp,
-    "finalized"               timestamp default null,
+    "start_date"              timestamp default null,
+    "end_date"                timestamp default null,
+    "finalized_date"          timestamp default null,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT
 );
 
