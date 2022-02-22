@@ -13,16 +13,30 @@ import './EditModule.css';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import { DefaultModule } from './DefaultModule';
-import { ModuleTypePolicies, ModuleTypePortfolios } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import PolicyValuations from './Implementations/PolicyValuations';
-import Portfolios from './Implementations/Portfolios';
+import {
+    ModuleTypeFundFees,
+    ModuleTypeFundFeesElse,
+    ModuleTypePolicyValuations,
+    ModuleTypeSelectSpec
+} from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import PolicyValuations from './Implementations/PolicyValuations/PolicyValuations';
+import IndependentFundFees from './Implementations/FundFees/IndependentFundFees';
+import PolicyFundFees from './Implementations/FundFees/PolicyFundFees';
 
 const EditModule = () => {
-    const [ state, dispatch ] = useContext(Context);
-
     let { clientId, reviewId, module } = useParams();
     clientId = parseInt(clientId);
     reviewId = parseInt(reviewId);
+
+    return EditModuleComponent({
+        clientId,
+        reviewId,
+        module,
+    });
+}
+
+export const EditModuleComponent = ({ clientId, reviewId, module }) => {
+    const [ state, dispatch ] = useContext(Context);
 
     let [ moduleState, setModuleState ] = useState(null);
     let preset;
@@ -76,6 +90,8 @@ const EditModule = () => {
 
     return (
         <div className='ong-EditModule'>
+            {ModuleTypeSelectSpec[module]}
+
             {preset &&
                 <Card variant='outlined'>
                     <CardHeader subheader="Module Preset" />
@@ -88,19 +104,25 @@ const EditModule = () => {
             <Card variant='outlined'>
                 <CardHeader subheader="Intro text" />
                 <CardContent>
-                    <RichTextEditor initialValue = {moduleState.Intro}
-                                    onChange     = {handlers.SetIntro} />
-
-                    <div className='ong-buttonGroup'>
-                        <Button disabled={deleteDisabled} variant='outlined' onClick={onDelete}>{deleteLabel}</Button>
-                        <Button type='submit' variant='contained' onClick={onSubmit}>Update</Button>
-                    </div>
-                    <br />
+                    {/* <RichTextEditor initialValue = {moduleState.Intro}
+                                    onChange     = {handlers.SetIntro} /> */}
                 </CardContent>
             </Card>
 
-            {module === ModuleTypePolicies   && <PolicyValuations />}
-            {module === ModuleTypePortfolios && <Portfolios /> }
+            <Card variant='outlined'>
+                <CardHeader subheader="Body text" />
+                <CardContent>
+                    {/* <RichTextEditor initialValue = {moduleState.Text}
+                                    onChange     = {handlers.SetText} /> */}
+                </CardContent>
+            </Card>
+
+            <div className='ong-buttonGroup'>
+                <Button disabled={deleteDisabled} variant='outlined' onClick={onDelete}>{deleteLabel}</Button>
+                <Button type='submit' variant='contained' onClick={onSubmit}>Update</Button>
+            </div>
+
+            {module === ModuleTypePolicyValuations   && <PolicyValuations />}
         </div>
     );
 }

@@ -37,8 +37,8 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
     };
     
     return (
-        <div className="modal" >
-            <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack}>
+            <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Holding</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -86,10 +86,10 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button onClick={submitHandler}>{submitLabel}</Button>
+                    <Button type='submit'>{submitLabel}</Button>
                 </DialogActions>
-            </Dialog>
-        </div>
+            </form>
+        </Dialog>
     );
 };
 

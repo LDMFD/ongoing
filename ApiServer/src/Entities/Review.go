@@ -14,13 +14,14 @@ var (
 type Review struct {
 	bun.BaseModel `bun:"table:reviews"`
 
-	Id        int64     `bun:"id,pk,autoincrement"`
-	Uid       string    `bun:"uid,notnull"`
-	ClientId  int64     `bun:"client_id,notnull"`
-	State     string    `bun:"state,notnull,default:draft"`
-	Report    *string   `bun:"report,notnull"`
-	Started   time.Time `bun:"started,nullzero,notnull,default:current_timestamp"`
-	Finalized time.Time `bun:"finalized,nullzero,notnull"`
+	Id            int64     `bun:"id,pk,autoincrement"`
+	Uid           string    `bun:"uid,notnull"`
+	ClientId      int64     `bun:"client_id,notnull"`
+	State         string    `bun:"state,notnull,default:draft"`
+	Report        *string   `bun:"report,notnull"`
+	StartDate     time.Time `bun:"start_date,nullzero,notnull,default:current_timestamp"`
+	EndDate       time.Time `bun:"end_date,nullzero,notnull,default:current_timestamp"`
+	FinalizedDate time.Time `bun:"finalized_date,nullzero,notnull"`
 
 	Client    *Client         `bun:"rel:has-one,join:client_id=id"`
 	Modules   []*ReviewModule `bun:"rel:has-many,join:id=review_id"`
