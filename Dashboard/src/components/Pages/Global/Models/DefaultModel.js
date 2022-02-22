@@ -1,7 +1,7 @@
 export const DefaultModel = {
     Name: '',
     OperatorId: 'select',
-    OcfFee: '',
-    ExAnteFee: '',
+    WeightedOcfFee: '',
+    WeightedExAnteFee: '',
     FileUid: null,
 };

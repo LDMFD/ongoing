@@ -36,10 +36,10 @@ const AddModel = () => {
     };
 
     return (
-        <ModelDialog model     = {model}
-                         setModel  = {setModel}
-                         submitLabel   = 'Add'
-                         submitHandler = {submitHandler}  />
+        <ModelDialog model         = {model}
+                     setModel      = {setModel}
+                     submitLabel   = 'Add'
+                     submitHandler = {submitHandler}  />
     );
 }
 

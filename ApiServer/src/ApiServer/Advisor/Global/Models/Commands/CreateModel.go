@@ -12,11 +12,11 @@ import (
 )
 
 type CreateOrUpdateModelRequestBody struct {
-	Name       string  `binding:"required"`
-	OperatorId int64   `binding:"required"`
-	OcfFee     float64 `binding:"required"`
-	ExAnteFee  float64 `binding:"required"`
-	FileUid    *string
+	Name              string  `binding:"required"`
+	OperatorId        int64   `binding:"required"`
+	WeightedOcfFee    float64 `binding:"required"`
+	WeightedExAnteFee float64 `binding:"required"`
+	FileUid           *string
 }
 
 func CreateModel(c *gin.Context) {
@@ -47,8 +47,8 @@ func CreateModel(c *gin.Context) {
 	var model = Entities.Model{
 		Name:              body.Name,
 		OperatorId:        body.OperatorId,
-		WeightedOcfFee:    body.OcfFee,
-		WeightedExAnteFee: body.ExAnteFee,
+		WeightedOcfFee:    body.WeightedOcfFee,
+		WeightedExAnteFee: body.WeightedExAnteFee,
 		FileId:            fileId,
 	}
 	if _, err := db.NewInsert().Model(&model).Exec(c); err != nil {

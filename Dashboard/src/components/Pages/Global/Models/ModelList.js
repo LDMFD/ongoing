@@ -37,11 +37,11 @@ const ModelList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'name',           headerName: 'Name',         flex: 0.2, },
-        { field: 'operator',       headerName: 'Operator',     flex: 0.2, },
-        { field: 'ocfFee',         headerName: 'OCF Fee', flex: 0.1, },
-        { field: 'exAnteFee',      headerName: 'Ex Ante Fee',  flex: 0.1, },
-        { field: 'file',           headerName: 'Factsheet',    flex: 0.2, },
+        { field: 'name',              headerName: 'Name',                 flex: 0.2, },
+        { field: 'operator',          headerName: 'Operator',             flex: 0.2, },
+        { field: 'weightedOcfFee',    headerName: 'Weighted OCF Fee',     flex: 0.1, },
+        { field: 'weightedExAnteFee', headerName: 'Weighted Ex Ante Fee', flex: 0.1, },
+        { field: 'file',              headerName: 'Factsheet',            flex: 0.2, },
         {
             field: 'actions',
             type: 'actions',
@@ -56,12 +56,12 @@ const ModelList = () => {
     let models = state.Models.map(m => {
         let op = state.Operators.find(o => o.Id === m.OperatorId).Name;
         return {
-            id:          m.Id,
-            name:        m.Name,
-            operator:    op,
-            ocfFee:      m.OcfFee,
-            exAnteFee:   m.ExAnteFee,
-            file:        m.File?.Filename,
+            id:                m.Id,
+            name:              m.Name,
+            operator:          op,
+            weightedOcfFee:    m.WeightedOcfFee,
+            weightedExAnteFee: m.WeightedExAnteFee,
+            file:              m.File?.Filename,
         };
     });
 

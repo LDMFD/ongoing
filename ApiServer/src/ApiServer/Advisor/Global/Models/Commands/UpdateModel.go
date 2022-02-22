@@ -45,15 +45,15 @@ func UpdateModel(c *gin.Context) {
 		Id:                path.ModelId,
 		Name:              body.Name,
 		OperatorId:        body.OperatorId,
-		WeightedOcfFee:    body.OcfFee,
-		WeightedExAnteFee: body.ExAnteFee,
+		WeightedOcfFee:    body.WeightedOcfFee,
+		WeightedExAnteFee: body.WeightedExAnteFee,
 		FileId:            fileId,
 	}
 	if _, err := db.NewUpdate().Model(&model).WherePK().
 		Column("name").
 		Column("operator_id").
-		Column("ocf_fee").
-		Column("ex_ante_fee").
+		Column("weighted_ocf_fee").
+		Column("weighted_ex_ante_fee").
 		Column("file_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

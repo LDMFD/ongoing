@@ -25,10 +25,10 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
     const [ state ] = useContext(Context);
 
     const handlers = {
-        EditName:        (event) => { setModel({ ...model, Name:        event.target.value }); },
-        EditOcfFee:      (event) => { setModel({ ...model, OcfFee:      parseFloat(event.target.value) }); },
-        EditExAnteFee:   (event) => { setModel({ ...model, ExAnteFee:   parseFloat(event.target.value) }); },
-        SetOperatorId:   (event) => { setModel({ ...model, OperatorId:  parseInt(event.target.value), }); },
+        EditName:              (event) => { setModel({ ...model, Name:              event.target.value }); },
+        EditWeightedOcfFee:    (event) => { setModel({ ...model, WeightedOcfFee:    parseFloat(event.target.value) }); },
+        EditWeightedExAnteFee: (event) => { setModel({ ...model, WeightedExAnteFee: parseFloat(event.target.value) }); },
+        SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        parseInt(event.target.value), }); },
     };
     
     const download = (uid) => {
@@ -84,7 +84,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                     </Select>
 
                     <TextField value = {model.WeightedOcfFee}
-                            onChange = {handlers.EditOcfFee}
+                            onChange = {handlers.EditWeightedOcfFee}
                             margin   = "dense"
                             id       = "ocfFee"
                             label    = "Weighted OCF Fee"
@@ -92,7 +92,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             fullWidth />
 
                     <TextField value = {model.WeightedExAnteFee}
-                            onChange = {handlers.EditExAnteFee}
+                            onChange = {handlers.EditWeightedExAnteFee}
                             margin   = "dense"
                             id       = "exAnteFee"
                             label    = "Weighted Ex Ante Fee"
