@@ -14,6 +14,7 @@ _db_migrate:
 
 db-up:
 	make _db_migrate MIGRATION=0
+	make _db_migrate MIGRATION=1
 
 # Run this, then `make db-up`
 db-clean:

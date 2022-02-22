@@ -13,9 +13,6 @@ CREATE TABLE users (
     "timestamp"               timestamp default current_timestamp
 );
 
-INSERT INTO users ("type", "email", "uid") VALUES ('admin',   'darren@tp1.org',           '5f781892e3594e2b9578171de55c18c6');
-INSERT INTO users ("type", "email", "uid") VALUES ('advisor', 'company@tp1.org',          'bcc64c156d5f49df98c249909cd49a42');
-
 -- fund-related:
 
 CREATE TABLE files (
@@ -101,7 +98,7 @@ CREATE TABLE risk_levels (
 -- client-related:
 
 -- TODO
-CREATE TABLE risk_assessment (
+CREATE TABLE risk_assessments (
     "id"                      int primary key generated always as identity,
     "client_id"               int not null,
     "risk_provider_id"        int not null,
@@ -175,36 +172,32 @@ CREATE TABLE portfolios (
 
 -- This list also found in ReviewModule.go and ModuleTypes.js
 CREATE TYPE module_type AS ENUM (
-    'intro',                -- "Introduction"; preset intro, valuation
+    'introduction',         -- "Introduction"; preset, rich text, valuation
     
     -- "Fact find, Risk profile & Objectives"
-    'profile',              -- preset intro
-        'fact-find',            -- preset intro + file
-        'risk',                 -- preset intro, risk assessment (level, name, desc, file)
-        'objectives',           -- preset intro, text with button to populate from prevous
+    'profile',                              -- preset
+        'profile:fact-find',                    -- preset + file "Fact find"
+        'profile:risk',                         -- preset, risk assessment (level, name, desc, file)
+        'profile:objectives',                   -- preset, text with button to populate from prevous
     
     -- "Policy Valuations"
-    'policies',             -- preset intro. Joined to policy with review_policies
-        'valuation',            -- (for each policy): preset intro, start + end values, text
-        'policy-funds',         -- (for each policy): preset intro, funds file, ocf, ex ante, weighted averages
-        'contributions',        -- (for each policy): preset intro, policy.monthly_contributions, text
-
-    -- "Portfolios"
-    'portfolios',           -- preset intro
-        'portfolio',            -- (for each portfolio): preset intro, ocf + ex ante, model.file, text, weighted averages
+    'policy-valuations',                    -- preset, file "Policy document"
+        'policy-valuations:valuation',          -- (for each policy): preset, start + end values, text
+        'policy-valuations:contributions',      -- (for each policy): preset, policy.monthly_contributions, text
 
     -- "Fees"
-    'fees',                 -- preset intro
-        'advice-fee',            -- text, policy_providers.Pricing, Policy.platform_discount (if not null) embedded in Text from DB
-        'policy-fund-fees',      -- text, file - from policy_funds
-        'model-fund-fees',       -- text, file - from models
-        'dim-fee',               -- text (from operators table if type DIM)
+    'fees',                                 -- preset
+        'fees:advice-fee',                      -- preset, client.advice_fee, calculations, file "Fees report"
+        'fees:policy-fees',                     -- preset, for-each policy
+        'fees:fund-fees',                       -- preset, file - from models
+        'fees:fund-fees-else',                  -- preset, file - from models
 
     -- "Suitability and Advice"
-    'advice-given',         -- text
-    'due-digilence',        -- text (dynamic presets from diligence_templates)
-    'ongoing-suitability',  -- text
-    'action-points'         -- text
+    'conclusions',
+        'conclusions:advice-given',         -- text
+        'conclusions:due-diligence',        -- text
+        'conclusions:ongoing-suitability',  -- text
+        'conclusions:action-points'         -- text
 );
 
 CREATE TABLE module_presets (
@@ -249,18 +242,11 @@ CREATE TABLE review_modules (
     CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE CASCADE  -- TODO check deletion behaviour here
 );
 
+-- For section policy-valuations (to capture the value and contribution notes)
 CREATE TABLE review_policies (
     "id"                      int primary key generated always as identity,
     "module_id"               int not null,
     "policy_id"               int not null,
     CONSTRAINT fk_module FOREIGN KEY(module_id) REFERENCES review_modules(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy FOREIGN KEY(policy_id) REFERENCES policies(id) ON DELETE RESTRICT
-);
-
-CREATE TABLE review_portfolios (
-    "id"                      int primary key generated always as identity,
-    "module_id"               int not null,
-    "portfolio_id"            int not null,
-    CONSTRAINT fk_module FOREIGN KEY(module_id) REFERENCES review_modules(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_portfolio FOREIGN KEY(portfolio_id) REFERENCES portfolios(id) ON DELETE RESTRICT
 );

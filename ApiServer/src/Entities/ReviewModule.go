@@ -6,26 +6,28 @@ import (
 
 // This list also found in 0.sql and ModuleTypes.js
 var (
-	ModuleTypeIntro              = "intro"
-	ModuleTypeProfile            = "profile"
-	ModuleTypeFactFind           = "fact-find"
-	ModuleTypeRisk               = "risk"
-	ModuleTypeObjectives         = "objectives"
-	ModuleTypePolicies           = "policies"
-	ModuleTypeValuation          = "valuation"
-	ModuleTypePolicyFunds        = "policy-funds"
-	ModuleTypeContributions      = "contributions"
-	ModuleTypePortfolios         = "portfolios"
-	ModuleTypePortfolio          = "portfolio"
-	ModuleTypeFees               = "fees"
-	ModuleTypeAdviceFee          = "advice-fee"
-	ModuleTypePolicyFundFees     = "policy-fund-fees"
-	ModuleTypeModelFundFees      = "model-fund-fees"
-	ModuleTypeDimFee             = "dim-fee"
-	ModuleTypeAdviceGiven        = "advice-given"
-	ModuleTypeRiskAssessment     = "risk-assessment"
-	ModuleTypeOngoingSuitability = "ongoing-suitability"
-	ModuleTypeActionPoints       = "action-points"
+	ModuleTypeIntroduction = "introduction"
+
+	ModuleTypeProfile    = "profile"
+	ModuleTypeFactFind   = "profile:fact-find"
+	ModuleTypeRisk       = "profile:risk"
+	ModuleTypeObjectives = "profile:objectives"
+
+	ModuleTypePolicyValuations = "policy-valuations"
+	ModuleTypeValuation        = "policy-valuations:valuation"
+	ModuleTypeContributions    = "policy-valuations:contributions"
+
+	ModuleTypeFees         = "fees"
+	ModuleTypeAdviceFee    = "fees:advice-fee"
+	ModuleTypePolicyFees   = "fees:policy-fees"
+	ModuleTypeFundFees     = "fees:fund-fees"
+	ModuleTypeFundFeesElse = "fees:fund-fees-else"
+
+	ModuleTypeConclusions        = "conclusions"
+	ModuleTypeAdviceGiven        = "conclusions:advice-given"
+	ModuleTypeDueDiligence       = "conclusions:due-diligence"
+	ModuleTypeOngoingSuitability = "conclusions:ongoing-suitability"
+	ModuleTypeActionPoints       = "conclusions:action-points"
 )
 
 type ReviewModule struct {
