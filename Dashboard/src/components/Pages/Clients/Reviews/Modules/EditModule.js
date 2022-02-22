@@ -14,14 +14,14 @@ import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import { DefaultModule } from './DefaultModule';
 import {
-    ModuleTypeFundFees,
-    ModuleTypeFundFeesElse,
+    ModuleTypeFundLevelFees,
+    ModuleTypePortfolioLevelFees,
     ModuleTypePolicyValuations,
     ModuleTypeSelectSpec
 } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import PolicyValuations from './Implementations/PolicyValuations/PolicyValuations';
-import IndependentFundFees from './Implementations/FundFees/IndependentFundFees';
-import PolicyFundFees from './Implementations/FundFees/PolicyFundFees';
+import PortfolioLevelFees from './Implementations/FundFees/IndependentFundFees';
+import FundLevelFees from './Implementations/FundFees/FundLevelFees';
 
 const EditModule = () => {
     let { clientId, reviewId, module } = useParams();
@@ -123,6 +123,8 @@ export const EditModuleComponent = ({ clientId, reviewId, module }) => {
             </div>
 
             {module === ModuleTypePolicyValuations   && <PolicyValuations />}
+            {module === ModuleTypeFundLevelFees      && <FundLevelFees />}
+            {module === ModuleTypePortfolioLevelFees && <PortfolioLevelFees />}
         </div>
     );
 }

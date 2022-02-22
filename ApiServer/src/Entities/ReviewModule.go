@@ -17,11 +17,11 @@ var (
 	ModuleTypeValuation        = "policy-valuations:valuation"
 	ModuleTypeContributions    = "policy-valuations:contributions"
 
-	ModuleTypeFees         = "fees"
-	ModuleTypeAdviceFee    = "fees:advice-fee"
-	ModuleTypePolicyFees   = "fees:policy-fees"
-	ModuleTypeFundFees     = "fees:fund-fees"
-	ModuleTypeFundFeesElse = "fees:fund-fees-else"
+	ModuleTypeFees               = "fees"
+	ModuleTypeAdviceFee          = "fees:advice-fee"
+	ModuleTypePolicyFees         = "fees:policy-fees"
+	ModuleTypeFundLevelFees      = "fees:fund-level"
+	ModuleTypePortfolioLevelFees = "fees:portfolio-level"
 
 	ModuleTypeConclusions        = "conclusions"
 	ModuleTypeAdviceGiven        = "conclusions:advice-given"

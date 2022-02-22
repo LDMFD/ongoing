@@ -189,8 +189,8 @@ CREATE TYPE module_type AS ENUM (
     'fees',                                 -- preset
         'fees:advice-fee',                      -- preset, client.advice_fee, calculations, file "Fees report"
         'fees:policy-fees',                     -- preset, for-each policy
-        'fees:fund-fees',                       -- preset, file - from models
-        'fees:fund-fees-else',                  -- preset, file - from models
+        'fees:fund-level',                      -- preset, file - from models
+        'fees:portfolio-level',                 -- preset, file - from models
 
     -- "Suitability and Advice"
     'conclusions',
