@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { Context } from 'State/StateProvider'
 import { SET_FUNDS } from 'State/Reducer';
 import FundDialog from './FundDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const EditFund = () => {
     let history = useHistory();

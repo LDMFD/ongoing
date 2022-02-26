@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
 import { SET_OPERATORS } from 'State/Reducer';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import OperatorDialog from './OperatorDialog';
 
 const EditOperator = () => {

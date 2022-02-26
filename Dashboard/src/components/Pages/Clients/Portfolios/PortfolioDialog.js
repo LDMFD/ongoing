@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHandler }) => {
     let history = useHistory();

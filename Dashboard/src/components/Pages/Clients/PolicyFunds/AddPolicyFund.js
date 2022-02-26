@@ -5,7 +5,7 @@ import { Context } from 'State/StateProvider'
 import { POPULATE_CLIENT } from 'State/Reducer';
 import { DefaultPolicyFund } from './DefaultPolicyFund';
 import PolicyFundDialog from './PolicyFundDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const AddPolicyFund = () => {
     let history = useHistory();

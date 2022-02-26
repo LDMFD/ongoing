@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
 import { Api } from 'State';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import { DefaultPolicyProvider } from './DefaultPolicyProvider';
 import PolicyProviderDialog from './PolicyProviderDialog';
 

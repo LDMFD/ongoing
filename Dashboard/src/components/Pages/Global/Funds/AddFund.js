@@ -5,7 +5,7 @@ import { Context } from 'State/StateProvider'
 import { SET_FUNDS } from 'State/Reducer';
 import DefaultFund from './DefaultFund';
 import FundDialog from './FundDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const AddFund = () => {
     let history = useHistory();

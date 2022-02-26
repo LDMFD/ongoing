@@ -5,6 +5,7 @@ import {
 } from '@mui/material';
 import { EditModuleComponent } from '../../EditModule';
 import { ModuleTypeValuation } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { CurrencyFormatter } from 'Utils/Strings';
 
 const PolicyValuation = ({ policy }) => {
     let { clientId, reviewId } = useParams();
@@ -20,8 +21,8 @@ const PolicyValuation = ({ policy }) => {
                                  reviewId = {reviewId}
                                  module   = {ModuleTypeValuation} />
 
-            start value: {policy.StartValue}<br />
-            end value: {policy.EndValue}
+            Start value: {CurrencyFormatter.format(policy.StartValue)}<br />
+            End value: {CurrencyFormatter.format(policy.EndValue)}
         </Paper>
     );
 }

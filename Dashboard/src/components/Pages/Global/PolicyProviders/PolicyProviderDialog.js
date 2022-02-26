@@ -10,7 +10,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import RichTextEditor from 'components/Widgets/RichTextEditor';
 
 import './PolicyProviderDialog.css';

@@ -5,7 +5,7 @@ import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import DefaultRiskAssessment from './DefaultRiskAssessment';
 import RiskAssessmentDialog from './RiskAssessmentDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const AddRiskAssessment = () => {
     let history = useHistory();

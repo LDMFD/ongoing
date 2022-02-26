@@ -10,7 +10,7 @@ import {
     DialogTitle,
 } from '@mui/material';
 
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const ClientDialog = ({ client, setClient, submitLabel, submitHandler }) => {
     let history = useHistory();

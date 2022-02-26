@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Context } from 'State/StateProvider'
 import { SET_MODELS } from 'State/Reducer';
 import ModelDialog from './ModelDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const EditModel = () => {
     let history = useHistory();

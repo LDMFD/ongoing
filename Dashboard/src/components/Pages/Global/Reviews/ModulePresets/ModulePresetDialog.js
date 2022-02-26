@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import RichTextEditor from 'components/Widgets/RichTextEditor';
 
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import { ModuleTypeSelectSpec } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 
 import './ModulePresetDialog.css';

@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
 import PortfolioDialog from './PortfolioDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import { Api } from 'State';
 
 const EditPortfolio = () => {

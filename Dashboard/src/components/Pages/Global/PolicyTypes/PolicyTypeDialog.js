@@ -10,7 +10,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 export const PolicyTypeDialog = ({ policyType, setPolicyType, submitLabel, submitHandler }) => {
     let history = useHistory();

@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 
 import { Context } from 'State/StateProvider'
-import { RouteMatch } from 'Utils';
+import { RouteMatch } from 'Utils/Routing';
 import { Api } from 'State';
 
 const ClientWrapper = ({ children }) => {

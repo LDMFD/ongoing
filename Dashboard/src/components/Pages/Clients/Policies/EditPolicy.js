@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
 import PolicyDialog from './PolicyDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import { Api } from 'State';
 
 const EditPolicy = () => {

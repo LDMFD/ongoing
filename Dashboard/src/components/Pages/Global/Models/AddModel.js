@@ -5,7 +5,7 @@ import { Context } from 'State/StateProvider'
 import { SET_MODELS } from 'State/Reducer';
 import { DefaultModel } from './DefaultModel';
 import ModelDialog from './ModelDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const AddModel = () => {
     let history = useHistory();

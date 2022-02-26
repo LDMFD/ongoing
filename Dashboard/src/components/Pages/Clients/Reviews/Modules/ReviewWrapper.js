@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 
 import './Review.css';
-import { RouteMatch } from 'Utils';
+import { RouteMatch } from 'Utils/Routing';
 
 const ReviewWrapper = ({ children }) => {
 

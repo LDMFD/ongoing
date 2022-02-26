@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import FileInput from 'components/Widgets/FileUploader';
 
 export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, includeFiles }) => {

@@ -5,7 +5,7 @@ import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import DefaultModulePreset from './DefaultModulePreset';
 import ModulePresetDialog from './ModulePresetDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const AddModulePreset = () => {
     let history = useHistory();

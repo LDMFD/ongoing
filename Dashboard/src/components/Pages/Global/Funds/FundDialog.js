@@ -10,7 +10,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
     let history = useHistory();

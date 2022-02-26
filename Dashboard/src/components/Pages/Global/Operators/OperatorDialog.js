@@ -12,7 +12,7 @@ import {
     TextField,
 } from '@mui/material';
 
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 import { OPERATOR_TYPES } from './OperatorTypes';
 
 export const OperatorDialog = ({ operator, setOperator, submitLabel, submitHandler }) => {

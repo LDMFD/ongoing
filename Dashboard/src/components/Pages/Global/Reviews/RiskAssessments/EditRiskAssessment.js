@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import RiskAssessmentDialog from './RiskAssessmentDialog';
-import { GoBack } from 'Utils';
+import { GoBack } from 'Utils/Routing';
 
 const EditRiskAssessment = () => {
     let history = useHistory();
