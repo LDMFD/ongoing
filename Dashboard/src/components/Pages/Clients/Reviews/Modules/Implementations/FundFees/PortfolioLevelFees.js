@@ -17,7 +17,7 @@ var formatter = new Intl.NumberFormat('en-UK', {
     maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-const PortfoliosPolicy = ({ policy, portfolios }) => {
+const PolicyPortfolios = ({ policy, portfolios }) => {
     const columns = [
         { field: 'model',              headerName: 'Model',                flex: 0.1, },
         { field: 'ocfFee',             headerName: 'OCF Fee (%)',          flex: 0.1, },
@@ -62,7 +62,7 @@ const PortfoliosPolicy = ({ policy, portfolios }) => {
     );
 }
 
-const IndependentFundFees = () => {
+const PortfolioLevelFees = () => {
     const [state, ] = useContext(Context);
 
     let { clientId } = useParams();
@@ -95,10 +95,10 @@ const IndependentFundFees = () => {
             </Toolbar>
 
             {client.Policies.map(p => 
-                <PortfoliosPolicy policy={p} portfolios={portfolios} key={p.Id} />
+                <PolicyPortfolios policy={p} portfolios={portfolios} key={p.Id} />
             )}
         </div>
     );
 }
 
-export default IndependentFundFees;
+export default PortfolioLevelFees;

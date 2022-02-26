@@ -20,7 +20,7 @@ import {
     ModuleTypeSelectSpec
 } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import PolicyValuations from './Implementations/PolicyValuations/PolicyValuations';
-import PortfolioLevelFees from './Implementations/FundFees/IndependentFundFees';
+import PortfolioLevelFees from './Implementations/FundFees/PortfolioLevelFees';
 import FundLevelFees from './Implementations/FundFees/FundLevelFees';
 
 const EditModule = () => {

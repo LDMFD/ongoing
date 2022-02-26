@@ -20,9 +20,9 @@ const PolicyValuations = () => {
         <div>
             {client.Policies.map(p => (
                 <Paper elevation={2} key={p.Id}>
-                    <h1>
+                    <h3>
                         {p.ExternalId}
-                    </h1>
+                    </h3>
                     <PolicyValuation policy={p} />
                     <PolicyContributions policy={p} />
                 </Paper>

@@ -27,7 +27,7 @@ const ReviewList = () => {
     };
 
     const onEdit = useCallback(params => () => {
-        history.push(`/clients/id/${clientId}/reviews/id/${params.row.id}`);
+        history.push(`/clients/id/${clientId}/reviews/id/${params.row.id}/modules/introduction`);
     }, [ history, clientId ]);
 
     const onDelete = useCallback(params => async () => {

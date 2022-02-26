@@ -8,21 +8,22 @@ import {
 import { Context } from 'State'
 import { ONGOING_DASHBOARD_URL } from 'App';
 
-const actionCodeSettings = {
-    url: ONGOING_DASHBOARD_URL,
-    handleCodeInApp: true,    // This must be true (apparently).
-};
-
 function SendSignInLink(email) {
+    const actionCodeSettings = {
+        url: ONGOING_DASHBOARD_URL,
+        handleCodeInApp: true,    // This must be true according to the docs.
+    };
+    
     const auth = getAuth();
+
     sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
-        // TODO show success
+        alert("Email sent");
     })
     .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
-        alert(`${errorCode}, {errorMessage}`);
+        alert(`${errorCode}, ${errorMessage}`);
     });
 }
 

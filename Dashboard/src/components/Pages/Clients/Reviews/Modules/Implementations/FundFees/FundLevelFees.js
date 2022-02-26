@@ -90,9 +90,6 @@ const FundLevelFees = () => {
         <div>
             {client.Policies.map(p => (
                 <Paper elevation={2} key={p.Id}>
-                    <h1>
-                        {p.ExternalId}
-                    </h1>
                     <PolicyFunds policy={p} />
                 </Paper>
             ))}

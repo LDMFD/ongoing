@@ -26,9 +26,9 @@ const PolicyContributions = ({ policy }) => {
 
     return (
         <Paper>
-            <h2>
+            <h4>
                 Policy Contributions
-            </h2>
+            </h4>
             <EditModuleComponent clientId = {clientId}
                                  reviewId = {reviewId}
                                  module   = {ModuleTypeValuation} />
