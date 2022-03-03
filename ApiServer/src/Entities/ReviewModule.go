@@ -22,6 +22,7 @@ var (
     ModuleTypePolicyFees         = "fees:policy-fees"
     ModuleTypeFundLevelFees      = "fees:fund-level"
     ModuleTypePortfolioLevelFees = "fees:portfolio-level"
+    ModuleTypeDimFee             = "fees:dim"
 
     ModuleTypeConclusions        = "conclusions"
     ModuleTypeAdviceGiven        = "conclusions:advice-given"

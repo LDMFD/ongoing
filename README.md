@@ -6,3 +6,11 @@ GCP setup
     - OAuth consenst screen
     - Domain verification
 - Enable the IAM API
+
+Migration
+
+    make _db_migrate MIGRATION=1
+
+Dashboard
+
+    docker-compose up dash

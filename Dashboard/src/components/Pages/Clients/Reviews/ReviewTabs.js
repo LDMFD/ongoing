@@ -1,16 +1,13 @@
 import React, {  } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import {
-    Typography,
-    Breadcrumbs,
     Tab,
     Tabs,
 } from '@mui/material';
 
-import './Review.css';
 import { RouteMatch } from 'Utils/Routing';
 
-const ReviewWrapper = ({ children }) => {
+const ReviewTabs = ({ children }) => {
 
     let { clientId, reviewId } = useParams();
     clientId = parseInt(clientId);
@@ -37,7 +34,7 @@ const ReviewWrapper = ({ children }) => {
                 <Tab label="Introduction"      value={`${basePath}/introduction`}      to={`${baseTarget}/introduction`}      component={Link} />
                 <Tab label="Profile"           value={`${basePath}/profile`}           to={`${baseTarget}/profile`}           component={Link} />
                 <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`} component={Link} />
-                <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees`}              component={Link} />
+                <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/intro`}        component={Link} />
                 <Tab label="Conclusions"       value={`${basePath}/conclusions`}       to={`${baseTarget}/conclusions`}       component={Link} />
             </Tabs>
         );
@@ -45,11 +42,11 @@ const ReviewWrapper = ({ children }) => {
 
     return (
         <div className='review'>
-            <Breadcrumbs aria-label="breadcrumb">
+            {/* <Breadcrumbs aria-label="breadcrumb">
                 <Typography color="text.primary">
                     Review #{reviewId}
                 </Typography>
-            </Breadcrumbs>
+            </Breadcrumbs> */}
 
             <ReviewTabs />
 
@@ -58,4 +55,4 @@ const ReviewWrapper = ({ children }) => {
     );
 }
 
-export default ReviewWrapper;
+export default ReviewTabs;

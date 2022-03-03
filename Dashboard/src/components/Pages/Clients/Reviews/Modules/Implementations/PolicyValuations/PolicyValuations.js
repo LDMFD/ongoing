@@ -18,6 +18,9 @@ const PolicyValuations = () => {
 
     return (
         <div>
+            <h2>
+                Policy Valuations
+            </h2>
             {client.Policies.map(p => (
                 <Paper elevation={2} key={p.Id}>
                     <h3>

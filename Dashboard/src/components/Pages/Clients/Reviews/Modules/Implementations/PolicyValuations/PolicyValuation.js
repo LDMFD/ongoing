@@ -3,7 +3,7 @@ import { useParams,  } from 'react-router-dom';
 import {
     Paper,
 } from '@mui/material';
-import { EditModuleComponent } from '../../EditModule';
+import { ModuleEditor } from '../../EditModule';
 import { ModuleTypeValuation } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 
@@ -17,9 +17,9 @@ const PolicyValuation = ({ policy }) => {
             <h4>
                 Valuation
             </h4>
-            <EditModuleComponent clientId = {clientId}
-                                 reviewId = {reviewId}
-                                 module   = {ModuleTypeValuation} />
+            <ModuleEditor clientId = {clientId}
+                          reviewId = {reviewId}
+                          module   = {ModuleTypeValuation} />
 
             Start value: {CurrencyFormatter.format(policy.StartValue)}<br />
             End value: {CurrencyFormatter.format(policy.EndValue)}

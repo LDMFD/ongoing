@@ -15,6 +15,7 @@ export const ModuleTypeAdviceFee          = "fees:advice-fee";
 export const ModuleTypePolicyFees         = "fees:policy-fees";
 export const ModuleTypeFundLevelFees      = "fees:fund-level";
 export const ModuleTypePortfolioLevelFees = "fees:portfolio-level";
+export const ModuleTypeDimFee             = "fees:dim";
 
 export const ModuleTypeConclusions        = "conclusions";
 export const ModuleTypeAdviceGiven        = "conclusions:advice-given";

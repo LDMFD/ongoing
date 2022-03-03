@@ -14,8 +14,8 @@ type UpdateReviewModulePath struct {
 }
 
 type UpdateReviewModuleRequestBody struct {
-	Intro string `binding:"required"`
-	Text string //`binding:"required"`
+	Intro string
+	Text string
 }
 
 func UpdateReviewModule(c *gin.Context) {

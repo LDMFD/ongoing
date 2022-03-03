@@ -1,14 +1,14 @@
 import React, {  } from 'react';
 import {
-    Paper
+    Paper,
 } from '@mui/material';
 
-const PreviewModule = () => {
+const Advice = () => {
     return (
         <Paper>
-            Preview module
+            Advice
         </Paper>
     );
 }
 
-export default PreviewModule;
+export default Advice;

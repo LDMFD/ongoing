@@ -15,8 +15,8 @@ import PolicyList        from './Policies/PolicyList';
 import PolicyFundList    from './PolicyFunds/PolicyFundList';
 import AddPolicyFund     from './PolicyFunds/AddPolicyFund';
 import EditPolicyFund    from './PolicyFunds/EditPolicyFund';
-import ReviewRoutes from './Reviews/ReviewRoutes';
-import ReviewList from './Reviews/ReviewList';
+import ReviewRoutes      from './Reviews/ReviewRoutes';
+import ReviewList        from './Reviews/ReviewList';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();

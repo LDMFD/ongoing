@@ -191,6 +191,7 @@ CREATE TYPE module_type AS ENUM (
         'fees:policy-fees',                     -- preset, for-each policy
         'fees:fund-level',                      -- preset, file - from models
         'fees:portfolio-level',                 -- preset, file - from models
+        'fees:dim',                         -- preset
 
     -- "Suitability and Advice"
     'conclusions',

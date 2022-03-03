@@ -36,5 +36,5 @@ func AddRoutes(r *gin.RouterGroup) {
 	reviewGroup.POST("", Reviews.CreateReview)
 	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
 	reviewGroup.PUT("/:ReviewId/module/:Module", Reviews.UpdateReviewModule)
-	reviewGroup.DELETE("/:ReviewId/module/:Module", Reviews.DeleteReviewModule)
+	reviewGroup.DELETE("/:ReviewId/module/:Module/field/:Field", Reviews.DeleteReviewModule)
 }

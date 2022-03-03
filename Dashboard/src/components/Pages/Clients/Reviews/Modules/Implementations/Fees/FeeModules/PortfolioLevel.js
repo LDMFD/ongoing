@@ -1,11 +1,9 @@
 import {
-    Button,
     Paper,
-    Toolbar
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useContext } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
 
 import { Context } from 'State';
 import { CurrencyFormatter } from 'Utils/Strings';
@@ -66,14 +64,24 @@ const PortfolioLevelFees = () => {
     let portfolios = client.Portfolios.map(portfolio => {
         let policy = client.Policies.find(p => p.Id === portfolio.PolicyId);
         let model = state.Models.find(p => p.Id === portfolio.ModelId);
+
+        let ocfPercent    = (model.WeightedOcfFee).toPrecision(2);
+        let exAntePercent = (model.WeightedExAnteFee).toPrecision(2);
+
+        let ocfSterling    = model.WeightedOcfFee * policy.EndValue / 100;
+        let exAnteSterling = model.WeightedExAnteFee * policy.EndValue / 100;
+
+        let ocfStr    = `${ocfPercent}% (${CurrencyFormatter.format(ocfSterling)})`;
+        let exAnteStr = `${exAntePercent}% (${CurrencyFormatter.format(exAnteSterling)})`;
+
         return {
             id:                portfolio.Id,
             proportion:        portfolio.Proportion,
             policyId:          policy.Id,
             endValue:          `$${policy.EndValue}`,
             model:             model.Name,
-            ocfFee:            `${(model.WeightedOcfFee).toPrecision(2)}% (${formatter.format(model.WeightedOcfFee * policy.EndValue / 100)})`,
-            exAnteFee:         `${(model.WeightedExAnteFee).toPrecision(2)}% (${formatter.format(model.WeightedExAnteFee * policy.EndValue / 100)})`,
+            ocfFee:            ocfStr,
+            exAnteFee:         exAnteStr,
             ocf:               model.WeightedOcfFee,
             exAnte:            model.WeightedExAnteFee,
             weightedOcfFee:    (model.WeightedOcfFee * portfolio.Proportion).toPrecision(2),
@@ -82,15 +90,11 @@ const PortfolioLevelFees = () => {
     });
 
     return (
-        <div className='ongoing-portfolioList'>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/portfolios/add` }}><Button>Add portfolio</Button></Link>
-            </Toolbar>
-
+        <>
             {client.Policies.map(p => 
                 <PolicyPortfolios policy={p} portfolios={portfolios} key={p.Id} />
             )}
-        </div>
+        </>
     );
 }
 

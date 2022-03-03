@@ -3,7 +3,7 @@ import { useParams,  } from 'react-router-dom';
 import {
     Paper,
 } from '@mui/material';
-import { EditModuleComponent } from '../../EditModule';
+import { ModuleEditor } from '../../EditModule';
 import { ModuleTypeValuation } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 
 const PolicyContributions = ({ policy }) => {
@@ -29,9 +29,9 @@ const PolicyContributions = ({ policy }) => {
             <h4>
                 Policy Contributions
             </h4>
-            <EditModuleComponent clientId = {clientId}
-                                 reviewId = {reviewId}
-                                 module   = {ModuleTypeValuation} />
+            <ModuleEditor clientId = {clientId}
+                          reviewId = {reviewId}
+                          module   = {ModuleTypeValuation} />
 
             Monthly contributions: {contributions} ({policy.MonthlyContributions})<br />
         </Paper>

@@ -1,15 +1,13 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-// import EditModule from './Modules/EditModule';
-// import PreviewModule from './Modules/PreviewModule';
-import ReviewWrapper from './Modules/ReviewWrapper';
+import ReviewTabs from './ReviewTabs';
 
 import Introduction     from './Modules/Implementations/Introduction';
 import Profile          from './Modules/Implementations/Profile';
 import PolicyValuations from './Modules/Implementations/PolicyValuations/PolicyValuations';
-import Fees             from './Modules/Implementations/Fees';
 import Conclusions      from './Modules/Implementations/Conclusions';
+import FeeRoutes        from './Modules/Implementations/Fees/FeeRoutes';
 
 const ReviewRoutes = () => {
     let { path } = useRouteMatch();
@@ -24,20 +22,17 @@ const ReviewRoutes = () => {
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
                 <Route path={`${path}`}>
-                    <ReviewWrapper>
+                    <ReviewTabs>
                         <Switch>
                             <Route path={`${basePath}/introduction`}      component={Introduction} />
                             <Route path={`${basePath}/profile`}           component={Profile} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
-                            <Route path={`${basePath}/fees`}              component={Fees} />
+                            <Route path={`${basePath}/fees`}              component={FeeRoutes} />
                             <Route path={`${basePath}/conclusions`}       component={Conclusions} />
                         </Switch>
-                    </ReviewWrapper>
+                    </ReviewTabs>
                 </Route>
             </Switch>
-
-            {/* <Route path={`${path}/edit`} component={EditModule} />
-            <Route path={`${path}/preview`} component={PreviewModule} /> */}
         </div>
     );
 }

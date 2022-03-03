@@ -3,8 +3,8 @@ const Update = (clientId, reviewId, moduleName, module) => {
         ...module
     })
 }
-const Delete = (clientId, reviewId, moduleName) => {
-    return window.ApiClient.delete(`advisor/clients/${clientId}/reviews/${reviewId}/module/${moduleName}`, {
+const Delete = (clientId, reviewId, moduleName, field) => {
+    return window.ApiClient.delete(`advisor/clients/${clientId}/reviews/${reviewId}/module/${moduleName}/field/${field}`, {
         ...module
     })
 }
