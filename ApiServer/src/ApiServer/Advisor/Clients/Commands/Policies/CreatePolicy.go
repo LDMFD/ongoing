@@ -15,7 +15,7 @@ type CreatePolicyRequestPath struct {
 
 type CreateOrUpdatePolicyRequestBody struct {
 	ExternalId           string  `binding:"required"`
-	PlatformDiscount     float64 `binding:"required"`
+	PlatformDiscount     float64 // `binding:"required"`  0 doesn't work??
 	MonthlyContributions int64   `binding:"required"`
 	StartValue           int64   `binding:"required"`
 	EndValue             int64   `binding:"required"`

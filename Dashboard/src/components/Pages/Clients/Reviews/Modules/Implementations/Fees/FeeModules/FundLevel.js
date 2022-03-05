@@ -4,9 +4,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import {
     Paper,
 } from '@mui/material';
+import { ModuleEditor } from '../../../EditModule';
 
 import { Context,  } from 'State'
 import { CurrencyFormatter } from 'Utils/Strings';
+import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 
 const PolicyFunds = ({ policy }) => {
     const [state, ] = useContext(Context);
@@ -74,13 +76,18 @@ const PolicyFunds = ({ policy }) => {
 const FundLevelFees = () => {
     const [state,  ] = useContext(Context);
 
-    let { clientId } = useParams();
+    let { clientId, reviewId } = useParams();
     clientId = parseInt(clientId);
+    reviewId = parseInt(reviewId);
 
     let client = state.Clients.find(c => c.Id === clientId);
 
     return (
         <div>
+            <ModuleEditor clientId = {clientId}
+                          reviewId = {reviewId}
+                          module   = {ModuleTypeFundLevelFees} />
+
             {client.Policies.map(p => (
                 <Paper elevation={2} key={p.Id}>
                     <PolicyFunds policy={p} />

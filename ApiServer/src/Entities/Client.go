@@ -12,7 +12,7 @@ type Client struct {
 	UserId     	int64      `bun:"user_id,notnull"`
 	Forenames  	string     `bun:"forenames,notnull"`
 	Surname    	string     `bun:"surname,notnull"`
-	Fee         int64      `bun:"fee,notnull"`
+	Fee         float64    `bun:"fee,notnull"`
 	Timestamp   time.Time  `bun:",nullzero,notnull,default:current_timestamp"`
 
 	User        User          `bun:"rel:has-one,join:user_id=id"`

@@ -37,6 +37,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypePolicyFees,         label: "Fees - Policies" },
     { id: ModuleTypeFundLevelFees,      label: "Fees - Funds Level" },
     { id: ModuleTypePortfolioLevelFees, label: "Fees - Portfolio Level" },
+    { id: ModuleTypeDimFee,             label: "Fees - DIM" },
     { id: ModuleTypeConclusions,        label: "Conclusions page" },
     { id: ModuleTypeAdviceGiven,        label: "Conclusions - Advice Given" },
     { id: ModuleTypeDueDiligence,       label: "Conclusions - Due Digilence" },

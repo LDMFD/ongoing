@@ -6,8 +6,8 @@ import FeeTabs from './FeeTabs';
 import FundLevelFees from './FeeModules/FundLevel';
 import PortfolioLevelFees from './FeeModules/PortfolioLevel';
 import Introduction from './FeeModules/Introduction';
-import Advice from './FeeModules/Advice';
-import Platform from './FeeModules/Platform';
+import AdviceFees from './FeeModules/Advice';
+import PlatformFees from './FeeModules/Platform';
 import DimFees from './FeeModules/DimFees';
 import { EditModuleText } from '../../EditModule';
 
@@ -26,8 +26,8 @@ const FeeRoutes = () => {
                 <Route path={`${path}`}>
                     <FeeTabs>
                         <Switch>
-                            <Route path={`${basePath}/advice`}          component={Advice} />
-                            <Route path={`${basePath}/platform`}        component={Platform} />
+                            <Route path={`${basePath}/advice`}          component={AdviceFees} />
+                            <Route path={`${basePath}/platform`}        component={PlatformFees} />
                             <Route path={`${basePath}/fund-level`}      component={FundLevelFees} />
                             <Route path={`${basePath}/portfolio-level`} component={PortfolioLevelFees} />
                             <Route path={`${basePath}/dim`}             component={DimFees} />

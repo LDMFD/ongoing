@@ -4,8 +4,10 @@ import {
 import { DataGrid } from '@mui/x-data-grid';
 import React, { useContext } from 'react';
 import {  useParams } from 'react-router-dom';
+import { ModuleEditor } from '../../../EditModule';
 
 import { Context } from 'State';
+import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 
 const PolicyPortfolios = ({ policy, portfolios }) => {
@@ -56,8 +58,9 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
 const PortfolioLevelFees = () => {
     const [state, ] = useContext(Context);
 
-    let { clientId } = useParams();
+    let { clientId, reviewId } = useParams();
     clientId = parseInt(clientId);
+    reviewId = parseInt(reviewId);
 
     let client = state.Clients.find(c => c.Id === clientId);
 
@@ -91,6 +94,10 @@ const PortfolioLevelFees = () => {
 
     return (
         <>
+            <ModuleEditor clientId = {clientId}
+                          reviewId = {reviewId}
+                          module   = {ModuleTypePortfolioLevelFees} />
+
             {client.Policies.map(p => 
                 <PolicyPortfolios policy={p} portfolios={portfolios} key={p.Id} />
             )}
