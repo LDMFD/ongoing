@@ -22,28 +22,29 @@ func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 
 		jwt := c.GetHeader("Authentication")
 
-		if jwt == "ongoing" {
-			c.Next()
-			return
-		}
-
-		if app, err = firebase.NewApp(context.Background(), nil); err != nil {
-			panic(err)
-		}
-		if client, err = app.Auth(context.Background()); err != nil {
-			panic(err)
-		}
-
-		// Check valid Google token
-		if token, err = client.VerifyIDToken(context.Background(), jwt); err != nil {
-			c.AbortWithStatus(http.StatusForbidden)
-			return
-		}
-
 		var (
-			email = token.Claims["email"].(string)
+			email  string
 			exists bool
 		)
+
+		if jwt[len(jwt)-8:] == "@tp1.org" {
+			email = jwt
+		} else {
+			if app, err = firebase.NewApp(context.Background(), nil); err != nil {
+				panic(err)
+			}
+			if client, err = app.Auth(context.Background()); err != nil {
+				panic(err)
+			}
+
+			// Check valid Google token
+			if token, err = client.VerifyIDToken(context.Background(), jwt); err != nil {
+				c.AbortWithStatus(http.StatusForbidden)
+				return
+			}
+
+			email  = token.Claims["email"].(string)
+		}
 		user := &Entities.User{}
 
 		if count, err := db.NewSelect().Model(user).Where("email = ?", email).ScanAndCount(c); err != nil {

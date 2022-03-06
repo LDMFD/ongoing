@@ -33,7 +33,7 @@ function AuthControl() {
         });
 
         // Reload page
-        window.location = '/';
+        // window.location = '/'; // TODO can cause loop if no internet connection?
     }, [ dispatch ]);
 
     const loginFn = useCallback((token, email, name, photoURL) => {

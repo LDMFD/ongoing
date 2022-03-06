@@ -4,6 +4,8 @@ import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 
+export const DEV = true;
+
 const FirebaseUiConfig = {
     signInFlow: 'redirect',
     signInOptions: [
@@ -34,13 +36,25 @@ const firebaseConfig = {
     measurementId: "G-NXWP2MYJ02"
 };
 
-firebase.initializeApp(firebaseConfig);
-const authUI = new firebaseui.auth.AuthUI(firebase.auth());
-authUI.disableAutoSignIn();
+if (!DEV) {
+    firebase.initializeApp(firebaseConfig);
+    const authUI = new firebaseui.auth.AuthUI(firebase.auth());
+    authUI.disableAutoSignIn();
 
-authUI.start('#firebaseui-container', FirebaseUiConfig);
+    authUI.start('#firebaseui-container', FirebaseUiConfig);
+}
 
 export function ShowLogin(callback) {
+    if (DEV) {
+        let email = localStorage.getItem('email');
+        if (!email) {
+            email = prompt('email');
+            localStorage.setItem('email', email);
+        }
+        callback(email, email, 'Darren', null);
+        return;
+    }
+
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             user.getIdToken(/* forceRefresh */ true).then((idToken) => {
@@ -53,5 +67,9 @@ export function ShowLogin(callback) {
 }
 
 export function Logout() {
+    if (DEV) {
+        localStorage.clear();
+        return;
+    }
     firebase.auth().signOut();
 }
