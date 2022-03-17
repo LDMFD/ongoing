@@ -25,13 +25,13 @@ func UpdateClient(c *gin.Context) {
 	var path UpdateClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body UpdateClientRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var client = Entities.Client{
@@ -44,7 +44,7 @@ func UpdateClient(c *gin.Context) {
 		Column("surname").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if err := db.NewSelect().
@@ -53,7 +53,7 @@ func UpdateClient(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if body.Email != client.User.Email {

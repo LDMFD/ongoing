@@ -17,13 +17,13 @@ func RequestDownload(c *gin.Context) {
 	var req RequestDownloadRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var file = Entities.File{}
 	if err := db.NewSelect().Model(&file).Where("uid = ?", req.Uid).Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	url := GenerateSignedGetUrl("/Users/darren/dev/p/ongoing/Config/Storage/Credentials/Storage.pem", "ongoing-test-docs", file.Uid)

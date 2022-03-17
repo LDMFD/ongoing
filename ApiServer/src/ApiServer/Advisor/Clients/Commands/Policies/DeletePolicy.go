@@ -21,7 +21,7 @@ func DeletePolicy(c *gin.Context) {
 	var path DeletePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policy = Entities.Policy{Id: path.PolicyId}
@@ -31,7 +31,7 @@ func DeletePolicy(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if policy.ClientId != path.ClientId {
@@ -49,7 +49,7 @@ func DeletePolicy(c *gin.Context) {
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{})

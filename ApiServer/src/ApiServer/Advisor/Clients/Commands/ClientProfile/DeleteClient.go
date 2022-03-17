@@ -18,7 +18,7 @@ func DeleteClient(c *gin.Context) {
 	var path DeleteClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var client = Entities.Client{Id: path.ClientId}
@@ -27,7 +27,7 @@ func DeleteClient(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if _, err := db.NewDelete().
@@ -35,7 +35,7 @@ func DeleteClient(c *gin.Context) {
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{})

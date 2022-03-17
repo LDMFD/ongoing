@@ -20,7 +20,7 @@ func DeletePortfolio(c *gin.Context) {
 	var path DeletePortfolioRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var portfolio = Entities.Portfolio{Id: path.PortfolioId}
@@ -29,7 +29,7 @@ func DeletePortfolio(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if portfolio.ClientId != path.ClientId {
@@ -42,7 +42,7 @@ func DeletePortfolio(c *gin.Context) {
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{})

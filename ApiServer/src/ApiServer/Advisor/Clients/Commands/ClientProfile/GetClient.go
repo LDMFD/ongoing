@@ -19,7 +19,7 @@ func GetClient(c *gin.Context) {
 	var path GetClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var client = Entities.Client{Id: path.ClientId}
@@ -34,7 +34,7 @@ func GetClient(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Client": client,

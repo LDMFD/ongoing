@@ -24,13 +24,13 @@ func UpdateReviewModule(c *gin.Context) {
 	var path UpdateReviewModulePath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body UpdateReviewModuleRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var review = Entities.Review{Id: path.ReviewId}
@@ -39,7 +39,7 @@ func UpdateReviewModule(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if review.ClientId != path.ClientId {
@@ -59,7 +59,7 @@ func UpdateReviewModule(c *gin.Context) {
 		Set("\"text\" = EXCLUDED.text").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{})
 }

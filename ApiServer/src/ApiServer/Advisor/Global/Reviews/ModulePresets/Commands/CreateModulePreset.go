@@ -25,7 +25,7 @@ func CreateModulePreset(c *gin.Context) {
 	var body CreateOrUpdateModulePresetRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var modulePreset = Entities.ReviewModulePreset{
@@ -34,7 +34,7 @@ func CreateModulePreset(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&modulePreset).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

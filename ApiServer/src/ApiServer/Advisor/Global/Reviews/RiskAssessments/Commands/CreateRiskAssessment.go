@@ -25,7 +25,7 @@ func CreateRiskAssessment(c *gin.Context) {
 	var body CreateOrUpdateRiskAssessmentRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var riskAssessment = Entities.RiskAssessment{
@@ -34,7 +34,7 @@ func CreateRiskAssessment(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&riskAssessment).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

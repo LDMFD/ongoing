@@ -25,7 +25,7 @@ func CreatePolicyProvider(c *gin.Context) {
 	var req CreatePolicyProviderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policyProvider = Entities.PolicyProvider{
@@ -34,7 +34,7 @@ func CreatePolicyProvider(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&policyProvider).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"PolicyProvider": policyProvider,

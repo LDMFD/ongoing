@@ -23,13 +23,13 @@ func UpdatePolicyType(c *gin.Context) {
 	var uri UpdatePolicyTypeQuery
 	if err := c.ShouldBindUri(&uri); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var req UpdatePolicyTypeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policyType = Entities.PolicyType{
@@ -38,7 +38,7 @@ func UpdatePolicyType(c *gin.Context) {
 	}
 	if _, err := db.NewUpdate().Model(&policyType).WherePK().Column("name").Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

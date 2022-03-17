@@ -23,7 +23,7 @@ func CreateReview(c *gin.Context) {
 	var path CreateReviewRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	// Only 1 review in draft state at once
@@ -41,7 +41,7 @@ func CreateReview(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Review": review,

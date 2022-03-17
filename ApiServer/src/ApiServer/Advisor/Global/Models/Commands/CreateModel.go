@@ -28,7 +28,7 @@ func CreateModel(c *gin.Context) {
 	var body CreateOrUpdateModelRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var fileId *int64
@@ -53,7 +53,7 @@ func CreateModel(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&model).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Model": model,

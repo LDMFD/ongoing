@@ -18,7 +18,7 @@ func GetModels(c *gin.Context) {
 		Relation("File").
 		OrderExpr("name ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Models": models,

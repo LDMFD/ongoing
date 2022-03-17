@@ -18,7 +18,7 @@ func GetClients(c *gin.Context) {
 		Relation("User").
 		OrderExpr("id ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Clients": clients,

@@ -17,7 +17,7 @@ func RequestUpload(c *gin.Context) {
 	var req RequestUploadRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	uid := uuid.NewString()
@@ -44,7 +44,7 @@ func SignalUpload(c *gin.Context) {
 	var req SignalUploadRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var file = Entities.File{
@@ -55,7 +55,7 @@ func SignalUpload(c *gin.Context) {
 
 	if _, err := db.NewInsert().Model(&file).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{})

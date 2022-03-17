@@ -19,13 +19,13 @@ func UpdateModulePreset(c *gin.Context) {
 	var path UpdateModulePresetRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body CreateOrUpdateModulePresetRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var modulePreset = Entities.ReviewModulePreset{
@@ -38,7 +38,7 @@ func UpdateModulePreset(c *gin.Context) {
 		Column("text").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

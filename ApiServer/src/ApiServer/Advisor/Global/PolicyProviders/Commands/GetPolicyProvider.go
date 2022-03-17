@@ -19,7 +19,7 @@ func GetPolicyProvider(c *gin.Context) {
 	var uri GetPolicyProviderQuery
 	if err := c.ShouldBindUri(&uri); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policyProvider = Entities.PolicyProvider{Id: uri.PolicyProviderId}
@@ -28,7 +28,7 @@ func GetPolicyProvider(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"PolicyProvider": policyProvider,

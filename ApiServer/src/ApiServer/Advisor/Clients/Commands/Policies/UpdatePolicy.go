@@ -20,13 +20,13 @@ func UpdatePolicy(c *gin.Context) {
 	var path UpdatePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body CreateOrUpdatePolicyRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policy = Entities.Policy{Id: path.PolicyId}
@@ -35,7 +35,7 @@ func UpdatePolicy(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if policy.ClientId != path.ClientId {
@@ -63,7 +63,7 @@ func UpdatePolicy(c *gin.Context) {
 		Column("policy_provider_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

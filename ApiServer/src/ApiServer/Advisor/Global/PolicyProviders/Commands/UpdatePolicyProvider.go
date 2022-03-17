@@ -24,13 +24,13 @@ func UpdatePolicyProvider(c *gin.Context) {
 	var uri UpdatePolicyProviderQuery
 	if err := c.ShouldBindUri(&uri); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var req UpdatePolicyProviderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policyProvider = Entities.PolicyProvider{
@@ -42,7 +42,7 @@ func UpdatePolicyProvider(c *gin.Context) {
 		Column("name").
 		Column("pricing").Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

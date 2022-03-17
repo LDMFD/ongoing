@@ -19,13 +19,13 @@ func UpdateRiskAssessment(c *gin.Context) {
 	var path UpdateRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body CreateOrUpdateRiskAssessmentRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var riskAssessment = Entities.RiskAssessment{
@@ -38,7 +38,7 @@ func UpdateRiskAssessment(c *gin.Context) {
 		Column("text").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

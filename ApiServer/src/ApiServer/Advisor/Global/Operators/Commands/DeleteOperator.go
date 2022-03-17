@@ -22,7 +22,7 @@ func DeleteOperator(c *gin.Context) {
 	var path DeleteOperatorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var operator = Entities.Operator{Id: path.OperatorId}
@@ -32,7 +32,7 @@ func DeleteOperator(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if len(operator.Models) > 0 {
@@ -50,7 +50,7 @@ func DeleteOperator(c *gin.Context) {
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{})

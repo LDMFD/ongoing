@@ -18,7 +18,7 @@ func GetRiskAssessments(c *gin.Context) {
 		//OrderExpr("label ASC").
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

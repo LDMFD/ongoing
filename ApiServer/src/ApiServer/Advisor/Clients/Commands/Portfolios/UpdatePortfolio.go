@@ -26,13 +26,13 @@ func UpdatePortfolio(c *gin.Context) {
 	var path UpdatePortfolioRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body CreateOrUpdatePortfolioRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var portfolio = Entities.Portfolio{Id: path.PortfolioId}
@@ -41,7 +41,7 @@ func UpdatePortfolio(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if portfolio.ClientId != path.ClientId {
@@ -61,7 +61,7 @@ func UpdatePortfolio(c *gin.Context) {
 		Column("proportion").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

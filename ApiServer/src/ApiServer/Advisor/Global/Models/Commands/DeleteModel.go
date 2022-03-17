@@ -22,7 +22,7 @@ func DeleteModel(c *gin.Context) {
 	var path DeleteModelRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var model = Entities.Model{Id: path.ModelId}
@@ -33,7 +33,7 @@ func DeleteModel(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if len(model.Portfolios) > 0 {
@@ -52,7 +52,7 @@ func DeleteModel(c *gin.Context) {
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{})

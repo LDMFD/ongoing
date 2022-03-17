@@ -27,13 +27,13 @@ func UpdatePolicyFund(c *gin.Context) {
 	var path UpdatePolicyFundRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body CreateOrUpdatePolicyFundRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policyFund = Entities.PolicyFund{Id: path.PolicyFundId}
@@ -42,7 +42,7 @@ func UpdatePolicyFund(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if policyFund.ClientId != path.ClientId {
@@ -62,7 +62,7 @@ func UpdatePolicyFund(c *gin.Context) {
 		Column("proportion").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	c.JSON(200, gin.H{

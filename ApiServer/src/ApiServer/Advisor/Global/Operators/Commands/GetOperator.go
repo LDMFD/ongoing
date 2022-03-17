@@ -19,7 +19,7 @@ func GetOperator(c *gin.Context) {
 	var path GetOperatorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var operator = Entities.Operator{Id: path.OperatorId}
@@ -28,7 +28,7 @@ func GetOperator(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Operator": operator,

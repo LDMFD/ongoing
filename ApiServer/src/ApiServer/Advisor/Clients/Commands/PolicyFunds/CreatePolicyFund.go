@@ -18,13 +18,13 @@ func CreatePolicyFund(c *gin.Context) {
 	var path CreatePolicyFundRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var body CreateOrUpdatePolicyFundRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var policyFund = Entities.PolicyFund{
@@ -35,7 +35,7 @@ func CreatePolicyFund(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&policyFund).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"PolicyFund": policyFund,

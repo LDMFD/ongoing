@@ -24,12 +24,12 @@ func CreateClient(c *gin.Context) {
 	var req CreateClientRequstBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", req.Email).Exists(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	} else if exists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.ClientAlreadyExists})
 		return
@@ -44,7 +44,7 @@ func CreateClient(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&user).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var client = Entities.Client{
@@ -54,7 +54,7 @@ func CreateClient(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&client).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
 		"Client": client,

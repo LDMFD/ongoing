@@ -20,7 +20,7 @@ func DeleteReviewModule(c *gin.Context) {
 	var path DeleteReviewModulePath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	var review = Entities.Review{Id: path.ReviewId}
@@ -29,7 +29,7 @@ func DeleteReviewModule(c *gin.Context) {
 		WherePK().
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 
 	if review.ClientId != path.ClientId {
@@ -43,7 +43,7 @@ func DeleteReviewModule(c *gin.Context) {
 		Where("review_id = ? AND type = ?", path.ReviewId, path.Module).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		panic(err.Error())
 	}
 	if path.Field == "intro" {
 		module.Intro = ""
