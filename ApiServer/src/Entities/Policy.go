@@ -20,6 +20,7 @@ type Policy struct {
 	EndValue             int64     `bun:"end_value,notnull"`
 	Timestamp            time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Client     *Client      `bun:"rel:has-one,join:client_id=id"`
-	Portfolios []*Portfolio `bun:"rel:has-many,join:id=client_id"`
+	Client         *Client         `bun:"rel:has-one,join:client_id=id"`
+	Portfolios     []*Portfolio    `bun:"rel:has-many,join:id=client_id"`
+	PolicyProvider *PolicyProvider `bun:"rel:has-one,join:policy_provider_id=id"`
 }

@@ -16,5 +16,6 @@ type PolicyFund struct {
 	Timestamp    time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
 	Client      *Client `bun:"rel:has-one,join:client_id=id"`
+	Fund        *Fund   `bun:"rel:has-one,join:fund_id=id"`
 }
 
