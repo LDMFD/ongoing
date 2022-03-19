@@ -26,7 +26,7 @@ func addAdvisorRoutes(r *gin.Engine) {
 }
 
 func addClientSpaceRoutes(r *gin.Engine) {
-	routes := r.Group("/client")
+	routes := r.Group("/client-space")
 	routes.Use(AuthMiddleware(&Entities.UserTypeClient))
 	ClientSpace.AddRoutes(routes)
 }

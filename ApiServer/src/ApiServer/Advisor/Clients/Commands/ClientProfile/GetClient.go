@@ -25,10 +25,9 @@ func GetClient(c *gin.Context) {
 	var client = Entities.Client{Id: path.ClientId}
 	if err := db.NewSelect().
 		Model(&client).
-		Relation("Policies").
-		Relation("PolicyFunds").
-		Relation("Portfolios").
-		Relation("Reviews").
+		Relation("Policies.PolicyProvider").
+		Relation("PolicyFunds.Fund").
+		Relation("Portfolios.Model.Operator").
 		Relation("Reviews.Modules").
 		Relation("User").
 		WherePK().
