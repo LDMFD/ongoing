@@ -13,6 +13,7 @@ import {
     MenuItem,
     Select,
 } from '@mui/material';
+import RichTextEditor from 'components/Widgets/RichTextEditor';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
@@ -31,6 +32,7 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
         SetEndValue:     (event) => { setPolicy({ ...policy, EndValue:             parseInt(event.target.value), }); },
         SetPolicyTypeId: (event) => { setPolicy({ ...policy, PolicyTypeId:         parseInt(event.target.value), }); },
         SetProviderId:   (event) => { setPolicy({ ...policy, PolicyProviderId:     parseInt(event.target.value), }); },
+        SetNotes:        (html) => { setPolicy({ ...policy,  Notes:                html, }); },
     };
 
     return (
@@ -83,7 +85,7 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                fullWidth />
 
                     <FormControl sx={{ width: `30ch` }}>
-                        <InputLabel id='ong-select-module'>Module</InputLabel>
+                        <InputLabel id='ong-select-module'>Type</InputLabel>
                         <Select labelId  = 'ong-select-module'
                                 value    = {policy.PolicyTypeId || ''}
                                 onChange = {handlers.SetPolicyTypeId}
@@ -120,6 +122,9 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                             ))}
                         </Select>
                     </FormControl>
+
+                    <RichTextEditor initialValue = {policy.Notes}
+                                    onChange     = {handlers.SetNotes} />
 
                 </DialogContent>
                 <DialogActions>

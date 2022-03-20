@@ -21,6 +21,7 @@ type CreateOrUpdatePolicyRequestBody struct {
 	EndValue             int64   `binding:"required"`
 	PolicyTypeId         int64   `binding:"required"`
 	PolicyProviderId     int64   `binding:"required"`
+	Notes                string  `binding:"required"`
 }
 
 func CreatePolicy(c *gin.Context) {
@@ -47,6 +48,7 @@ func CreatePolicy(c *gin.Context) {
 		EndValue:             body.EndValue,
 		PolicyTypeId:         body.PolicyTypeId,
 		PolicyProviderId:     body.PolicyProviderId,
+		Notes:                body.Notes,
 	}
 	if _, err := db.NewInsert().Model(&policy).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

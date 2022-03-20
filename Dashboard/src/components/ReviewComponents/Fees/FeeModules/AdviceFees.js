@@ -1,22 +1,14 @@
-import React, { useContext } from 'react';
-import { useParams,  } from 'react-router-dom';
+import React, { useContext  } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import { ModuleEditor } from '../../../EditModule';
 
-import { Context } from 'State'
 import { CurrencyFormatter } from 'Utils/Strings';
+import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import { Context } from 'State';
 
 const AdviceFees = () => {
-    const [ state, ] = useContext(Context);
-
-    let { clientId, reviewId } = useParams();
-    clientId = parseInt(clientId);
-    reviewId = parseInt(reviewId);
-
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    const [state,  ] = useContext(Context);
+    let client = state.ClientContext;
 
     let policies = [];
     client.Policies.forEach(p => {
@@ -42,9 +34,8 @@ const AdviceFees = () => {
     return (
         <>
             <br />
-            <ModuleEditor clientId = {clientId}
-                          reviewId = {reviewId}
-                          module   = {ModuleTypeAdviceFee} />
+            <ModuleWrapper client={client}
+                           module={ModuleTypeAdviceFee} />
 
             <p>
                 Advice fee: {client.Fee * 100}%

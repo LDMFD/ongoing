@@ -1,14 +1,14 @@
-export const LOGIN                   = 'LOGIN';
-export const LOGOUT                  = 'LOGOUT';
-export const POPULATE_CLIENT         = 'POPULATE_CLIENT';
-export const SET_CLIENTS             = 'SET_CLIENTS';
+export const LOGIN                        = 'LOGIN';
+export const LOGOUT                       = 'LOGOUT';
+export const POPULATE_CLIENT              = 'POPULATE_CLIENT';
+export const SET_CLIENTS                  = 'SET_CLIENTS';
 export const SET_RISKASSESSMENT_TEMPLATES = 'SET_RISKASSESSMENT_TEMPLATES';
-export const SET_FUNDS               = 'SET_FUNDS';
-export const SET_MODELS              = 'SET_MODELS';
-export const SET_MODULE_PRESETS      = 'SET_MODULE_PRESETS';
-export const SET_OPERATORS           = 'SET_OPERATORS';
-export const SET_POLICY_PROVIDERS    = 'SET_POLICY_PROVIDERS';
-export const SET_POLICY_TYPES        = 'SET_POLICY_TYPES';
+export const SET_FUNDS                    = 'SET_FUNDS';
+export const SET_MODELS                   = 'SET_MODELS';
+export const SET_MODULE_PRESETS           = 'SET_MODULE_PRESETS';
+export const SET_OPERATORS                = 'SET_OPERATORS';
+export const SET_POLICY_PROVIDERS         = 'SET_POLICY_PROVIDERS';
+export const SET_POLICY_TYPES             = 'SET_POLICY_TYPES';
 
 // The various "|| []" in this file are due to the server returning nil for empty arrays.
 
@@ -80,7 +80,7 @@ const Reducer = (state, action) => {
                 Clients: action.payload.Clients || [],
             }
 
-        case POPULATE_CLIENT:
+        case POPULATE_CLIENT: {
             let client = action.payload.Client;
 
             client.Policies    ||= [];
@@ -97,12 +97,9 @@ const Reducer = (state, action) => {
 
             return {
                 ...state,
-                Clients: state.Clients.map(c => (
-                    c.Id === client.Id ? {
-                        ...client
-                    } : c
-                ))
-            }
+                ClientContext: client,
+            };
+        }
 
         default:
             return state;

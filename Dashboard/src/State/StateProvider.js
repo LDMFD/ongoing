@@ -4,13 +4,14 @@ import Reducer from './Reducer'
 
 const initialState = {
     Auth:               null, // or { token, name, photoURL }
+    ClientContext:      null,
     Clients:            [],
     Funds:              [],
     Operators:          [],
     Models:             [],
     PolicyTypes:        [],
     PolicyProviders:    [],
-    RiskAssessments: [],
+    RiskAssessments:    [],
     ModulePresets:      [],
 };
   

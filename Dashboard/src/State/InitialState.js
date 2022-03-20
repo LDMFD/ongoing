@@ -1,3 +1,5 @@
+// TODO rename this something like StateLoader
+
 import React, { useEffect, useContext, useCallback, useState } from 'react';
 
 import Api from './Api';
@@ -48,20 +50,20 @@ const InitialState = ({ children }) => {
         getClients,
     ]);
 
-    // Clients
-    // const getClientDetail    = useCallback(() => { return Api.Clients.ClientDetail.Read(dispatch); },    [ dispatch ]);
+    // Client space
+    const getClientSpace = useCallback(() => { return Api.ClientSpace.ClientDetail.Read(dispatch); },    [ dispatch ]);
 
-    const getClientDependencies = useCallback(async () => {
-        // await getClientDetail();
+    const getClientSpaceDependencies = useCallback(async () => {
+        await getClientSpace();
         setLoaded(true);
     }, [
-        // getClientDetail,
+        getClientSpace,
     ]);
 
     const getDependencies = state.Auth.UserType === UserType.UserTypeAdvisor
                          || state.Auth.UserType === UserType.UserTypeAdmin
         ? getAdvisorDependencies
-        : getClientDependencies;
+        : getClientSpaceDependencies;
 
     useEffect(() => {
         getDependencies();

@@ -13,12 +13,12 @@ const EditPolicyFund = () => {
     const [ state, dispatch] = useContext(Context);
     let [ policyFund, setPolicyFund ] = useState(null);
 
-    let { clientId, policyFundId } = useParams();
-    clientId = parseInt(clientId);
+    let { policyFundId } = useParams();
     policyFundId = parseInt(policyFundId);
-
+    
+    let client = state.ClientContext;
+    
     if (!policyFund) {
-        let client = state.Clients.find(c => c.Id === clientId);
         setPolicyFund(client.PolicyFunds.find(h => h.Id === policyFundId))
         return;
     }
@@ -27,10 +27,10 @@ const EditPolicyFund = () => {
         if (policyFund.Proportion === '') {
             policyFund.Proportion = 1;
         }
-        window.ApiClient.put(`advisor/clients/${clientId}/policy-funds/${policyFundId}`, {
+        window.ApiClient.put(`advisor/clients/${client.Id}/policy-funds/${policyFundId}`, {
             ...policyFund
         }).then(_ => {
-            return window.ApiClient.get(`advisor/clients/${clientId}`).then(res => {
+            return window.ApiClient.get(`advisor/clients/${client.Id}`).then(res => {
                 dispatch({
                     type: POPULATE_CLIENT,
                     payload: res.data,

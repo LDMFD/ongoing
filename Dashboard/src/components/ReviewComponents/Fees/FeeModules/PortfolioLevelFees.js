@@ -1,14 +1,13 @@
+import React, { useContext  } from 'react';
 import {
     Paper,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import React, { useContext } from 'react';
-import {  useParams } from 'react-router-dom';
-import { ModuleEditor } from '../../../EditModule';
 
-import { Context } from 'State';
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
+import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import { Context } from 'State';
 
 const PolicyPortfolios = ({ policy, portfolios }) => {
     const columns = [
@@ -34,7 +33,7 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
     let exAntePounds = weightedExAnte / 100 * policy.EndValue;
 
     return (
-       <Paper elevation={2}>
+       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '1rem' }}>
             <h3>{policy.ExternalId}</h3>
 
             <DataGrid autoHeight {...data} />
@@ -56,17 +55,12 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
 }
 
 const PortfolioLevelFees = () => {
-    const [state, ] = useContext(Context);
-
-    let { clientId, reviewId } = useParams();
-    clientId = parseInt(clientId);
-    reviewId = parseInt(reviewId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    const [state,  ] = useContext(Context);
+    let client = state.ClientContext;
 
     let portfolios = client.Portfolios.map(portfolio => {
         let policy = client.Policies.find(p => p.Id === portfolio.PolicyId);
-        let model = state.Models.find(p => p.Id === portfolio.ModelId);
+        let model = portfolio.Model;
 
         let ocfPercent    = (model.WeightedOcfFee).toPrecision(2);
         let exAntePercent = (model.WeightedExAnteFee).toPrecision(2);
@@ -94,9 +88,8 @@ const PortfolioLevelFees = () => {
 
     return (
         <>
-            <ModuleEditor clientId = {clientId}
-                          reviewId = {reviewId}
-                          module   = {ModuleTypePortfolioLevelFees} />
+            <ModuleWrapper client={client}
+                           module={ModuleTypePortfolioLevelFees} />
 
             {client.Policies.map(p => 
                 <PolicyPortfolios policy={p} portfolios={portfolios} key={p.Id} />

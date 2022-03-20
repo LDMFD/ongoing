@@ -3,11 +3,12 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ReviewTabs from './ReviewTabs';
 
-import Introduction     from './Modules/Implementations/Introduction';
-import Profile          from './Modules/Implementations/Profile';
-import PolicyValuations from './Modules/Implementations/PolicyValuations/PolicyValuations';
-import Conclusions      from './Modules/Implementations/Conclusions';
-import FeeRoutes        from './Modules/Implementations/Fees/FeeRoutes';
+import { EditModuleText } from './Modules/ModuleEditor';
+import Conclusions from 'components/ReviewComponents/Conclusions';
+import FeeRoutes from './AdvisorFeeRoutes';
+import Introduction from 'components/ReviewComponents/Introduction';
+import Profile from 'components/ReviewComponents/Profile';
+import PolicyValuations from 'components/ReviewComponents/PolicyValuations';
 
 const ReviewRoutes = () => {
     let { path } = useRouteMatch();
@@ -31,6 +32,7 @@ const ReviewRoutes = () => {
                             <Route path={`${basePath}/conclusions`}       component={Conclusions} />
                         </Switch>
                     </ReviewTabs>
+                    <Route path={`${basePath}/:page/edit/:rmod/:field`} component={EditModuleText} />
                 </Route>
             </Switch>
         </div>

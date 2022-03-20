@@ -19,6 +19,7 @@ type Policy struct {
 	StartValue           int64     `bun:"start_value,notnull"`
 	EndValue             int64     `bun:"end_value,notnull"`
 	Timestamp            time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	Notes                string    `bun:"notes,notnull"`
 
 	Client         *Client         `bun:"rel:has-one,join:client_id=id"`
 	Portfolios     []*Portfolio    `bun:"rel:has-many,join:id=client_id"`

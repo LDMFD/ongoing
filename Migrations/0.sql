@@ -135,6 +135,7 @@ CREATE TABLE policies (
     "end_value"               int,
     -- "start_date"              timestamp default null,
     -- "end_date"                timestamp default null,
+    "notes"                   text not null,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy_type FOREIGN KEY(policy_type_id) REFERENCES policy_types(id) ON DELETE RESTRICT,
@@ -241,13 +242,4 @@ CREATE TABLE review_modules (
     "text"                    text not null,
     UNIQUE ("review_id", "type"),
     CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE CASCADE  -- TODO check deletion behaviour here
-);
-
--- For section policy-valuations (to capture the value and contribution notes)
-CREATE TABLE review_policies (
-    "id"                      int primary key generated always as identity,
-    "module_id"               int not null,
-    "policy_id"               int not null,
-    CONSTRAINT fk_module FOREIGN KEY(module_id) REFERENCES review_modules(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_policy FOREIGN KEY(policy_id) REFERENCES policies(id) ON DELETE RESTRICT
 );

@@ -1,6 +1,5 @@
 import React, { useContext, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
@@ -16,26 +15,23 @@ const ReviewList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    let client = state.ClientContext;
 
     const addReview = async () => {
-        await Api.Clients.Reviews.Create(clientId);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Clients.Reviews.Create(client.Id);
+        await Api.Clients.ClientDetail.Read(dispatch, client.Id);
     };
 
     const onEdit = useCallback(params => () => {
-        history.push(`/clients/id/${clientId}/reviews/id/${params.row.id}/modules/introduction`);
-    }, [ history, clientId ]);
+        history.push(`/clients/id/${client.Id}/reviews/id/${params.row.id}/modules/introduction`);
+    }, [ history, client.Id ]);
 
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete client review?`)) {
-            await Api.Clients.Reviews.Delete(clientId, params.row.id)
-            await Api.Clients.ClientDetail.Read(dispatch, clientId);
+            await Api.Clients.Reviews.Delete(client.Id, params.row.id)
+            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
         }        
-    }, [ dispatch, clientId ]);
+    }, [ dispatch, client.Id ]);
 
     const columns = [
         { field: 'idLabel',    headerName: 'ID',     flex: 0.1, },

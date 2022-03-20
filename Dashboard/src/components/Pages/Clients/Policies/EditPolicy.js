@@ -14,11 +14,10 @@ const EditPolicy = () => {
     let [ policy, setPolicy ] = useState(null);
 
     let { clientId, policyId } = useParams();
-    clientId = parseInt(clientId);
     policyId = parseInt(policyId);
 
     if (!policy) {
-        let client = state.Clients.find(c => c.Id === clientId);
+        let client = state.ClientContext;
         setPolicy(client.Policies.find(p => p.Id === policyId))
         return;
     }
@@ -34,7 +33,7 @@ const EditPolicy = () => {
     return (
         <PolicyDialog policy        = {policy}
                       setPolicy     = {setPolicy}
-                      submitLabel   = 'Edit'
+                      submitLabel   = 'Update'
                       submitHandler = {submitHandler}  />
     );
 }

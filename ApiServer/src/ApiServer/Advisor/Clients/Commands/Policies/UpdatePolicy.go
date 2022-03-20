@@ -50,6 +50,7 @@ func UpdatePolicy(c *gin.Context) {
 	policy.EndValue = body.EndValue
 	policy.PolicyTypeId = body.PolicyTypeId
 	policy.PolicyProviderId = body.PolicyProviderId
+	policy.Notes = body.Notes
 
 	if _, err := db.NewUpdate().
 		Model(&policy).
@@ -61,6 +62,7 @@ func UpdatePolicy(c *gin.Context) {
 		Column("end_value").
 		Column("policy_type_id").
 		Column("policy_provider_id").
+		Column("notes").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

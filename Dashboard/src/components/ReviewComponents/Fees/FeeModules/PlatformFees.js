@@ -1,21 +1,12 @@
-import React, { useContext } from 'react';
-import { useParams,  } from 'react-router-dom';
+import React, { useContext  } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import { ModuleEditor } from '../../../EditModule';
-
-import { Context } from 'State'
+import { Context } from 'State';
+import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
 
 const PlatformFees = () => {
-    const [ state, ] = useContext(Context);
-
-    let { clientId, reviewId } = useParams();
-    clientId = parseInt(clientId);
-    reviewId = parseInt(reviewId);
-
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    const [state,  ] = useContext(Context);
+    let client = state.ClientContext;
 
     let rows = [ /*{
         provider: Provider
@@ -36,12 +27,11 @@ const PlatformFees = () => {
             found = true;
         });
         if (!found) {
-            let provider = state.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
             rows.push({
-                provider: provider,
+                provider: policy.PolicyProvider,
                 policies: [ policy ],
                 platformDiscount: policy.PlatformDiscount,
-                pricing: policy.PlatformDiscount ? policy.PlatformDiscount : provider.Pricing,
+                pricing: policy.PlatformDiscount ? policy.PlatformDiscount : policy.PolicyProvider.Pricing,
             })
         }
     });
@@ -70,9 +60,8 @@ const PlatformFees = () => {
     return (
         <>
             <br />
-            <ModuleEditor clientId = {clientId}
-                          reviewId = {reviewId}
-                          module   = {ModuleTypePolicyFees} />
+            <ModuleWrapper client={client}
+                           module={ModuleTypePolicyFees} />
 
             <DataGrid autoHeight {...data} />
         </>

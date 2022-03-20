@@ -13,12 +13,12 @@ const EditPortfolio = () => {
     const [ state, dispatch] = useContext(Context);
     let [ portfolio, setPortfolio ] = useState(null);
 
-    let { clientId, portfolioId } = useParams();
-    clientId = parseInt(clientId);
+    let { portfolioId } = useParams();
     portfolioId = parseInt(portfolioId);
 
+    let client = state.ClientContext;
+
     if (!portfolio) {
-        let client = state.Clients.find(c => c.Id === clientId);
         setPortfolio(client.Portfolios.find(h => h.Id === portfolioId))
         return;
     }
@@ -27,8 +27,8 @@ const EditPortfolio = () => {
         if (portfolio.Proportion === '') {
             portfolio.Proportion = 1;
         }
-        await Api.Clients.Portfolios.Update(clientId, portfolio)
-        await Api.Clients.ClientDetail.Read(dispatch, clientId)
+        await Api.Clients.Portfolios.Update(client.Id, portfolio)
+        await Api.Clients.ClientDetail.Read(dispatch, client.Id)
         goBack();
         return false;
     };

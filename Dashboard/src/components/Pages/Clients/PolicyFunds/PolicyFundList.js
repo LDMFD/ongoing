@@ -1,5 +1,5 @@
 import React, { useContext, useCallback } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,22 +15,19 @@ const PolicyFundList = () => {
 
     const [state, dispatch ] = useContext(Context);
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    let client = state.ClientContext;
 
     const deletePolicyFund = useCallback(params => async () => {
         if (window.confirm(`Delete policy fund?`)) {
-            await Api.Clients.PolicyFunds.Delete(clientId, params.row.id);
-            await Api.Clients.ClientDetail.Read(dispatch, clientId);
+            await Api.Clients.PolicyFunds.Delete(client.Id, params.row.id);
+            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
         }        
-    }, [ dispatch, clientId ]);
+    }, [ dispatch, client.Id ]);
 
     const editPolicyFund = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/clients/id/${clientId}/policy-funds/id/${id}/edit`);
-    }, [ history, clientId ]);
+        history.push(`/clients/id/${client.Id}/policy-funds/id/${id}/edit`);
+    }, [ history, client.Id ]);
 
     const columns = [
         { field: 'idLabel',    headerName: 'ID',          flex: 0.1, },

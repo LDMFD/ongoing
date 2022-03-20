@@ -81,7 +81,7 @@ const Items = {
         {
             label: 'Your Reviews',
             icon: <SearchIcon />,
-            link: '/reviews',
+            link: '/client-space/reviews',
         },
     ],
 };

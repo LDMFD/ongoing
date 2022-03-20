@@ -1,23 +1,15 @@
-import React, { useContext,  } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useContext  } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
     Paper,
 } from '@mui/material';
-import { ModuleEditor } from '../../../EditModule';
+import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import { Context } from 'State';
 
-import { Context,  } from 'State'
 import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 
-const PolicyFunds = ({ policy }) => {
-    const [state, ] = useContext(Context);
-
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
-
+const PolicyFunds = ({ client, policy }) => {
     const columns = [
         { field: 'fund',       headerName: 'Fund name',                flex: 0.1, },
         { field: 'ocf',        headerName: 'OCF (% pa)',               flex: 0.1, },
@@ -28,7 +20,7 @@ const PolicyFunds = ({ policy }) => {
     ];
 
     let policyFunds = client.PolicyFunds.filter(pf => pf.PolicyId === policy.Id).map(pf => {
-        let fund = state.Funds.find(f => f.Id === pf.FundId);
+        let fund = pf.Fund;
         return {
             id:          pf.Id,
             fund:        fund.Name,
@@ -52,7 +44,7 @@ const PolicyFunds = ({ policy }) => {
     let exAntePounds = exAnteweightedAvg / 100 * policy.EndValue;
 
     return (
-       <Paper elevation={2}>
+       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '1rem' }}>
             <h3>{policy.ExternalId}</h3>
 
             <DataGrid autoHeight {...data} />
@@ -75,22 +67,16 @@ const PolicyFunds = ({ policy }) => {
 
 const FundLevelFees = () => {
     const [state,  ] = useContext(Context);
-
-    let { clientId, reviewId } = useParams();
-    clientId = parseInt(clientId);
-    reviewId = parseInt(reviewId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    let client = state.ClientContext;
 
     return (
         <div>
-            <ModuleEditor clientId = {clientId}
-                          reviewId = {reviewId}
-                          module   = {ModuleTypeFundLevelFees} />
+            <ModuleWrapper client={client} 
+                           module={ModuleTypeFundLevelFees} />
 
             {client.Policies.map(p => (
                 <Paper elevation={2} key={p.Id}>
-                    <PolicyFunds policy={p} />
+                    <PolicyFunds client={client} policy={p} />
                 </Paper>
             ))}
         </div>

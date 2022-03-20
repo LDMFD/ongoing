@@ -35,7 +35,7 @@ export const EditModuleText = () => {
     let preset;
 
     if (!moduleState) {
-        let client = state.Clients.find(c => c.Id === clientId);
+        let client = state.ClientContext;
         let review = client.Reviews.find(r => r.Id === reviewId);
         let draft = review?.Modules?.find(m => m.Type === module);
 
@@ -106,19 +106,19 @@ export const EditModuleText = () => {
     );
 }
 
-export const ModuleEditor = ({ clientId, reviewId, module }) => {
+export const ModuleEditor = ({ client, module }) => {
     const [ state,  ] = useContext(Context);
+
+    let { reviewId } = useParams();
+    reviewId = parseInt(reviewId);
 
     let [ moduleState, setModuleState ] = useState(null);
     let preset;
 
-    let client = state.Clients.find(c => c.Id === clientId);
     let review = client.Reviews.find(r => r.Id === reviewId);
     let draft = review?.Modules?.find(m => m.Type === module);
 
     preset = state.ModulePresets.find(p => p.ModuleType === module);
-    console.log('moduleState',moduleState);
-    console.log('draft',draft);
 
     if (!moduleState) {
         // First load
@@ -143,13 +143,11 @@ export const ModuleEditor = ({ clientId, reviewId, module }) => {
         });
     }
 
-    // let header = ModuleTypeSelectSpec.find(m => m.id === module).label;
-
     let basePath = window.location.pathname;
 
     return (
         <div className='ong-EditModule'>
-            {/* {header} */}
+            <br />
 
             {preset &&
                 <Card variant='outlined'>

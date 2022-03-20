@@ -9,7 +9,7 @@ import PolicyProviderRoutes from './Pages/Global/PolicyProviders/PolicyProviderR
 import RiskAssessmentRoutes from './Pages/Global/Reviews/RiskAssessments/RiskAssessmentRoutes';
 import ModulePresetRoutes   from './Pages/Global/Reviews/ModulePresets/ModulePresetRoutes';
 
-import Reviews from './Pages/ClientSpace/Reviews.js';
+import ClientSpaceRoutes from "./Pages/ClientSpace/ClientSpaceRoutes";
   
 const routes = () => (
     <Switch>
@@ -22,7 +22,7 @@ const routes = () => (
         <Route path="/review-config/risk-assessment"  component={RiskAssessmentRoutes} />
         <Route path="/review-config/module-presets"   component={ModulePresetRoutes} />
 
-        <Route path="/reviews"                      component={Reviews} />
+        <Route path="/client-space"                   component={ClientSpaceRoutes} />
         
         <Route path="/" />
     </Switch>

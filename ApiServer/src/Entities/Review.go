@@ -23,6 +23,6 @@ type Review struct {
 	EndDate       time.Time `bun:"end_date,nullzero,notnull,default:current_timestamp"`
 	FinalizedDate time.Time `bun:"finalized_date,nullzero,notnull"`
 
-	Client    *Client         `bun:"rel:has-one,join:client_id=id"`
-	Modules   []*ReviewModule `bun:"rel:has-many,join:id=review_id"`
+	Client        *Client              `bun:"rel:has-one,join:client_id=id"`
+	Modules       []*ReviewModule      `bun:"rel:has-many,join:id=review_id"`
 }

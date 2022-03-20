@@ -1,5 +1,5 @@
 import React, { useContext, useCallback } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,22 +15,19 @@ const PortfolioList = () => {
 
     const [state, dispatch ] = useContext(Context);
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    let client = state.ClientContext;
 
     const deletePortfolio = useCallback(params => async () => {
         if (window.confirm(`Delete portfolio?`)) {
-            await Api.Clients.Portfolios.Delete(clientId, params.row.id);
-            await Api.Clients.ClientDetail.Read(dispatch, clientId);
+            await Api.Clients.Portfolios.Delete(client.Id, params.row.id);
+            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
         }        
-    }, [ dispatch, clientId ]);
+    }, [ dispatch, client.Id ]);
 
     const editPortfolio = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/clients/id/${clientId}/portfolios/id/${id}/edit`);
-    }, [ history, clientId ]);
+        history.push(`/clients/id/${client.Id}/portfolios/id/${id}/edit`);
+    }, [ history, client.Id ]);
 
     const columns = [
         { field: 'idLabel',    headerName: 'ID',          flex: 0.1, },

@@ -48,7 +48,7 @@ export function ShowLogin(callback) {
     if (DEV) {
         let email = localStorage.getItem('email');
         if (!email) {
-            email = prompt('email');
+            email = prompt('Enter email for auth bypass');
             localStorage.setItem('email', email);
         }
         callback(email, email, 'Darren', null);

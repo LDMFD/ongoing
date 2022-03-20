@@ -1,5 +1,5 @@
 import React, { useContext, useCallback } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,22 +18,19 @@ const PolicyList = () => {
 
     const [state, dispatch ] = useContext(Context);
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    let client = state.ClientContext;
 
     const deletePolicy = useCallback(params => async () => {
         if (window.confirm(`Delete policy?`)) {
-            await Api.Clients.Policies.Delete(clientId, params.row.id);
-            await Api.Clients.ClientDetail.Read(dispatch, clientId);
+            await Api.Clients.Policies.Delete(client.Id, params.row.id);
+            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
         }
-    }, [ dispatch, clientId ]);
+    }, [ dispatch, client.Id ]);
 
     const editPolicy = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/clients/id/${clientId}/policies/id/${id}/edit`);
-    }, [ history, clientId ]);
+        history.push(`/clients/id/${client.Id}/policies/id/${id}/edit`);
+    }, [ history, client.Id ]);
 
     const columns = [
         { field: 'policyNumber',     headerName: 'Policy Number',         flex: 0.1, },
@@ -43,6 +40,7 @@ const PolicyList = () => {
         { field: 'endValue',         headerName: 'End Value',             flex: 0.1, },
         { field: 'type',             headerName: 'Type',                  flex: 0.1, },
         { field: 'provider',         headerName: 'Provider',              flex: 0.1, },
+        { field: 'notes',            headerName: 'Notes',                 flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -64,6 +62,7 @@ const PolicyList = () => {
             monthlies:        policy.MonthlyContributions,
             startValue:       policy.StartValue,
             endValue:         policy.EndValue,
+            notes:            policy.Notes,
             type,
             provider,
         };

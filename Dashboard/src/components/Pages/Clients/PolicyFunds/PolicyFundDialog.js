@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
     Button,
     Dialog,
@@ -19,12 +19,8 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
     let history = useHistory();
     let goBack = GoBack(history);
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
     const [ state ] = useContext(Context);
-
-    let client = state.Clients.find(c => c.Id === clientId);
+    let client = state.ClientContext;
 
     const handlers = {
         SetFundId:       (event) => { setPolicyFund({ ...policyFund, FundId:   parseInt(event.target.value), }); },
