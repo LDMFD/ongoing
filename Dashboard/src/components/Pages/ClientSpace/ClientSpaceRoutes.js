@@ -3,7 +3,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ClientSpaceWrapper from './ClientSpaceWrapper';
 import ReviewRoutes       from './ClientSpaceReviewRoutes';
-import ReviewList         from './ReviewList';
+import ReviewList         from './ClientSpaceReviewList';
 
 const ClientSpaceRoutes = () => {
     let { path } = useRouteMatch();

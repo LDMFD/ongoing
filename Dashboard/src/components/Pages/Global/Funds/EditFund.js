@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { SET_FUNDS } from 'State/Reducer';
 import FundDialog from './FundDialog';
 import { GoBack } from 'Utils/Routing';
+import { Api } from 'State';
 
 const EditFund = () => {
     let history = useHistory();
@@ -14,32 +14,20 @@ const EditFund = () => {
     let [ fund, setFund ] = useState(null);
 
     let { fundId } = useParams();
-    fundId = parseInt(fundId);
 
-    if (!fund) {
-        let p = state.Funds.find(p => p.Id === fundId);
-        if (!p) {
-            return <>Fund not found</>;
-        }
-        setFund(p)
-        return;
-    }
-
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.put(`advisor/funds/${fundId}`, {
-            ...fund
-        }).then(_ => {
-            return window.ApiClient.get(`advisor/funds`).then(res => {
-                dispatch({
-                    type: SET_FUNDS,
-                    payload: res.data,
-                })
-            }).then(goBack);;
-        });
+        await Api.Global.Funds.Update(fund);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
 
+    if (!fund) {
+        let p = state.Entities.Funds.find(p => p.Id === fundId);
+        setFund(p)
+        return;
+    }
     return (
         <FundDialog fund          = {fund}
                     setFund       = {setFund}

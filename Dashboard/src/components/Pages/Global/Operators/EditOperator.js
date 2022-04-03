@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { SET_OPERATORS } from 'State/Reducer';
 import { GoBack } from 'Utils/Routing';
 import OperatorDialog from './OperatorDialog';
+import { Api } from 'State';
 
 const EditOperator = () => {
     let history = useHistory();
@@ -15,31 +15,19 @@ const EditOperator = () => {
     let [ operator, setOperator ] = useState(null);
 
     let { operatorId } = useParams();
-    operatorId = parseInt(operatorId);
 
-    if (!operator) {
-        setOperator(state.Operators.find(o => o.Id === operatorId))
-        return;
-    }
-
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.put(`advisor/operators/${operator.Id}`, {
-            ...operator
-        })
-        .then(() => {
-            goBack();
-        })
-        .then(_ => {
-            window.ApiClient.get("advisor/operators").then(res => {
-                dispatch({
-                    type: SET_OPERATORS,
-                    payload: res.data,
-                })
-            });
-        });
+        await Api.Global.Operators.Update(operator);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
+
+    if (!operator) {
+        setOperator(state.Entities.Operators.find(o => o.Id === operatorId))
+        return;
+    }
 
     return (
         <OperatorDialog operator      = {operator}

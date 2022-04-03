@@ -14,3 +14,8 @@ type File struct {
 	Size		int64 		`bun:"size,notnull"`
 	Timestamp   time.Time	`bun:",nullzero,notnull,default:current_timestamp"`
 }
+
+type ReportFile struct {
+	Uid      string
+	Filename string
+}

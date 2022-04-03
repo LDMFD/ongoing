@@ -12,7 +12,7 @@ import { Context, Api } from 'State'
 
 const ClientList = () => {
     let history = useHistory();
-    const [ state, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete client?`)) {
@@ -43,7 +43,7 @@ const ClientList = () => {
         return {
             id:       c.Id,
             idLabel:  `#${c.Id}`,
-            name:     `${c.Surname}, ${c.Forenames}`,
+            name:     `${c.Identity.Surname}, ${c.Identity.Forenames}`,
         };
     });
 

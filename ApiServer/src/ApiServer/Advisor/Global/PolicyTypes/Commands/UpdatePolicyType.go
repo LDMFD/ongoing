@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UpdatePolicyTypeQuery struct {
-	PolicyTypeId int64 `binding:"required"`
+type UpdatePolicyTypePath struct {
+	PolicyTypeId string `binding:"required"`
 }
 
 type UpdatePolicyTypeRequest struct {
@@ -20,8 +20,8 @@ type UpdatePolicyTypeRequest struct {
 func UpdatePolicyType(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var uri UpdatePolicyTypeQuery
-	if err := c.ShouldBindUri(&uri); err != nil {
+	var path UpdatePolicyTypePath
+	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
@@ -33,10 +33,13 @@ func UpdatePolicyType(c *gin.Context) {
 	}
 
 	var policyType = Entities.PolicyType{
-		Id:   uri.PolicyTypeId,
 		Name: req.Name,
 	}
-	if _, err := db.NewUpdate().Model(&policyType).WherePK().Column("name").Exec(c); err != nil {
+	if _, err := db.NewUpdate().
+		Model(&policyType).
+		Where("uid = ?", path.PolicyTypeId).
+		Column("name").
+		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}

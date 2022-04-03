@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateFundRequestPath struct {
-	FundId int64 `binding:"required"`
+	FundId string `binding:"required"`
 }
 
 func UpdateFund(c *gin.Context) {
@@ -29,12 +29,11 @@ func UpdateFund(c *gin.Context) {
 	}
 
 	var fund = Entities.Fund{
-		Id:        path.FundId,
 		Name:      body.Name,
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,
 	}
-	if _, err := db.NewUpdate().Model(&fund).WherePK().
+	if _, err := db.NewUpdate().Model(&fund).Where("uid = ?", path.FundId).
 		Column("name").
 		Column("ocf_fee").
 		Column("ex_ante_fee").

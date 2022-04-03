@@ -1,24 +1,22 @@
 package Reviews
 
 import (
-	"net/http"
-	"ongoing/Entities"
-	"strings"
-
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"net/http"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile/Reports"
+	"ongoing/Entities"
+	"strings"
 )
 
 type CreateReviewRequestPath struct {
-	ClientId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 }
 
 func CreateReview(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
 
 	var path CreateReviewRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -34,11 +32,27 @@ func CreateReview(c *gin.Context) {
 		return
 	}
 
+	uid := uuid.NewString()
+	uid = strings.ReplaceAll(uid, "-", "")
+
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+
+	report := Reports.GenerateReport(c, client.Id)
+
+	b, err := json.Marshal(report)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+	reportJson := string(b)
+
 	review := &Entities.Review{
 		Uid:      uid,
-		ClientId: path.ClientId,
+		ClientId: client.Id,
 		State:    Entities.ReviewStateDraft,
+		Report:   &reportJson,
 	}
+
 	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

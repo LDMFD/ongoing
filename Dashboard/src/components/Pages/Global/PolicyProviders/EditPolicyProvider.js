@@ -15,24 +15,19 @@ const EditPolicyProvider = () => {
     let [ policyProvider, setPolicyProvider ] = useState(null);
 
     let { policyProviderId } = useParams();
-    policyProviderId = parseInt(policyProviderId);
 
-    if (!policyProvider) {
-        setPolicyProvider(state.PolicyProviders.find(o => o.Id === policyProviderId))
-        return;
-    }
-
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        Api.Global.PolicyProviders.Update(policyProvider)
-        .then(() => {
-            goBack();
-        })
-        .then(() => {
-            Api.Global.PolicyProviders.Read(dispatch)
-        });
+        await Api.Global.PolicyProviders.Update(policyProvider);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
+
+    if (!policyProvider) {
+        setPolicyProvider(state.Entities.PolicyProviders.find(o => o.Id === policyProviderId))
+        return;
+    }
 
     return (
         <PolicyProviderDialog policyProvider      = {policyProvider}

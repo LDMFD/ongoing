@@ -31,19 +31,18 @@ const ClientAccountPage = () => {
     const [state] = useContext(Context);
 
     let { clientId } = useParams();
-    clientId = parseInt(clientId);
 
     let client = state.Clients.find(c => c.Id === clientId);
     console.log(client);
 
     return (
         <div>
-            <h1>{client.Surname}, {client.Forenames}</h1>
+            <h1>{client.Identity.Surname}, {client.Identity.Forenames}</h1>
             <p>
-                Email: <a href={`mailto:${client.User.Email}`} target='_blank' rel='noreferrer'>{client.User.Email}</a>
+                Email: <a href={`mailto:${client.Identity.Email}`} target='_blank' rel='noreferrer'>{client.Identity.Email}</a>
             </p>
             <p>
-                <Button onClick={SendSignInLink.bind(null, client.User.Email)}>
+                <Button onClick={SendSignInLink.bind(null, client.Identity.Email)}>
                     Send sign-in link
                 </Button>
             </p>

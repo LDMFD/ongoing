@@ -10,7 +10,7 @@ import (
 )
 
 type DeleteRiskAssessmentRequestPath struct {
-	RiskAssessmentId int64 `binding:"required"`
+	RiskAssessmentId string `binding:"required"`
 }
 
 func DeleteRiskAssessment(c *gin.Context) {
@@ -22,18 +22,18 @@ func DeleteRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var riskAssessment = Entities.RiskAssessment{Id: path.RiskAssessmentId}
-	if err := db.NewSelect().
-		Model(&riskAssessment).
-		WherePK().
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
+	var riskAssessment = Entities.RiskAssessment{}
+	//if err := db.NewSelect().
+	//	Model(&riskAssessment).
+	//	Where("uid = ", path.RiskAssessmentId).
+	//	Scan(c); err != nil {
+	//	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	//	panic(err.Error())
+	//}
 
 	if _, err := db.NewDelete().
 		Model(&riskAssessment).
-		WherePK().
+		Where("uid = ?", path.RiskAssessmentId).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

@@ -1,8 +1,10 @@
 package Policies
 
 import (
+	"github.com/google/uuid"
 	"net/http"
 	"ongoing/Entities"
+	"strings"
 
 	"github.com/uptrace/bun"
 
@@ -10,7 +12,7 @@ import (
 )
 
 type CreatePolicyRequestPath struct {
-	ClientId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 }
 
 type CreateOrUpdatePolicyRequestBody struct {
@@ -19,8 +21,8 @@ type CreateOrUpdatePolicyRequestBody struct {
 	MonthlyContributions int64   `binding:"required"`
 	StartValue           int64   `binding:"required"`
 	EndValue             int64   `binding:"required"`
-	PolicyTypeId         int64   `binding:"required"`
-	PolicyProviderId     int64   `binding:"required"`
+	PolicyTypeId         string  `binding:"required"`
+	PolicyProviderId     string  `binding:"required"`
 	Notes                string  `binding:"required"`
 }
 
@@ -36,18 +38,42 @@ func CreatePolicy(c *gin.Context) {
 	var body CreateOrUpdatePolicyRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+ 			panic(err.Error())
+	}
+
+	uid := uuid.NewString()
+	uid = strings.ReplaceAll(uid, "-", "")
+
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+
+	var policyType = Entities.PolicyType{}
+	if err := db.NewSelect().
+		Model(&policyType).
+		Where("uid = ?", body.PolicyTypeId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	var provider = Entities.PolicyProvider{}
+	if err := db.NewSelect().
+		Model(&provider).
+		Where("uid = ?", body.PolicyProviderId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
 	var policy = Entities.Policy{
-		ClientId:             path.ClientId,
+		Uid:                  uid,
+		ClientId:             client.Id,
 		ExternalId:           body.ExternalId,
 		PlatformDiscount:     body.PlatformDiscount,
 		MonthlyContributions: body.MonthlyContributions,
 		StartValue:           body.StartValue,
 		EndValue:             body.EndValue,
-		PolicyTypeId:         body.PolicyTypeId,
-		PolicyProviderId:     body.PolicyProviderId,
+		PolicyTypeId:         policyType.Id,
+		PolicyProviderId:     provider.Id,
 		Notes:                body.Notes,
 	}
 	if _, err := db.NewInsert().Model(&policy).Exec(c); err != nil {

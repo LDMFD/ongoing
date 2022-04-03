@@ -14,11 +14,9 @@ const EditPolicy = () => {
     let [ policy, setPolicy ] = useState(null);
 
     let { clientId, policyId } = useParams();
-    policyId = parseInt(policyId);
 
     if (!policy) {
-        let client = state.ClientContext;
-        setPolicy(client.Policies.find(p => p.Id === policyId))
+        setPolicy(state.Report.Policies.find(p => p.Id === policyId))
         return;
     }
 

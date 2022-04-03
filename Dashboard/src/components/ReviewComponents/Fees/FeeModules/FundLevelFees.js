@@ -1,15 +1,15 @@
-import React, { useContext  } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import {
     Paper,
 } from '@mui/material';
 import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
-import { Context } from 'State';
 
 import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
-const PolicyFunds = ({ client, policy }) => {
+const PolicyFunds = ({ review, policy }) => {
     const columns = [
         { field: 'fund',       headerName: 'Fund name',                flex: 0.1, },
         { field: 'ocf',        headerName: 'OCF (% pa)',               flex: 0.1, },
@@ -19,16 +19,16 @@ const PolicyFunds = ({ client, policy }) => {
         // { field: 'wEx', headerName: 'weight ex-ante', flex: 0.1, },
     ];
 
-    let policyFunds = client.PolicyFunds.filter(pf => pf.PolicyId === policy.Id).map(pf => {
-        let fund = pf.Fund;
+    let policyFunds = review.PolicyFunds.filter(pf => pf.PolicyId === policy.Id).map(pf => {
+        let fund = review.Funds.find(f => f.Id === pf.FundId);
         return {
             id:          pf.Id,
             fund:        fund.Name,
             ocf:         fund.OcfFee,
             exAnte:      fund.ExAnteFee,
             percentage:  pf.Proportion * 100,
-            wOcf: fund.OcfFee * pf.Proportion,
-            wEx:  fund.ExAnteFee * pf.Proportion,
+            wOcf:        fund.OcfFee * pf.Proportion,
+            wEx:         fund.ExAnteFee * pf.Proportion,
         };
     });
 
@@ -66,17 +66,15 @@ const PolicyFunds = ({ client, policy }) => {
 }
 
 const FundLevelFees = () => {
-    const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let report = GetReport();
 
     return (
         <div>
-            <ModuleWrapper client={client} 
-                           module={ModuleTypeFundLevelFees} />
+            <ModuleWrapper module={ModuleTypeFundLevelFees} />
 
-            {client.Policies.map(p => (
+            {report.Policies.map(p => (
                 <Paper elevation={2} key={p.Id}>
-                    <PolicyFunds client={client} policy={p} />
+                    <PolicyFunds review={report} policy={p} />
                 </Paper>
             ))}
         </div>

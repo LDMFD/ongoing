@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { SET_OPERATORS } from 'State/Reducer';
 import { GoBack } from 'Utils/Routing';
 import { DefaultOperator } from './DefaultOperator';
 import OperatorDialog from './OperatorDialog';
+import { Api } from 'State';
 
 const AddOperator = () => {
     let history = useHistory();
@@ -14,22 +14,11 @@ const AddOperator = () => {
     const [ , dispatch] = useContext(Context);
     let [ operator, setOperator ] = useState(DefaultOperator);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.post("advisor/operators", {
-            ...operator
-        })
-        .then(() => {
-            goBack();
-        })
-        .then(_ => {
-            window.ApiClient.get("advisor/operators").then(res => {
-                dispatch({
-                    type: SET_OPERATORS,
-                    payload: res.data,
-                })
-            });
-        });
+        await Api.Global.Operators.Create(operator);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
 

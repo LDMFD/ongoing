@@ -6,7 +6,7 @@ RUN npm install
 
 FROM base
 WORKDIR /app
-COPY --from=base /app/node_modules .
+COPY --from=base /app/node_modules node_modules
 EXPOSE 3000
 CMD ["npm", "start"]
 #CMD bash

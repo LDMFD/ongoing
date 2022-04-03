@@ -13,9 +13,10 @@ import { Api } from 'State';
 
 const ReviewList = () => {
     let history = useHistory();
-    const [ state, dispatch] = useContext(Context);
-
-    let client = state.ClientContext;
+    const [state, dispatch ] = useContext(Context);
+    let {
+        ClientContext: client,
+    } = state;
 
     const addReview = async () => {
         await Api.Clients.Reviews.Create(client.Id);
@@ -34,9 +35,11 @@ const ReviewList = () => {
     }, [ dispatch, client.Id ]);
 
     const columns = [
-        { field: 'idLabel',    headerName: 'ID',     flex: 0.1, },
-        { field: 'date',       headerName: 'Date',   flex: 0.1, },
-        { field: 'state',      headerName: 'State',  flex: 0.1, },
+        { field: 'idLabel',       headerName: 'ID',             flex: 0.1, },
+        { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
+        { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
+        { field: 'finalizedDate', headerName: 'Finalized Date', flex: 0.1, },
+        { field: 'state',         headerName: 'State',          flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -48,12 +51,14 @@ const ReviewList = () => {
         },
     ];
 
-    let reviews = client.Reviews.map(review => {
+    let reviews = state.Reviews.map(review => {
         return {
-            id:         review.Id,
-            idLabel:    `#${review.Id}`,
-            date:       review.Timestamp,
-            state:      review.State,
+            id:            review.Id,
+            idLabel:       `#${review.Id}`,
+            startDate:     review.Meta.StartDate,
+            endDate:       review.Meta.EndDate,
+            finalizedDate: review.Meta.FinalizedDate,
+            state:         review.Meta.State,
         };
     });
 

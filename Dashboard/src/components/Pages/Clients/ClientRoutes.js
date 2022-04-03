@@ -15,8 +15,9 @@ import PolicyList        from './Policies/PolicyList';
 import PolicyFundList    from './PolicyFunds/PolicyFundList';
 import AddPolicyFund     from './PolicyFunds/AddPolicyFund';
 import EditPolicyFund    from './PolicyFunds/EditPolicyFund';
-import ReviewRoutes      from './Reviews/ReviewRoutes';
-import ReviewList        from './Reviews/ReviewList';
+import ReviewList        from './Reviews/AdvisorReviewList';
+import ReportRoutes      from './AdvisorReport/ReportRoutes';
+import ReviewRoutes from './Reviews/ReviewRoutes';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();
@@ -34,6 +35,9 @@ const ClientRoutes = () => {
                         <Switch>
                             <Route path={`${path}/id/:clientId/reviews/id/:reviewId/modules/:module`} component={ReviewRoutes} />
                             <Route path={`${path}/id/:clientId/reviews/id/:reviewId`} component={ReviewRoutes} />
+
+                            <Route path={`${path}/id/:clientId/modules/:module`} component={ReportRoutes} />
+                            <Route path={`${path}/id/:clientId/report`} component={ReportRoutes} />
 
                             <Route path={`${path}/id/:clientId/reviews`} component={ReviewList} />
                             <Route path={`${path}/id/:clientId/portfolios`} component={PortfolioList} />

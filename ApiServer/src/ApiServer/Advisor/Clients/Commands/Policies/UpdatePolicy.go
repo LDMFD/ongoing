@@ -10,8 +10,8 @@ import (
 )
 
 type UpdatePolicyRequestPath struct {
-	ClientId int64 `binding:"required"`
-	PolicyId int64 `binding:"required"`
+	ClientId string `binding:"required"`
+	PolicyId string `binding:"required"`
 }
 
 func UpdatePolicy(c *gin.Context) {
@@ -29,18 +29,37 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var policy = Entities.Policy{Id: path.PolicyId}
+	var policy = Entities.Policy{}
 	if err := db.NewSelect().
 		Model(&policy).
-		WherePK().
+		Where("uid = ?", path.PolicyId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if policy.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if policy.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy does not belong to client"})
 		return
+	}
+
+	var policyType = Entities.PolicyType{}
+	if err := db.NewSelect().
+		Model(&policyType).
+		Where("uid = ?", body.PolicyTypeId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	var provider = Entities.PolicyProvider{}
+	if err := db.NewSelect().
+		Model(&provider).
+		Where("uid = ?", body.PolicyProviderId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
 	}
 
 	policy.ExternalId = body.ExternalId
@@ -48,8 +67,8 @@ func UpdatePolicy(c *gin.Context) {
 	policy.MonthlyContributions = body.MonthlyContributions
 	policy.StartValue = body.StartValue
 	policy.EndValue = body.EndValue
-	policy.PolicyTypeId = body.PolicyTypeId
-	policy.PolicyProviderId = body.PolicyProviderId
+	policy.PolicyTypeId = policyType.Id
+	policy.PolicyProviderId = provider.Id
 	policy.Notes = body.Notes
 
 	if _, err := db.NewUpdate().

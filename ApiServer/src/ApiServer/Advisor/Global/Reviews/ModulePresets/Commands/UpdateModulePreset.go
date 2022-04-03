@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateModulePresetRequestPath struct {
-	ModulePresetId int64 `binding:"required"`
+	ModulePresetId string `binding:"required"`
 }
 
 func UpdateModulePreset(c *gin.Context) {
@@ -28,12 +28,11 @@ func UpdateModulePreset(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var modulePreset = Entities.ReviewModulePreset{
-		Id:          path.ModulePresetId,
+	var modulePreset = Entities.ModulePreset{
 		ModuleType:  body.ModuleType,
 		Text:        body.Text,
 	}
-	if _, err := db.NewUpdate().Model(&modulePreset).WherePK().
+	if _, err := db.NewUpdate().Model(&modulePreset).Where("Id = ?", path.ModulePresetId).
 		Column("module_type").
 		Column("text").
 		Exec(c); err != nil {

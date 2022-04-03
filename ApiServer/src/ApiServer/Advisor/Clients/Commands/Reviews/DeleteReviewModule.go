@@ -8,8 +8,7 @@ import (
 )
 
 type DeleteReviewModulePath struct {
-	ClientId int64 `binding:"required"`
-	ReviewId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 	Module string `binding:"required"`
 	Field string `binding:"required,oneof=intro text"`
 }
@@ -23,24 +22,12 @@ func DeleteReviewModule(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var review = Entities.Review{Id: path.ReviewId}
-	if err := db.NewSelect().
-		Model(&review).
-		WherePK().
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
 
-	if review.ClientId != path.ClientId {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Review does not belong to client"})
-		return
-	}
-
-	module := &Entities.ReviewModule{}
+	module := &Entities.Module{}
 	if err := db.NewSelect().
 		Model(module).
-		Where("review_id = ? AND type = ?", path.ReviewId, path.Module).
+		Where("client_id = ? AND type = ?", client.Id, path.Module).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -55,7 +42,7 @@ func DeleteReviewModule(c *gin.Context) {
 	if module.Intro == "" && module.Text == "" {
 		if _, err := db.NewDelete().
 			Model(module).
-			Where("review_id = ? AND type = ?", path.ReviewId, path.Module).
+			Where("client_id = ? AND type = ?", client.Id, path.Module).
 			Exec(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

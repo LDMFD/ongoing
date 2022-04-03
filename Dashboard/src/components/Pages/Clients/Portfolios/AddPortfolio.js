@@ -11,12 +11,10 @@ const AddPortfolio = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    let { clientId } = useParams();
-    clientId = parseInt(clientId);
-
     const [, dispatch] = useContext(Context);
-
     let [ portfolio, setPortfolio ] = useState(DefaultPortfolio);
+
+    let { clientId } = useParams();
 
     const submitHandler = async (e) => {
         e.preventDefault();

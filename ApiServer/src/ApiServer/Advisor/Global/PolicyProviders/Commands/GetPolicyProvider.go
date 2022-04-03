@@ -9,23 +9,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type GetPolicyProviderQuery struct {
-	PolicyProviderId int64 `binding:"required"`
+type GetPolicyProviderPath struct {
+	PolicyProviderId string `binding:"required"`
 }
 
 func GetPolicyProvider(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var uri GetPolicyProviderQuery
-	if err := c.ShouldBindUri(&uri); err != nil {
+	var path GetPolicyProviderPath
+	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	var policyProvider = Entities.PolicyProvider{Id: uri.PolicyProviderId}
+	var policyProvider = Entities.PolicyProvider{}
 	if err := db.NewSelect().
 		Model(&policyProvider).
-		WherePK().
+		Where("uid = ?", path.PolicyProviderId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

@@ -4,6 +4,8 @@ export const GoBack = history => e => {
     if (e) {
         // TODO either use location to see if we came from this site or not,
         // or just change strategy to strip last path element regardless.
+        //
+        // repro: sign in directly to some Edit page, then on submit site is redirected back to login page
         e.stopPropagation();
     }
     history.goBack();

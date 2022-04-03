@@ -4,7 +4,8 @@ import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui'
 import 'firebaseui/dist/firebaseui.css'
 
-export const DEV = true;
+// Bypass Firebase
+const OFFLINE_AUTH = false;
 
 const FirebaseUiConfig = {
     signInFlow: 'redirect',
@@ -36,7 +37,7 @@ const firebaseConfig = {
     measurementId: "G-NXWP2MYJ02"
 };
 
-if (!DEV) {
+if (!OFFLINE_AUTH) {
     firebase.initializeApp(firebaseConfig);
     const authUI = new firebaseui.auth.AuthUI(firebase.auth());
     authUI.disableAutoSignIn();
@@ -45,7 +46,7 @@ if (!DEV) {
 }
 
 export function ShowLogin(callback) {
-    if (DEV) {
+    if (OFFLINE_AUTH) {
         let email = localStorage.getItem('email');
         if (!email) {
             email = prompt('Enter email for auth bypass');
@@ -67,7 +68,7 @@ export function ShowLogin(callback) {
 }
 
 export function Logout() {
-    if (DEV) {
+    if (OFFLINE_AUTH) {
         localStorage.clear();
         return;
     }

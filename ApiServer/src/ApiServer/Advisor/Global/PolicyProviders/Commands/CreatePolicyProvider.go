@@ -29,6 +29,7 @@ func CreatePolicyProvider(c *gin.Context) {
 	}
 
 	var policyProvider = Entities.PolicyProvider{
+		Uid: uid,
 		Name: req.Name,
 		Pricing: req.Pricing,
 	}

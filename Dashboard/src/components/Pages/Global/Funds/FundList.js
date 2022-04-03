@@ -15,7 +15,7 @@ const FundList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getFunds = useCallback(() => {
-        Api.Global.Funds.Read(dispatch)
+        Api.Global.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const FundList = () => {
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete fund?`)) {
             await window.ApiClient.delete(`advisor/funds/${params.row.id}`)
-            await Api.Global.Funds.Read(dispatch);
+            await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
@@ -50,7 +50,7 @@ const FundList = () => {
         },
     ];
 
-    let funds = state.Funds.map(p => {
+    let funds = state.Entities.Funds.map(p => {
         return {
             id:          p.Id,
             name:        p.Name,

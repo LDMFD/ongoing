@@ -15,16 +15,12 @@ const AddPolicyType = () => {
 
     let [ policyType, setPolicyType ] = useState(DefaultPolicyType);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        Api.Global.PolicyTypes.Create(policyType)
-        .then(() => {
-            goBack();
-        })
-        .then(() => {
-            Api.Global.PolicyTypes.Read(dispatch)
-        });
-            return false;
+        await Api.Global.PolicyTypes.Create(policyType);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
+        return false;
     };
 
     return (

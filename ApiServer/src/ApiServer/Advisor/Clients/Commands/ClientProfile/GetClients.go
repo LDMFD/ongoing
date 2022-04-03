@@ -20,7 +20,13 @@ func GetClients(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	var reportClients = []Entities.ClientReport{}
+	for _, c := range clients {
+		reportClients = append(reportClients, c.ToReport())
+	}
+
 	c.JSON(200, gin.H{
-		"Clients": clients,
+		"Clients": reportClients,
 	})
 }

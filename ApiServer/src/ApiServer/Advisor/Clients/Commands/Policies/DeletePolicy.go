@@ -11,8 +11,8 @@ import (
 )
 
 type DeletePolicyRequestPath struct {
-	ClientId int64 `binding:"required"`
-	PolicyId int64 `binding:"required"`
+	ClientId string `binding:"required"`
+	PolicyId string `binding:"required"`
 }
 
 func DeletePolicy(c *gin.Context) {
@@ -24,17 +24,18 @@ func DeletePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var policy = Entities.Policy{Id: path.PolicyId}
+	var policy = Entities.Policy{}
 	if err := db.NewSelect().
 		Model(&policy).
 		Relation("Portfolios").
-		WherePK().
+		Where("uid = ?", path.PolicyId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if policy.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if policy.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy does not belong to client"})
 		return
 	}

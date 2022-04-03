@@ -10,8 +10,8 @@ import (
 )
 
 type DeletePortfolioRequestPath struct {
-	ClientId    int64 `binding:"required"`
-	PortfolioId int64 `binding:"required"`
+	ClientId    string `binding:"required"`
+	PortfolioId string `binding:"required"`
 }
 
 func DeletePortfolio(c *gin.Context) {
@@ -23,16 +23,17 @@ func DeletePortfolio(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var portfolio = Entities.Portfolio{Id: path.PortfolioId}
+	var portfolio = Entities.Portfolio{}
 	if err := db.NewSelect().
 		Model(&portfolio).
-		WherePK().
+		Where("uid = ?", path.PortfolioId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if portfolio.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if portfolio.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Portfolio does not belong to client"})
 		return
 	}

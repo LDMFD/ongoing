@@ -29,9 +29,10 @@ func CreateOperator(c *gin.Context) {
 	}
 
 	var operator = Entities.Operator{
-		Type:      req.Type,
-		Name:      req.Name,
-		Fee:       req.Fee,
+		Uid:  uid,
+		Type: req.Type,
+		Name: req.Name,
+		Fee:  req.Fee,
 	}
 	if _, err := db.NewInsert().Model(&operator).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

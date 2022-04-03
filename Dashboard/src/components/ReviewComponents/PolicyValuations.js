@@ -1,14 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { ModuleTypePolicyValuations } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
-import { Context } from 'State';
 import { CurrencyFormatter } from 'Utils/Strings';
+import { GetReport } from './GetReport';
 
 const PolicyValuations = () => {
-    const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let report = GetReport();
 
     const columns = [
         { field: 'policy',        headerName: 'Policy',        flex: 0.1, },
@@ -18,7 +17,7 @@ const PolicyValuations = () => {
         { field: 'notes',         headerName: 'Notes',         flex: 0.2, },
     ];
 
-    let valuations = client.Policies.map(p => {
+    let valuations = report.Policies.map(p => {
         let contributions;
         switch (p.MonthlyContributions) {
             case null: 
@@ -49,8 +48,7 @@ const PolicyValuations = () => {
 
     return (
         <>
-            <ModuleWrapper client = {client}
-                           module = {ModuleTypePolicyValuations} />
+            <ModuleWrapper module = {ModuleTypePolicyValuations} />
             <br />
 
             <DataGrid autoHeight {...data} />

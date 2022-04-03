@@ -18,7 +18,7 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
 
     const handlers = {
         SetName:         (event) => { setFund({ ...fund, Name:        event.target.value, }); },
-        EditOcfFee:      (event) => { setFund({ ...fund, OcfFee: parseFloat(event.target.value) }); },
+        EditOcfFee:      (event) => { setFund({ ...fund, OcfFee:      parseFloat(event.target.value) }); },
         EditExAnteFee:   (event) => { setFund({ ...fund, ExAnteFee:   parseFloat(event.target.value) }); },
     };
     

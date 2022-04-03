@@ -21,18 +21,11 @@ func DeleteModulePreset(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var modulePreset = Entities.ReviewModulePreset{Id: path.ModulePresetId}
-	if err := db.NewSelect().
-		Model(&modulePreset).
-		WherePK().
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
+	var modulePreset = Entities.ModulePreset{}
 
 	if _, err := db.NewDelete().
 		Model(&modulePreset).
-		WherePK().
+		Where("id = ?", path.ModulePresetId).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

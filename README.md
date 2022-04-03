@@ -7,10 +7,11 @@ GCP setup
     - Domain verification
 - Enable the IAM API
 
-Migration
+Local dev
 
-    make _db_migrate MIGRATION=1
+    make db-clean
+    docker-compose up postgres
 
-Dashboard
+    make db-up
 
     docker-compose up dash

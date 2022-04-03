@@ -13,7 +13,7 @@ import (
 
 type CreateOrUpdateModelRequestBody struct {
 	Name              string  `binding:"required"`
-	OperatorId        int64   `binding:"required"`
+	OperatorId        string  `binding:"required"`
 	WeightedOcfFee    float64 `binding:"required"`
 	WeightedExAnteFee float64 `binding:"required"`
 	FileUid           *string
@@ -21,9 +21,6 @@ type CreateOrUpdateModelRequestBody struct {
 
 func CreateModel(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
 
 	var body CreateOrUpdateModelRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -44,9 +41,22 @@ func CreateModel(c *gin.Context) {
 		fileId = &file.Id
 	}
 
+	uid := uuid.NewString()
+	uid = strings.ReplaceAll(uid, "-", "")
+
+	var operator = Entities.Operator{}
+	if err := db.NewSelect().
+		Model(&operator).
+		Where("uid = ?", body.OperatorId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
 	var model = Entities.Model{
+		Uid:               uid,
 		Name:              body.Name,
-		OperatorId:        body.OperatorId,
+		OperatorId:        operator.Id,
 		WeightedOcfFee:    body.WeightedOcfFee,
 		WeightedExAnteFee: body.WeightedExAnteFee,
 		FileId:            fileId,

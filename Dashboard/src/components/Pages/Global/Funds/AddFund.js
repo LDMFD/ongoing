@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import { useHistory,  } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { SET_FUNDS } from 'State/Reducer';
 import DefaultFund from './DefaultFund';
 import FundDialog from './FundDialog';
 import { GoBack } from 'Utils/Routing';
+import { Api } from 'State';
 
 const AddFund = () => {
     let history = useHistory();
@@ -15,18 +15,11 @@ const AddFund = () => {
 
     let [ fund, setFund ] = useState(DefaultFund);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.post(`advisor/funds`, {
-            ...fund
-        }).then(_ => {
-            return window.ApiClient.get(`advisor/funds`).then(res => {
-                dispatch({
-                    type: SET_FUNDS,
-                    payload: res.data,
-                })
-            }).then(goBack);;
-        });
+        await Api.Global.Funds.Create(fund);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
 

@@ -16,7 +16,7 @@ const ModulePresetList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getModulePresets = useCallback(() => {
-        Api.Global.ModulePresets.Read(dispatch)
+        Api.Global.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const ModulePresetList = () => {
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete modulePreset?`)) {
             await Api.Global.ModulePresets.Delete(params.row.id)
-            await Api.Global.ModulePresets.Read(dispatch);
+            await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
@@ -36,8 +36,8 @@ const ModulePresetList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'moduleType', headerName: 'Module Type', flex: 0.5, },
-        { field: 'text',       headerName: 'Intro paragraph',       flex: 0.5, },
+        { field: 'moduleType', headerName: 'Module Type',     flex: 0.5, },
+        { field: 'text',       headerName: 'Intro paragraph', flex: 0.5, },
         {
             field: 'actions',
             type: 'actions',
@@ -49,9 +49,9 @@ const ModulePresetList = () => {
         },
     ];
 
-    let modulePresets = state.ModulePresets.map(p => {
+    let modulePresets = state.Entities.ModulePresets.map(p => {
         return {
-            id:          p.Id,
+            id:          p.Id,  // TODO multiple module presets?
             moduleType:  ModuleTypeSelectSpec.find(t => t.id === p.ModuleType).label,
             text:        p.Text,
         };

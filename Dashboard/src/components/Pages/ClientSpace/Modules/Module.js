@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useParams } from "react-router-dom";
 
 import './Module.css';
 import { Context } from 'State/StateProvider'
@@ -7,15 +8,15 @@ import { DefaultModule } from './DefaultModule';
 export const Module = ({ module }) => {
     const [ state,  ] = useContext(Context);
 
+    let { reviewId } = useParams();
+    let review = state.Reviews.find(r => r.Id === reviewId).Report;
+
     let [ moduleState, setModuleState ] = useState(null);
     let preset;
 
-    // let client = state.Clients[0];
-    let client = state.ClientContext;
-    let review = client.Reviews[0];
-    let draft = review?.Modules?.find(m => m.Type === module);
+    let draft = review.Modules.find(m => m.Type === module);
 
-    preset = state.ModulePresets.find(p => p.ModuleType === module);
+    preset = review.ModulePresets.find(p => p.ModuleType === module);
 
     if (!moduleState) {
         // First load

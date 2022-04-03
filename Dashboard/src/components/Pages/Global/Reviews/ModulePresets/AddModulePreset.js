@@ -24,7 +24,7 @@ const AddModulePreset = () => {
         }
 
         await Api.Global.ModulePresets.Create(modulePreset);
-        await Api.Global.ModulePresets.Read(dispatch);
+        await Api.Global.Entities.Read(dispatch);
         goBack();
         return false;
     };

@@ -19,8 +19,8 @@ func GetModulePresets(c *gin.Context) {
 	})
 }
 
-func GetModulePresetsInternal(c *gin.Context, db *bun.DB) []Entities.ReviewModulePreset {
-	var modulePresets []Entities.ReviewModulePreset
+func GetModulePresetsInternal(c *gin.Context, db *bun.DB) []Entities.ModulePreset {
+	var modulePresets []Entities.ModulePreset
 	if err := db.NewSelect().Model(&modulePresets).OrderExpr("module_type ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

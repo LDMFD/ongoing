@@ -71,11 +71,11 @@ const Items = {
             icon: <SearchIcon />,
             link: '/review-config/module-presets',
         },
-        {
-            label: 'Users',
-            icon: <SearchIcon />,
-            link: '/users',
-        },
+        // {
+        //     label: 'Users',
+        //     icon: <SearchIcon />,
+        //     link: '/users',
+        // },
     ]),
     'client': [
         {

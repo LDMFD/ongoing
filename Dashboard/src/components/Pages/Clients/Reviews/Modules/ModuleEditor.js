@@ -26,18 +26,14 @@ export const EditModuleText = () => {
 
     const [ state, dispatch ] = useContext(Context);
 
-    let { clientId, reviewId, rmod: module, field } = useParams();
-    clientId = parseInt(clientId);
-    reviewId = parseInt(reviewId);
+    let { clientId, rmod: module, field } = useParams();
     let capsField = field.charAt(0).toUpperCase() + field.slice(1);
 
     let [ moduleState, setModuleState ] = useState(null);
     let preset;
 
     if (!moduleState) {
-        let client = state.ClientContext;
-        let review = client.Reviews.find(r => r.Id === reviewId);
-        let draft = review?.Modules?.find(m => m.Type === module);
+        let draft = state.Report.Modules.find(m => m.Type === module);
 
         let newState = {
             ...DefaultModule,
@@ -63,14 +59,14 @@ export const EditModuleText = () => {
 
     let onSubmit = async (e) => {
         e.preventDefault();
-        await Api.Clients.ReviewModules.Update(clientId, reviewId, module, moduleState);
+        await Api.Clients.ReviewModules.Update(clientId, module, moduleState);
         await Api.Clients.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };
 
     let onDelete = async () => {
-        await Api.Clients.ReviewModules.Delete(clientId, reviewId, module, field);
+        await Api.Clients.ReviewModules.Delete(clientId, module, field);
         await Api.Clients.ClientDetail.Read(dispatch, clientId);
         goBack();
     }
@@ -109,14 +105,10 @@ export const EditModuleText = () => {
 export const ModuleEditor = ({ client, module }) => {
     const [ state,  ] = useContext(Context);
 
-    let { reviewId } = useParams();
-    reviewId = parseInt(reviewId);
-
     let [ moduleState, setModuleState ] = useState(null);
     let preset;
 
-    let review = client.Reviews.find(r => r.Id === reviewId);
-    let draft = review?.Modules?.find(m => m.Type === module);
+    let draft = state.Report.Modules.find(m => m.Type === module);
 
     preset = state.ModulePresets.find(p => p.ModuleType === module);
 

@@ -12,9 +12,14 @@ const Delete = (clientId, reviewId) => {
     return window.ApiClient.delete(`advisor/clients/${clientId}/reviews/${reviewId}`);
 }
 
+const Publish = (clientId, reviewId) => {
+    return window.ApiClient.post(`advisor/clients/${clientId}/reviews/${reviewId}/publish`);
+}
+
 const defaults = {
     Create,
     Update,
     Delete,
+    Publish,
 };
 export default defaults;

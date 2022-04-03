@@ -10,6 +10,7 @@ type Policy struct {
 	bun.BaseModel `bun:"table:policies"`
 
 	Id                   int64     `bun:"id,pk,autoincrement"`
+	Uid                  string    `bun:"uid,notnull"`
 	ClientId             int64     `bun:"client_id,notnull"`
 	PolicyTypeId         int64     `bun:"policy_type_id,notnull"`
 	PolicyProviderId     int64     `bun:"policy_provider_id,notnull"`
@@ -23,5 +24,32 @@ type Policy struct {
 
 	Client         *Client         `bun:"rel:has-one,join:client_id=id"`
 	Portfolios     []*Portfolio    `bun:"rel:has-many,join:id=client_id"`
+	PolicyType     *PolicyType     `bun:"rel:has-one,join:policy_type_id=id"`
 	PolicyProvider *PolicyProvider `bun:"rel:has-one,join:policy_provider_id=id"`
+}
+
+type ReportPolicy struct {
+	Id                   string
+	PolicyTypeId         string
+	PolicyProviderId     string
+	ExternalId           string
+	PlatformDiscount     float64
+	MonthlyContributions int64
+	StartValue           int64
+	EndValue             int64
+	Notes                string
+}
+
+func (p *Policy) ToReport() ReportPolicy {
+	return ReportPolicy{
+		Id:                   p.Uid,
+		PolicyTypeId:         p.PolicyType.Uid,
+		PolicyProviderId:     p.PolicyProvider.Uid,
+		ExternalId:           p.ExternalId,
+		PlatformDiscount:     p.PlatformDiscount,
+		MonthlyContributions: p.MonthlyContributions,
+		StartValue:           p.StartValue,
+		EndValue:             p.EndValue,
+		Notes:                p.Notes,
+	}
 }

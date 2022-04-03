@@ -17,7 +17,7 @@ const PolicyTypeList = () => {
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete policy type?`)) {
             await Api.Global.PolicyTypes.Delete(params.row.id)
-            await Api.Global.PolicyTypes.Read(dispatch);
+            await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
@@ -26,7 +26,7 @@ const PolicyTypeList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'name',     headerName: 'Name',       flex: 0.1, },
+        { field: 'name', headerName: 'Name', flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -38,7 +38,7 @@ const PolicyTypeList = () => {
         },
     ];
 
-    let policyTypes = state.PolicyTypes.map(p => {
+    let policyTypes = state.Entities.PolicyTypes.map(p => {
         return {
             id:       p.Id,
             name:     p.Name,

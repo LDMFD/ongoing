@@ -2,6 +2,7 @@ package ClientProfile
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile/Reports"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -10,7 +11,7 @@ import (
 )
 
 type GetClientRequestPath struct {
-	ClientId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 }
 
 func GetClient(c *gin.Context) {
@@ -22,20 +23,19 @@ func GetClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var client = Entities.Client{Id: path.ClientId}
+	var client = Entities.Client{}
 	if err := db.NewSelect().
 		Model(&client).
-		Relation("Policies.PolicyProvider").
-		Relation("PolicyFunds.Fund").
-		Relation("Portfolios.Model.Operator").
-		Relation("Reviews.Modules").
 		Relation("User").
-		WherePK().
+		Where("uid = ?", path.ClientId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
 	c.JSON(200, gin.H{
-		"Client": client,
+		"ClientContext": client.ToReport(),
+		"Report":        Reports.GenerateReport(c, client.Id),
+		"Reviews":       Reports.GetReviews(c, &client),
 	})
 }

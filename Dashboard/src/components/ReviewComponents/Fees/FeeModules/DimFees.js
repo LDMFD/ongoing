@@ -1,16 +1,16 @@
-import React, { useContext  } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypeDimFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
-import { Context } from 'State';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const DimFees = () => {
-    const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let report = GetReport();
 
     let operators = [];
-    client.Portfolios.forEach(p => {
-        let op = p.Model.Operator;
+    report.Portfolios.forEach(p => {
+        let model = report.Models.find(m => m.Id === p.ModelId);
+        let op = report.Operators.find(o => o.Id === model.OperatorId);
         if (op.Type === 'dim' && !operators.some(o => o.id === op.Id)) {
             operators.push({
                 id:   op.Id,
@@ -33,8 +33,7 @@ const DimFees = () => {
     return (
         <>
             <br />
-            <ModuleWrapper client={client}
-                           module={ModuleTypeDimFee} />
+            <ModuleWrapper module={ModuleTypeDimFee} />
 
             <DataGrid autoHeight {...data} />
         </>

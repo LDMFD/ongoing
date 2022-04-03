@@ -25,12 +25,14 @@ CREATE TABLE files (
 
 CREATE TABLE policy_types (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "name"                    text not null unique,          -- e.g. SIPP (a pension), PP (personal pension), Equity ISA
     "timestamp"               timestamp default current_timestamp
 );
 
 CREATE TABLE policy_providers (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "name"                    text not null unique,          -- e.g. Aviva
     "pricing"                 text not null,
     "timestamp"               timestamp default current_timestamp
@@ -45,6 +47,7 @@ CREATE TYPE operator_type AS ENUM (
 
 CREATE TABLE operators (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "type"                    operator_type not null,
     "name"                    text not null unique,          -- e.g. Tatton, LGT Vestra, IBOSS
     "fee"                     decimal not null,
@@ -53,6 +56,7 @@ CREATE TABLE operators (
 
 CREATE TABLE models (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "name"                    text not null unique,    -- e.g. "IBOSS MPS PORTFOLIO 2"
     "operator_id"             int not null,     -- (MPS is run by a DIM, etc.)
     "weighted_ocf_fee"        decimal not null,
@@ -66,6 +70,7 @@ CREATE TABLE models (
 -- For individually managed policy funds (no model)
 CREATE TABLE funds (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "name"                    text not null unique,          -- e.g. Tatton, LGT Vestra, IBOSS
     "ocf_fee"                 decimal not null,
     "ex_ante_fee"             decimal not null,
@@ -125,6 +130,7 @@ CREATE TABLE clients (
 
 CREATE TABLE policies (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "external_id"             text not null unique,         -- Policy number, e.g., AV1234-001
     "platform_discount"       decimal default null,
     "client_id"               int not null,
@@ -145,6 +151,7 @@ CREATE TABLE policies (
 -- Funds attached to a policy, no model
 CREATE TABLE policy_funds (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "client_id"               int not null,
     "policy_id"               int not null,
     "fund_id"                 int not null,
@@ -158,6 +165,7 @@ CREATE TABLE policy_funds (
 -- Policy + model
 CREATE TABLE portfolios (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "client_id"               int not null,
     "policy_id"               int not null,
     "model_id"                int not null,
@@ -206,7 +214,8 @@ CREATE TABLE module_presets (
     "id"                      int primary key generated always as identity,
     "module_type"             module_type not null,
     "text"                    text,
-    "timestamp"               timestamp default current_timestamp
+    "timestamp"               timestamp default current_timestamp,
+    UNIQUE ("module_type")
 );
 
 -- TODO
@@ -234,12 +243,12 @@ CREATE TABLE reviews (
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT
 );
 
-CREATE TABLE review_modules (
+CREATE TABLE modules (
     "id"                      int primary key generated always as identity,
-    "review_id"               int not null,
+    "client_id"               int not null,
     "type"                    module_type not null,
     "intro"                   text not null,
     "text"                    text not null,
-    UNIQUE ("review_id", "type"),
-    CONSTRAINT fk_review FOREIGN KEY(review_id) REFERENCES reviews(id) ON DELETE CASCADE  -- TODO check deletion behaviour here
+    UNIQUE ("client_id", "type"),
+    CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT
 );

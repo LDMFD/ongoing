@@ -9,13 +9,17 @@ import {
 } from '@mui/material';
 
 import { Context, Api } from 'State'
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const PortfolioList = () => {
     let history = useHistory();
 
     const [state, dispatch ] = useContext(Context);
+    let {
+        ClientContext: client,
+    } = state;
 
-    let client = state.ClientContext;
+    let report = GetReport();
 
     const deletePortfolio = useCallback(params => async () => {
         if (window.confirm(`Delete portfolio?`)) {
@@ -45,9 +49,9 @@ const PortfolioList = () => {
         },
     ];
 
-    let portfolios = client.Portfolios.map(portfolio => {
-        let policy = client.Policies.find(p => p.Id === portfolio.PolicyId).ExternalId;
-        let model = state.Models.find(p => p.Id === portfolio.ModelId).Name;
+    let portfolios = report.Portfolios.map(portfolio => {
+        let policy = report.Policies.find(p => p.Id === portfolio.PolicyId).ExternalId;
+        let model = report.Models.find(p => p.Id === portfolio.ModelId).Name;
         return {
             id:         portfolio.Id,
             idLabel:    `#${portfolio.Id}`,

@@ -10,13 +10,13 @@ import (
 )
 
 type UpdatePortfolioRequestPath struct {
-	ClientId    int64 `binding:"required"`
-	PortfolioId int64 `binding:"required"`
+	ClientId    string `binding:"required"`
+	PortfolioId string `binding:"required"`
 }
 
 type CreateOrUpdatePortfolioRequestBody struct {
-	PolicyId   int64   `binding:"required"`
-	ModelId    int64   `binding:"required"`
+	PolicyId   string   `binding:"required"`
+	ModelId    string   `binding:"required"`
 	Proportion float64 `binding:"required"`
 }
 
@@ -35,22 +35,41 @@ func UpdatePortfolio(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var portfolio = Entities.Portfolio{Id: path.PortfolioId}
+	var portfolio = Entities.Portfolio{}
 	if err := db.NewSelect().
 		Model(&portfolio).
-		WherePK().
+		Where("uid = ?", path.PortfolioId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if portfolio.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if portfolio.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Portfolio does not belong to client"})
 		return
 	}
 
-	portfolio.PolicyId = body.PolicyId
-	portfolio.ModelId = body.ModelId
+	var policy = Entities.Policy{}
+	if err := db.NewSelect().
+		Model(&policy).
+		Where("uid = ?", body.PolicyId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	var model = Entities.Model{}
+	if err := db.NewSelect().
+		Model(&model).
+		Where("uid = ?", body.ModelId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	portfolio.PolicyId = policy.Id
+	portfolio.ModelId = model.Id
 	portfolio.Proportion = body.Proportion
 
 	if _, err := db.NewUpdate().

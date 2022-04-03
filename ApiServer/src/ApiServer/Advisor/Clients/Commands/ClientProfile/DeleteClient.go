@@ -9,7 +9,7 @@ import (
 )
 
 type DeleteClientRequestPath struct {
-	ClientId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 }
 
 func DeleteClient(c *gin.Context) {
@@ -21,18 +21,20 @@ func DeleteClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var client = Entities.Client{Id: path.ClientId}
-	if err := db.NewSelect().
+	var client = Entities.ClientFromUserUID(c, db, path.ClientId)
+
+	if _, err := db.NewDelete().
 		Model(&client).
-		WherePK().
-		Scan(c); err != nil {
+		Where("id = ?", client.Id).
+		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
+	var user Entities.User
 	if _, err := db.NewDelete().
-		Model(&client).
-		WherePK().
+		Model(&user).
+		Where("id = ?", client.UserId).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

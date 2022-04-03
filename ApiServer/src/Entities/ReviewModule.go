@@ -31,14 +31,29 @@ var (
     ModuleTypeActionPoints       = "conclusions:action-points"
 )
 
-type ReviewModule struct {
-    bun.BaseModel `bun:"table:review_modules"`
+type Module struct {
+    bun.BaseModel `bun:"table:modules"`
 
     Id       int64  `bun:"id,pk,autoincrement"`
-    ReviewId int64  `bun:"review_id,notnull"`
+    ClientId int64  `bun:"client_id,notnull"`
     Type     string `bun:"type,notnull"`
     Intro    string `bun:"intro,notnull"`
     Text     string `bun:"text,notnull"`
 
-    Review *Review `bun:"rel:has-one,join:review_id=id"`
+    Client *Client `bun:"rel:has-one,join:client_id=id"`
+}
+
+type ReportModule struct {
+    Id    string
+    Type  string
+    Intro string
+    Text  string
+}
+
+func (r *Module) ToReport() ReportModule {
+    return ReportModule{
+        Type:  r.Type,
+        Intro: r.Intro,
+        Text:  r.Text,
+    }
 }

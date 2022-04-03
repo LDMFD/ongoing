@@ -21,11 +21,9 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
 
     const [ state ] = useContext(Context);
 
-    let client = state.ClientContext;
-
     const handlers = {
-        SetPolicyId:     (event) => { setPortfolio({ ...portfolio, PolicyId:    parseInt(event.target.value), }); },
-        SetModelId:      (event) => { setPortfolio({ ...portfolio, ModelId: parseInt(event.target.value), }); },
+        SetPolicyId:     (event) => { setPortfolio({ ...portfolio, PolicyId: event.target.value, }); },
+        SetModelId:      (event) => { setPortfolio({ ...portfolio, ModelId: event.target.value, }); },
         EditProportion:  (event) => {
             let p = parseFloat(event.target.value);
             p = isNaN(p) ? '' : p;
@@ -50,7 +48,7 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select policy</MenuItem>
-                        {client.Policies.map(t => (
+                        {state.Report.Policies.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.ExternalId}
                             </MenuItem>
@@ -65,20 +63,20 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select model</MenuItem>
-                        {state.Models.map(t => (
+                        {state.Entities.Models.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>
                         ))}
                     </Select>
 
-                    <TextField value = {portfolio.Proportion}
-                            onChange = {handlers.EditProportion}
-                            margin   = "dense"
-                            id       = "proportion"
-                            label    = "Proportion"
-                            type     = "number"
-                            fullWidth autoFocus />
+                    <TextField value    = {portfolio.Proportion}
+                               onChange = {handlers.EditProportion}
+                               margin   = "dense"
+                               id       = "proportion"
+                               label    = "Proportion"
+                               type     = "number"
+                               fullWidth autoFocus />
 
                 </DialogContent>
                 <DialogActions>

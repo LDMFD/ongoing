@@ -20,11 +20,10 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
     let goBack = GoBack(history);
 
     const [ state ] = useContext(Context);
-    let client = state.ClientContext;
 
     const handlers = {
-        SetFundId:       (event) => { setPolicyFund({ ...policyFund, FundId:   parseInt(event.target.value), }); },
-        SetPolicyId:     (event) => { setPolicyFund({ ...policyFund, PolicyId: parseInt(event.target.value), }); },
+        SetFundId:       (event) => { setPolicyFund({ ...policyFund, FundId:   event.target.value, }); },
+        SetPolicyId:     (event) => { setPolicyFund({ ...policyFund, PolicyId: event.target.value, }); },
         EditProportion:  (event) => {
             let p = parseFloat(event.target.value);
             p = isNaN(p) ? '' : p;
@@ -49,7 +48,7 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select policy</MenuItem>
-                        {client.Policies?.map(t => (
+                        {state.Report.Policies.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.ExternalId}
                             </MenuItem>
@@ -64,7 +63,7 @@ export const PolicyFund = ({ policyFund, setPolicyFund, submitLabel, submitHandl
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select fund</MenuItem>
-                        {state.Funds?.map(t => (
+                        {state.Entities.Funds.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>

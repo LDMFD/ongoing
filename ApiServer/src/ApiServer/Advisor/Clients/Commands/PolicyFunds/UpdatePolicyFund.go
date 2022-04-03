@@ -11,13 +11,13 @@ import (
 )
 
 type UpdatePolicyFundRequestPath struct {
-	ClientId     int64 `binding:"required"`
-	PolicyFundId int64 `binding:"required"`
+	ClientId     string `binding:"required"`
+	PolicyFundId string `binding:"required"`
 }
 
 type CreateOrUpdatePolicyFundRequestBody struct {
-	FundId     int64   `binding:"required"`
-	PolicyId   int64   `binding:"required"`
+	FundId     string   `binding:"required"`
+	PolicyId   string   `binding:"required"`
 	Proportion float64 `binding:"required"`
 }
 
@@ -36,22 +36,41 @@ func UpdatePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var policyFund = Entities.PolicyFund{Id: path.PolicyFundId}
+	var policyFund = Entities.PolicyFund{}
 	if err := db.NewSelect().
 		Model(&policyFund).
-		WherePK().
+		Where("uid = ?", path.PolicyFundId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if policyFund.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if policyFund.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyFundDoesNotBelongToClient})
 		return
 	}
 
-	policyFund.FundId = body.FundId
-	policyFund.PolicyId = body.PolicyId
+	var policy = Entities.Policy{}
+	if err := db.NewSelect().
+		Model(&policy).
+		Where("uid = ?", body.PolicyId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	var fund = Entities.Fund{}
+	if err := db.NewSelect().
+		Model(&fund).
+		Where("uid = ?", body.FundId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	policyFund.FundId = fund.Id
+	policyFund.PolicyId = policy.Id
 	policyFund.Proportion = body.Proportion
 
 	if _, err := db.NewUpdate().

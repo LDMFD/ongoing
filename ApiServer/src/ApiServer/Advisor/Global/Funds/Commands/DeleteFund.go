@@ -13,7 +13,7 @@ import (
 )
 
 type DeleteFundRequestPath struct {
-	FundId int64 `binding:"required"`
+	FundId string `binding:"required"`
 }
 
 func DeleteFund(c *gin.Context) {
@@ -25,12 +25,12 @@ func DeleteFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var fund = Entities.Fund{Id: path.FundId}
+	var fund = Entities.Fund{}
 	if err := db.NewSelect().
 		Model(&fund).
 		Relation("PolicyFunds").
 		Relation("PolicyFunds.Client").
-		WherePK().
+		Where("uid = ?", path.FundId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

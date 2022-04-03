@@ -13,45 +13,21 @@ const InitialState = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     // Advisors
-    const getClients            = useCallback(() => { return Api.Clients.Clients.Read(dispatch); },           [ dispatch ]);
-    const getFunds              = useCallback(() => { return Api.Global.Funds.Read(dispatch); },              [ dispatch ]);
-    const getOperators          = useCallback(() => { return Api.Global.Operators.Read(dispatch); },          [ dispatch ]);
-    const getPolicyProviders    = useCallback(() => { return Api.Global.PolicyProviders.Read(dispatch); },    [ dispatch ]);
-    const getPolicyTypes        = useCallback(() => { return Api.Global.PolicyTypes.Read(dispatch); },        [ dispatch ]);
-    const getModels             = useCallback(() => { return Api.Global.Models.Read(dispatch); },             [ dispatch ]);
-    const getRiskAssessments    = useCallback(() => { return Api.Global.RiskAssessments.Read(dispatch); },    [ dispatch ]);
-    const getModulePresets      = useCallback(() => { return Api.Global.ModulePresets.Read(dispatch); },      [ dispatch ]);
+    const getClients        = useCallback(() => { return Api.Clients.Clients.Read(dispatch); }, [ dispatch ]);
+    const getGlobalEntities = useCallback(() => { return Api.Global.Entities.Read(dispatch); }, [ dispatch ]);
     
     const getAdvisorDependencies = useCallback(async () => {
-        await getFunds();  // TODO parallelize
-        await getPolicyProviders();
-        await getPolicyTypes();
-
-        await getOperators();
-        await getModels();
-
-        await getRiskAssessments();
-        await getModulePresets();
-
+        await getGlobalEntities();
         await getClients();
 
         setLoaded(true);
     }, [
-        getFunds,
-        getPolicyProviders,
-        getPolicyTypes,
-        
-        getOperators,
-        getModels,
-
-        getRiskAssessments,
-        getModulePresets,
-
+        getGlobalEntities,
         getClients,
     ]);
 
     // Client space
-    const getClientSpace = useCallback(() => { return Api.ClientSpace.ClientDetail.Read(dispatch); },    [ dispatch ]);
+    const getClientSpace = useCallback(() => { return Api.ClientSpace.ClientDetail.Read(dispatch); }, [ dispatch ]);
 
     const getClientSpaceDependencies = useCallback(async () => {
         await getClientSpace();

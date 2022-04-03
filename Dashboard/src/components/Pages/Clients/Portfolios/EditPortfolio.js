@@ -14,12 +14,11 @@ const EditPortfolio = () => {
     let [ portfolio, setPortfolio ] = useState(null);
 
     let { portfolioId } = useParams();
-    portfolioId = parseInt(portfolioId);
 
     let client = state.ClientContext;
 
     if (!portfolio) {
-        setPortfolio(client.Portfolios.find(h => h.Id === portfolioId))
+        setPortfolio(state.Report.Portfolios.find(h => h.Id === portfolioId))
         return;
     }
     const submitHandler = async (e) => {
@@ -34,10 +33,10 @@ const EditPortfolio = () => {
     };
 
     return (
-        <PortfolioDialog portfolio       = {portfolio}
-                       setPortfolio    = {setPortfolio}
-                       submitLabel   = 'Update'
-                       submitHandler = {submitHandler}  />
+        <PortfolioDialog portfolio     = {portfolio}
+                         setPortfolio  = {setPortfolio}
+                         submitLabel   = 'Update'
+                         submitHandler = {submitHandler}  />
     );
 }
 

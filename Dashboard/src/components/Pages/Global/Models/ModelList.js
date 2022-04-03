@@ -15,7 +15,7 @@ const ModelList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getModels = useCallback(() => {
-        Api.Global.Models.Read(dispatch)
+        Api.Global.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const ModelList = () => {
         if (window.confirm(`Delete model?`)) {
             window.ApiClient.delete(`advisor/models/${params.row.id}`)
             .then(async () => {
-                await Api.Global.Models.Read(dispatch);
+                await Api.Global.Entities.Read(dispatch);
             });
         }        
     }, [ dispatch ]);
@@ -53,8 +53,8 @@ const ModelList = () => {
         },
     ];
 
-    let models = state.Models.map(m => {
-        let op = state.Operators.find(o => o.Id === m.OperatorId).Name;
+    let models = state.Entities.Models.map(m => {
+        let op = state.Entities.Operators.find(o => o.Id === m.OperatorId).Name;
         return {
             id:                m.Id,
             name:              m.Name,

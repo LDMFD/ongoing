@@ -14,17 +14,11 @@ const AddPolicyProvider = () => {
     const [ , dispatch] = useContext(Context);
     let [ policyProvider, setPolicyProvider ] = useState(DefaultPolicyProvider);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.post("advisor/policy-providers", {
-            ...policyProvider
-        })
-        .then(() => {
-            goBack();
-        })
-        .then(() => {
-            Api.Global.PolicyProviders.Read(dispatch)
-        });
+        await Api.Global.PolicyProviders.Create(policyProvider);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
 

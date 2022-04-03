@@ -17,10 +17,7 @@ const EditModulePreset = () => {
     modulePresetId = parseInt(modulePresetId);
 
     if (!modulePreset) {
-        let p = state.ModulePresets.find(p => p.Id === modulePresetId);
-        if (!p) {
-            return <>ModulePreset not found</>;
-        }
+        let p = state.Entities.ModulePresets.find(p => p.Id === modulePresetId);
         setModulePreset(p)
         return;
     }
@@ -28,7 +25,7 @@ const EditModulePreset = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         await Api.Global.ModulePresets.Update(modulePreset);
-        await Api.Global.ModulePresets.Read(dispatch);
+        await Api.Global.Entities.Read(dispatch);
         goBack();
         return false;
     };

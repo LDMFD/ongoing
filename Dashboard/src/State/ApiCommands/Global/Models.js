@@ -1,19 +1,6 @@
-import {
-    SET_MODELS
-} from "State/Reducer";
-
-const Create = (models) => {
+const Create = (model) => {
     return window.ApiClient.post(`advisor/models`, {
-        ...models,
-    });
-}
-
-const Read = (dispatch) => {
-    return window.ApiClient.get(`advisor/models`).then(res => {
-        dispatch({
-            type: SET_MODELS,
-            payload: res.data,
-        });
+        ...model,
     });
 }
 
@@ -29,7 +16,6 @@ const Delete = (modelId) => {
 
 const defaults = {
     Create,
-    Read,
     Update,
     Delete,
 };

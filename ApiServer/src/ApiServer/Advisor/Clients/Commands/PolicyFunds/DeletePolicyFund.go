@@ -10,8 +10,8 @@ import (
 )
 
 type DeletePolicyFundRequestPath struct {
-	ClientId     int64 `binding:"required"`
-	PolicyFundId int64 `binding:"required"`
+	ClientId     string `binding:"required"`
+	PolicyFundId string `binding:"required"`
 }
 
 func DeletePolicyFund(c *gin.Context) {
@@ -23,16 +23,17 @@ func DeletePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var policyFund = Entities.PolicyFund{Id: path.PolicyFundId}
+	var policyFund = Entities.PolicyFund{}
 	if err := db.NewSelect().
 		Model(&policyFund).
-		WherePK().
+		Where("uid = ?", path.PolicyFundId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if policyFund.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if policyFund.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy fund does not belong to client"})
 		return
 	}

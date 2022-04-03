@@ -1,12 +1,11 @@
-import React, { useContext  } from 'react';
+import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import { Context } from 'State';
 import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const PlatformFees = () => {
-    const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let report = GetReport();
 
     let rows = [ /*{
         provider: Provider
@@ -15,7 +14,7 @@ const PlatformFees = () => {
         platformDiscount: float,
     }*/ ];
 
-    client.Policies.forEach(policy => {
+    report.Policies.forEach(policy => {
         let found = false;
         rows.forEach(row => {
             if (row.provider.Id !== policy.PolicyProviderId || row.platformDiscount !== policy.PlatformDiscount) {
@@ -27,11 +26,12 @@ const PlatformFees = () => {
             found = true;
         });
         if (!found) {
+            let provider = report.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId);
             rows.push({
-                provider: policy.PolicyProvider,
+                provider: provider,
                 policies: [ policy ],
                 platformDiscount: policy.PlatformDiscount,
-                pricing: policy.PlatformDiscount ? policy.PlatformDiscount : policy.PolicyProvider.Pricing,
+                pricing: policy.PlatformDiscount ? policy.PlatformDiscount : provider.Pricing,
             })
         }
     });
@@ -60,8 +60,7 @@ const PlatformFees = () => {
     return (
         <>
             <br />
-            <ModuleWrapper client={client}
-                           module={ModuleTypePolicyFees} />
+            <ModuleWrapper module={ModuleTypePolicyFees} />
 
             <DataGrid autoHeight {...data} />
         </>

@@ -13,7 +13,7 @@ import (
 )
 
 type DeleteOperatorRequestPath struct {
-	OperatorId int64 `binding:"required"`
+	OperatorId string `binding:"required"`
 }
 
 func DeleteOperator(c *gin.Context) {
@@ -25,11 +25,11 @@ func DeleteOperator(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var operator = Entities.Operator{Id: path.OperatorId}
+	var operator = Entities.Operator{}
 	if err := db.NewSelect().
 		Model(&operator).
 		Relation("Models").
-		WherePK().
+		Where("uid = ?", path.OperatorId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

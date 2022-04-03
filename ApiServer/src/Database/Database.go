@@ -22,6 +22,8 @@ func New() (*bun.DB, error) {
 	dsn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", user, password, addr, database)
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	DB := bun.NewDB(sqldb, pgdialect.New())
+	DB.AddQueryHook(bundebug.NewQueryHook())
+	//DB.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 
 	log.Println("Database connected")
 

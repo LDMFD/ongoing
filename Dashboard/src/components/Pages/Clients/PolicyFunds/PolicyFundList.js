@@ -9,13 +9,17 @@ import {
 } from '@mui/material';
 
 import { Context, Api } from 'State'
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const PolicyFundList = () => {
     let history = useHistory();
 
     const [state, dispatch ] = useContext(Context);
+    let {
+        ClientContext: client,
+    } = state;
 
-    let client = state.ClientContext;
+    let report = GetReport();
 
     const deletePolicyFund = useCallback(params => async () => {
         if (window.confirm(`Delete policy fund?`)) {
@@ -45,9 +49,9 @@ const PolicyFundList = () => {
         },
     ];
 
-    let policyFunds = client.PolicyFunds.map(policyFund => {
-        let policy = client.Policies.find(p => p.Id === policyFund.PolicyId).ExternalId;
-        let fund = state.Funds.find(p => p.Id === policyFund.FundId).Name;
+    let policyFunds = report.PolicyFunds.map(policyFund => {
+        let policy = report.Policies.find(p => p.Id === policyFund.PolicyId).ExternalId;
+        let fund = report.Funds.find(p => p.Id === policyFund.FundId).Name;
         return {
             id:         policyFund.Id,
             idLabel:    `#${policyFund.Id}`,

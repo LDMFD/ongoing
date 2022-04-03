@@ -28,7 +28,7 @@ func CreateModulePreset(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var modulePreset = Entities.ReviewModulePreset{
+	var modulePreset = Entities.ModulePreset{
 		ModuleType:  body.ModuleType,
 		Text:        body.Text,
 	}

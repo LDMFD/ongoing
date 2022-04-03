@@ -14,24 +14,19 @@ const EditPolicyType = () => {
     let [ policyType, setPolicyType ] = useState(null);
 
     let { policyTypeId } = useParams();
-    policyTypeId = parseInt(policyTypeId);
 
-    if (!policyType) {
-        setPolicyType(state.PolicyTypes.find(o => o.Id === policyTypeId))
-        return;
-    }
-
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        Api.Global.PolicyTypes.Update(policyType)
-        .then(() => {
-            goBack();
-        })
-        .then(() => {
-            Api.Global.PolicyTypes.Read(dispatch)
-        });
+        await Api.Global.PolicyTypes.Update(policyType);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
+
+    if (!policyType) {
+        setPolicyType(state.Entities.PolicyTypes.find(o => o.Id === policyTypeId))
+        return;
+    }
 
     return (
         <PolicyTypeDialog policyType      = {policyType}

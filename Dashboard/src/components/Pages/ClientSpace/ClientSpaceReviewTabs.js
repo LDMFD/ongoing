@@ -10,7 +10,6 @@ import { RouteMatch } from 'Utils/Routing';
 const ReviewTabs = ({ children }) => {
 
     let { reviewId } = useParams();
-    reviewId = parseInt(reviewId);
 
     const { pathname } = useLocation();
 

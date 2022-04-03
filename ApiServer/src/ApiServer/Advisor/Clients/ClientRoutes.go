@@ -32,9 +32,12 @@ func AddRoutes(r *gin.RouterGroup) {
 	policyFundGroup.PUT("/:PolicyFundId", PolicyFunds.UpdatePolicyFund)
 	policyFundGroup.DELETE("/:PolicyFundId", PolicyFunds.DeletePolicyFund)
 
+	moduleGroup := r.Group("/:ClientId/modules")
+	moduleGroup.PUT("/:Module", Reviews.UpdateReviewModule)
+	moduleGroup.DELETE("/:Module/field/:Field", Reviews.DeleteReviewModule)
+
 	reviewGroup := r.Group("/:ClientId/reviews")
 	reviewGroup.POST("", Reviews.CreateReview)
 	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
-	reviewGroup.PUT("/:ReviewId/module/:Module", Reviews.UpdateReviewModule)
-	reviewGroup.DELETE("/:ReviewId/module/:Module/field/:Field", Reviews.DeleteReviewModule)
+	reviewGroup.POST("/:ReviewId/publish", Reviews.Publish)
 }

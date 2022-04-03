@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { POPULATE_CLIENT } from 'State/Reducer';
 import PolicyFundDialog from './PolicyFundDialog';
 import { GoBack } from 'Utils/Routing';
+import { Api } from 'State';
 
 const EditPolicyFund = () => {
     let history = useHistory();
@@ -14,29 +14,22 @@ const EditPolicyFund = () => {
     let [ policyFund, setPolicyFund ] = useState(null);
 
     let { policyFundId } = useParams();
-    policyFundId = parseInt(policyFundId);
     
     let client = state.ClientContext;
     
     if (!policyFund) {
-        setPolicyFund(client.PolicyFunds.find(h => h.Id === policyFundId))
+        setPolicyFund(state.Report.PolicyFunds.find(h => h.Id === policyFundId))
         return;
     }
-    const submitHandler = (e) => {
+
+    const submitHandler = async (e) => {
         e.preventDefault();
-        if (policyFund.Proportion === '') {
-            policyFund.Proportion = 1;
-        }
-        window.ApiClient.put(`advisor/clients/${client.Id}/policy-funds/${policyFundId}`, {
-            ...policyFund
-        }).then(_ => {
-            return window.ApiClient.get(`advisor/clients/${client.Id}`).then(res => {
-                dispatch({
-                    type: POPULATE_CLIENT,
-                    payload: res.data,
-                })
-            }).then(goBack);;
-        });
+        // if (policyFund.Proportion === '') {
+        //     policyFund.Proportion = 1;
+        // }
+        await Api.Clients.PolicyFunds.Update(client.Id, policyFund);
+        await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+        goBack();
         return false;
     };
 

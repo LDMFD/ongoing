@@ -9,8 +9,8 @@ import (
 )
 
 type DeleteReviewRequestPath struct {
-	ClientId int64 `binding:"required"`
-	ReviewId int64 `binding:"required"`
+	ClientId string `binding:"required"`
+	ReviewId string `binding:"required"`
 }
 
 func DeleteReview(c *gin.Context) {
@@ -22,16 +22,17 @@ func DeleteReview(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var review = Entities.Review{Id: path.ReviewId}
+	var review = Entities.Review{}
 	if err := db.NewSelect().
 		Model(&review).
-		WherePK().
+		Where("uid = ?", path.ReviewId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if review.ClientId != path.ClientId {
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if review.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Review does not belong to client"})
 		return
 	}

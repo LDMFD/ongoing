@@ -16,7 +16,7 @@ const OperatorList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getOperators = useCallback(() => {
-        Api.Global.Operators.Read(dispatch)
+        Api.Global.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const OperatorList = () => {
         if (window.confirm(`Delete operator?`)) {
             window.ApiClient.delete(`advisor/operators/${params.row.id}`)
             .then(async () => {
-                await Api.Global.Operators.Read(dispatch);
+                await Api.Global.Entities.Read(dispatch);
             });
         }        
     }, [ dispatch ]);
@@ -52,7 +52,7 @@ const OperatorList = () => {
         },
     ];
 
-    let operators = state.Operators.map(p => {
+    let operators = state.Entities.Operators.map(p => {
         return {
             id:       p.Id,
             name:     p.Name,

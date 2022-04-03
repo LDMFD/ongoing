@@ -19,7 +19,7 @@ import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
 
 const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
-        let history = useHistory();
+    let history = useHistory();
     let goBack = GoBack(history);
 
     const [ state, ] = useContext(Context);
@@ -30,8 +30,8 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
         SetMonthlies:    (event) => { setPolicy({ ...policy, MonthlyContributions: parseInt(event.target.value), }); },
         SetStartValue:   (event) => { setPolicy({ ...policy, StartValue:           parseInt(event.target.value), }); },
         SetEndValue:     (event) => { setPolicy({ ...policy, EndValue:             parseInt(event.target.value), }); },
-        SetPolicyTypeId: (event) => { setPolicy({ ...policy, PolicyTypeId:         parseInt(event.target.value), }); },
-        SetProviderId:   (event) => { setPolicy({ ...policy, PolicyProviderId:     parseInt(event.target.value), }); },
+        SetPolicyTypeId: (event) => { setPolicy({ ...policy, PolicyTypeId:         event.target.value, }); },
+        SetProviderId:   (event) => { setPolicy({ ...policy, PolicyProviderId:     event.target.value, }); },
         SetNotes:        (html) => { setPolicy({ ...policy,  Notes:                html, }); },
     };
 
@@ -94,8 +94,8 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                 label    = "Type"
                                 type     = "text"
                                 fullWidth>
-                            <MenuItem value='select'>Select policy</MenuItem>
-                            {state.PolicyTypes.map(t => (
+                            <MenuItem value='select'>Select policy type</MenuItem>
+                            {state.Entities.PolicyTypes.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>
@@ -115,7 +115,7 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select provider</MenuItem>
-                            {state.PolicyProviders.map(t => (
+                            {state.Entities.PolicyProviders.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>
@@ -123,7 +123,7 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                         </Select>
                     </FormControl>
 
-                    <RichTextEditor initialValue = {policy.Notes}
+                    <RichTextEditor initialValue = {policy.Notes || ''}
                                     onChange     = {handlers.SetNotes} />
 
                 </DialogContent>

@@ -5,13 +5,16 @@ import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleType
 import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
 import { Context } from 'State';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);
     let client = state.ClientContext;
 
+    let report = GetReport();
+    
     let policies = [];
-    client.Policies.forEach(p => {
+    report.Policies.forEach(p => {
         if (!policies.some(pol => pol.Id === p.Id)) {
             policies.push({
                 id:               p.Id,
@@ -34,8 +37,7 @@ const AdviceFees = () => {
     return (
         <>
             <br />
-            <ModuleWrapper client={client}
-                           module={ModuleTypeAdviceFee} />
+            <ModuleWrapper module={ModuleTypeAdviceFee} />
 
             <p>
                 Advice fee: {client.Fee * 100}%

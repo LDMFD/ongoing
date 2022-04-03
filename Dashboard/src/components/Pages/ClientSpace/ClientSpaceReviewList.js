@@ -9,8 +9,6 @@ const ReviewList = () => {
     let history = useHistory();
     const [ state, ] = useContext(Context);
 
-    let client = state.ClientContext;
-
     const onEdit = useCallback(params => () => {
         history.push(`/client-space/reviews/${params.row.id}/modules/introduction`);
     }, [ history ]);
@@ -29,12 +27,12 @@ const ReviewList = () => {
         },
     ];
 
-    let reviews = client.Reviews.map(review => {
+    let reviews = state.Reviews.map(review => {
         return {
             id:         review.Id,
             idLabel:    `#${review.Id}`,
-            date:       review.Timestamp,
-            state:      review.State,
+            date:       review.Meta.FinalizedDate,
+            state:      review.Meta.State,
         };
     });
 

@@ -28,7 +28,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
         EditName:              (event) => { setModel({ ...model, Name:              event.target.value }); },
         EditWeightedOcfFee:    (event) => { setModel({ ...model, WeightedOcfFee:    parseFloat(event.target.value) }); },
         EditWeightedExAnteFee: (event) => { setModel({ ...model, WeightedExAnteFee: parseFloat(event.target.value) }); },
-        SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        parseInt(event.target.value), }); },
+        SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        event.target.value, }); },
     };
     
     const download = (uid) => {
@@ -76,7 +76,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select operator</MenuItem>
-                        {state.Operators.map(t => (
+                        {state.Entities.Operators.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>

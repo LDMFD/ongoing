@@ -12,13 +12,17 @@ import { Context } from 'State/StateProvider'
 
 import './PolicyList.css';
 import { Api } from 'State';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const PolicyList = () => {
     let history = useHistory();
 
     const [state, dispatch ] = useContext(Context);
+    let {
+        ClientContext: client,
+    } = state;
 
-    let client = state.ClientContext;
+    let report = GetReport();
 
     const deletePolicy = useCallback(params => async () => {
         if (window.confirm(`Delete policy?`)) {
@@ -52,9 +56,9 @@ const PolicyList = () => {
         },
     ];
 
-    let policies = client.Policies.map(policy => {
-        let type = state.PolicyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
-        let provider = state.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
+    let policies = report.Policies.map(policy => {
+        let type = report.PolicyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
+        let provider = report.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
         return {
             id:               policy.Id,
             policyNumber:     policy.ExternalId,
@@ -76,7 +80,7 @@ const PolicyList = () => {
     return (
         <div className='ongoing-policyList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/policies/add` }}><Button>Add policy</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/policies/add` }}><Button>Add policy</Button></Link>
             </Toolbar>
 
             <DataGrid autoHeight {...data} />

@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateOperatorRequestPath struct {
-	OperatorId int64 `binding:"required"`
+	OperatorId string `binding:"required"`
 }
 
 type UpdateOperatorRequestBody struct {
@@ -35,12 +35,11 @@ func UpdateOperator(c *gin.Context) {
 	}
 
 	var operator = Entities.Operator{
-		Id:        path.OperatorId,
 		Type:      body.Type,
 		Name:      body.Name,
 		Fee:       body.Fee,
 	}
-	if _, err := db.NewUpdate().Model(&operator).WherePK().
+	if _, err := db.NewUpdate().Model(&operator).Where("uid = ?", path.OperatorId).
 		Column("type").
 		Column("name").
 		Column("fee").Exec(c); err != nil {

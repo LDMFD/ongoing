@@ -10,13 +10,12 @@ import { RouteMatch } from 'Utils/Routing';
 const ReviewTabs = ({ children }) => {
 
     let { clientId, reviewId } = useParams();
-    clientId = parseInt(clientId);
-    reviewId = parseInt(reviewId);
 
     const { pathname } = useLocation();
 
     function ReviewTabs() {
         let routeMatch = RouteMatch(pathname, [
+            '/clients/id/:clientId/reviews/id/:reviewId/modules/state',
             '/clients/id/:clientId/reviews/id/:reviewId/modules/introduction',
             '/clients/id/:clientId/reviews/id/:reviewId/modules/profile',
             '/clients/id/:clientId/reviews/id/:reviewId/modules/policy-valuations',
@@ -31,6 +30,7 @@ const ReviewTabs = ({ children }) => {
 
         return (
             <Tabs value={currentTab}>
+                {/* <Tab label="Publish state"     value={`${basePath}/state`}             to={`${baseTarget}/state`}             component={Link} /> */}
                 <Tab label="Introduction"      value={`${basePath}/introduction`}      to={`${baseTarget}/introduction`}      component={Link} />
                 <Tab label="Profile"           value={`${basePath}/profile`}           to={`${baseTarget}/profile`}           component={Link} />
                 <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`} component={Link} />

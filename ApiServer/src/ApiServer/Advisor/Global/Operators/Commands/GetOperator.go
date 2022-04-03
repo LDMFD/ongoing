@@ -10,7 +10,7 @@ import (
 )
 
 type GetOperatorRequestPath struct {
-	OperatorId int64 `binding:"required"`
+	OperatorId string `binding:"required"`
 }
 
 func GetOperator(c *gin.Context) {
@@ -22,10 +22,10 @@ func GetOperator(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var operator = Entities.Operator{Id: path.OperatorId}
+	var operator = Entities.Operator{}
 	if err := db.NewSelect().
 		Model(&operator).
-		WherePK().
+		Where("uid = ?", path.OperatorId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

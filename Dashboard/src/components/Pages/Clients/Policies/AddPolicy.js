@@ -15,7 +15,6 @@ const AddPolicy = () => {
     let [ policy, setPolicy ] = useState(DefaultPolicy);
 
     let { clientId } = useParams();
-    clientId = parseInt(clientId);
 
     const submitHandler = async (e) => {
         e.preventDefault();

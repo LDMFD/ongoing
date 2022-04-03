@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateClientRequestPath struct {
-	ClientId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 }
 
 type UpdateClientRequestBody struct {
@@ -34,11 +34,10 @@ func UpdateClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var client = Entities.Client{
-		Id:        path.ClientId,
-		Forenames: body.Forenames,
-		Surname:   body.Surname,
-	}
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	client.Forenames = body.Forenames
+	client.Surname = body.Surname
+
 	if _, err := db.NewUpdate().Model(&client).WherePK().
 		Column("forenames").
 		Column("surname").

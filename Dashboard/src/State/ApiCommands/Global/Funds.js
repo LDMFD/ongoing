@@ -1,25 +1,12 @@
-import {
-    SET_FUNDS
-} from "State/Reducer";
-
 const Create = (funds) => {
     return window.ApiClient.post(`advisor/funds`, {
         ...funds,
     });
 }
 
-const Read = (dispatch) => {
-    return window.ApiClient.get(`advisor/funds`).then(res => {
-        dispatch({
-            type: SET_FUNDS,
-            payload: res.data,
-        });
-    });
-}
-
-const Update = (funds) => {
-    return window.ApiClient.put(`advisor/funds/${funds.Id}`, {
-        ...funds
+const Update = (fund) => {
+    return window.ApiClient.put(`advisor/funds/${fund.Id}`, {
+        ...fund
     })
 }
 
@@ -29,7 +16,6 @@ const Delete = (fundId) => {
 
 const defaults = {
     Create,
-    Read,
     Update,
     Delete,
 };

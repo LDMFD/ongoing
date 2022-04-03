@@ -2,10 +2,10 @@ import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
-import { SET_MODELS } from 'State/Reducer';
 import { DefaultModel } from './DefaultModel';
 import ModelDialog from './ModelDialog';
 import { GoBack } from 'Utils/Routing';
+import { Api } from 'State';
 
 const AddModel = () => {
     let history = useHistory();
@@ -15,23 +15,12 @@ const AddModel = () => {
 
     let [ model, setModel ] = useState(DefaultModel);
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.post("advisor/models", {
-            ...model,
-            FileUid: model?.File?.Uid,
-        })
-        .then(() => {
-            goBack();
-        })
-        .then(_ => {
-            window.ApiClient.get("advisor/models").then(res => {
-                dispatch({
-                    type: SET_MODELS,
-                    payload: res.data,
-                })
-            })
-        });
+        await Api.Global.Models.Create(model);
+        // TODO FileUid: model?.File?.Uid,
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
 

@@ -12,7 +12,7 @@ import (
 )
 
 type DeletePolicyProviderRequestPath struct {
-	PolicyProviderId int64 `binding:"required"`
+	PolicyProviderId string `binding:"required"`
 }
 
 func DeletePolicyProvider(c *gin.Context) {
@@ -24,12 +24,12 @@ func DeletePolicyProvider(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var policyProvider = Entities.PolicyProvider{Id: path.PolicyProviderId}
+	var policyProvider = Entities.PolicyProvider{}
 	if err := db.NewSelect().
 		Model(&policyProvider).
 		Relation("Policies").
 		Relation("Policies.Client").
-		WherePK().
+		Where("uid = ?", path.PolicyProviderId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

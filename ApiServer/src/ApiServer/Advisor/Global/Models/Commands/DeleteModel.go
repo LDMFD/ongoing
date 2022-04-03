@@ -13,7 +13,7 @@ import (
 )
 
 type DeleteModelRequestPath struct {
-	ModelId int64 `binding:"required"`
+	ModelId string `binding:"required"`
 }
 
 func DeleteModel(c *gin.Context) {
@@ -25,12 +25,12 @@ func DeleteModel(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var model = Entities.Model{Id: path.ModelId}
+	var model = Entities.Model{}
 	if err := db.NewSelect().
 		Model(&model).
 		Relation("Portfolios").
 		Relation("Portfolios.Client").
-		WherePK().
+		Where("uid = ?", path.ModelId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

@@ -15,7 +15,7 @@ const PolicyProviderList = () => {
     const [ state, dispatch] = useContext(Context);
 
     const getPolicyProviders = useCallback(() => {
-        Api.Global.PolicyProviders.Read(dispatch)
+        Api.Global.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const PolicyProviderList = () => {
         if (window.confirm(`Delete policy provider?`)) {
             window.ApiClient.delete(`advisor/policy-providers/${params.row.id}`)
             .then(async () => {
-                await Api.Global.PolicyProviders.Read(dispatch);
+                await Api.Global.Entities.Read(dispatch);
             });
         }        
     }, [ dispatch ]);
@@ -50,7 +50,7 @@ const PolicyProviderList = () => {
         },
     ];
 
-    let policyProviders = state.PolicyProviders.map(p => {
+    let policyProviders = state.Entities.PolicyProviders.map(p => {
         return {
             id:       p.Id,
             name:     p.Name,

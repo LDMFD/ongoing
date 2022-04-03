@@ -1,4 +1,4 @@
-import React, { useContext  } from 'react';
+import React from 'react';
 import {
     Paper,
 } from '@mui/material';
@@ -7,7 +7,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
-import { Context } from 'State';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const PolicyPortfolios = ({ policy, portfolios }) => {
     const columns = [
@@ -55,12 +55,11 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
 }
 
 const PortfolioLevelFees = () => {
-    const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let report = GetReport();
 
-    let portfolios = client.Portfolios.map(portfolio => {
-        let policy = client.Policies.find(p => p.Id === portfolio.PolicyId);
-        let model = portfolio.Model;
+    let portfolios = report.Portfolios.map(portfolio => {
+        let policy = report.Policies.find(p => p.Id === portfolio.PolicyId);
+        let model = report.Models.find(m => m.Id === portfolio.ModelId);
 
         let ocfPercent    = (model.WeightedOcfFee).toPrecision(2);
         let exAntePercent = (model.WeightedExAnteFee).toPrecision(2);
@@ -88,10 +87,9 @@ const PortfolioLevelFees = () => {
 
     return (
         <>
-            <ModuleWrapper client={client}
-                           module={ModuleTypePortfolioLevelFees} />
+            <ModuleWrapper module={ModuleTypePortfolioLevelFees} />
 
-            {client.Policies.map(p => 
+            {report.Policies.map(p => 
                 <PolicyPortfolios policy={p} portfolios={portfolios} key={p.Id} />
             )}
         </>

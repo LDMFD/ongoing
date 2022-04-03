@@ -12,7 +12,7 @@ import (
 )
 
 type DeletePolicyTypeRequestPath struct {
-	PolicyTypeId int64 `binding:"required"`
+	PolicyTypeId string `binding:"required"`
 }
 
 func DeletePolicyType(c *gin.Context) {
@@ -24,12 +24,12 @@ func DeletePolicyType(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var policyType = Entities.PolicyType{Id: path.PolicyTypeId}
+	var policyType = Entities.PolicyType{}
 	if err := db.NewSelect().
 		Model(&policyType).
 		Relation("Policies").
 		Relation("Policies.Client").
-		WherePK().
+		Where("uid = ?", path.PolicyTypeId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

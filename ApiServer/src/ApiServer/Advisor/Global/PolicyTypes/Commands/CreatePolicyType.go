@@ -28,7 +28,8 @@ func CreatePolicyType(c *gin.Context) {
 	}
 
 	var policyType = Entities.PolicyType{
-		Name: req.Name,
+		Uid:       uid,
+		Name:      req.Name,
 	}
 	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -1,14 +1,13 @@
 import React from 'react';
-import { useParams } from "react-router-dom";
 
 import FeeRoutesBase from 'components/ReviewComponents/Fees/FeeRoutesBase';
+import { GetReport } from 'components/ReviewComponents/GetReport';
 
 const FeeRoutes = () => {
-    let { reviewId } = useParams();
-    reviewId = parseInt(reviewId);
+    let report = GetReport();
 
     let basePath = '/client-space/reviews/:reviewId/modules/:module';
-    let baseTarget = `/client-space/reviews/${reviewId}/modules/fees`;
+    let baseTarget = `/client-space/reviews/${report.Id}/modules/fees`;
 
     return (
         <FeeRoutesBase basePath   = {basePath}

@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateModelRequestPath struct {
-	ModelId int64 `binding:"required"`
+	ModelId string `binding:"required"`
 }
 
 func UpdateModel(c *gin.Context) {
@@ -41,15 +41,23 @@ func UpdateModel(c *gin.Context) {
 		fileId = &file.Id
 	}
 
+	var operator = Entities.Operator{}
+	if err := db.NewSelect().
+		Model(&operator).
+		Where("uid = ?", body.OperatorId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
 	var model = Entities.Model{
-		Id:                path.ModelId,
 		Name:              body.Name,
-		OperatorId:        body.OperatorId,
+		OperatorId:        operator.Id,
 		WeightedOcfFee:    body.WeightedOcfFee,
 		WeightedExAnteFee: body.WeightedExAnteFee,
 		FileId:            fileId,
 	}
-	if _, err := db.NewUpdate().Model(&model).WherePK().
+	if _, err := db.NewUpdate().Model(&model).Where("uid = ?", path.ModelId).
 		Column("name").
 		Column("operator_id").
 		Column("weighted_ocf_fee").

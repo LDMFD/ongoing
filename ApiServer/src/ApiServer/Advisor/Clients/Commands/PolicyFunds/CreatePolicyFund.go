@@ -1,15 +1,17 @@
 package PolicyFunds
 
 import (
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 type CreatePolicyFundRequestPath struct {
-	ClientId int64 `binding:"required"`
+	ClientId string `binding:"required"`
 }
 
 func CreatePolicyFund(c *gin.Context) {
@@ -27,10 +29,34 @@ func CreatePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	uid := uuid.NewString()
+	uid = strings.ReplaceAll(uid, "-", "")
+
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+
+	var policy = Entities.Policy{}
+	if err := db.NewSelect().
+		Model(&policy).
+		Where("uid = ?", body.PolicyId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	var fund = Entities.Fund{}
+	if err := db.NewSelect().
+		Model(&fund).
+		Where("uid = ?", body.FundId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
 	var policyFund = Entities.PolicyFund{
-		ClientId:   path.ClientId,
-		FundId:     body.FundId,
-		PolicyId:   body.PolicyId,
+		Uid:        uid,
+		ClientId:   client.Id,
+		FundId:     fund.Id,
+		PolicyId:   policy.Id,
 		Proportion: body.Proportion,
 	}
 	if _, err := db.NewInsert().Model(&policyFund).Exec(c); err != nil {
@@ -41,3 +67,4 @@ func CreatePolicyFund(c *gin.Context) {
 		"PolicyFund": policyFund,
 	})
 }
+

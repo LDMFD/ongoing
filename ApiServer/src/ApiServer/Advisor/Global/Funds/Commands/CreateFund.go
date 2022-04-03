@@ -20,16 +20,17 @@ type CreateOrUpdateFundRequestBody struct {
 func CreateFund(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
 	var body CreateOrUpdateFundRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
+	uid := uuid.NewString()
+	uid = strings.ReplaceAll(uid, "-", "")
+
 	var fund = Entities.Fund{
+		Uid:       uid,
 		Name:      body.Name,
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,

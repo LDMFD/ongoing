@@ -2,9 +2,9 @@ import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { Context } from 'State/StateProvider'
-import { SET_MODELS } from 'State/Reducer';
 import ModelDialog from './ModelDialog';
 import { GoBack } from 'Utils/Routing';
+import { Api } from 'State';
 
 const EditModel = () => {
     let history = useHistory();
@@ -14,34 +14,18 @@ const EditModel = () => {
     let [ model, setModel ] = useState(null);
 
     let { modelId } = useParams();
-    modelId = parseInt(modelId);
 
     if (!model) {
-        let p = state.Models.find(p => p.Id === modelId);
-        if (!p) {
-            return <>Model not found</>;
-        }
+        let p = state.Entities.Models.find(p => p.Id === modelId);
         setModel(p)
         return;
     }
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        window.ApiClient.put(`advisor/models/${model.Id}`, {
-            ...model,
-            FileUid: model?.File?.Uid,
-        })
-        .then(() => {
-            goBack();
-        })
-        .then(_ => {
-            window.ApiClient.get("advisor/models").then(res => {
-                dispatch({
-                    type: SET_MODELS,
-                    payload: res.data,
-                })
-            })
-        });
+        await Api.Global.Models.Update(model);
+        await Api.Global.Entities.Read(dispatch);
+        goBack();
         return false;
     };
 

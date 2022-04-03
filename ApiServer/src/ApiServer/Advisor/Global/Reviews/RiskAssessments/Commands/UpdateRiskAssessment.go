@@ -10,7 +10,7 @@ import (
 )
 
 type UpdateRiskAssessmentRequestPath struct {
-	RiskAssessmentId int64 `binding:"required"`
+	RiskAssessmentId string `binding:"required"`
 }
 
 func UpdateRiskAssessment(c *gin.Context) {
@@ -29,11 +29,10 @@ func UpdateRiskAssessment(c *gin.Context) {
 	}
 
 	var riskAssessment = Entities.RiskAssessment{
-		Id:    path.RiskAssessmentId,
 		//Label: body.Label,
 		//Text:  body.Text,
 	}
-	if _, err := db.NewUpdate().Model(&riskAssessment).WherePK().
+	if _, err := db.NewUpdate().Model(&riskAssessment).Where("uid = ?", path.RiskAssessmentId).
 		Column("label").
 		Column("text").
 		Exec(c); err != nil {
