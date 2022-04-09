@@ -1,2 +1,2 @@
 env-import:
-	$(eval ENV        := $(shell cat ~/.env))
+	$(eval ENV := $(shell cat ~/.env))

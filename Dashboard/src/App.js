@@ -11,8 +11,17 @@ import StateProvider from 'State/StateProvider'
 
 import './App.css';
 
-export const ONGOING_DASHBOARD_URL = 'http://ongoing.tp1.org:3000';
-const ONGOING_API_URL = 'http://api.ongoing.localhost:8000';
+// API server
+export const ONGOING_API_URL = process.env.NODE_ENV !== 'production'
+    ? 'http://localhost:8000'
+    : 'https://ong-api.tp1.org';
+
+// Link to embed in email links
+export const ONGOING_DASHBOARD_URL = process.env.NODE_ENV !== 'production'
+    ? 'http://localhost.ongoing.tp1.org:3000'
+    : 'http://ongoing.tp1.org';
+
+console.log(`ONGOING_API_URL: ${ONGOING_API_URL}`);
 
 window.ApiClient = axios.create({
     baseURL: `${ONGOING_API_URL}`,

@@ -1,4 +1,4 @@
-FROM golang:1.17 AS deps
+FROM golang:1.17-alpine AS deps
 
 WORKDIR /go/src
 
@@ -16,7 +16,7 @@ COPY --from=deps /go /go
 ADD src /go/src
 RUN go build
 
-
 FROM builder AS runtime
 COPY --from=builder /go/src/ongoing /go/bin
+
 CMD /go/bin/ongoing

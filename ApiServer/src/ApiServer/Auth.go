@@ -10,6 +10,8 @@ import (
 	"ongoing/Entities"
 )
 
+const OFFLINE_AUTH = false
+
 func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
@@ -27,7 +29,7 @@ func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 			exists bool
 		)
 
-		if jwt[len(jwt)-8:] == "@tp1.org" {
+		if OFFLINE_AUTH && jwt[len(jwt)-8:] == "@tp1.org" {
 			email = jwt
 		} else {
 			if app, err = firebase.NewApp(context.Background(), nil); err != nil {

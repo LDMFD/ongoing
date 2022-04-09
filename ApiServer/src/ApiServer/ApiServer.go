@@ -43,7 +43,10 @@ func (s *ApiServer) ListenAndServe() error {
 	r.SetTrustedProxies(nil)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:     []string{ "http://ongoing.tp1.org:3000", "http://localhost:3000" },
+		AllowedOrigins:     []string{
+			"https://ongoing.tp1.org",
+			"http://localhost.ongoing.tp1.org:3000",
+		},
 		AllowedMethods:     []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
 		AllowedHeaders:     []string{"Authentication", "Content-Type"},
 

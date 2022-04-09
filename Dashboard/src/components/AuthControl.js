@@ -7,6 +7,7 @@ import {
 import { Context } from 'State/StateProvider';
 import { Logout, ShowLogin } from 'Auth';
 import { LOGOUT } from 'State/Reducer';
+import { ONGOING_API_URL } from "App";
 
 // Keep in sync with ApiServer/src/ApiServer/Auth.go
 export const UserType = {
@@ -40,7 +41,7 @@ function AuthControl() {
         window.ApiClient.defaults.headers.common['Authentication'] = token;
 
         window.ApiClient.get(`/common/user`, {
-            baseURL: 'http://api.ongoing.localhost:8000',
+            baseURL: ONGOING_API_URL,
         }).then(res => {
             dispatch({
                 type: 'LOGIN',

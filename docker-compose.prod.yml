@@ -1,0 +1,26 @@
+version: '3'
+
+volumes:
+  node_modules_prod:
+
+services:
+  dash-builder:
+    container_name: ongoing-dash-builder
+    build:
+      context: ./Dashboard
+      dockerfile: Builder.Dockerfile
+    volumes:
+      - ./Dashboard:/app
+      - "node_modules_prod:/app/node_modules"
+      - "./Dashboard/build:/app/build"
+
+  dash-server:
+    container_name: ongoing-dash-server
+    build:
+      context: ./DashboardServer
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./DashboardServer:/app
