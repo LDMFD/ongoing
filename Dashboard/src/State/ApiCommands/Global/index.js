@@ -4,6 +4,7 @@ import Models             from './Models';
 import Operators          from './Operators';
 import PolicyProviders    from './PolicyProviders';
 import PolicyTypes        from './PolicyTypes';
+import ProviderCharges    from './ProviderCharges';
 import RiskAssessments    from './Reviews/RiskAssessments';
 import ModulePresets      from './Reviews/ModulePresets';
 
@@ -14,6 +15,7 @@ const defaults = {
     Operators,
     PolicyProviders,
     PolicyTypes,
+    ProviderCharges,
     RiskAssessments,
     ModulePresets,
 };

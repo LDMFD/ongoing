@@ -17,7 +17,7 @@ up-api:
 	make push-image IMAGE=ongoing-api
 
 build-dashboard:
-	rm -r DashboardServer/build
+	rm -rf DashboardServer/build
 
 	# Build React app
 	docker-compose -f docker-compose.prod.yml build --no-cache dash-builder

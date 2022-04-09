@@ -12,6 +12,7 @@ type ReportDetail struct {
 	Modules         []ReportModule
 	PolicyTypes     []ReportPolicyType
 	PolicyProviders []ReportPolicyProvider
+	ProviderCharges []ReportProviderCharge
 	Policies        []ReportPolicy
 	Funds           []ReportFund
 	PolicyFunds     []ReportPolicyFund

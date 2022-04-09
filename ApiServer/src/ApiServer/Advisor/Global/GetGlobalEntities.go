@@ -13,6 +13,7 @@ type GlobalEntities struct {
 	Operators       []Entities.ReportOperator
 	PolicyProviders []Entities.ReportPolicyProvider
 	PolicyTypes     []Entities.ReportPolicyType
+	ProviderCharges []Entities.ReportProviderCharge
 	ModulePresets   []Entities.ReportModulePreset
 }
 
@@ -25,6 +26,7 @@ func GetGlobalEntities(c *gin.Context) {
 		Operators:       make([]Entities.ReportOperator, 0),
 		PolicyProviders: make([]Entities.ReportPolicyProvider, 0),
 		PolicyTypes:     make([]Entities.ReportPolicyType, 0),
+		ProviderCharges: make([]Entities.ReportProviderCharge, 0),
 		ModulePresets:   make([]Entities.ReportModulePreset, 0),
 	}
 
@@ -75,6 +77,19 @@ func GetGlobalEntities(c *gin.Context) {
 	}
 	for _, pp := range policyProviders {
 		entities.PolicyProviders = append(entities.PolicyProviders, pp.ToReport())
+	}
+
+	var providerCharges []Entities.ProviderCharge
+	if err := db.NewSelect().
+		Model(&providerCharges).
+		//OrderExpr("sequence ASC").  // TODO ordering (advisor to control)
+		Relation("PolicyProvider").
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+	for _, pc := range providerCharges {
+		entities.ProviderCharges = append(entities.ProviderCharges, pc.ToReport())
 	}
 
 	var policyTypes []Entities.PolicyType

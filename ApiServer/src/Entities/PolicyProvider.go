@@ -15,7 +15,8 @@ type PolicyProvider struct {
 	Pricing   string    `bun:"pricing,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Policies  []*Policy `bun:"rel:has-many,join:id=policy_provider_id"`
+	Policies []*Policy         `bun:"rel:has-many,join:id=policy_provider_id"`
+	Charges  []*ProviderCharge `bun:"rel:has-many,join:id=policy_provider_id"`
 }
 
 type ReportPolicyProvider struct {

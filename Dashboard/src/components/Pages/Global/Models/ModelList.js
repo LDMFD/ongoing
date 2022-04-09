@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
@@ -14,26 +14,15 @@ const ModelList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const getModels = useCallback(() => {
-        Api.Global.Entities.Read(dispatch)
-    }, [ dispatch ]);
-
-    useEffect(() => {
-        getModels();
-    }, [ getModels ]);
-    
-    const onDelete = useCallback(params => () => {
+    const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete model?`)) {
-            window.ApiClient.delete(`advisor/models/${params.row.id}`)
-            .then(async () => {
-                await Api.Global.Entities.Read(dispatch);
-            });
+            await window.ApiClient.delete(`advisor/models/${params.row.id}`)
+            await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
     const onEdit = useCallback(params => () => {
-        let id = params.row.id;
-        history.push(`/models/id/${id}/edit`);
+        history.push(`/models/id/${params.row.id}/edit`);
     }, [ history ]);
 
     const columns = [

@@ -38,11 +38,20 @@ const PlatformFees = () => {
 
     let ix = 0;
     let tableRows = rows.map(r => {
+
+        // Placeholder
+
+        let providerCharges = report.ProviderCharges
+            .filter(pc => pc.ProviderId === r.provider.Id)
+            .map(c => `${c.Desc} - ${c.Charge}`)
+
+        let pricing = r.provider.Pricing.replace('{{ charges }}', providerCharges.join('<br />'));
+
         return {
             id:       ix++,
             provider: r.provider.Name,
             policies: r.policies.map(p => p.ExternalId).join(', '),
-            pricing:  r.pricing,
+            pricing:  pricing,
         }
     });
 

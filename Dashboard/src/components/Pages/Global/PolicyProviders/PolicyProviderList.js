@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
@@ -14,20 +14,10 @@ const PolicyProviderList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const getPolicyProviders = useCallback(() => {
-        Api.Global.Entities.Read(dispatch)
-    }, [ dispatch ]);
-
-    useEffect(() => {
-        getPolicyProviders();
-    }, [ getPolicyProviders ]);
-    
-    const onDelete = useCallback(params => () => {
+    const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete policy provider?`)) {
-            window.ApiClient.delete(`advisor/policy-providers/${params.row.id}`)
-            .then(async () => {
-                await Api.Global.Entities.Read(dispatch);
-            });
+            await window.ApiClient.delete(`advisor/policy-providers/${params.row.id}`)
+            await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 

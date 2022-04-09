@@ -14,7 +14,7 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	var client = Entities.Client{Id: clientId}
 	if err := db.NewSelect().
 		Model(&client).
-		Relation("Policies.PolicyProvider").
+		Relation("Policies.PolicyProvider.Charges.PolicyProvider").
 		Relation("Policies.PolicyType").
 		Relation("PolicyFunds.Policy").
 		Relation("PolicyFunds.Fund.File").
@@ -42,7 +42,7 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 		report.Modules[ix] = m.ToReport()
 	}
 
-	// Policies, Policy Types, Policy Providers
+	// Policies, Policy Types, Policy Providers, Provider Charges
 	report.Policies = make([]Entities.ReportPolicy, 0)
 	var policyProviders = map[int64]*Entities.PolicyProvider{}
 	var policyTypes = map[int64]*Entities.PolicyType{}
@@ -51,7 +51,11 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 		policyProviders[pol.PolicyProviderId] = pol.PolicyProvider
 		policyTypes[pol.PolicyTypeId] = pol.PolicyType
 	}
+	report.ProviderCharges = make([]Entities.ReportProviderCharge, 0)
 	for _, p := range policyProviders {
+		for _, pc := range p.Charges {
+			report.ProviderCharges = append(report.ProviderCharges, pc.ToReport())
+		}
 		report.PolicyProviders = append(report.PolicyProviders, p.ToReport())
 	}
 	for _, p := range policyTypes {

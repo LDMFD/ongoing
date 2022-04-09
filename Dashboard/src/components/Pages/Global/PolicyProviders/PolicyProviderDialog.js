@@ -1,5 +1,5 @@
 import React, {  } from 'react';
-import { useHistory,  } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import {
     Button,
     Dialog,
@@ -50,6 +50,8 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                         
                         <RichTextEditor initialValue = {policyProvider.Pricing}
                                         onChange     = {handlers.SetPricing} />
+
+                        <Link to={{ pathname: `/policy-providers/id/${policyProvider.Id}/provider-charges` }}>Provider charges</Link>
 
                     </DialogContent>
                     <DialogActions>

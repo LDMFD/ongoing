@@ -38,6 +38,16 @@ CREATE TABLE policy_providers (
     "timestamp"               timestamp default current_timestamp
 );
 
+CREATE TABLE provider_charges (
+    "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
+    "policy_provider_id"      int not null,
+    "desc"                    text not null,
+    "charge"                  decimal not null,
+    "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_policy_provider FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE RESTRICT
+);
+
 CREATE TYPE operator_type AS ENUM (
     'dim',
     'firm',
