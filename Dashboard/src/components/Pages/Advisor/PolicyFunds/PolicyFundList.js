@@ -9,9 +9,9 @@ import {
 } from '@mui/material';
 
 import { Context, Api } from 'State'
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
-const PortfolioList = () => {
+const PolicyFundList = () => {
     let history = useHistory();
 
     const [state, dispatch ] = useContext(Context);
@@ -21,60 +21,60 @@ const PortfolioList = () => {
 
     let report = GetReport();
 
-    const deletePortfolio = useCallback(params => async () => {
-        if (window.confirm(`Delete portfolio?`)) {
-            await Api.Clients.Portfolios.Delete(client.Id, params.row.id);
+    const deletePolicyFund = useCallback(params => async () => {
+        if (window.confirm(`Delete policy fund?`)) {
+            await Api.Clients.PolicyFunds.Delete(client.Id, params.row.id);
             await Api.Clients.ClientDetail.Read(dispatch, client.Id);
         }        
     }, [ dispatch, client.Id ]);
 
-    const editPortfolio = useCallback(params => () => {
+    const editPolicyFund = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/clients/id/${client.Id}/portfolios/id/${id}/edit`);
+        history.push(`/clients/id/${client.Id}/policy-funds/id/${id}/edit`);
     }, [ history, client.Id ]);
 
     const columns = [
         { field: 'idLabel',    headerName: 'ID',          flex: 0.1, },
         { field: 'policy',     headerName: 'Policy',      flex: 0.1, },
-        { field: 'model',      headerName: 'Model',       flex: 0.1, },
+        { field: 'fund',       headerName: 'Fund',       flex: 0.1, },
         { field: 'proportion', headerName: 'Proportion',  flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
             flex: .05,
             getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={editPortfolio(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={deletePortfolio(params)} label="Delete" />,
+                <GridActionsCellItem icon={<EditIcon />}   onClick={editPolicyFund(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />} onClick={deletePolicyFund(params)} label="Delete" />,
             ]
         },
     ];
 
-    let portfolios = report.Portfolios.map(portfolio => {
-        let policy = report.Policies.find(p => p.Id === portfolio.PolicyId).ExternalId;
-        let model = report.Models.find(p => p.Id === portfolio.ModelId).Name;
+    let policyFunds = report.PolicyFunds.map(policyFund => {
+        let policy = report.Policies.find(p => p.Id === policyFund.PolicyId).ExternalId;
+        let fund = report.Funds.find(p => p.Id === policyFund.FundId).Name;
         return {
-            id:         portfolio.Id,
-            idLabel:    `#${portfolio.Id}`,
+            id:         policyFund.Id,
+            idLabel:    `#${policyFund.Id}`,
             policy,
-            model,
-            proportion: portfolio.Proportion,
+            fund,
+            proportion: policyFund.Proportion,
         };
     });
 
     let data = {
-        rows: portfolios,
+        rows: policyFunds,
         columns: columns,
     }
 
     return (
-        <div className='ongoing-portfolioList'>
+        <>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/portfolios/add` }}><Button>Add portfolio</Button></Link>
+                <Link to={{ pathname: `/clients/id/${client.Id}/policy-funds/add` }}><Button>Add policy fund</Button></Link>
             </Toolbar>
 
             <DataGrid autoHeight {...data} />
-        </div>
+        </>
     );
 }
 
-export default PortfolioList;
+export default PolicyFundList;

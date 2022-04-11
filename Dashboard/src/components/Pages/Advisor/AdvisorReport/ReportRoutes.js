@@ -3,10 +3,10 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ReportTabs from './ReportTabs';
 
-import Conclusions from 'components/ReviewComponents/Conclusions';
-import Introduction from 'components/ReviewComponents/Introduction';
-import Profile from 'components/ReviewComponents/Profile';
-import PolicyValuations from 'components/ReviewComponents/PolicyValuations';
+import Conclusions from 'Components/ReviewComponents/Conclusions';
+import Introduction from 'Components/ReviewComponents/Introduction';
+import Profile from 'Components/ReviewComponents/Profile';
+import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
 import { EditModuleText } from '../Reviews/Modules/ModuleEditor';
 import ReportFeeRoutes from './ReportFeeRoutes';
 

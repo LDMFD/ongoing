@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { ModuleTypeConclusions } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { Context } from 'State';
 

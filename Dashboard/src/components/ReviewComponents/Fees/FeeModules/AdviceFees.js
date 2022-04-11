@@ -3,9 +3,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 
 import { CurrencyFormatter } from 'Utils/Strings';
-import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { Context } from 'State';
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);

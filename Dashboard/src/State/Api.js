@@ -1,4 +1,4 @@
-import Clients from './ApiCommands/Clients';
+import Clients from './ApiCommands/Advisor';
 import Global from './ApiCommands/Global';
 import ClientSpace from './ApiCommands/ClientSpace';
 

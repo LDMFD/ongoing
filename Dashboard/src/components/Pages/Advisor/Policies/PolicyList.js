@@ -12,7 +12,7 @@ import { Context } from 'State/StateProvider'
 
 import './PolicyList.css';
 import { Api } from 'State';
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const PolicyList = () => {
     let history = useHistory();

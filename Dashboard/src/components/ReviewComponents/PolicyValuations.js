@@ -2,7 +2,7 @@ import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 
 import { ModuleTypePolicyValuations } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetReport } from './GetReport';
 

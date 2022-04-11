@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Context,  } from 'State'
-import { Module } from 'components/Pages/ClientSpace/Modules/Module';
+import { Module } from 'Components/Pages/ClientSpace/Modules/Module';
 import { ModuleEditor } from './ModuleEditor';
 
 const ModuleWrapper = ({ client, module }) => {

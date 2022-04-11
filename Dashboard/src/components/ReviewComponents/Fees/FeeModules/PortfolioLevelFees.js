@@ -6,8 +6,8 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
-import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const PolicyPortfolios = ({ policy, portfolios }) => {
     const columns = [

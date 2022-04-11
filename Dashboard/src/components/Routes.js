@@ -1,6 +1,6 @@
 import { Switch, Route } from "react-router-dom";
 
-import ClientRoutes         from './Pages/Clients/ClientRoutes';
+import ClientRoutes         from './Pages/Advisor/AdvisorRoutes';
 import OperatorRoutes       from './Pages/Global/Operators/OperatorRoutes';
 import FundRoutes           from './Pages/Global/Funds/FundRoutes';
 import ModelRoutes          from './Pages/Global/Models/ModelRoutes';

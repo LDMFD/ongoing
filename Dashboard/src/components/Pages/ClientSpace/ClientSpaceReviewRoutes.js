@@ -4,10 +4,10 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import ClientSpaceReviewTabs from './ClientSpaceReviewTabs';
 
 import FeeRoutes from './ClientSpaceFeeRoutes';
-import Introduction from 'components/ReviewComponents/Introduction';
-import PolicyValuations from 'components/ReviewComponents/PolicyValuations';
-import Profile from 'components/ReviewComponents/Profile';
-import Conclusions from 'components/ReviewComponents/Conclusions';
+import Introduction from 'Components/ReviewComponents/Introduction';
+import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
+import Profile from 'Components/ReviewComponents/Profile';
+import Conclusions from 'Components/ReviewComponents/Conclusions';
 
 const ClientSpaceReviewRoutes = () => {
     let { path } = useRouteMatch();

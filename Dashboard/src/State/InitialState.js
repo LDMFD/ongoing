@@ -5,7 +5,7 @@ import React, { useEffect, useContext, useCallback, useState } from 'react';
 import Api from './Api';
 
 import { Context } from 'State/StateProvider'
-import { UserType } from 'components/AuthControl';
+import { UserType } from 'Components/AuthControl';
 
 const InitialState = ({ children }) => {
     const [ state, dispatch ] = useContext(Context);

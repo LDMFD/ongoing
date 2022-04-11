@@ -5,7 +5,7 @@ import {
     Toolbar,
 } from '@mui/material';
 
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State';
 
 const PublishState = () => {

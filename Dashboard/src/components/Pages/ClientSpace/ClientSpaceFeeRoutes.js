@@ -1,7 +1,7 @@
 import React from 'react';
 
-import FeeRoutesBase from 'components/ReviewComponents/Fees/FeeRoutesBase';
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import FeeRoutesBase from 'Components/ReviewComponents/Fees/FeeRoutesBase';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const FeeRoutes = () => {
     let report = GetReport();

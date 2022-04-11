@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import FeeRoutesBase from 'components/ReviewComponents/Fees/FeeRoutesBase';
+import FeeRoutesBase from 'Components/ReviewComponents/Fees/FeeRoutesBase';
 import { Context } from 'State';
 
 const ReportFeeRoutes = () => {

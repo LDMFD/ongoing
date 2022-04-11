@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 
-import FeeRoutesBase from 'components/ReviewComponents/Fees/FeeRoutesBase';
+import FeeRoutesBase from 'Components/ReviewComponents/Fees/FeeRoutesBase';
 import { Context } from 'State';
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const AdvisorReviewFeeRoutes = () => {
     const [state,  ] = useContext(Context);

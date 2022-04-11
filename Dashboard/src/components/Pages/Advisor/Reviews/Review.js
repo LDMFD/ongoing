@@ -5,7 +5,7 @@ import {
     Button
 } from '@mui/material';
 
-import FileInput from 'components/Widgets/FileUploader';
+import FileInput from 'Components/Widgets/FileUploader';
 
 const Review = ({ review }) => {
     const download = (uid) => {

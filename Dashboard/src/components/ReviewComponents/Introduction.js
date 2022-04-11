@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { ModuleTypeIntroduction } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetReport } from './GetReport';

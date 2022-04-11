@@ -4,11 +4,11 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import ReviewTabs from './ReviewTabs';
 
 import { EditModuleText } from './Modules/ModuleEditor';
-import Conclusions from 'components/ReviewComponents/Conclusions';
+import Conclusions from 'Components/ReviewComponents/Conclusions';
 import FeeRoutes from './AdvisorReviewFeeRoutes';
-import Introduction from 'components/ReviewComponents/Introduction';
-import Profile from 'components/ReviewComponents/Profile';
-import PolicyValuations from 'components/ReviewComponents/PolicyValuations';
+import Introduction from 'Components/ReviewComponents/Introduction';
+import Profile from 'Components/ReviewComponents/Profile';
+import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
 import PublishState from './PublishState';
 import EditReviewStateDialog from './EditReviewStateDialog';
 

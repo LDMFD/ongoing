@@ -16,7 +16,7 @@ import {
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
-import FileInput from 'components/Widgets/FileUploader';
+import FileInput from 'Components/Widgets/FileUploader';
 
 export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, includeFiles }) => {
     let history = useHistory();

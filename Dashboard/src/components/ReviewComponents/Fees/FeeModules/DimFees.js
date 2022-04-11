@@ -1,8 +1,8 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypeDimFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'components/Pages/Clients/Reviews/Modules/ModuleWrapper';
-import { GetReport } from 'components/ReviewComponents/GetReport';
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const DimFees = () => {
     let report = GetReport();

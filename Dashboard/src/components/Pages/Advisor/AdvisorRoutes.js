@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import ClientWrapper     from './ClientWrapper';
+import ClientWrapper     from './AdvisorSpaceWrapper';
 import PortfolioList     from './Portfolios/PortfolioList';
 import AddPortfolio      from './Portfolios/AddPortfolio';
 import EditPortfolio     from './Portfolios/EditPortfolio';

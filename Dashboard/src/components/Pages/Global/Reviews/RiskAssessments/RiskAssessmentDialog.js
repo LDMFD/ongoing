@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import RichTextEditor from 'components/Widgets/RichTextEditor';
+import RichTextEditor from 'Components/Widgets/RichTextEditor';
 
 export const RiskAssessmentDialog = ({ riskAssessment, setRiskAssessment, submitLabel, submitHandler }) => {
     let history = useHistory();
