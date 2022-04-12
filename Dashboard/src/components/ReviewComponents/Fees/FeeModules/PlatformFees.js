@@ -15,17 +15,12 @@ const PlatformFees = () => {
     }*/ ];
 
     report.Policies.forEach(policy => {
-        let found = false;
-        rows.forEach(row => {
-            if (row.provider.Id !== policy.PolicyProviderId || row.platformDiscount !== policy.PlatformDiscount) {
-                return;
-            }
+        let row = rows.find(r => r.provider.Id === policy.PolicyProviderId);
+        if (row) {
             if (!row.policies.includes(p => p.Id === policy.Id)) {
                 row.policies.push(policy);
             }
-            found = true;
-        });
-        if (!found) {
+        } else {
             let provider = report.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId);
             rows.push({
                 provider: provider,
