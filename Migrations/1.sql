@@ -24,7 +24,7 @@ DELETE FROM operators;
 DELETE FROM policy_types;
 DELETE FROM policy_providers;
 
-INSERT INTO policy_providers ("id", "name", "pricing", "uid")                                       OVERRIDING SYSTEM VALUE VALUES (1, 'Aviva Wrap', '<p>Aviva''s pricing notes.</p>', 'b7f8f4e5104043429c5993be7fdf930d');
+INSERT INTO policy_providers ("id", "name", "pricing", "uid")                                       OVERRIDING SYSTEM VALUE VALUES (1, 'Aviva Wrap', '<p>Aviva charges on a tiered basis according to the following table:</p><p><br></p><p>{{ charges }}</p>', 'b7f8f4e5104043429c5993be7fdf930d');
 INSERT INTO policy_types     ("id", "name","uid")                                                   OVERRIDING SYSTEM VALUE VALUES (1, 'Pension', '7ec08af90397470285aef69c5f5b6a86');
 INSERT INTO policy_types     ("id", "name","uid")                                                   OVERRIDING SYSTEM VALUE VALUES (2, 'ISA', 'ae132a8a68c94f2a8a20cd2268592991');
 INSERT INTO operators        ("id", "type","name","fee", "uid")                                     OVERRIDING SYSTEM VALUE VALUES (1, 'dim', 'LGT Vestra', 0.12, '598f683493e34cdbb0f786a06f2a92ea');
@@ -57,6 +57,9 @@ INSERT INTO policy_funds     ("id", "client_id","policy_id","fund_id","proportio
 	 (4, 1, 1, 4, 0.32, '639c6191b08747b4a79fa92cd6724e67'),
 	 (5, 1, 1, 5, 0.15, 'a79e65a532cf490689ff008ab13725f6'),
 	 (6, 1, 2, 1, 0.15, '57083349d3404a02967c260a29f13abe');
+INSERT INTO provider_charges ("uid","policy_provider_id","desc","charge") VALUES
+	 ('fcf3111e932a4bde905454e3841355de', 1, '100,000+',  0.42),
+	 ('78bcbb4251464ae5b991753a95440eab', 1, '0-100,000', 0.3);
 
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"clients"',          'id')), (SELECT (MAX("id") + 1) FROM "clients"),          FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"funds"',            'id')), (SELECT (MAX("id") + 1) FROM "funds"),            FALSE);

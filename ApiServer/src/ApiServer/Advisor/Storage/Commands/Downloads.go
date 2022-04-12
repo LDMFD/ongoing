@@ -26,7 +26,7 @@ func RequestDownload(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	url := GenerateSignedGetUrl("/Users/darren/dev/p/ongoing/Config/Storage/Credentials/Storage.pem", "ongoing-test-docs", file.Uid)
+	url := GenerateSignedGetUrl(file.Uid)
 
 	c.JSON(200, gin.H{
 		"Url": url,

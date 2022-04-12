@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     Paper,
 } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PolicyPortfolios = ({ policy, portfolios }) => {
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'model',              headerName: 'Model',                flex: 0.1, },
         { field: 'ocfFee',             headerName: 'OCF Fee (%)',          flex: 0.1, },
@@ -17,9 +23,22 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
         { field: 'proportion',         headerName: 'Proportion' ,          flex: 0.1, },
         // { field: 'weightedOcfFee',     headerName: 'Weighted OCF (%)', flex: 0.1, },
         // { field: 'weightedExAnteFee',  headerName: 'Weighted Ex Ante (%)', flex: 0.1, },
+        {
+            field: 'actions',
+            headerName: 'Factsheet',
+            type: 'actions',
+            flex: .05,
+            getActions: (params) => params.row.fileUid ? [
+                <GridActionsCellItem icon={<DownloadIcon />}   onClick={downloadFile(params)} label="Download factsheet" />,
+            ] : [],
+        },
     ];
 
-    portfolios = portfolios.filter(p => p.policyId === policy.Id);
+    portfolios = portfolios.filter(p => p.policyId === policy.Id).map(p => ({
+        ...p,
+        model: p.model.Name,
+        fileUid: p.model.File?.Uid,
+    }));
 
     let data = {
         rows: portfolios,
@@ -75,7 +94,7 @@ const PortfolioLevelFees = () => {
             proportion:        portfolio.Proportion,
             policyId:          policy.Id,
             endValue:          `$${policy.EndValue}`,
-            model:             model.Name,
+            model:             model,
             ocfFee:            ocfStr,
             exAnteFee:         exAnteStr,
             ocf:               model.WeightedOcfFee,

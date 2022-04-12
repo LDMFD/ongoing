@@ -23,8 +23,7 @@ func RequestUpload(c *gin.Context) {
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
-	url, fields := GenerateSignedPostPolicy("/Users/darren/dev/p/ongoing/Config/Storage/Credentials/Storage.pem",
-		"ongoing-test-docs", uid, req.Filename)
+	url, fields := GenerateSignedPostPolicy(uid, req.Filename)
 
 	c.JSON(200, gin.H{
 		"Url":    url,

@@ -16,7 +16,7 @@ type CreateOrUpdateModelRequestBody struct {
 	OperatorId        string  `binding:"required"`
 	WeightedOcfFee    float64 `binding:"required"`
 	WeightedExAnteFee float64 `binding:"required"`
-	FileUid           *string
+	File *Entities.RequestFile
 }
 
 func CreateModel(c *gin.Context) {
@@ -29,9 +29,9 @@ func CreateModel(c *gin.Context) {
 	}
 
 	var fileId *int64
-	if body.FileUid != nil {
+	if body.File != nil {
 		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", *body.FileUid).ScanAndCount(c); err != nil {
+		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		} else if count == 0 {

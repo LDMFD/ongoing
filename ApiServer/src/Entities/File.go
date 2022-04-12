@@ -15,6 +15,12 @@ type File struct {
 	Timestamp   time.Time	`bun:",nullzero,notnull,default:current_timestamp"`
 }
 
+type RequestFile struct {
+	Uid      string
+	Filename string
+	Size     int64
+}
+
 type ReportFile struct {
 	Uid      string
 	Filename string

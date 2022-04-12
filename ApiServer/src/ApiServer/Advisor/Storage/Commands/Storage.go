@@ -3,20 +3,25 @@ package Commands
 import (
 	"cloud.google.com/go/storage"
 	"io/ioutil"
+	"os"
 	"time"
 )
 
-func GenerateSignedGetUrl(jsonPath, bucketName, objectName string) (url string) {
+func GenerateSignedGetUrl(objectName string) (url string) {
 	var (
 		err error
 		key []byte
 	)
-	if key, err = ioutil.ReadFile(jsonPath); err != nil {
+	pemPath := os.Getenv("STORAGE_CREDENTIAL")
+	serviceAccount := os.Getenv("STORAGE_SA")
+	bucketName := os.Getenv("STORAGE_BUCKET")
+
+	if key, err = ioutil.ReadFile(pemPath); err != nil {
 		panic(err)
 	}
 
 	if url, err := storage.SignedURL(bucketName, objectName, &storage.SignedURLOptions{
-		GoogleAccessID:  "storage@ongoing-test.iam.gserviceaccount.com",
+		GoogleAccessID:  serviceAccount,
 		PrivateKey:      key,
 		Method:          "GET",
 		Expires:         time.Now().Add(time.Second * 60),
@@ -28,18 +33,22 @@ func GenerateSignedGetUrl(jsonPath, bucketName, objectName string) (url string) 
 }
 
 // explicit reads credentials from the specified path.
-func GenerateSignedPostPolicy(jsonPath, bucketName, objectName, filename string) (url string, fields map[string]string) {
+func GenerateSignedPostPolicy(objectName, filename string) (url string, fields map[string]string) {
 	var (
 		err error
 		pv4 *storage.PostPolicyV4
 	)
+	pemPath := os.Getenv("STORAGE_CREDENTIAL")
+	serviceAccount := os.Getenv("STORAGE_SA")
+	bucketName := os.Getenv("STORAGE_BUCKET")
+
 	var key []byte
-	if key, err = ioutil.ReadFile(jsonPath); err != nil {
+	if key, err = ioutil.ReadFile(pemPath); err != nil {
 		panic(err)
 	}
 
 	if pv4, err = storage.GenerateSignedPostPolicyV4(bucketName, objectName, &storage.PostPolicyV4Options{
-		GoogleAccessID: "storage@ongoing-test.iam.gserviceaccount.com",
+		GoogleAccessID: serviceAccount,
 		PrivateKey:     key,
 		Expires:        time.Now().Add(time.Second * 60),
 		Fields: &storage.PolicyV4Fields{

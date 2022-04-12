@@ -28,15 +28,30 @@ func UpdateFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	var fileId *int64
+	if body.File != nil {
+		var file Entities.File
+		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		} else if count == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
+			return
+		}
+		fileId = &file.Id
+	}
+
 	var fund = Entities.Fund{
 		Name:      body.Name,
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,
+		FileId:    fileId,
 	}
 	if _, err := db.NewUpdate().Model(&fund).Where("uid = ?", path.FundId).
 		Column("name").
 		Column("ocf_fee").
 		Column("ex_ante_fee").
+		Column("file_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

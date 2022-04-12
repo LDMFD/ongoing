@@ -1,15 +1,21 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useCallback } from 'react';
 import {
     Paper,
 } from '@mui/material';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DownloadIcon from '@mui/icons-material/Download';
 
+import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PolicyFunds = ({ review, policy }) => {
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'fund',       headerName: 'Fund name',                flex: 0.1, },
         { field: 'ocf',        headerName: 'OCF (% pa)',               flex: 0.1, },
@@ -17,6 +23,15 @@ const PolicyFunds = ({ review, policy }) => {
         { field: 'percentage', headerName: 'Percentage of policy (%)', flex: 0.1, },
         // { field: 'wOcf',headerName: 'weight ocf', flex: 0.1, },
         // { field: 'wEx', headerName: 'weight ex-ante', flex: 0.1, },
+        {
+            field: 'actions',
+            headerName: 'Factsheet',
+            type: 'actions',
+            flex: .05,
+            getActions: (params) => params.row.fileUid ? [
+                <GridActionsCellItem icon={<DownloadIcon />}   onClick={downloadFile(params)} label="Download factsheet" />,
+            ] : [],
+        },
     ];
 
     let policyFunds = review.PolicyFunds.filter(pf => pf.PolicyId === policy.Id).map(pf => {
@@ -29,6 +44,7 @@ const PolicyFunds = ({ review, policy }) => {
             percentage:  pf.Proportion * 100,
             wOcf:        fund.OcfFee * pf.Proportion,
             wEx:         fund.ExAnteFee * pf.Proportion,
+            fileUid:     fund.File?.Uid,
         };
     });
 

@@ -16,7 +16,8 @@ import {
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
-import FileInput from 'Components/Widgets/FileUploader';
+import FileInput from 'Components/Widgets/FileHandling/FileUploader';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, includeFiles }) => {
     let history = useHistory();
@@ -31,12 +32,6 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
         SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        event.target.value, }); },
     };
     
-    const download = (uid) => {
-        window.ApiClient.get(`advisor/storage/download?Uid=${uid}`).then(res => {
-            window.location = res.data.Url;
-        })
-    };
-
     const remove = () => {
         setModel({
             ...model,
@@ -103,7 +98,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                         {model.File ? (
                             <>
                                 {model.File.Filename} (uploaded {`${Day(model.File.Date)}`})
-                                <Button onClick={download.bind(null, model.File.Uid)}>Download</Button>
+                                <Button onClick={Download.bind(null, model.File.Uid)}>Download</Button>
                                 <Button onClick={remove}>Remove</Button>
                             </>
                         ) : <>No files</>}

@@ -35,9 +35,10 @@ const FundList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'name',           headerName: 'Name',         flex: 0.3, },
-        { field: 'ocfFee',         headerName: 'OCF Fee', flex: 0.1, },
-        { field: 'exAnteFee',      headerName: 'Ex Ante Fee',  flex: 0.1, },
+        { field: 'name',      headerName: 'Name',        flex: 0.3, },
+        { field: 'ocfFee',    headerName: 'OCF Fee',     flex: 0.1, },
+        { field: 'exAnteFee', headerName: 'Ex Ante Fee', flex: 0.1, },
+        { field: 'file',      headerName: 'Factsheet',   flex: 0.2, },
         // TODO SEDOL, ISIN, Citicode
         {
             field: 'actions',
@@ -50,12 +51,13 @@ const FundList = () => {
         },
     ];
 
-    let funds = state.Entities.Funds.map(p => {
+    let funds = state.Entities.Funds.map(f => {
         return {
-            id:          p.Id,
-            name:        p.Name,
-            ocfFee:      p.OcfFee,
-            exAnteFee:   p.ExAnteFee,
+            id:        f.Id,
+            name:      f.Name,
+            ocfFee:    f.OcfFee,
+            exAnteFee: f.ExAnteFee,
+            file:      f.File?.Filename,
         };
     });
 

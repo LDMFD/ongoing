@@ -32,6 +32,9 @@ GCP setup
             us-central1-docker.pkg.dev/ongoing-test/ongoing-test/ongoing_dash-server:latest (port 8080)
         - Security:
             (Compute Engine default service account)
+- Cloud Storage
+    - ongoing-test-docs
+        See Makefiles/Storage.mak
 
 Local dev
 
