@@ -110,7 +110,7 @@ export const ModuleEditor = ({ client, module }) => {
 
     let draft = state.Report.Modules.find(m => m.Type === module);
 
-    preset = state.ModulePresets.find(p => p.ModuleType === module);
+    preset = state.Report.ModulePresets.find(p => p.ModuleType === module);
 
     if (!moduleState) {
         // First load
