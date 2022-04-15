@@ -3,16 +3,18 @@ import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
 import {
     Button,
     Toolbar,
 } from '@mui/material';
 
-import { Context } from 'State/StateProvider'
-
 import './PolicyList.css';
+
 import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Context } from 'State/StateProvider'
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PolicyList = () => {
     let history = useHistory();
@@ -36,6 +38,10 @@ const PolicyList = () => {
         history.push(`/clients/id/${client.Id}/policies/id/${id}/edit`);
     }, [ history, client.Id ]);
 
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'policyNumber',     headerName: 'Policy Number',         flex: 0.1, },
         { field: 'platformDiscount', headerName: 'Platform Discount',     flex: 0.1, },
@@ -48,11 +54,14 @@ const PolicyList = () => {
         {
             field: 'actions',
             type: 'actions',
-            flex: .05,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={editPolicy(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={deletePolicy(params)} label="Delete" />,
-            ]
+            flex: .1,
+            getActions: (params) => ([
+                params.row.fileUid
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    : null,
+                <GridActionsCellItem icon={<EditIcon />}     onClick={editPolicy(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />}   onClick={deletePolicy(params)} label="Delete" />,
+            ].filter(t => t)),
         },
     ];
 
@@ -67,6 +76,7 @@ const PolicyList = () => {
             startValue:       policy.StartValue,
             endValue:         policy.EndValue,
             notes:            policy.Notes,
+            fileUid:          policy.File?.Uid,
             type,
             provider,
         };

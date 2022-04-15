@@ -95,7 +95,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             fullWidth />
 
                     <Paper elevation={2}>
-                        {model.File ? (
+                        {model.File?.Uid ? (
                             <>
                                 {model.File.Filename} (uploaded {`${Day(model.File.Date)}`})
                                 <Button onClick={Download.bind(null, model.File.Uid)}>Download</Button>

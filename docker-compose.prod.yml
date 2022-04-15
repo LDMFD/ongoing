@@ -14,8 +14,9 @@ services:
       - "node_modules_prod:/app/node_modules"
       - "./Dashboard/build:/app/build"
 
-  dash-server:
-    container_name: ongoing-dash-server
+  dashboard:
+    container_name: ongoing-dashboard
+    image: ongoing-dashboard
     build:
       context: ./DashboardServer
       dockerfile: Dockerfile

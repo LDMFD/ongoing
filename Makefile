@@ -4,6 +4,7 @@ SHELL := /bin/bash
 include Makefiles/Constants.mak
 
 include Makefiles/Building.mak
+include Makefiles/Deploy.mak
 include Makefiles/Environment.mak
 include Makefiles/Firebase.mak
 include Makefiles/Database.mak

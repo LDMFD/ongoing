@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import {
+    Button,
     Paper,
 } from '@mui/material';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -40,6 +41,10 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
         fileUid: p.model.File?.Uid,
     }));
 
+    if (!portfolios.length) {
+        return null;
+    }
+
     let data = {
         rows: portfolios,
         columns: columns,
@@ -69,6 +74,13 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
             Estimated annual charges in pounds, based on values at end of period:<br />
             <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
             <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
+
+            {policy.File.Uid &&
+                <p>
+                    Factsheet: {policy.File.Filename}
+                    <Button onClick={Download.bind(null, policy.File.Uid)}>Download</Button>
+                </p>
+            }
         </Paper>
     );
 }

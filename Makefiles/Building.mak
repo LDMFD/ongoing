@@ -27,10 +27,10 @@ build-dashboard:
 	find DashboardServer/build/ -name *.map -delete
 
 	# Build server
-	docker-compose -f docker-compose.prod.yml build --no-cache dash-server
+	docker-compose -f docker-compose.prod.yml build --no-cache dashboard
 
 push-dashboard:
-	make push-image IMAGE=ongoing_dash-server
+	make push-image IMAGE=ongoing-dashboard
 
 make up-dashboard:
 	make build-dashboard

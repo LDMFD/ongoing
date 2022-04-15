@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import Day from 'dayjs';
 import {
     Button,
     TextField,
@@ -12,11 +13,14 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    Paper,
 } from '@mui/material';
 import RichTextEditor from 'Components/Widgets/RichTextEditor';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
+import FileInput from 'Components/Widgets/FileHandling/FileUploader';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -33,6 +37,24 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
         SetPolicyTypeId: (event) => { setPolicy({ ...policy, PolicyTypeId:         event.target.value, }); },
         SetProviderId:   (event) => { setPolicy({ ...policy, PolicyProviderId:     event.target.value, }); },
         SetNotes:        (html) => { setPolicy({ ...policy,  Notes:                html, }); },
+    };
+
+    const download = (uid) => {
+        Download(uid);
+    };
+
+    const remove = () => {
+        setPolicy({
+            ...policy,
+            File: null,
+        });
+    };
+
+    let fileUploaded = (fileSpec) => {
+        setPolicy({
+            ...policy,
+            File: fileSpec,
+        });
     };
 
     return (
@@ -125,6 +147,19 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
 
                     <RichTextEditor initialValue = {policy.Notes || ''}
                                     onChange     = {handlers.SetNotes} />
+
+                    <Paper elevation={2}>
+                        {policy.File.Uid ? (
+                            <>
+                                {policy.File.Filename} (uploaded {`${Day(policy.File.Date)}`})
+                                <Button onClick={download.bind(null, policy.File.Uid)}>Download</Button>
+                                <Button onClick={remove}>Remove</Button>
+                            </>
+                        ) : <>No files</>}
+            
+                        <p>Upload new:</p>
+                        <FileInput completionCallback={fileUploaded} />
+                    </Paper>
 
                 </DialogContent>
                 <DialogActions>

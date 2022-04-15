@@ -6,12 +6,11 @@ import {
 } from '@mui/material';
 
 import FileInput from 'Components/Widgets/FileHandling/FileUploader';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const Review = ({ review }) => {
     const download = (uid) => {
-        window.ApiClient.get(`advisor/storage/download?Uid=${uid}`).then(res => {
-            window.location = res.data.Url;
-        })
+        Download(uid);
     };
 
     return (

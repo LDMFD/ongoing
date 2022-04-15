@@ -1,13 +1,19 @@
-import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useCallback } from 'react';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePolicyValuations } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetReport } from './GetReport';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PolicyValuations = () => {
     let report = GetReport();
+
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
 
     const columns = [
         { field: 'policy',        headerName: 'Policy',        flex: 0.1, },
@@ -15,6 +21,16 @@ const PolicyValuations = () => {
         { field: 'endValue',      headerName: 'End value',     flex: 0.1, },
         { field: 'contributions', headerName: 'Contributions', flex: 0.2, },
         { field: 'notes',         headerName: 'Notes',         flex: 0.2, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .1,
+            getActions: (params) => ([
+                params.row.fileUid
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    : null,
+            ].filter(t => t)),
+        },
     ];
 
     let valuations = report.Policies.map(p => {
@@ -38,6 +54,7 @@ const PolicyValuations = () => {
             endValue:      CurrencyFormatter.format(p.EndValue),
             contributions: `${contributions} (£${p.MonthlyContributions})`,
             notes:         p.Notes,
+            fileUid:       p.File?.Uid,
         };
     });
 

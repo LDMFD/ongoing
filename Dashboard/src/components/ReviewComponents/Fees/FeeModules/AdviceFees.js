@@ -1,11 +1,13 @@
-import React, { useContext  } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import React, { useContext, useCallback } from 'react';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DownloadIcon from '@mui/icons-material/Download';
 
+import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);
@@ -20,13 +22,28 @@ const AdviceFees = () => {
                 id:               p.Id,
                 policyNumber:     p.ExternalId,
                 fee:              CurrencyFormatter.format(client.Fee * p.EndValue),
+                fileUid:          p.File?.Uid,
             });
         }
     });
 
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'policyNumber', headerName: 'Policy Number', flex: 0.1, },
         { field: 'fee',          headerName: 'Fee',           flex: 0.1, },
+        {
+            field: 'actions',
+            type: 'actions',
+            flex: .01,
+            getActions: (params) => ([
+                params.row.fileUid
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    : null,
+            ].filter(t => t)),
+        },
     ];
 
     let data = {

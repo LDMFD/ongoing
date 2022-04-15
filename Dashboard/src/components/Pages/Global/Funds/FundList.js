@@ -7,8 +7,10 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import { Context, Api } from 'State'
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const FundList = () => {
     let history = useHistory();
@@ -34,20 +36,26 @@ const FundList = () => {
         history.push(`/funds/id/${id}/edit`);
     }, [ history ]);
 
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'name',      headerName: 'Name',        flex: 0.3, },
         { field: 'ocfFee',    headerName: 'OCF Fee',     flex: 0.1, },
         { field: 'exAnteFee', headerName: 'Ex Ante Fee', flex: 0.1, },
-        { field: 'file',      headerName: 'Factsheet',   flex: 0.2, },
         // TODO SEDOL, ISIN, Citicode
         {
             field: 'actions',
             type: 'actions',
-            flex: .01,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            flex: .05,
+            getActions: (params) => ([
+                params.row.fileUid
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    : null,
+                <GridActionsCellItem icon={<EditIcon />}     onClick={onEdit(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />}   onClick={onDelete(params)} label="Delete" />,
+            ].filter(t => t)),
         },
     ];
 
@@ -57,7 +65,7 @@ const FundList = () => {
             name:      f.Name,
             ocfFee:    f.OcfFee,
             exAnteFee: f.ExAnteFee,
-            file:      f.File?.Filename,
+            fileUid:   f.File?.Uid,
         };
     });
 

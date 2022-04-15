@@ -152,6 +152,7 @@ CREATE TABLE policies (
     -- "start_date"              timestamp default null,
     -- "end_date"                timestamp default null,
     "notes"                   text not null,
+    "file_id"                 int,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy_type FOREIGN KEY(policy_type_id) REFERENCES policy_types(id) ON DELETE RESTRICT,

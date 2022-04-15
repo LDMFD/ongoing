@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import {
+    Button,
     Paper,
 } from '@mui/material';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -11,7 +12,7 @@ import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/Module
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
-const PolicyFunds = ({ review, policy }) => {
+const PolicyFunds = ({ review, policy, policyFunds }) => {
     const downloadFile = useCallback(params => () => {
         Download(params.row.fileUid);
     }, []);
@@ -34,7 +35,7 @@ const PolicyFunds = ({ review, policy }) => {
         },
     ];
 
-    let policyFunds = review.PolicyFunds.filter(pf => pf.PolicyId === policy.Id).map(pf => {
+    policyFunds = policyFunds.map(pf => {
         let fund = review.Funds.find(f => f.Id === pf.FundId);
         return {
             id:          pf.Id,
@@ -77,6 +78,13 @@ const PolicyFunds = ({ review, policy }) => {
             Estimated annual charges in pounds, based on values at end of period:<br />
             <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
             <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
+
+            {policy.File.Uid &&
+                <p>
+                    Factsheet: {policy.File.Filename}
+                    <Button onClick={Download.bind(null, policy.File.Uid)}>Download</Button>
+                </p>
+            }
         </Paper>
     );
 }
@@ -88,11 +96,16 @@ const FundLevelFees = () => {
         <div>
             <ModuleWrapper module={ModuleTypeFundLevelFees} />
 
-            {report.Policies.map(p => (
-                <Paper elevation={2} key={p.Id}>
-                    <PolicyFunds review={report} policy={p} />
-                </Paper>
-            ))}
+            {report.Policies.map(p => {
+                let policyFunds = report.PolicyFunds.filter(pf => pf.PolicyId === p.Id);
+                return policyFunds.length ? (
+                    <Paper elevation={2} key={p.Id}>
+                        <PolicyFunds review      = {report}
+                                     policy      = {p}
+                                     policyFunds = {policyFunds} />
+                    </Paper>
+                ) : null;
+            })}
         </div>
     );
 }

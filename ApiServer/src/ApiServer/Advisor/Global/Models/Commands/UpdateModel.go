@@ -29,7 +29,7 @@ func UpdateModel(c *gin.Context) {
 	}
 
 	var fileId *int64
-	if body.File != nil {
+	if body.File != nil && body.File.Uid != "" {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

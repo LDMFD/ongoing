@@ -14,6 +14,7 @@ import {
 
 import { GoBack } from 'Utils/Routing';
 import FileInput from 'Components/Widgets/FileHandling/FileUploader';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -26,9 +27,7 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
     };
     
     const download = (uid) => {
-        window.ApiClient.get(`advisor/storage/download?Uid=${uid}`).then(res => {
-            window.location = res.data.Url;
-        })
+        Download(uid);
     };
 
     const remove = () => {
@@ -81,7 +80,7 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                fullWidth />
 
                     <Paper elevation={2}>
-                        {fund.File ? (
+                        {fund.File?.Uid ? (
                             <>
                                 {fund.File.Filename} (uploaded {`${Day(fund.File.Date)}`})
                                 <Button onClick={download.bind(null, fund.File.Uid)}>Download</Button>

@@ -7,8 +7,10 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
 
 import { Context, Api } from 'State'
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const ModelList = () => {
     let history = useHistory();
@@ -25,20 +27,26 @@ const ModelList = () => {
         history.push(`/models/id/${params.row.id}/edit`);
     }, [ history ]);
 
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'name',              headerName: 'Name',                 flex: 0.2, },
         { field: 'operator',          headerName: 'Operator',             flex: 0.2, },
         { field: 'weightedOcfFee',    headerName: 'Weighted OCF Fee',     flex: 0.1, },
         { field: 'weightedExAnteFee', headerName: 'Weighted Ex Ante Fee', flex: 0.1, },
-        { field: 'file',              headerName: 'Factsheet',            flex: 0.2, },
         {
             field: 'actions',
             type: 'actions',
             flex: .1,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            getActions: (params) => ([
+                params.row.fileUid
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    : null,
+                <GridActionsCellItem icon={<EditIcon />}     onClick={onEdit(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />}   onClick={onDelete(params)} label="Delete" />,
+            ].filter(t => t)),
         },
     ];
 
@@ -50,7 +58,7 @@ const ModelList = () => {
             operator:          op,
             weightedOcfFee:    m.WeightedOcfFee,
             weightedExAnteFee: m.WeightedExAnteFee,
-            file:              m.File?.Filename,
+            fileUid:           m.File?.Uid,
         };
     });
 

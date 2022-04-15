@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
 import {
     Button,
     Toolbar,
@@ -10,6 +11,7 @@ import {
 
 import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PolicyFundList = () => {
     let history = useHistory();
@@ -33,8 +35,11 @@ const PolicyFundList = () => {
         history.push(`/clients/id/${client.Id}/policy-funds/id/${id}/edit`);
     }, [ history, client.Id ]);
 
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
-        { field: 'idLabel',    headerName: 'ID',          flex: 0.1, },
         { field: 'policy',     headerName: 'Policy',      flex: 0.1, },
         { field: 'fund',       headerName: 'Fund',       flex: 0.1, },
         { field: 'proportion', headerName: 'Proportion',  flex: 0.1, },
@@ -42,22 +47,26 @@ const PolicyFundList = () => {
             field: 'actions',
             type: 'actions',
             flex: .05,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={editPolicyFund(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={deletePolicyFund(params)} label="Delete" />,
-            ]
+            getActions: (params) => ([
+                params.row.fileUid
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    : null,
+                <GridActionsCellItem icon={<EditIcon />}     onClick={editPolicyFund(params)}   label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />}   onClick={deletePolicyFund(params)} label="Delete" />,
+            ].filter(t => t)),
         },
     ];
 
     let policyFunds = report.PolicyFunds.map(policyFund => {
         let policy = report.Policies.find(p => p.Id === policyFund.PolicyId).ExternalId;
-        let fund = report.Funds.find(p => p.Id === policyFund.FundId).Name;
+        let fund = report.Funds.find(p => p.Id === policyFund.FundId);
         return {
             id:         policyFund.Id,
             idLabel:    `#${policyFund.Id}`,
             policy,
-            fund,
+            fund:       fund.Name,
             proportion: policyFund.Proportion,
+            fileUid:    fund.File?.Uid,
         };
     });
 

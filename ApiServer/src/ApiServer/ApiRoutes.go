@@ -3,6 +3,7 @@ package ApiServer
 import (
 	"github.com/gin-gonic/gin"
 	"ongoing/ApiServer/Advisor"
+	"ongoing/ApiServer/Advisor/Storage"
 	"ongoing/ApiServer/ClientSpace"
 	"ongoing/Entities"
 )
@@ -17,6 +18,9 @@ func addCommonRoutes(r *gin.Engine) {
 	routes := r.Group("/common")
 	routes.Use(AuthMiddleware(nil))
 	routes.GET("/user", getUser)
+
+	// TODO add security for files
+	Storage.AddRoutes(routes.Group("/storage"))
 }
 
 func addAdvisorRoutes(r *gin.Engine) {

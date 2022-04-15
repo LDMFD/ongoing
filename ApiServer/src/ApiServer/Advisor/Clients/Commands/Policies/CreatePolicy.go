@@ -23,7 +23,8 @@ type CreateOrUpdatePolicyRequestBody struct {
 	EndValue             int64   `binding:"required"`
 	PolicyTypeId         string  `binding:"required"`
 	PolicyProviderId     string  `binding:"required"`
-	Notes                string  `binding:"required"`
+	Notes                string  //`binding:"required"`
+	File                 *Entities.RequestFile
 }
 
 func CreatePolicy(c *gin.Context) {
@@ -39,6 +40,19 @@ func CreatePolicy(c *gin.Context) {
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
  			panic(err.Error())
+	}
+
+	var fileId *int64
+	if body.File != nil && body.File.Uid != "" {
+		var file Entities.File
+		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		} else if count == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
+			return
+		}
+		fileId = &file.Id
 	}
 
 	uid := uuid.NewString()
@@ -75,6 +89,7 @@ func CreatePolicy(c *gin.Context) {
 		PolicyTypeId:         policyType.Id,
 		PolicyProviderId:     provider.Id,
 		Notes:                body.Notes,
+		FileId:               fileId,
 	}
 	if _, err := db.NewInsert().Model(&policy).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

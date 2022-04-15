@@ -16,6 +16,7 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 		Model(&client).
 		Relation("Policies.PolicyProvider.Charges.PolicyProvider").
 		Relation("Policies.PolicyType").
+		Relation("Policies.File").
 		Relation("PolicyFunds.Policy").
 		Relation("PolicyFunds.Fund.File").
 		Relation("Portfolios.Model.File").

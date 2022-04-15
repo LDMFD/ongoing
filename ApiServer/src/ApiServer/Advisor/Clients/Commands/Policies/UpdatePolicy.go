@@ -29,6 +29,19 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	var fileId *int64
+	if body.File != nil && body.File.Uid != "" {
+		var file Entities.File
+		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		} else if count == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
+			return
+		}
+		fileId = &file.Id
+	}
+
 	var policy = Entities.Policy{}
 	if err := db.NewSelect().
 		Model(&policy).
@@ -70,6 +83,7 @@ func UpdatePolicy(c *gin.Context) {
 	policy.PolicyTypeId = policyType.Id
 	policy.PolicyProviderId = provider.Id
 	policy.Notes = body.Notes
+	policy.FileId = fileId
 
 	if _, err := db.NewUpdate().
 		Model(&policy).
@@ -82,6 +96,7 @@ func UpdatePolicy(c *gin.Context) {
 		Column("policy_type_id").
 		Column("policy_provider_id").
 		Column("notes").
+		Column("file_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

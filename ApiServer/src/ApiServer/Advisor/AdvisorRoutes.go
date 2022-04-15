@@ -11,7 +11,6 @@ import (
 	"ongoing/ApiServer/Advisor/Global/PolicyTypes"
 	"ongoing/ApiServer/Advisor/Global/ProviderCharges"
 	"ongoing/ApiServer/Advisor/Global/Reviews"
-	"ongoing/ApiServer/Advisor/Storage"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
@@ -23,6 +22,5 @@ func AddRoutes(r *gin.RouterGroup) {
 	PolicyTypes.AddRoutes(r.Group("/policy-types"))
 	PolicyProviders.AddRoutes(r.Group("/policy-providers"))
 	ProviderCharges.AddRoutes(r.Group("/provider-charges"))
-	Storage.AddRoutes(r.Group("/storage"))
 	Reviews.AddRoutes(r.Group("/reviews"))
 }

@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
 import {
     Button,
     Toolbar,
@@ -10,6 +11,7 @@ import {
 
 import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
 const PortfolioList = () => {
     let history = useHistory();
@@ -33,31 +35,52 @@ const PortfolioList = () => {
         history.push(`/clients/id/${client.Id}/portfolios/id/${id}/edit`);
     }, [ history, client.Id ]);
 
+    const downloadFile = useCallback(params => () => {
+        Download(params.row.fileUid);
+    }, []);
+
     const columns = [
         { field: 'idLabel',    headerName: 'ID',          flex: 0.1, },
         { field: 'policy',     headerName: 'Policy',      flex: 0.1, },
+        {
+            field: 'policyActions',
+            type: 'actions',
+            flex: .01,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)}     label="Download factsheet" />,
+            ]
+        },
         { field: 'model',      headerName: 'Model',       flex: 0.1, },
+        {
+            field: 'modelActions',
+            type: 'actions',
+            flex: .01,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)}     label="Download factsheet" />,
+            ]
+        },
         { field: 'proportion', headerName: 'Proportion',  flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
             flex: .05,
             getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={editPortfolio(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={deletePortfolio(params)} label="Delete" />,
+                <GridActionsCellItem icon={<EditIcon />}     onClick={editPortfolio(params)}    label="Edit" />,
+                <GridActionsCellItem icon={<DeleteIcon />}   onClick={deletePortfolio(params)}  label="Delete" />,
             ]
         },
     ];
 
     let portfolios = report.Portfolios.map(portfolio => {
         let policy = report.Policies.find(p => p.Id === portfolio.PolicyId).ExternalId;
-        let model = report.Models.find(p => p.Id === portfolio.ModelId).Name;
+        let model = report.Models.find(p => p.Id === portfolio.ModelId);
         return {
             id:         portfolio.Id,
             idLabel:    `#${portfolio.Id}`,
             policy,
-            model,
+            model:      model.Name,
             proportion: portfolio.Proportion,
+            fileUid:    model.File?.Uid,
         };
     });
 
