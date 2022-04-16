@@ -65,7 +65,7 @@ const PolicyFundList = () => {
             idLabel:    `#${policyFund.Id}`,
             policy,
             fund:       fund.Name,
-            proportion: policyFund.Proportion,
+            proportion: `${policyFund.Proportion * 100}%`,
             fileUid:    fund.File?.Uid,
         };
     });

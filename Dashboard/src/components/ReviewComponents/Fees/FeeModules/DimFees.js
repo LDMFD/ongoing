@@ -15,7 +15,7 @@ const DimFees = () => {
             operators.push({
                 id:   op.Id,
                 name: op.Name,
-                fee:  op.Fee,
+                fee:  `${op.Fee * 100}%`,
             });
         }
     });

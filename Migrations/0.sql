@@ -146,7 +146,7 @@ CREATE TABLE policies (
     "client_id"               int not null,
     "policy_type_id"          int not null,
     "policy_provider_id"      int not null,
-    "monthly_contributions"   int not null,    -- 0 for none, null for no data
+    "monthly_contributions"   int,    -- 0 for none, null for no data
     "start_value"             int,
     "end_value"               int,
     -- "start_date"              timestamp default null,

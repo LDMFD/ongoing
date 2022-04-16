@@ -21,7 +21,7 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
         { field: 'model',              headerName: 'Model',                flex: 0.1, },
         { field: 'ocfFee',             headerName: 'OCF Fee (%)',          flex: 0.1, },
         { field: 'exAnteFee',          headerName: 'Ex Ante Fee (%)',      flex: 0.1, },
-        { field: 'proportion',         headerName: 'Proportion' ,          flex: 0.1, },
+        { field: 'proportionStr',      headerName: 'Proportion' ,          flex: 0.1, },
         // { field: 'weightedOcfFee',     headerName: 'Weighted OCF (%)', flex: 0.1, },
         // { field: 'weightedExAnteFee',  headerName: 'Weighted Ex Ante (%)', flex: 0.1, },
         {
@@ -104,6 +104,7 @@ const PortfolioLevelFees = () => {
         return {
             id:                portfolio.Id,
             proportion:        portfolio.Proportion,
+            proportionStr:     `${portfolio.Proportion * 100}%`,
             policyId:          policy.Id,
             endValue:          `$${policy.EndValue}`,
             model:             model,

@@ -79,7 +79,7 @@ const PortfolioList = () => {
             idLabel:    `#${portfolio.Id}`,
             policy,
             model:      model.Name,
-            proportion: portfolio.Proportion,
+            proportion: `${portfolio.Proportion * 100}%`,
             fileUid:    model.File?.Uid,
         };
     });

@@ -1,0 +1,24 @@
+.ong-policyCell {
+    position: relative;
+    top: -3px;
+}
+
+.ong-openFileIcon button {
+    border: 0;
+    background: transparent;
+}
+
+.ong-openFileIcon svg {
+    height: 0.7em;
+    position: relative;
+    top: 4px;
+    /* color: #1976d2; */
+}
+
+.ong-openFileIcon svg:hover {
+    cursor: pointer;
+}
+
+.ong-notes p:first-child {
+    margin-top: 0;
+}

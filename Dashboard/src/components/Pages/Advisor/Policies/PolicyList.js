@@ -15,6 +15,7 @@ import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
 import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { CurrencyFormatter } from 'Utils/Strings';
 
 const PolicyList = () => {
     let history = useHistory();
@@ -68,19 +69,34 @@ const PolicyList = () => {
     let policies = report.Policies.map(policy => {
         let type = report.PolicyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
         let provider = report.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
+
+        // TODO refactor with PolicyValuations.js
+        let contributions;
+        switch (policy.MonthlyContributions) {
+            case null: 
+                contributions = `Data not provided`;
+                break;
+            case 0:
+                contributions = `No regular contributions`;
+                break;
+            default:
+                contributions = `Annual regular (£${policy.MonthlyContributions})`;
+                break;
+        }
+
         return {
             id:               policy.Id,
             policyNumber:     policy.ExternalId,
-            platformDiscount: policy.PlatformDiscount,
-            monthlies:        policy.MonthlyContributions,
-            startValue:       policy.StartValue,
-            endValue:         policy.EndValue,
+            platformDiscount: `${policy.PlatformDiscount * 100}%`,
+            monthlies:        contributions,
+            startValue:       CurrencyFormatter.format(policy.StartValue),
+            endValue:         CurrencyFormatter.format(policy.EndValue),
             notes:            policy.Notes,
             fileUid:          policy.File?.Uid,
             type,
             provider,
         };
-    });
+    }).sort((p,q) => (p.policyNumber < q.policyNumber) ? -1 : ((p.policyNumber > q.policyNumber) ? 1 : 0));
 
     let data = {
         rows: policies,

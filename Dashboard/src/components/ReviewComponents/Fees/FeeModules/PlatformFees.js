@@ -1,11 +1,34 @@
 import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import Table from 'Components/Widgets/Table';
 
 const PlatformFees = () => {
     let report = GetReport();
+
+    const columns = [
+        {
+            accessor: 'provider',
+            Header: 'Provider',
+            width: 1,
+        },
+        {
+            accessor: 'policies',
+            Header: 'Policies',
+            width: 1,
+        },
+        {
+            accessor: 'pricing',
+            Header: 'Pricing',
+            width: 4,
+            Cell: ({ row }) => (
+                row.original.pricing && (
+                    <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.pricing }} />
+                )
+            ),
+        },
+    ];
 
     let rows = [ /*{
         provider: Provider
@@ -33,9 +56,6 @@ const PlatformFees = () => {
 
     let ix = 0;
     let tableRows = rows.map(r => {
-
-        // Placeholder
-
         let providerCharges = report.ProviderCharges
             .filter(pc => pc.ProviderId === r.provider.Id)
             .map(c => `${c.Desc} - ${c.Charge}`)
@@ -50,23 +70,12 @@ const PlatformFees = () => {
         }
     });
 
-    const columns = [
-        { field: 'provider', headerName: 'Provider', flex: 0.1, },
-        { field: 'policies', headerName: 'Policies', flex: 0.1, },
-        { field: 'pricing',  headerName: 'Pricing',  flex: 0.1, },
-    ];
-
-    let data = {
-        rows: tableRows,
-        columns: columns,
-    }
-
     return (
         <>
             <br />
             <ModuleWrapper module={ModuleTypePolicyFees} />
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={tableRows} />
         </>
     );
 }

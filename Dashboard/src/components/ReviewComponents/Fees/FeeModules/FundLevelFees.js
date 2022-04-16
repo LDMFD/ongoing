@@ -21,7 +21,7 @@ const PolicyFunds = ({ review, policy, policyFunds }) => {
         { field: 'fund',       headerName: 'Fund name',                flex: 0.1, },
         { field: 'ocf',        headerName: 'OCF (% pa)',               flex: 0.1, },
         { field: 'exAnte',     headerName: 'ex-Ante (% pa)',           flex: 0.1, },
-        { field: 'percentage', headerName: 'Percentage of policy (%)', flex: 0.1, },
+        { field: 'percentage', headerName: 'Percentage of policy', flex: 0.1, },
         // { field: 'wOcf',headerName: 'weight ocf', flex: 0.1, },
         // { field: 'wEx', headerName: 'weight ex-ante', flex: 0.1, },
         {
@@ -42,7 +42,7 @@ const PolicyFunds = ({ review, policy, policyFunds }) => {
             fund:        fund.Name,
             ocf:         fund.OcfFee,
             exAnte:      fund.ExAnteFee,
-            percentage:  pf.Proportion * 100,
+            percentage:  `${pf.Proportion * 100}%`,
             wOcf:        fund.OcfFee * pf.Proportion,
             wEx:         fund.ExAnteFee * pf.Proportion,
             fileUid:     fund.File?.Uid,
