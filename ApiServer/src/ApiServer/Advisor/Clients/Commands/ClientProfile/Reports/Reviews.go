@@ -38,7 +38,7 @@ func GetReviews(c *gin.Context, client *Entities.Client) []Entities.ReportReview
 				StartDate:     r.StartDate.String(),
 				EndDate:       r.EndDate.String(),
 				FinalizedDate: r.FinalizedDate.String(),
-				State:         r.State,
+				//State:         r.State,
 			},
 			Report: rep,
 		})

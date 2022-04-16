@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Day from 'dayjs';
 
 import { Context } from 'State/StateProvider'
 import { Api } from 'State';
@@ -35,11 +36,11 @@ const ReviewList = () => {
     }, [ dispatch, client.Id ]);
 
     const columns = [
-        { field: 'idLabel',       headerName: 'ID',             flex: 0.1, },
-        { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
-        { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
+        // { field: 'idLabel',       headerName: 'ID',             flex: 0.1, },
+        // { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
+        // { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
         { field: 'finalizedDate', headerName: 'Finalized Date', flex: 0.1, },
-        { field: 'state',         headerName: 'State',          flex: 0.1, },
+        // { field: 'state',         headerName: 'State',          flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -57,8 +58,8 @@ const ReviewList = () => {
             idLabel:       `#${review.Id}`,
             startDate:     review.Meta.StartDate,
             endDate:       review.Meta.EndDate,
-            finalizedDate: review.Meta.FinalizedDate,
-            state:         review.Meta.State,
+            finalizedDate: Day(review.Meta.FinalizedDate).format('DD-MM-YYYY'),
+            // state:         review.Meta.State,
         };
     });
 

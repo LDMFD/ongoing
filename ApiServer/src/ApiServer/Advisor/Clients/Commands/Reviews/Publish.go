@@ -2,7 +2,6 @@ package Reviews
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
@@ -31,12 +30,12 @@ func Publish(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if review.State != Entities.ReviewStateDraft {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Review not in draft state"})
-		panic(errors.New("Review not in draft state"))
-	}
-
-	review.State = Entities.ReviewStateFinal
+	//if review.State != Entities.ReviewStateDraft {
+	//	c.JSON(http.StatusBadRequest, gin.H{"error": "Review not in draft state"})
+	//	panic(errors.New("Review not in draft state"))
+	//}
+	//
+	//review.State = Entities.ReviewStateFinal
 
 	if _, err := db.NewUpdate().Model(&review).WherePK().
 		Column("state").

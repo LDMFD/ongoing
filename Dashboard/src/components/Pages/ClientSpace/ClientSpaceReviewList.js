@@ -2,6 +2,7 @@ import React, { useContext, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import InventoryIcon from '@mui/icons-material/Inventory';
+import Day from 'dayjs';
 
 import { Context } from 'State/StateProvider'
 
@@ -14,9 +15,8 @@ const ReviewList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'idLabel',    headerName: 'ID',     flex: 0.1, },
         { field: 'date',       headerName: 'Date',   flex: 0.1, },
-        { field: 'state',      headerName: 'State',  flex: 0.1, },
+        // { field: 'state',      headerName: 'State',  flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -31,8 +31,8 @@ const ReviewList = () => {
         return {
             id:         review.Id,
             idLabel:    `#${review.Id}`,
-            date:       review.Meta.FinalizedDate,
-            state:      review.Meta.State,
+            date:       Day(review.Meta.FinalizedDate).format('DD-MM-YYYY'),
+            // state:      review.Meta.State,
         };
     });
 

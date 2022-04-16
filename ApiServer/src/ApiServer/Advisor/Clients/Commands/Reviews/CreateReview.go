@@ -9,6 +9,7 @@ import (
 	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile/Reports"
 	"ongoing/Entities"
 	"strings"
+	"time"
 )
 
 type CreateReviewRequestPath struct {
@@ -25,12 +26,12 @@ func CreateReview(c *gin.Context) {
 	}
 
 	// Only 1 review in draft state at once
-	if exists, err := db.NewSelect().Model((*Entities.Review)(nil)).Where("state != ?", Entities.ReviewStateFinal).Exists(c); err != nil {
-		panic(err)
-	} else if exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
-		return
-	}
+	//if exists, err := db.NewSelect().Model((*Entities.Review)(nil)).Where("state != ?", Entities.ReviewStateFinal).Exists(c); err != nil {
+	//	panic(err)
+	//} else if exists {
+	//	c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
+	//	return
+	//}
 
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
@@ -47,10 +48,11 @@ func CreateReview(c *gin.Context) {
 	reportJson := string(b)
 
 	review := &Entities.Review{
-		Uid:      uid,
-		ClientId: client.Id,
-		State:    Entities.ReviewStateDraft,
-		Report:   &reportJson,
+		Uid:           uid,
+		ClientId:      client.Id,
+		Report:        &reportJson,
+		FinalizedDate: time.Now(),
+		//State:    Entities.ReviewStateDraft,
 	}
 
 	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {
