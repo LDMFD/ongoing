@@ -3,22 +3,24 @@
     top: -3px;
 }
 
-.ong-openFileIcon button {
+.ong-openFileIcon {
+    padding: 0;
     border: 0;
     background: transparent;
+    cursor: pointer;
+    color: #1976d2;
 }
 
 .ong-openFileIcon svg {
     height: 0.7em;
     position: relative;
     top: 4px;
-    /* color: #1976d2; */
-}
-
-.ong-openFileIcon svg:hover {
-    cursor: pointer;
+    margin-left: 2px;
 }
 
 .ong-notes p:first-child {
     margin-top: 0;
+}
+.ong-notes p:last-child {
+    margin-bottom: 0;
 }

@@ -15,7 +15,7 @@ const ReviewList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'date',       headerName: 'Date',   flex: 0.1, },
+        { field: 'finalizedDateStr',       headerName: 'Date',   flex: 0.1, },
         // { field: 'state',      headerName: 'State',  flex: 0.1, },
         {
             field: 'actions',
@@ -29,12 +29,13 @@ const ReviewList = () => {
 
     let reviews = state.Reviews.map(review => {
         return {
-            id:         review.Id,
-            idLabel:    `#${review.Id}`,
-            date:       Day(review.Meta.FinalizedDate).format('DD-MM-YYYY'),
+            id:               review.Id,
+            idLabel:          `#${review.Id}`,
+            date:             review.Meta.FinalizedDate,
+            finalizedDateStr: Day(review.Meta.FinalizedDate).format('DD-MM-YYYY HH:mm:ss'),
             // state:      review.Meta.State,
         };
-    });
+    }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0));
 
     let data = {
         rows: reviews,

@@ -66,14 +66,12 @@ const PolicyValuations = () => {
 
         let policyCell = (
             <div className='ong-policyCell'>
-                {p.ExternalId}
-                {p.File?.Uid && (
-                    <span className='ong-openFileIcon'>
-                        <button onClick={downloadFile(p.File?.Uid)} title="Download policy factsheet">
-                            <DownloadIcon />
-                        </button>
-                    </span>
-                )}
+                {p.File?.Uid ? (
+                    <button className='ong-openFileIcon' onClick={downloadFile(p.File?.Uid)} title="Download policy factsheet">
+                        {p.ExternalId}
+                        <DownloadIcon />
+                    </button>
+                ) : p.ExternalId}
             </div>
         )
 
