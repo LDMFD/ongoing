@@ -44,7 +44,7 @@ export const EditModuleText = () => {
             newState.Intro = draft.Intro;
             newState.Text = draft.Text;
         } else {
-            preset = state.ModulePresets.find(p => p.ModuleType === module);
+            preset = state.Report.ModulePresets.find(p => p.ModuleType === module);
             if (field === 'intro' && preset) {
                 newState.Intro = preset.Text;
             }
@@ -150,22 +150,38 @@ export const ModuleEditor = ({ client, module }) => {
                 </Card>
             }
 
-            <Card variant='outlined'>
-                <CardHeader subheader="Custom Introduction" />
-                <CardContent>
-                    <div dangerouslySetInnerHTML={{ __html: moduleState.Intro }} />
-                    <Link to={{ pathname: `${basePath}/edit/${module}/intro` }}><Button>Edit</Button></Link>
-                </CardContent>
-            </Card>
+            {moduleState.Intro.length ? 
+                <Card variant='outlined'>
+                    <CardHeader subheader="Custom Introduction" />
+                    <CardContent>
+                        <div dangerouslySetInnerHTML={{ __html: moduleState.Intro }} />
+                        <Link to={{ pathname: `${basePath}/edit/${module}/intro` }}><Button>Edit</Button></Link>
+                    </CardContent>
+                </Card>
+            :
+                <Link to={{ pathname: `${basePath}/edit/${module}/intro` }}>
+                    <Button>
+                        Override preset introduction
+                    </Button>
+                </Link>
+            }
 
-            <Card variant='outlined'>
-                <CardHeader subheader="Custom Body" />
-                <CardContent>
-                    <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
+            {moduleState.Text.length ?
+                <Card variant='outlined'>
+                    <CardHeader subheader="Custom Body" />
+                    <CardContent>
+                        <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
 
-                    <Link to={{ pathname: `${basePath}/edit/${module}/text` }}><Button>Edit</Button></Link>
-                </CardContent>
-            </Card>
+                        <Link to={{ pathname: `${basePath}/edit/${module}/text` }}><Button>Edit</Button></Link>
+                    </CardContent>
+                </Card>
+            :
+                <Link to={{ pathname: `${basePath}/edit/${module}/text` }}>
+                    <Button>
+                        Add custom paragraph
+                    </Button>
+                </Link>
+            }
         </div>
     );
 }

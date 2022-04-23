@@ -4,7 +4,6 @@ import Day from 'dayjs';
 
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
-import Table from '../../../Widgets/Table';
 import { ModuleTypeFactFind } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 
@@ -27,15 +26,17 @@ const FactFind = () => {
         <>
             <ModuleWrapper module={ModuleTypeFactFind} />
  
-            <p>
-                Submitted: {Day(factFind.Submitted).format('DD-MM-YYYY')}
+            {factFind &&
+                <p>
+                    Submitted: {Day(factFind.Submitted).format('DD-MM-YYYY')}
 
-                <br />
-                <button onClick={downloadFile(factFind.file.Uid)} className='ong-openFileIcon'>
-                    {factFind.file.Filename}
-                    <DownloadIcon />
-                </button>
-            </p>
+                    <br />
+                    <button onClick={downloadFile(factFind.file.Uid)} className='ong-openFileIcon'>
+                        {factFind.file.Filename}
+                        <DownloadIcon />
+                    </button>
+                </p>
+            }
         </>
     );
 }
