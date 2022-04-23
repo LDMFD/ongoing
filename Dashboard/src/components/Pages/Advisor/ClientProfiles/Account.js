@@ -33,7 +33,6 @@ const ClientAccountPage = () => {
     let { clientId } = useParams();
 
     let client = state.Clients.find(c => c.Id === clientId);
-    console.log(client);
 
     return (
         <div>

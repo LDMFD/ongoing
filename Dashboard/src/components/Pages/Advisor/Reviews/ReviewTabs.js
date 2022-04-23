@@ -30,26 +30,18 @@ const ReviewTabs = ({ children }) => {
 
         return (
             <Tabs value={currentTab}>
-                {/* <Tab label="Publish state"     value={`${basePath}/state`}             to={`${baseTarget}/state`}             component={Link} /> */}
                 <Tab label="Introduction"      value={`${basePath}/introduction`}      to={`${baseTarget}/introduction`}               component={Link} />
                 <Tab label="Profile"           value={`${basePath}/profile`}           to={`${baseTarget}/profile/risk-questionnaire`} component={Link} />
                 <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`}          component={Link} />
                 <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/intro`}                 component={Link} />
-                <Tab label="Conclusions"       value={`${basePath}/conclusions`}       to={`${baseTarget}/conclusions`}                component={Link} />
+                <Tab label="Conclusions"       value={`${basePath}/conclusions`}       to={`${baseTarget}/conclusions/advice-given`}   component={Link} />
             </Tabs>
         );
     }
 
     return (
         <div className='review'>
-            {/* <Breadcrumbs aria-label="breadcrumb">
-                <Typography color="text.primary">
-                    Review #{reviewId}
-                </Typography>
-            </Breadcrumbs> */}
-
             <ReviewTabs />
-
             {children}
         </div>
     );

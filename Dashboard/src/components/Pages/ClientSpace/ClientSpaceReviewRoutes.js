@@ -6,8 +6,8 @@ import ClientSpaceReviewTabs from './ClientSpaceReviewTabs';
 import FeeRoutes from './ClientSpaceFeeRoutes';
 import Introduction from 'Components/ReviewComponents/Introduction';
 import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
-import ProfileRoutes from './ClientSpaceProfileRoutes';//'Components/ReviewComponents/Profile';
-import Conclusions from 'Components/ReviewComponents/Conclusions';
+import ProfileRoutes from './ClientSpaceProfileRoutes';
+import ConclusionRoutes from './ClientSpaceConclusionRoutes';
 
 const ClientSpaceReviewRoutes = () => {
     let { path } = useRouteMatch();
@@ -28,7 +28,7 @@ const ClientSpaceReviewRoutes = () => {
                             <Route path={`${basePath}/profile`}           component={ProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
                             <Route path={`${basePath}/fees`}              component={FeeRoutes} />
-                            <Route path={`${basePath}/conclusions`}       component={Conclusions} />
+                            <Route path={`${basePath}/conclusions`}       component={ConclusionRoutes} />
                         </Switch>
                     </ClientSpaceReviewTabs>
                 </Route>

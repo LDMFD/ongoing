@@ -3,12 +3,12 @@ import { useLocation, useRouteMatch, Switch, Route } from "react-router-dom";
 
 import FeeTabs from './FeeTabs';
 
-import FundLevelFees from './FeeModules/FundLevelFees';
+import FundLevelFees      from './FeeModules/FundLevelFees';
 import PortfolioLevelFees from './FeeModules/PortfolioLevelFees';
-import FeesIntroduction from './FeeModules/FeesIntroduction';
-import AdviceFees from './FeeModules/AdviceFees';
-import PlatformFees from './FeeModules/PlatformFees';
-import DimFees from './FeeModules/DimFees';
+import FeesIntroduction   from './FeeModules/FeesIntroduction';
+import AdviceFees         from './FeeModules/AdviceFees';
+import PlatformFees       from './FeeModules/PlatformFees';
+import DimFees            from './FeeModules/DimFees';
 
 const FeeRoutesBase = ({ basePath, baseTarget }) => {
     let { path } = useRouteMatch();
@@ -31,7 +31,6 @@ const FeeRoutesBase = ({ basePath, baseTarget }) => {
                             <Route path={`${basePath}/dim`}             component={DimFees} />
                         </Switch>
                     </FeeTabs>
-                    {/* <Route path={`${basePath}/:page/edit/:rmod/:field`} component={EditModuleText} /> */}
                 </Route>
 
             </Switch>

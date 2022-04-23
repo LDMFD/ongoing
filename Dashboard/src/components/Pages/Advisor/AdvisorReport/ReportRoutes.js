@@ -3,12 +3,12 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ReportTabs from './ReportTabs';
 
-import Conclusions from 'Components/ReviewComponents/Conclusions';
-import Introduction from 'Components/ReviewComponents/Introduction';
-import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
+import Introduction           from 'Components/ReviewComponents/Introduction';
+import PolicyValuations       from 'Components/ReviewComponents/PolicyValuations';
+import ReportFeeRoutes        from './ReportFeeRoutes';
+import ReportProfileRoutes    from './ReportProfileRoutes';
+import ReportConclusionRoutes from './ReportConclusionRoutes';
 import { EditModuleText } from '../Reviews/Modules/ModuleEditor';
-import ReportFeeRoutes from './ReportFeeRoutes';
-import ReportProfileRoutes from './ReportProfileRoutes';
 
 const ReportRoutes = () => {
     let { path } = useRouteMatch();
@@ -29,7 +29,7 @@ const ReportRoutes = () => {
                             <Route path={`${basePath}/profile`}           component={ReportProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
                             <Route path={`${basePath}/fees`}              component={ReportFeeRoutes} />
-                            <Route path={`${basePath}/conclusions`}       component={Conclusions} />
+                            <Route path={`${basePath}/conclusions`}       component={ReportConclusionRoutes} />
                         </Switch>
                     </ReportTabs>
                     <Route path={`${basePath}/:page/edit/:rmod/:field`}   component={EditModuleText} />

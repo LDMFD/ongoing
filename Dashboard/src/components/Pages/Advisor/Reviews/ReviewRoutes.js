@@ -3,14 +3,14 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ReviewTabs from './ReviewTabs';
 
-import { EditModuleText } from './Modules/ModuleEditor';
-import Conclusions from 'Components/ReviewComponents/Conclusions';
-import FeeRoutes from './AdvisorReviewFeeRoutes';
-import Introduction from 'Components/ReviewComponents/Introduction';
-import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
-import PublishState from './PublishState';
+import Introduction          from 'Components/ReviewComponents/Introduction';
+import PolicyValuations      from 'Components/ReviewComponents/PolicyValuations';
+import { EditModuleText }    from './Modules/ModuleEditor';
+import FeeRoutes             from './AdvisorReviewFeeRoutes';
+import ConclusionRoutes      from './AdvisorReviewConclusionRoutes';
+import PublishState          from './PublishState';
 import EditReviewStateDialog from './EditReviewStateDialog';
-import ProfileRoutes from './AdvisorReviewProfileRoutes';
+import ProfileRoutes         from './AdvisorReviewProfileRoutes';
 
 const ReviewRoutes = () => {
     let { path } = useRouteMatch();
@@ -32,7 +32,7 @@ const ReviewRoutes = () => {
                             <Route path={`${basePath}/profile`}           component={ProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
                             <Route path={`${basePath}/fees`}              component={FeeRoutes} />
-                            <Route path={`${basePath}/conclusions`}       component={Conclusions} />
+                            <Route path={`${basePath}/conclusions`}       component={ConclusionRoutes} />
                         </Switch>
                     </ReviewTabs>
                     <Route path={`${basePath}/:page/edit/:rmod/:field`} component={EditModuleText} />
