@@ -1,11 +1,11 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import RiskAssessmentList from './RiskAssessmentList';
-import AddRiskAssessment from './AddRiskAssessment';
-import EditRiskAssessment from './EditRiskAssessment';
+import RiskLevelList from './RiskLevelList';
+import AddRiskLevel from './AddRiskLevel';
+import EditRiskLevel from './EditRiskLevel';
 
-const RiskAssessmentRoutes = () => {
+const RiskLevelRoutes = () => {
     let { path } = useRouteMatch();
 
     let location = useLocation();
@@ -16,18 +16,18 @@ const RiskAssessmentRoutes = () => {
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
                 <Route path={path}>
-                    <RiskAssessmentList />
+                    <RiskLevelList />
                 </Route>
             </Switch>
 
             <Route path={`${path}/add`}>
-                <AddRiskAssessment />
+                <AddRiskLevel />
             </Route>
-            <Route path={`${path}/id/:riskAssessmentId/edit`}>
-                <EditRiskAssessment />
+            <Route path={`${path}/:levelId/edit`}>
+                <EditRiskLevel />
             </Route>
         </div>
     );
 }
 
-export default RiskAssessmentRoutes;
+export default RiskLevelRoutes;

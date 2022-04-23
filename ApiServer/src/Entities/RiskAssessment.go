@@ -9,10 +9,48 @@ import (
 type RiskAssessment struct {
 	bun.BaseModel `bun:"table:risk_assessments"`
 
-	Id        int64     `bun:"id,pk,autoincrement"`
-	ClientId  int64     `bun:"client_id,notnull"`
+	Id                  int64     `bun:"id,pk,autoincrement"`
+	Uid                 string    `bun:"uid,notnull"`
+	ClientId            int64     `bun:"client_id,notnull"`
+	RiskLevelId         int64     `bun:"risk_level_id,notnull"`
+	QuestionnaireFileId *int64    `bun:"questionnaire_file_id"`
+	FactFindFileId      *int64    `bun:"fact_find_file_id"`
+	Completed           time.Time `bun:",nullzero,notnull"`
+	Timestamp           time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	Client        *Client    `bun:"rel:has-one,join:client_id=id"`
+	RiskLevel     *RiskLevel `bun:"rel:has-one,join:risk_level_id=id"`
+	Questionnaire *File      `bun:"rel:has-one,join:questionnaire_file_id=id"`
+	FactFind      *File      `bun:"rel:has-one,join:fact_find_file_id=id"`
+}
 
-	Client    *Client         `bun:"rel:has-one,join:client_id=id"`
+type ReportRiskAssessment struct {
+	Id            string
+	RiskLevelId   string
+	Completed     string
+	Questionnaire struct {
+		Uid      string
+		Filename string
+	}
+	FactFind struct {
+		Uid      string
+		Filename string
+	}
+}
+
+func (a *RiskAssessment) ToReport() ReportRiskAssessment {
+	return ReportRiskAssessment{
+		Id:          a.Uid,
+		RiskProviderId: a.RiskLevel.RiskProvider.Uid,
+		RiskLevelId: a.RiskLevel.Uid,
+		Completed:      a.Completed.Format("2006-01-02"),
+		Questionnaire: ReportFile{
+			Uid:      a.Questionnaire.Uid,
+			Filename: a.Questionnaire.Filename,
+		},
+		FactFind: ReportFile{
+			Uid:      a.FactFind.Uid,
+			Filename: a.FactFind.Filename,
+		},
+	}
 }

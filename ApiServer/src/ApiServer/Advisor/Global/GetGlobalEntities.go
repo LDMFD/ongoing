@@ -10,11 +10,13 @@ import (
 type GlobalEntities struct {
 	Funds           []Entities.ReportFund
 	Models          []Entities.ReportModel
+	ModulePresets   []Entities.ReportModulePreset
 	Operators       []Entities.ReportOperator
 	PolicyProviders []Entities.ReportPolicyProvider
 	PolicyTypes     []Entities.ReportPolicyType
 	ProviderCharges []Entities.ReportProviderCharge
-	ModulePresets   []Entities.ReportModulePreset
+	RiskProviders   []Entities.ReportRiskProvider
+	RiskLevels      []Entities.ReportRiskLevel
 }
 
 func GetGlobalEntities(c *gin.Context) {
@@ -23,11 +25,13 @@ func GetGlobalEntities(c *gin.Context) {
 	entities := GlobalEntities{
 		Funds:           make([]Entities.ReportFund, 0),
 		Models:          make([]Entities.ReportModel, 0),
+		ModulePresets:   make([]Entities.ReportModulePreset, 0),
 		Operators:       make([]Entities.ReportOperator, 0),
 		PolicyProviders: make([]Entities.ReportPolicyProvider, 0),
 		PolicyTypes:     make([]Entities.ReportPolicyType, 0),
 		ProviderCharges: make([]Entities.ReportProviderCharge, 0),
-		ModulePresets:   make([]Entities.ReportModulePreset, 0),
+		RiskProviders:   make([]Entities.ReportRiskProvider, 0),
+		RiskLevels:      make([]Entities.ReportRiskLevel, 0),
 	}
 
 	var funds []Entities.Fund
@@ -90,6 +94,30 @@ func GetGlobalEntities(c *gin.Context) {
 	}
 	for _, pc := range providerCharges {
 		entities.ProviderCharges = append(entities.ProviderCharges, pc.ToReport())
+	}
+
+	var riskProviders []Entities.RiskProvider
+	if err := db.NewSelect().
+		Model(&riskProviders).
+		OrderExpr("name ASC").
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+	for _, rp := range riskProviders {
+		entities.RiskProviders = append(entities.RiskProviders, rp.ToReport())
+	}
+
+	var riskLevels []Entities.RiskLevel
+	if err := db.NewSelect().
+		Model(&riskLevels).
+		Relation("RiskProvider").
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+	for _, rl := range riskLevels {
+		entities.RiskLevels = append(entities.RiskLevels, rl.ToReport())
 	}
 
 	var policyTypes []Entities.PolicyType

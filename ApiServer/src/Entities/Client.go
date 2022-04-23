@@ -17,12 +17,13 @@ type Client struct {
 	Fee       float64   `bun:"fee,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	User        User          `bun:"rel:has-one,join:user_id=id"`
-	Policies    []*Policy     `bun:"rel:has-many,join:id=client_id"`
-	PolicyFunds []*PolicyFund `bun:"rel:has-many,join:id=client_id"`
-	Portfolios  []*Portfolio  `bun:"rel:has-many,join:id=client_id"`
-	Modules     []*Module     `bun:"rel:has-many,join:id=client_id"`
-	Reviews     []*Review     `bun:"rel:has-many,join:id=client_id"`
+	User            User              `bun:"rel:has-one,join:user_id=id"`
+	RiskAssessments []*RiskAssessment `bun:"rel:has-many,join:id=client_id"`
+	Policies        []*Policy         `bun:"rel:has-many,join:id=client_id"`
+	PolicyFunds     []*PolicyFund     `bun:"rel:has-many,join:id=client_id"`
+	Portfolios      []*Portfolio      `bun:"rel:has-many,join:id=client_id"`
+	Modules         []*Module         `bun:"rel:has-many,join:id=client_id"`
+	Reviews         []*Review         `bun:"rel:has-many,join:id=client_id"`
 }
 
 type ReportClientIdentity struct {

@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Paper } from '@mui/material';
+import {
+    Button,
+    Paper
+} from '@mui/material';
 import axios from 'axios';
+import Day from 'dayjs';
+
+import { Download } from './FileDownloader';
 
 const File = ({ file, completionCallback }) => {
     let [ uploaded, setUploaded ] = useState(false);
@@ -76,7 +82,7 @@ const FileInput = ({ completionCallback }) => {
     };
 
     return (
-        <Paper>
+        <>
             <label>
                 Upload file:
                 <input type="file" multiple onChange={triggerUpload} ref={input} />
@@ -96,8 +102,43 @@ const FileInput = ({ completionCallback }) => {
                     ))}
                 </ul>
             )} */}
+        </>
+    );
+}
+
+const FileUploader = ({file, stateUpdater, state, property='File' }) => {
+    const download = (uid) => {
+        Download(uid);
+    };
+    
+    const remove = () => {
+        stateUpdater({
+            ...state,
+            [property]: null,
+        });
+    };
+    
+    let fileUploaded = (fileSpec) => {
+        stateUpdater({
+            ...state,
+            [property]: fileSpec,
+        });
+    };
+    
+    return (
+        <Paper elevation={2}>
+            {file?.Uid ? (
+                <>
+                    {file.Filename} (uploaded {`${Day(file.Date)}`})
+                    <Button onClick={download.bind(null, file.Uid)}>Download</Button>
+                    <Button onClick={remove}>Remove</Button>
+                </>
+            ) : <>No files</>}
+
+            <p>Upload new:</p>
+            <FileInput completionCallback={fileUploaded} />
         </Paper>
     );
 }
 
-export default FileInput;
+export default FileUploader;

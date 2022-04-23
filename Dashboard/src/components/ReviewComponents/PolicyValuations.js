@@ -36,7 +36,7 @@ const PolicyValuations = () => {
         {
             Header: 'Contributions',
             accessor: 'contributions',
-            width: 10,
+            width: 12,
         },
         {
             Header: 'Notes',

@@ -1,6 +1,5 @@
 import React, {  } from 'react';
 import { useHistory,  } from "react-router-dom";
-import Day from 'dayjs';
 import {
     Button,
     Dialog,
@@ -8,13 +7,11 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Paper,
     TextField,
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import FileInput from 'Components/Widgets/FileHandling/FileUploader';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import FileUploader from 'Components/Widgets/FileHandling/FileUploader';
 
 export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -26,24 +23,6 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
         EditExAnteFee:   (event) => { setFund({ ...fund, ExAnteFee:   parseFloat(event.target.value) }); },
     };
     
-    const download = (uid) => {
-        Download(uid);
-    };
-
-    const remove = () => {
-        setFund({
-            ...fund,
-            File: null,
-        });
-    };
-
-    let fileUploaded = (fileSpec) => {
-        setFund({
-            ...fund,
-            File: fileSpec,
-        });
-    };
-
     return (
         <Dialog open={true} onClose={goBack}>
             <form onSubmit={submitHandler}>
@@ -79,18 +58,9 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                type     = "number"
                                fullWidth />
 
-                    <Paper elevation={2}>
-                        {fund.File?.Uid ? (
-                            <>
-                                {fund.File.Filename} (uploaded {`${Day(fund.File.Date)}`})
-                                <Button onClick={download.bind(null, fund.File.Uid)}>Download</Button>
-                                <Button onClick={remove}>Remove</Button>
-                            </>
-                        ) : <>No files</>}
-            
-                        <p>Upload new:</p>
-                        <FileInput completionCallback={fileUploaded} />
-                    </Paper>
+                    <FileUploader file         = {fund.File}
+                                  stateUpdater = {setFund}
+                                  state        = {fund} />
 
                 </DialogContent>
                 <DialogActions>

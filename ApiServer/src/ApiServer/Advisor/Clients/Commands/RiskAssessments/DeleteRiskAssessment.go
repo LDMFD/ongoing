@@ -1,4 +1,4 @@
-package Commands
+package RiskAssessments
 
 import (
 	"net/http"
@@ -10,6 +10,7 @@ import (
 )
 
 type DeleteRiskAssessmentRequestPath struct {
+	ClientId         string `binding:"required"`
 	RiskAssessmentId string `binding:"required"`
 }
 
@@ -22,18 +23,24 @@ func DeleteRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var riskAssessment = Entities.RiskAssessment{}
-	//if err := db.NewSelect().
-	//	Model(&riskAssessment).
-	//	Where("uid = ", path.RiskAssessmentId).
-	//	Scan(c); err != nil {
-	//	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	//	panic(err.Error())
-	//}
+	var assessment = Entities.RiskAssessment{}
+	if err := db.NewSelect().
+		Model(&assessment).
+		Where("uid = ?", path.RiskAssessmentId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	if assessment.ClientId != client.Id {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "RiskAssessment does not belong to client"})
+		return
+	}
 
 	if _, err := db.NewDelete().
-		Model(&riskAssessment).
-		Where("uid = ?", path.RiskAssessmentId).
+		Model(&assessment).
+		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

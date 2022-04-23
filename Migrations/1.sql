@@ -23,6 +23,9 @@ DELETE FROM funds;
 DELETE FROM operators;
 DELETE FROM policy_types;
 DELETE FROM policy_providers;
+DELETE FROM risk_assessments;
+DELETE FROM risk_levels;
+DELETE FROM risk_providers;
 
 INSERT INTO policy_providers ("id", "name", "pricing", "uid")                                       OVERRIDING SYSTEM VALUE VALUES (1, 'Aviva Wrap', '<p>Aviva charges on a tiered basis according to the following table:</p><p><br></p><p>{{ charges }}</p>', 'b7f8f4e5104043429c5993be7fdf930d');
 INSERT INTO policy_types     ("id", "name","uid")                                                   OVERRIDING SYSTEM VALUE VALUES (1, 'Pension', '7ec08af90397470285aef69c5f5b6a86');
@@ -57,9 +60,17 @@ INSERT INTO policy_funds     ("id", "client_id","policy_id","fund_id","proportio
 	 (4, 1, 1, 4, 0.32, '639c6191b08747b4a79fa92cd6724e67'),
 	 (5, 1, 1, 5, 0.15, 'a79e65a532cf490689ff008ab13725f6'),
 	 (6, 1, 2, 1, 0.15, '57083349d3404a02967c260a29f13abe');
-INSERT INTO provider_charges ("uid","policy_provider_id","desc","charge") VALUES
+INSERT INTO provider_charges ("uid","policy_provider_id","desc","charge")                           OVERRIDING SYSTEM VALUE VALUES
 	 ('fcf3111e932a4bde905454e3841355de', 1, '100,000+',  0.42),
 	 ('78bcbb4251464ae5b991753a95440eab', 1, '0-100,000', 0.3);
+INSERT INTO risk_providers ("id","uid","name","timestamp")                                          OVERRIDING SYSTEM VALUE VALUES
+	 (1, '856a5d560b5849a98e682177ba22a24c','Provider One','2022-04-17 21:21:41.757'),
+	 (2, 'ca1a7c11168a4918a08d0ad14ee89370','Provider Two','2022-04-17 21:21:46.326');
+INSERT INTO risk_levels ("id","uid","risk_provider_id","level","label","desc","timestamp")          OVERRIDING SYSTEM VALUE VALUES
+	 (1, 'b724eeb31a6b4045b3a268cc975e1d88',1,1,'One1','Easy money','2022-04-17 21:22:02.821'),
+	 (2, 'ca242f73d2dd44099cf5be3c2267640f',1,2,'One2','Not so easy money','2022-04-17 21:25:11.882'),
+	 (3, '37f0686ace8d4625ba456838c0035ba1',2,6,'Two6','The big two six','2022-04-17 21:25:40.101'),
+	 (4, '2e990787d80a4c64929f975b0686c3f4',2,5,'Two5','The two five','2022-04-17 21:25:30.988');
 
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"clients"',          'id')), (SELECT (MAX("id") + 1) FROM "clients"),          FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"funds"',            'id')), (SELECT (MAX("id") + 1) FROM "funds"),            FALSE);
@@ -71,3 +82,6 @@ SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"policy_providers"', 'id')), (SELE
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"portfolios"',       'id')), (SELECT (MAX("id") + 1) FROM "portfolios"),       FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"reviews"',          'id')), (SELECT (MAX("id") + 1) FROM "reviews"),          FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"users"',            'id')), (SELECT (MAX("id") + 1) FROM "users"),            FALSE);
+SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"risk_providers"',   'id')), (SELECT (MAX("id") + 1) FROM "risk_providers"),   FALSE);
+SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"risk_levels"',      'id')), (SELECT (MAX("id") + 1) FROM "risk_levels"),      FALSE);
+SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"risk_assessments"', 'id')), (SELECT (MAX("id") + 1) FROM "risk_assessments"), FALSE);

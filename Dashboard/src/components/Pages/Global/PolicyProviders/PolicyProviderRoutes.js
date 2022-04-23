@@ -4,7 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import PolicyProviderList from './PolicyProviderList';
 import AddPolicyProvider from './AddPolicyProvider';
 import EditPolicyProvider from './EditPolicyProvider';
-import ProviderChargeRoutes from '../ProviderCharges/ProviderChargeRoutes';
+import ProviderChargeRoutes from '../PolicyProviderCharges/ProviderChargeRoutes';
 
 const PolicyProviderRoutes = () => {
     let { path } = useRouteMatch();

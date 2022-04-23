@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
-import Day from 'dayjs';
 import {
     Button,
     Dialog,
@@ -9,15 +8,13 @@ import {
     DialogContentText,
     DialogTitle,
     MenuItem,
-    Paper,
     Select,
     TextField,
 } from '@mui/material';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
-import FileInput from 'Components/Widgets/FileHandling/FileUploader';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import FileUploader from 'Components/Widgets/FileHandling/FileUploader';
 
 export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, includeFiles }) => {
     let history = useHistory();
@@ -32,20 +29,6 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
         SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        event.target.value, }); },
     };
     
-    const remove = () => {
-        setModel({
-            ...model,
-            File: null,
-        });
-    };
-
-    let fileUploaded = (fileSpec) => {
-        setModel({
-            ...model,
-            File: fileSpec,
-        });
-    };
-
     return (
         <Dialog open={true} onClose={goBack}>
             <form onSubmit={submitHandler}>
@@ -94,18 +77,9 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             type     = "number"
                             fullWidth />
 
-                    <Paper elevation={2}>
-                        {model.File?.Uid ? (
-                            <>
-                                {model.File.Filename} (uploaded {`${Day(model.File.Date)}`})
-                                <Button onClick={Download.bind(null, model.File.Uid)}>Download</Button>
-                                <Button onClick={remove}>Remove</Button>
-                            </>
-                        ) : <>No files</>}
-            
-                        <p>Upload new:</p>
-                        <FileInput completionCallback={fileUploaded} />
-                    </Paper>
+                    <FileUploader file         = {model.File}
+                                  stateUpdater = {setModel}
+                                  state        = {model} />
 
                 </DialogContent>
                 <DialogActions>

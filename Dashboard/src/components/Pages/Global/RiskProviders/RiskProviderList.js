@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
@@ -10,37 +10,29 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
 
-const RiskAssessmentList = () => {
+const RiskProviderList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const getRiskAssessments = useCallback(() => {
-        Api.Global.RiskAssessments.Read(dispatch)
-    }, [ dispatch ]);
-
-    useEffect(() => {
-        getRiskAssessments();
-    }, [ getRiskAssessments ]);
-    
     const onDelete = useCallback(params => async () => {
-        if (window.confirm(`Delete riskAssessment?`)) {
-            await Api.Global.RiskAssessments.Delete(params.row.id);
-            await Api.Global.RiskAssessments.Read(dispatch);
+        if (window.confirm(`Delete risk provider?`)) {
+            await window.ApiClient.delete(`advisor/risk-providers/${params.row.id}`)
+            await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
     const onEdit = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/review-config/risk-assessment/id/${id}/edit`);
+        history.push(`/risk-providers/id/${id}/edit`);
     }, [ history ]);
 
     const columns = [
-        { field: 'label', headerName: 'Select menu label', flex: 0.5, },
-        { field: 'text',  headerName: 'Template',  flex: 0.5, },
+        { field: 'name',     headerName: 'Name',       flex: 0.1, },
+        { field: 'pricing',  headerName: 'Pricing',   flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
-            flex: .01,
+            flex: .05,
             getActions: (params) => [
                 <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
                 <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
@@ -48,23 +40,22 @@ const RiskAssessmentList = () => {
         },
     ];
 
-    let riskAssessments = state.RiskAssessments.map(p => {
+    let riskProviders = state.Entities.RiskProviders.map(p => {
         return {
-            id:          p.Id,
-            label:       p.Label,
-            text:        p.Text,
+            id:       p.Id,
+            name:     p.Name,
         };
     });
 
     let data = {
-        rows: riskAssessments,
+        rows: riskProviders,
         columns: columns,
     }
 
     return (
         <>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/review-config/risk-assessment/add' }}><Button>Add new Risk Assessment</Button></Link>
+                <Link to={{ pathname: '/risk-providers/add' }}><Button>Add new risk provider</Button></Link>
             </Toolbar>
 
             <DataGrid autoHeight {...data} />
@@ -72,4 +63,4 @@ const RiskAssessmentList = () => {
     );
 }
 
-export default RiskAssessmentList;
+export default RiskProviderList;

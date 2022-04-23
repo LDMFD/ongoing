@@ -97,34 +97,35 @@ CREATE TABLE funds (
 -- TODO
 CREATE TABLE risk_providers (
     "id"                      int primary key generated always as identity,
-    "name"                    text not null unique          -- "Dynamic Planner", "FE Analytics", "Finimetrica"
+    "uid"                     text not null unique,
+    "name"                    text not null unique,          -- "Dynamic Planner", "FE Analytics", "Finimetrica"
+    "timestamp"               timestamp default current_timestamp
 );
 
 -- TODO
 CREATE TABLE risk_levels (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "risk_provider_id"        int,
     "level"                   int,
     "label"                   text,
     "desc"                    text,
+    "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_risk_provider FOREIGN KEY(risk_provider_id) REFERENCES risk_providers(id) ON DELETE RESTRICT
 );
 
 -- client-related:
 
--- TODO
 CREATE TABLE risk_assessments (
     "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
     "client_id"               int not null,
-    "risk_provider_id"        int not null,
     "risk_level_id"           int not null,
     "questionnaire_file_id"   int not null,
-    "fact_find_file_id"       int not null,
     "completed"               timestamp default null,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_risk_provider FOREIGN KEY(risk_provider_id) REFERENCES risk_providers(id) ON DELETE RESTRICT,
     CONSTRAINT fk_risk_level FOREIGN KEY(risk_level_id) REFERENCES risk_levels(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_questionnaire FOREIGN KEY(questionnaire_file_id) REFERENCES files(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_questionnaire FOREIGN KEY(questionnaire_file_id) REFERENCES files(id) ON DELETE RESTRICT
     CONSTRAINT fk_fact_find FOREIGN KEY(fact_find_file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 

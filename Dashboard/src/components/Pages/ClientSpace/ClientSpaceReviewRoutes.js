@@ -6,7 +6,7 @@ import ClientSpaceReviewTabs from './ClientSpaceReviewTabs';
 import FeeRoutes from './ClientSpaceFeeRoutes';
 import Introduction from 'Components/ReviewComponents/Introduction';
 import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
-import Profile from 'Components/ReviewComponents/Profile';
+import ProfileRoutes from './ClientSpaceProfileRoutes';//'Components/ReviewComponents/Profile';
 import Conclusions from 'Components/ReviewComponents/Conclusions';
 
 const ClientSpaceReviewRoutes = () => {
@@ -25,7 +25,7 @@ const ClientSpaceReviewRoutes = () => {
                     <ClientSpaceReviewTabs>
                         <Switch>
                             <Route path={`${basePath}/introduction`}      component={Introduction} />
-                            <Route path={`${basePath}/profile`}           component={Profile} />
+                            <Route path={`${basePath}/profile`}           component={ProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
                             <Route path={`${basePath}/fees`}              component={FeeRoutes} />
                             <Route path={`${basePath}/conclusions`}       component={Conclusions} />

@@ -14,6 +14,9 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	var client = Entities.Client{Id: clientId}
 	if err := db.NewSelect().
 		Model(&client).
+		Relation("RiskAssessments.RiskLevel.RiskProvider").
+		Relation("RiskAssessments.Questionnaire").
+		Relation("RiskAssessments.FactFind").
 		Relation("Policies.PolicyProvider.Charges.PolicyProvider").
 		Relation("Policies.PolicyType").
 		Relation("Policies.File").
@@ -42,6 +45,24 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	report.Modules = make([]Entities.ReportModule, len(client.Modules))
 	for ix, m := range client.Modules {
 		report.Modules[ix] = m.ToReport()
+	}
+
+	// Risk Assessments, Risk Providers, Risk Levels
+	report.RiskAssessments = make([]Entities.ReportRiskAssessment, 0)
+	var riskProviders = map[int64]*Entities.RiskProvider{}
+	var riskLevels = map[int64]*Entities.RiskLevel{}
+	for _, r := range client.RiskAssessments {
+		report.RiskAssessments = append(report.RiskAssessments, r.ToReport())
+		riskLevels[r.RiskLevelId] = r.RiskLevel
+		riskProviders[r.RiskLevel.RiskProviderId] = r.RiskLevel.RiskProvider
+	}
+	report.RiskProviders = make([]Entities.ReportRiskProvider, 0)
+	for _, p := range riskProviders {
+		report.RiskProviders = append(report.RiskProviders, p.ToReport())
+	}
+	report.RiskLevels = make([]Entities.ReportRiskLevel, 0)
+	for _, l := range riskLevels {
+		report.RiskLevels = append(report.RiskLevels, l.ToReport())
 	}
 
 	// Policies, Policy Types, Policy Providers, Provider Charges

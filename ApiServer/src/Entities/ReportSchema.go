@@ -19,4 +19,7 @@ type ReportDetail struct {
 	Operators       []ReportOperator
 	Models          []ReportModel
 	Portfolios      []ReportPortfolio
+	RiskProviders   []ReportRiskProvider
+	RiskLevels      []ReportRiskLevel
+	RiskAssessments []ReportRiskAssessment
 }

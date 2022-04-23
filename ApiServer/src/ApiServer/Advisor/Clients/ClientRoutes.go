@@ -6,6 +6,7 @@ import (
 	PolicyFunds "ongoing/ApiServer/Advisor/Clients/Commands/PolicyFunds"
 	Portfolios "ongoing/ApiServer/Advisor/Clients/Commands/Portfolios"
 	Reviews "ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
+	"ongoing/ApiServer/Advisor/Clients/Commands/RiskAssessments"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,4 +41,9 @@ func AddRoutes(r *gin.RouterGroup) {
 	reviewGroup.POST("", Reviews.CreateReview)
 	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
 	reviewGroup.POST("/:ReviewId/publish", Reviews.Publish)
+
+	riskAssessmentGroup := r.Group("/:ClientId/risk-assessments")
+	riskAssessmentGroup.POST("", RiskAssessments.CreateRiskAssessment)
+	riskAssessmentGroup.PUT("/:RiskAssessmentId", RiskAssessments.UpdateRiskAssessment)
+	riskAssessmentGroup.DELETE("/:RiskAssessmentId", RiskAssessments.DeleteRiskAssessment)
 }

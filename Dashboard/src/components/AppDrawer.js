@@ -55,17 +55,17 @@ const advisorItems = [
         icon: <SearchIcon />,
         link: '/policy-providers',
     },
+    {
+        label: 'Risk Providers',
+        icon: <SearchIcon />,
+        link: '/risk-providers',
+    },
 ];
 
 const Items = {
     'anonymous': [],
     'advisor': advisorItems,
     'admin': advisorItems.concat([
-        {
-            label: 'Risk Assessments',
-            icon: <SearchIcon />,
-            link: '/review-config/risk-assessment',
-        },
         {
             label: 'Module Presets',
             icon: <SearchIcon />,

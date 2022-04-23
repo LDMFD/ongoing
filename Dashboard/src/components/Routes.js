@@ -6,7 +6,7 @@ import FundRoutes           from './Pages/Global/Funds/FundRoutes';
 import ModelRoutes          from './Pages/Global/Models/ModelRoutes';
 import PolicyTypeRoutes     from './Pages/Global/PolicyTypes/PolicyTypeRoutes';
 import PolicyProviderRoutes from './Pages/Global/PolicyProviders/PolicyProviderRoutes';
-import RiskAssessmentRoutes from './Pages/Global/Reviews/RiskAssessments/RiskAssessmentRoutes';
+import RiskProviderRoutes   from './Pages/Global/RiskProviders/RiskProviderRoutes';
 import ModulePresetRoutes   from './Pages/Global/Reviews/ModulePresets/ModulePresetRoutes';
 
 import ClientSpaceRoutes from "./Pages/ClientSpace/ClientSpaceRoutes";
@@ -19,7 +19,7 @@ const routes = () => (
         <Route path="/models"                         component={ModelRoutes} />
         <Route path="/policy-types"                   component={PolicyTypeRoutes} />
         <Route path="/policy-providers"               component={PolicyProviderRoutes} />
-        <Route path="/review-config/risk-assessment"  component={RiskAssessmentRoutes} />
+        <Route path="/risk-providers"                 component={RiskProviderRoutes} />
         <Route path="/review-config/module-presets"   component={ModulePresetRoutes} />
 
         <Route path="/client-space"                   component={ClientSpaceRoutes} />
