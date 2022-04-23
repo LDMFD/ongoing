@@ -82,19 +82,6 @@ func UpdateRiskAssessment(c *gin.Context) {
 		questionnaireFileId = &file.Id
 	}
 
-	var factFindFileId *int64
-	if body.Questionnaire != nil && body.Questionnaire.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.Questionnaire.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
-		}
-		factFindFileId = &file.Id
-	}
-
 	var completed time.Time
 	var err error
 	if completed, err = time.Parse("2006-01-02", body.Completed); err != nil {
@@ -105,7 +92,6 @@ func UpdateRiskAssessment(c *gin.Context) {
 	assessment.RiskLevelId = level.Id
 	assessment.Completed = completed
 	assessment.QuestionnaireFileId = questionnaireFileId
-	assessment.FactFindFileId = factFindFileId
 
 	if _, err := db.NewUpdate().
 		Model(&assessment).
@@ -113,7 +99,6 @@ func UpdateRiskAssessment(c *gin.Context) {
 		Column("risk_level_id").
 		Column("completed").
 		Column("questionnaire_file_id").
-		Column("fact_find_file_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

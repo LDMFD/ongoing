@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import AddClient          from './ClientProfiles/AddClient';
+import AddFactFind        from './FactFinds/AddFactFind';
 import AddPolicy          from './Policies/AddPolicy';
 import AddPolicyFund      from './PolicyFunds/AddPolicyFund';
 import AddPortfolio       from './Portfolios/AddPortfolio';
@@ -10,10 +11,12 @@ import ClientAccountPage  from './ClientProfiles/Account'
 import ClientList         from './ClientProfiles/ClientList';
 import ClientWrapper      from './AdvisorSpaceWrapper';
 import EditClient         from './ClientProfiles/EditClient';
+import EditFactFind       from './FactFinds/EditFactFind';
 import EditPolicy         from './Policies/EditPolicy';
 import EditPolicyFund     from './PolicyFunds/EditPolicyFund';
 import EditPortfolio      from './Portfolios/EditPortfolio';
 import EditRiskAssessment from './RiskAssessments/EditRiskAssessment';
+import FactFindList       from './FactFinds/FactFindList';
 import PolicyFundList     from './PolicyFunds/PolicyFundList';
 import PolicyList         from './Policies/PolicyList';
 import PortfolioList      from './Portfolios/PortfolioList';
@@ -46,6 +49,7 @@ const ClientRoutes = () => {
                             <Route path={`${path}/id/:clientId/portfolios`} component={PortfolioList} />
                             <Route path={`${path}/id/:clientId/policy-funds`} component={PolicyFundList} />
                             <Route path={`${path}/id/:clientId/policies`} component={PolicyList} />
+                            <Route path={`${path}/id/:clientId/fact-finds`} component={FactFindList} />
                             <Route path={`${path}/id/:clientId/risk-assessments`} component={RiskAssessmentList} />
                             <Route path={`${path}/id/:clientId`} component={ClientAccountPage} />
                         </Switch>
@@ -63,6 +67,9 @@ const ClientRoutes = () => {
 
                         <Route path={`${path}/id/:clientId/risk-assessments/add`} component={AddRiskAssessment} />
                         <Route path={`${path}/id/:clientId/risk-assessments/id/:riskAssessmentId/edit`} component={EditRiskAssessment} />
+
+                        <Route path={`${path}/id/:clientId/fact-finds/add`} component={AddFactFind} />
+                        <Route path={`${path}/id/:clientId/fact-finds/id/:factFindId/edit`} component={EditFactFind} />
                     </ClientWrapper>
                 </Route>
                 <Route path={path} component={ClientList} />

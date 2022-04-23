@@ -126,7 +126,16 @@ CREATE TABLE risk_assessments (
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_risk_level FOREIGN KEY(risk_level_id) REFERENCES risk_levels(id) ON DELETE RESTRICT,
     CONSTRAINT fk_questionnaire FOREIGN KEY(questionnaire_file_id) REFERENCES files(id) ON DELETE RESTRICT
-    CONSTRAINT fk_fact_find FOREIGN KEY(fact_find_file_id) REFERENCES files(id) ON DELETE RESTRICT
+);
+
+CREATE TABLE fact_finds (
+    "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
+    "client_id"               int not null,
+    "file_id"                 int not null,
+    "submitted"               timestamp default null,
+    "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_fact_find FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE clients (

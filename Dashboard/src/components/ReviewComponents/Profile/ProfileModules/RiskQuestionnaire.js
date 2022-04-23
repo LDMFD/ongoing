@@ -65,6 +65,8 @@ const RiskQuestionnaire = () => {
             questionnaire:        ra.Questionnaire,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
+    
+    assessments = [ assessments[0]];
 
     return (
         <div className='ongoing-riskassessmentList'>

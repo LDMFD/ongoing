@@ -22,4 +22,5 @@ type ReportDetail struct {
 	RiskProviders   []ReportRiskProvider
 	RiskLevels      []ReportRiskLevel
 	RiskAssessments []ReportRiskAssessment
+	FactFinds       []ReportFactFind
 }

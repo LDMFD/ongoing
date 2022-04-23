@@ -14,17 +14,17 @@ _db_migrate:
 				 --file=/app/migrations/${MIGRATION}.sql
 
 # Against gcp:
-#_db_migrate:
-#	docker run -it --rm \
-#		--name db-migration \
-#		--network ongoing_default \
-#		-v `pwd`/Migrations:/app/migrations \
-#		postgres \
-#			psql --host=db-proxy \
-#				 --dbname=postgres \
-#				 --username=postgres \
-#				 --password \
-#				 --file=/app/migrations/${MIGRATION}.sql
+xxx_db_migrate:
+	docker run -it --rm \
+		--name db-migration \
+		--network ongoing_default \
+		-v `pwd`/Migrations:/app/migrations \
+		postgres \
+			psql --host=db-proxy \
+				 --dbname=postgres \
+				 --username=postgres \
+				 --password \
+				 --file=/app/migrations/${MIGRATION}.sql
 
 db-up:
 	make _db_migrate MIGRATION=0
