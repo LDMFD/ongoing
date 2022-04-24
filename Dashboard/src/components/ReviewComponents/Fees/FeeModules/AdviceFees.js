@@ -21,7 +21,7 @@ const AdviceFees = () => {
             policies.push({
                 id:               p.Id,
                 policyNumber:     p.ExternalId,
-                fee:              CurrencyFormatter.format(client.Fee * p.EndValue),
+                fee:              CurrencyFormatter.format(client.Fee * p.EndValue / 100),
                 fileUid:          p.File?.Uid,
             });
         }
@@ -57,7 +57,7 @@ const AdviceFees = () => {
             <ModuleWrapper module={ModuleTypeAdviceFee} />
 
             <p>
-                Advice fee: {client.Fee * 100}%
+                Advice fee: {client.Fee}%
             </p>
 
             <DataGrid autoHeight {...data} />

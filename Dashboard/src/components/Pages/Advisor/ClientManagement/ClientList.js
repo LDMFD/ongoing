@@ -26,8 +26,9 @@ const ClientList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'idLabel',  headerName: 'Client ID',  flex: 0.1, },
-        { field: 'name',     headerName: 'Name',       flex: 0.1, },
+        { field: 'name',  headerName: 'Name',  flex: 0.1, },
+        { field: 'email', headerName: 'Email', flex: 0.1, },
+        { field: 'fee',   headerName: 'Fee',   flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -44,6 +45,8 @@ const ClientList = () => {
             id:       c.Id,
             idLabel:  `#${c.Id}`,
             name:     `${c.Identity.Surname}, ${c.Identity.Forenames}`,
+            email:    c.Identity.Email,
+            fee:      `${c.Fee}%`,
         };
     });
 

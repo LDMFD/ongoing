@@ -1,5 +1,8 @@
 export const DefaultClient = {
-    Surname: '',
-    Forenames: '',
-    Email: '',
+    Identity: {
+        Surname: '',
+        Forenames: '',
+        Email: '',
+    },
+    Fee: 0,
 };

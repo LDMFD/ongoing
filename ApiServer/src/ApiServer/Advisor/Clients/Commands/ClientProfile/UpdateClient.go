@@ -13,10 +13,13 @@ type UpdateClientRequestPath struct {
 	ClientId string `binding:"required"`
 }
 
-type UpdateClientRequestBody struct {
-	Forenames string `binding:"required"`
-	Surname   string `binding:"required"`
-	Email     string `binding:"required"`
+type CreateOrUpdateClientRequestBody struct {
+	Identity struct {
+		Forenames string `binding:"required"`
+		Surname   string `binding:"required"`
+		Email     string `binding:"required"`
+	} `binding:"required"`
+	Fee float64 // allow 0 - `binding:"required"`
 }
 
 func UpdateClient(c *gin.Context) {
@@ -28,19 +31,21 @@ func UpdateClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var body UpdateClientRequestBody
+	var body CreateOrUpdateClientRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
 	client := Entities.ClientFromUserUID(c, db, path.ClientId)
-	client.Forenames = body.Forenames
-	client.Surname = body.Surname
+	client.Forenames = body.Identity.Forenames
+	client.Surname = body.Identity.Surname
+	client.Fee = body.Fee
 
 	if _, err := db.NewUpdate().Model(&client).WherePK().
 		Column("forenames").
 		Column("surname").
+		Column("fee").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -55,8 +60,8 @@ func UpdateClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if body.Email != client.User.Email {
-		client.User.Email = body.Email
+	if body.Identity.Email != client.User.Email {
+		client.User.Email = body.Identity.Email
 		client.User.Verified = false
 		if _, err := db.NewUpdate().Model(&client.User).WherePK().
 			Column("email").

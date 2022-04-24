@@ -12,22 +12,16 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateClientRequstBody struct {
-	Forenames string `binding:"required"`
-	Surname   string `binding:"required"`
-	Email     string `binding:"required"`
-}
-
 func CreateClient(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var body CreateClientRequstBody
+	var body CreateOrUpdateClientRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", body.Email).Exists(c); err != nil {
+	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", body.Identity.Email).Exists(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	} else if exists {
@@ -39,7 +33,7 @@ func CreateClient(c *gin.Context) {
 
 	var user = Entities.User{
 		Uid:   uid,
-		Email: body.Email,
+		Email: body.Identity.Email,
 		Type:  Entities.UserTypeClient,
 	}
 	if _, err := db.NewInsert().
@@ -52,16 +46,17 @@ func CreateClient(c *gin.Context) {
 
 	if err := db.NewSelect().
 		Model(&user).
-		Where("email = ?", body.Email).
+		Where("email = ?", body.Identity.Email).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
 	var client = Entities.Client{
-		Forenames: body.Forenames,
-		Surname:   body.Surname,
 		UserId:    user.Id,
+		Forenames: body.Identity.Forenames,
+		Surname:   body.Identity.Surname,
+		Fee:       body.Fee,
 	}
 	if _, err := db.NewInsert().Model(&client).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

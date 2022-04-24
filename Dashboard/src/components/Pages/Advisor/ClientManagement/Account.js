@@ -40,6 +40,8 @@ const ClientAccountPage = () => {
             <h1>{client.Identity.Surname}, {client.Identity.Forenames}</h1>
             <p>
                 Email: <a href={`mailto:${client.Identity.Email}`} target='_blank' rel='noreferrer'>{client.Identity.Email}</a>
+                <br /><br />
+                Fee: {client.Fee}%
             </p>
 
             <Toolbar className="breadcrumb-action">

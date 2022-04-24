@@ -16,13 +16,7 @@ const EditClient = () => {
     let { clientId } = useParams();
 
     if (!client) {
-        let c = state.Clients.find(c => c.Id === clientId);
-        setClient({
-            Id: c.Id,
-            Forenames: c.Identity.Forenames,
-            Surname: c.Identity.Surname,
-            Email: c.Identity.Email,
-        })
+        setClient(state.Clients.find(c => c.Id === clientId));
         return;
     }
 
@@ -36,10 +30,10 @@ const EditClient = () => {
     };
 
     return (
-        <ClientDialog identity         = {client}
-                      setIdentity      = {setClient}
-                      submitLabel      = 'Update'
-                      submitHandler    = {submitHandler}  />
+        <ClientDialog client        = {client}
+                      setClient     = {setClient}
+                      submitLabel   = 'Update'
+                      submitHandler = {submitHandler}  />
     );
 }
 
