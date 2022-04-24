@@ -1,4 +1,5 @@
 import React from 'react';
+import * as ReactDOMServer from 'react-dom/server';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
@@ -7,18 +8,15 @@ import Table from 'Components/Widgets/Table';
 const PlatformFees = () => {
     let report = GetReport();
 
-    const columns = [
-        {
+    const columns = [{
             accessor: 'provider',
             Header: 'Provider',
             width: 1,
-        },
-        {
+        }, {
             accessor: 'policies',
             Header: 'Policies',
             width: 1,
-        },
-        {
+        }, {
             accessor: 'pricing',
             Header: 'Pricing',
             width: 4,
@@ -56,11 +54,22 @@ const PlatformFees = () => {
 
     let ix = 0;
     let tableRows = rows.map(r => {
-        let providerCharges = report.ProviderCharges
-            .filter(pc => pc.ProviderId === r.provider.Id)
-            .map(c => `${c.Desc} - ${c.Charge}`)
+        let charges = report.ProviderCharges
+            .filter(pc => pc.ProviderId === r.provider.Id);
 
-        let pricing = r.provider.Pricing.replace('{{ charges }}', providerCharges.join('<br />'));
+        let cols = [{
+            accessor: 'Desc',
+            Header: 'Tier',
+        }, {
+            accessor: 'Charge',
+            Header: 'Fee',
+        }];
+
+        let markup = ReactDOMServer.renderToStaticMarkup(
+            <Table columns={cols} data={charges} />
+        );
+
+        let pricing = r.provider.Pricing.replace('{{ charges }}', markup);
 
         return {
             id:       ix++,
