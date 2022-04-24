@@ -23,8 +23,8 @@ const EditFactFind = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.FactFinds.Update(client.Id, factFind)
-        await Api.Clients.ClientDetail.Read(dispatch, client.Id)
+        await Api.Advisor.FactFinds.Update(client.Id, factFind)
+        await Api.Advisor.ClientDetail.Read(dispatch, client.Id)
         goBack();
         return false;
     };

@@ -27,8 +27,8 @@ const EditPolicyFund = () => {
         // if (policyFund.Proportion === '') {
         //     policyFund.Proportion = 1;
         // }
-        await Api.Clients.PolicyFunds.Update(client.Id, policyFund);
-        await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+        await Api.Advisor.PolicyFunds.Update(client.Id, policyFund);
+        await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         goBack();
         return false;
     };

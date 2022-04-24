@@ -1,6 +1,7 @@
 import React, { useContext, useCallback } from 'react';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
+import Day from 'dayjs';
 
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
@@ -27,8 +28,8 @@ const AdviceFees = () => {
         }
     });
 
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(uid => () => {
+        Download(uid);
     }, []);
 
     const columns = [
@@ -40,7 +41,7 @@ const AdviceFees = () => {
             flex: .01,
             getActions: (params) => ([
                 params.row.fileUid
-                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
+                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params.row.fileUid)} label="Download factsheet" />
                     : null,
             ].filter(t => t)),
         },
@@ -51,6 +52,14 @@ const AdviceFees = () => {
         columns: columns,
     }
 
+    let feesReport = report.FeesReports.map(fr => {
+        return {
+            id:        fr.Id,
+            submitted: Day(fr.Submitted).format('DD-MM-YYYY'),
+            file:      fr.File,
+        };
+    }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0))[0];
+
     return (
         <>
             <br />
@@ -58,6 +67,12 @@ const AdviceFees = () => {
 
             <p>
                 Advice fee: {client.Fee}%
+
+                <br />
+                Fees report: <button onClick={downloadFile(feesReport.file.Uid)} className='ong-openFileIcon'>
+                    {feesReport.file.Filename}
+                    <DownloadIcon />
+                </button>
             </p>
 
             <DataGrid autoHeight {...data} />

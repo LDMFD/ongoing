@@ -22,8 +22,8 @@ const AddPolicyFund = () => {
         // if (policyFund.Proportion === '') {
         //     policyFund.Proportion = 1;
         // }
-        await Api.Clients.PolicyFunds.Create(clientId, policyFund);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.PolicyFunds.Create(clientId, policyFund);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };

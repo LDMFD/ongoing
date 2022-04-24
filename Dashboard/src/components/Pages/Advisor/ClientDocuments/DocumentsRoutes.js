@@ -1,10 +1,13 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
+
 import DocumentsTabs from './DocumentsTabs';
 import AddFactFind from './FactFinds/AddFactFind';
 import EditFactFind from './FactFinds/EditFactFind';
 import FactFindList from './FactFinds/FactFindList';
-
+import AddFeesReport from './FeesReport/AddFeesReport';
+import EditFeesReport from './FeesReport/EditFeesReport';
+import FeesReportList from './FeesReport/FeesReportList';
 import AddRiskAssessment from './RiskAssessments/AddRiskAssessment';
 import EditRiskAssessment from './RiskAssessments/EditRiskAssessment';
 import RiskAssessmentList from './RiskAssessments/RiskAssessmentList';
@@ -26,6 +29,7 @@ const ReportRoutes = () => {
                         <Switch>
                             <Route path={`${basePath}/fact-finds`}       component={FactFindList} />
                             <Route path={`${basePath}/risk-assessments`} component={RiskAssessmentList} />
+                            <Route path={`${basePath}/fees-reports`}     component={FeesReportList} />
                         </Switch>
                     </DocumentsTabs>
 
@@ -34,6 +38,9 @@ const ReportRoutes = () => {
 
                     <Route path={`${basePath}/fact-finds/add`}                 component={AddFactFind} />
                     <Route path={`${basePath}/fact-finds/id/:factFindId/edit`} component={EditFactFind} />
+
+                    <Route path={`${basePath}/fees-reports/add`}                   component={AddFeesReport} />
+                    <Route path={`${basePath}/fees-reports/id/:feesReportId/edit`} component={EditFeesReport} />
                 </Route>
             </Switch>
         </div>

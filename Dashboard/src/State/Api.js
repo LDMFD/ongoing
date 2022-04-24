@@ -1,9 +1,9 @@
-import Clients from './ApiCommands/Advisor';
+import Advisor from './ApiCommands/Advisor';
 import Global from './ApiCommands/Global';
 import ClientSpace from './ApiCommands/ClientSpace';
 
 const defaults = {
-    Clients,
+    Advisor,
     Global,
     ClientSpace,
 };

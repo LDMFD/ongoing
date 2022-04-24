@@ -22,8 +22,8 @@ const EditPolicy = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.Policies.Update(clientId, policy);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.Policies.Update(clientId, policy);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };

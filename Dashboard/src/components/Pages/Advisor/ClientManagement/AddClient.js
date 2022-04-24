@@ -17,8 +17,8 @@ const AddClient = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.ClientDetail.Create(client);
-        await Api.Clients.Clients.Read(dispatch);
+        await Api.Advisor.ClientDetail.Create(client);
+        await Api.Advisor.Clients.Read(dispatch);
         goBack();
         return false;
     };

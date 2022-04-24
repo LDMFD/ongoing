@@ -22,9 +22,9 @@ const EditClient = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.ClientDetail.Update(client);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
-        await Api.Clients.Clients.Read(dispatch);  // TODO optimize this
+        await Api.Advisor.ClientDetail.Update(client);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.Clients.Read(dispatch);  // TODO optimize this
         goBack();
         return false;
     };

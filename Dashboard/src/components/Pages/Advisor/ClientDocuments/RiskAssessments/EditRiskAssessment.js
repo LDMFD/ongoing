@@ -23,8 +23,8 @@ const EditRiskAssessment = () => {
     }
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.RiskAssessments.Update(client.Id, assessment)
-        await Api.Clients.ClientDetail.Read(dispatch, client.Id)
+        await Api.Advisor.RiskAssessments.Update(client.Id, assessment)
+        await Api.Advisor.ClientDetail.Read(dispatch, client.Id)
         goBack();
         return false;
     };

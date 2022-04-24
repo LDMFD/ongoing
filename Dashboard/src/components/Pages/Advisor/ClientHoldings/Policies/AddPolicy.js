@@ -18,8 +18,8 @@ const AddPolicy = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.Policies.Create(clientId, policy);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.Policies.Create(clientId, policy);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };

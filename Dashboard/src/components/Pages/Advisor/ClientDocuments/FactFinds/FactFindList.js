@@ -27,8 +27,8 @@ const FactFindList = () => {
 
     const deleteFactFind = useCallback(id => async () => {
         if (window.confirm(`Delete fact find?`)) {
-            await Api.Clients.FactFinds.Delete(client.Id, id);
-            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+            await Api.Advisor.FactFinds.Delete(client.Id, id);
+            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }
     }, [ dispatch, client.Id ]);
 

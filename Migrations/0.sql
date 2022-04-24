@@ -138,6 +138,16 @@ CREATE TABLE fact_finds (
     CONSTRAINT fk_fact_find FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 
+CREATE TABLE fees_reports (
+    "id"                      int primary key generated always as identity,
+    "uid"                     text not null unique,
+    "client_id"               int not null,
+    "file_id"                 int not null,
+    "submitted"               timestamp default null,
+    "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_fees_report FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
+);
+
 CREATE TABLE clients (
     "id"                      int primary key generated always as identity,
     "user_id"                 int not null unique,

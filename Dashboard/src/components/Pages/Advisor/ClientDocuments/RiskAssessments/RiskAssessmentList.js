@@ -27,8 +27,8 @@ const RiskAssessmentList = () => {
 
     const deleteRiskAssessment = useCallback(id => async () => {
         if (window.confirm(`Delete assessment?`)) {
-            await Api.Clients.RiskAssessments.Delete(client.Id, id);
-            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+            await Api.Advisor.RiskAssessments.Delete(client.Id, id);
+            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }
     }, [ dispatch, client.Id ]);
 

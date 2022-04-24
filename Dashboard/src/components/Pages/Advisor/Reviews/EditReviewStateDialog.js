@@ -25,8 +25,8 @@ export const EditReviewStateDialog = () => {
    
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.Reviews.Publish(client.Id, reviewId);
-        await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+        await Api.Advisor.Reviews.Publish(client.Id, reviewId);
+        await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         goBack();
         return false;
     };

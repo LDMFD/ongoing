@@ -25,7 +25,7 @@ export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandl
     return (
         <Dialog open={true} onClose={goBack}>
             <form onSubmit={submitHandler}>
-                <DialogTitle>{submitLabel} FactFind</DialogTitle>
+                <DialogTitle>{submitLabel} Fact Find</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Upload Fact Find document

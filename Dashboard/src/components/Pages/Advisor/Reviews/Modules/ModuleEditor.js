@@ -58,15 +58,15 @@ export const EditModuleText = () => {
 
     let onSubmit = async (e) => {
         e.preventDefault();
-        await Api.Clients.ReviewModules.Update(clientId, module, moduleState);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.ReviewModules.Update(clientId, module, moduleState);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };
 
     let onDelete = async () => {
-        await Api.Clients.ReviewModules.Delete(clientId, module, field);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.ReviewModules.Delete(clientId, module, field);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
     }
 

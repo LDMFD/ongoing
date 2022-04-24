@@ -29,8 +29,8 @@ const PolicyList = () => {
 
     const deletePolicy = useCallback(params => async () => {
         if (window.confirm(`Delete policy?`)) {
-            await Api.Clients.Policies.Delete(client.Id, params.row.id);
-            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+            await Api.Advisor.Policies.Delete(client.Id, params.row.id);
+            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }
     }, [ dispatch, client.Id ]);
 

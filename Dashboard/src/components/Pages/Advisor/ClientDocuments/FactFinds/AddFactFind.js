@@ -18,8 +18,8 @@ const AddFactFind = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.FactFinds.Create(clientId, factFind);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.FactFinds.Create(clientId, factFind);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };

@@ -20,7 +20,7 @@ const ClientWrapper = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     const getDependencies = useCallback(async () => {
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         setLoaded(true);
     }, [ dispatch, clientId ]);
 

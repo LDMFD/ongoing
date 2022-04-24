@@ -16,8 +16,8 @@ const ClientList = () => {
 
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete client?`)) {
-            await Api.Clients.ClientDetail.Delete(params.row.id)
-            await Api.Clients.Clients.Read(dispatch);
+            await Api.Advisor.ClientDetail.Delete(params.row.id)
+            await Api.Advisor.Clients.Read(dispatch);
         }        
     }, [ dispatch ]);
 

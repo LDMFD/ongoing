@@ -20,8 +20,8 @@ const ReviewList = () => {
     } = state;
 
     const addReview = async () => {
-        await Api.Clients.Reviews.Create(client.Id);
-        await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+        await Api.Advisor.Reviews.Create(client.Id);
+        await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
     };
 
     const onEdit = useCallback(params => () => {
@@ -30,8 +30,8 @@ const ReviewList = () => {
 
     const onDelete = useCallback(params => async () => {
         if (window.confirm(`Delete client review?`)) {
-            await Api.Clients.Reviews.Delete(client.Id, params.row.id)
-            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+            await Api.Advisor.Reviews.Delete(client.Id, params.row.id)
+            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }        
     }, [ dispatch, client.Id ]);
 

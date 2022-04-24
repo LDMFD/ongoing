@@ -18,8 +18,8 @@ const AddRiskAssessment = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.RiskAssessments.Create(clientId, assessment);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.RiskAssessments.Create(clientId, assessment);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };

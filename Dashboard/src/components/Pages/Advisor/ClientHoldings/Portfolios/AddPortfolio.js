@@ -18,8 +18,8 @@ const AddPortfolio = () => {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        await Api.Clients.Portfolios.Create(clientId, portfolio);
-        await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Advisor.Portfolios.Create(clientId, portfolio);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
         return false;
     };

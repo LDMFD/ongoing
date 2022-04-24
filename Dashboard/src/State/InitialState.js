@@ -13,7 +13,7 @@ const InitialState = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     // Advisors
-    const getClients        = useCallback(() => { return Api.Clients.Clients.Read(dispatch); }, [ dispatch ]);
+    const getClients        = useCallback(() => { return Api.Advisor.Clients.Read(dispatch); }, [ dispatch ]);
     const getGlobalEntities = useCallback(() => { return Api.Global.Entities.Read(dispatch); }, [ dispatch ]);
     
     const getAdvisorDependencies = useCallback(async () => {

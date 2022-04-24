@@ -26,8 +26,8 @@ const EditPortfolio = () => {
         if (portfolio.Proportion === '') {
             portfolio.Proportion = 1;
         }
-        await Api.Clients.Portfolios.Update(client.Id, portfolio)
-        await Api.Clients.ClientDetail.Read(dispatch, client.Id)
+        await Api.Advisor.Portfolios.Update(client.Id, portfolio)
+        await Api.Advisor.ClientDetail.Read(dispatch, client.Id)
         goBack();
         return false;
     };

@@ -25,8 +25,8 @@ const PortfolioList = () => {
 
     const deletePortfolio = useCallback(params => async () => {
         if (window.confirm(`Delete portfolio?`)) {
-            await Api.Clients.Portfolios.Delete(client.Id, params.row.id);
-            await Api.Clients.ClientDetail.Read(dispatch, client.Id);
+            await Api.Advisor.Portfolios.Delete(client.Id, params.row.id);
+            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }        
     }, [ dispatch, client.Id ]);
 

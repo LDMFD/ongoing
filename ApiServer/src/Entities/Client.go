@@ -20,6 +20,7 @@ type Client struct {
 	User            User              `bun:"rel:has-one,join:user_id=id"`
 	FactFinds       []*FactFind       `bun:"rel:has-many,join:id=client_id"`
 	RiskAssessments []*RiskAssessment `bun:"rel:has-many,join:id=client_id"`
+	FeesReports     []*FeesReport     `bun:"rel:has-many,join:id=client_id"`
 	Policies        []*Policy         `bun:"rel:has-many,join:id=client_id"`
 	PolicyFunds     []*PolicyFund     `bun:"rel:has-many,join:id=client_id"`
 	Portfolios      []*Portfolio      `bun:"rel:has-many,join:id=client_id"`
