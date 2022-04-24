@@ -8,7 +8,6 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
 } from '@mui/material';
 
@@ -79,19 +78,11 @@ export const EditModuleText = () => {
             <form onSubmit={onSubmit}>
                 <DialogTitle>Edit Module Text</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Enter fund details
-                    </DialogContentText>
-
-                        <Card variant='outlined'>
-                            <CardHeader subheader={`Enter text`} />
-                            <CardContent>
-                                <RichTextEditor initialValue = {moduleState[capsField]}
-                                                onChange     = {onChange} />
-                            </CardContent>
-                        </Card>
-
-                    </DialogContent>
+                    <CardContent>
+                        <RichTextEditor initialValue = {moduleState[capsField]}
+                                        onChange     = {onChange} />
+                    </CardContent>
+                </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
                     <Button disabled={deleteDisabled} variant='outlined' onClick={onDelete}>{deleteLabel}</Button>

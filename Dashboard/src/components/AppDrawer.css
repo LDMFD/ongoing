@@ -1,6 +1,8 @@
-.MuiDrawer-root a,
-.MuiBreadcrumbs-root a,
-.MuiToolbar-root a {
+.MuiListItemButton-root {
+    left: -10px;
+    width: calc(100% + 10px);
+}
+.MuiDrawer-root a, .MuiBreadcrumbs-root a, .MuiToolbar-root a {
     text-decoration: none;
     color: inherit;
 }

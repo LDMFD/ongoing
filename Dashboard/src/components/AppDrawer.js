@@ -13,7 +13,6 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 
 import './AppDrawer.css';
 
@@ -27,37 +26,30 @@ const drawerWidth = 240;
 const advisorItems = [
     {
         label: 'Clients',
-        icon: <SearchIcon />,
         link: '/clients',
     },
     {
         label: 'Models',
-        icon: <SearchIcon />,
         link: '/models',
     },
     {
         label: 'Funds',
-        icon: <SearchIcon />,
         link: '/funds',
     },
     {
         label: 'Operators',
-        icon: <SearchIcon />,
         link: '/operators',
     },
     {
         label: 'Policy Types',
-        icon: <SearchIcon />,
         link: '/policy-types',
     },
     {
         label: 'Policy Providers',
-        icon: <SearchIcon />,
         link: '/policy-providers',
     },
     {
         label: 'Risk Providers',
-        icon: <SearchIcon />,
         link: '/risk-providers',
     },
 ];
@@ -68,19 +60,17 @@ const Items = {
     'admin': advisorItems.concat([
         {
             label: 'Module Presets',
-            icon: <SearchIcon />,
             link: '/review-config/module-presets',
         },
         // {
         //     label: 'Users',
-        //     icon: <SearchIcon />,
+        //  
         //     link: '/users',
         // },
     ]),
     'client': [
         {
             label: 'Your Reviews',
-            icon: <SearchIcon />,
             link: '/client-space/reviews',
         },
     ],
