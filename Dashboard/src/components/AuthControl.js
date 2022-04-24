@@ -62,8 +62,10 @@ function AuthControl() {
     }, [ dispatch, _logout ]);
 
     useEffect(() => {
-        ShowLogin(loginFn);
-    }, [ loginFn ]);
+        if (!state.Auth) {
+            ShowLogin(loginFn);
+        }
+    }, [ loginFn, state.Auth ]);
 
     return (
         <div>
