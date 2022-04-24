@@ -1,29 +1,29 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import AddClient          from './ClientProfiles/AddClient';
-import AddFactFind        from './FactFinds/AddFactFind';
-import AddPolicy          from './Policies/AddPolicy';
-import AddPolicyFund      from './PolicyFunds/AddPolicyFund';
-import AddPortfolio       from './Portfolios/AddPortfolio';
-import AddRiskAssessment  from './RiskAssessments/AddRiskAssessment';
-import ClientAccountPage  from './ClientProfiles/Account'
-import ClientList         from './ClientProfiles/ClientList';
+import AddClient          from './ClientManagement/AddClient';
+import AddFactFind        from './ClientDocuments/FactFinds/AddFactFind';
+import AddPolicy          from './ClientHoldings/Policies/AddPolicy';
+import AddPolicyFund      from './ClientHoldings/PolicyFunds/AddPolicyFund';
+import AddPortfolio       from './ClientHoldings/Portfolios/AddPortfolio';
+import AddRiskAssessment  from './ClientDocuments/RiskAssessments/AddRiskAssessment';
+import ClientAccountPage  from './ClientManagement/Account'
+import ClientList         from './ClientManagement/ClientList';
 import ClientWrapper      from './AdvisorSpaceWrapper';
-import EditClient         from './ClientProfiles/EditClient';
-import EditFactFind       from './FactFinds/EditFactFind';
-import EditPolicy         from './Policies/EditPolicy';
-import EditPolicyFund     from './PolicyFunds/EditPolicyFund';
-import EditPortfolio      from './Portfolios/EditPortfolio';
-import EditRiskAssessment from './RiskAssessments/EditRiskAssessment';
-import FactFindList       from './FactFinds/FactFindList';
-import PolicyFundList     from './PolicyFunds/PolicyFundList';
-import PolicyList         from './Policies/PolicyList';
-import PortfolioList      from './Portfolios/PortfolioList';
+import EditClient         from './ClientManagement/EditClient';
+import EditFactFind       from './ClientDocuments/FactFinds/EditFactFind';
+import EditPolicy         from './ClientHoldings/Policies/EditPolicy';
+import EditPolicyFund     from './ClientHoldings/PolicyFunds/EditPolicyFund';
+import EditPortfolio      from './ClientHoldings/Portfolios/EditPortfolio';
+import EditRiskAssessment from './ClientDocuments/RiskAssessments/EditRiskAssessment';
+import FactFindList       from './ClientDocuments/FactFinds/FactFindList';
+import PolicyFundList     from './ClientHoldings/PolicyFunds/PolicyFundList';
+import PolicyList         from './ClientHoldings/Policies/PolicyList';
+import PortfolioList      from './ClientHoldings/Portfolios/PortfolioList';
 import ReportRoutes       from './AdvisorReport/ReportRoutes';
 import ReviewList         from './Reviews/AdvisorReviewList';
 import ReviewRoutes       from './Reviews/ReviewRoutes';
-import RiskAssessmentList from './RiskAssessments/RiskAssessmentList';
+import RiskAssessmentList from './ClientDocuments/RiskAssessments/RiskAssessmentList';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();

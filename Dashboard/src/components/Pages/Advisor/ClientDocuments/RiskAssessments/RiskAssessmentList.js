@@ -13,7 +13,7 @@ import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
 import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
-import Table from '../../../Widgets/Table';
+import Table from 'Components/Widgets/Table';
 
 const RiskAssessmentList = () => {
     let history = useHistory();
