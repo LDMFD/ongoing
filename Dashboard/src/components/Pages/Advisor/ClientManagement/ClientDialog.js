@@ -12,14 +12,14 @@ import {
 
 import { GoBack } from 'Utils/Routing';
 
-const ClientDialog = ({ client, setClient, submitLabel, submitHandler }) => {
+const ClientDialog = ({ identity, setIdentity, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetSurname:   (event) => { setClient({ ...client, Surname:   event.target.value, }); },
-        SetForenames: (event) => { setClient({ ...client, Forenames: event.target.value, }); },
-        SetEmail:     (event) => { setClient({ ...client, Email:     event.target.value, }); },
+        SetSurname:   (event) => { setIdentity({ ...identity, Surname:   event.target.value, }); },
+        SetForenames: (event) => { setIdentity({ ...identity, Forenames: event.target.value, }); },
+        SetEmail:     (event) => { setIdentity({ ...identity, Email:     event.target.value, }); },
     }
 
     return (
@@ -31,7 +31,7 @@ const ClientDialog = ({ client, setClient, submitLabel, submitHandler }) => {
                         Enter client details
                     </DialogContentText>
 
-                    <TextField value    = {client.Surname}
+                    <TextField value    = {identity.Surname}
                                onChange = {handlers.SetSurname}
                                margin   = "dense"
                                id       = "surname"
@@ -41,7 +41,7 @@ const ClientDialog = ({ client, setClient, submitLabel, submitHandler }) => {
                                autoFocus
                                fullWidth />
 
-                    <TextField value    = {client.Forenames}
+                    <TextField value    = {identity.Forenames}
                                onChange = {handlers.SetForenames}
                                margin   = "dense"
                                id       = "forenames"
@@ -50,7 +50,7 @@ const ClientDialog = ({ client, setClient, submitLabel, submitHandler }) => {
                                variant  = "standard"
                                fullWidth />
 
-                    <TextField value    = {client.Email}
+                    <TextField value    = {identity.Email}
                                onChange = {handlers.SetEmail}
                                margin   = "dense"
                                id       = "email"

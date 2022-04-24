@@ -19,9 +19,9 @@ const EditClient = () => {
         let c = state.Clients.find(c => c.Id === clientId);
         setClient({
             Id: c.Id,
-            Forenames: c.Forenames,
-            Surname: c.Surname,
-            Email: c.Email,
+            Forenames: c.Identity.Forenames,
+            Surname: c.Identity.Surname,
+            Email: c.Identity.Email,
         })
         return;
     }
@@ -30,13 +30,14 @@ const EditClient = () => {
         e.preventDefault();
         await Api.Clients.ClientDetail.Update(client);
         await Api.Clients.ClientDetail.Read(dispatch, clientId);
+        await Api.Clients.Clients.Read(dispatch);  // TODO optimize this
         goBack();
         return false;
     };
 
     return (
-        <ClientDialog client           = {client}
-                      setClient        = {setClient}
+        <ClientDialog identity         = {client}
+                      setIdentity      = {setClient}
                       submitLabel      = 'Update'
                       submitHandler    = {submitHandler}  />
     );

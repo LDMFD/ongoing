@@ -4,10 +4,8 @@ import React, { useEffect, useContext, useCallback, useState } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import {
     Breadcrumbs,
-    Button,
     Tab,
     Tabs,
-    Toolbar,
 } from '@mui/material';
 
 import { Context } from 'State/StateProvider'
@@ -66,10 +64,6 @@ const ClientWrapper = ({ children }) => {
                     {client.Identity.Surname}, {client.Identity.Forenames}
                 </Link>
             </Breadcrumbs>
-
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/edit` }}><Button>Edit client</Button></Link>
-            </Toolbar>
 
             <ClientTabs />
 

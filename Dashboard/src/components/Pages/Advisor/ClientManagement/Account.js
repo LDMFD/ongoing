@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import {
     Button,
+    Toolbar,
 } from '@mui/material';
 
 import { Context } from 'State'
@@ -40,11 +41,14 @@ const ClientAccountPage = () => {
             <p>
                 Email: <a href={`mailto:${client.Identity.Email}`} target='_blank' rel='noreferrer'>{client.Identity.Email}</a>
             </p>
-            <p>
+
+            <Toolbar className="breadcrumb-action">
+                <Link to={{ pathname: `/clients/id/${client.Id}/edit` }}><Button>Edit client</Button></Link>
+                
                 <Button onClick={SendSignInLink.bind(null, client.Identity.Email)}>
                     Send sign-in link
                 </Button>
-            </p>
+            </Toolbar>
         </div>
     );
 }
