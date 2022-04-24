@@ -33,7 +33,7 @@ const RiskAssessmentList = () => {
     }, [ dispatch, client.Id ]);
 
     const editRiskAssessment = useCallback(id => () => {
-        history.push(`/clients/id/${client.Id}/risk-assessments/id/${id}/edit`);
+        history.push(`/clients/id/${client.Id}/documents/risk-assessments/id/${id}/edit`);
     }, [ history, client.Id ]);
 
     const downloadFile = useCallback(fileUid => () => {
@@ -111,7 +111,7 @@ const RiskAssessmentList = () => {
     return (
         <div className='ongoing-riskassessmentList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/risk-assessments/add` }}><Button>Add assessment</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/documents/risk-assessments/add` }}><Button>Add assessment</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={assessments} />

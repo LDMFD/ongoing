@@ -36,7 +36,7 @@ const PolicyList = () => {
 
     const editPolicy = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/clients/id/${client.Id}/policies/id/${id}/edit`);
+        history.push(`/clients/id/${client.Id}/holdings/policies/id/${id}/edit`);
     }, [ history, client.Id ]);
 
     const downloadFile = useCallback(params => () => {
@@ -106,7 +106,7 @@ const PolicyList = () => {
     return (
         <div className='ongoing-policyList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/policies/add` }}><Button>Add policy</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/holdings/policies/add` }}><Button>Add policy</Button></Link>
             </Toolbar>
 
             <DataGrid autoHeight {...data} />

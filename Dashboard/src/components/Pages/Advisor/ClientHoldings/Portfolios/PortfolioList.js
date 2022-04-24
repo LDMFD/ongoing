@@ -32,7 +32,7 @@ const PortfolioList = () => {
 
     const editPortfolio = useCallback(params => () => {
         let id = params.row.id;
-        history.push(`/clients/id/${client.Id}/portfolios/id/${id}/edit`);
+        history.push(`/clients/id/${client.Id}/holdings/portfolios/id/${id}/edit`);
     }, [ history, client.Id ]);
 
     const downloadFile = useCallback(params => () => {
@@ -92,7 +92,7 @@ const PortfolioList = () => {
     return (
         <div className='ongoing-portfolioList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/portfolios/add` }}><Button>Add portfolio</Button></Link>
+                <Link to={{ pathname: `/clients/id/${client.Id}/holdings/portfolios/add` }}><Button>Add portfolio</Button></Link>
             </Toolbar>
 
             <DataGrid autoHeight {...data} />

@@ -33,7 +33,7 @@ const FactFindList = () => {
     }, [ dispatch, client.Id ]);
 
     const editFactFind = useCallback(id => () => {
-        history.push(`/clients/id/${client.Id}/fact-finds/id/${id}/edit`);
+        history.push(`/clients/id/${client.Id}/documents/fact-finds/id/${id}/edit`);
     }, [ history, client.Id ]);
 
     const downloadFile = useCallback(fileUid => () => {
@@ -85,7 +85,7 @@ const FactFindList = () => {
     return (
         <div className='ongoing-factfindList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/fact-finds/add` }}><Button>Add fact find</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/documents/fact-finds/add` }}><Button>Add fact find</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={factFinds} />
