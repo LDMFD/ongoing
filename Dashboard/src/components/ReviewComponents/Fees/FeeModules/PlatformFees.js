@@ -71,10 +71,18 @@ const PlatformFees = () => {
 
         let pricing = r.provider.Pricing.replace('{{ charges }}', markup);
 
+        let policies = (
+            <ul style={{ paddingLeft: '1rem' }}>
+                {r.policies.map(p => (
+                    <li key={p.Id}>{p.ExternalId}</li>
+                ))}
+            </ul>
+        );
+
         return {
             id:       ix++,
             provider: r.provider.Name,
-            policies: r.policies.map(p => p.ExternalId).join(', '),
+            policies: policies,
             pricing:  pricing,
         }
     });

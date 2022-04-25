@@ -12,7 +12,7 @@ import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/Module
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
-const PolicyFunds = ({ review, policy, policyFunds }) => {
+const PolicyFunds = ({ report, policy, policyFunds }) => {
     const downloadFile = useCallback(params => () => {
         Download(params.row.fileUid);
     }, []);
@@ -36,7 +36,7 @@ const PolicyFunds = ({ review, policy, policyFunds }) => {
     ];
 
     policyFunds = policyFunds.map(pf => {
-        let fund = review.Funds.find(f => f.Id === pf.FundId);
+        let fund = report.Funds.find(f => f.Id === pf.FundId);
         return {
             id:          pf.Id,
             fund:        fund.Name,
@@ -60,9 +60,15 @@ const PolicyFunds = ({ review, policy, policyFunds }) => {
     let ocfPounds    = ocfWeightedAvg    / 100 * policy.EndValue;
     let exAntePounds = exAnteweightedAvg / 100 * policy.EndValue;
 
+    let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
+
     return (
-       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '1rem' }}>
-            <h3>{policy.ExternalId}</h3>
+       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '2rem' }}>
+            <h3>{provider.Name} ({policy.ExternalId})</h3>
+
+            <p>
+                Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
+            </p>
 
             <DataGrid autoHeight {...data} />
 
@@ -71,11 +77,8 @@ const PolicyFunds = ({ review, policy, policyFunds }) => {
                 <b>Weighted Ex Ante:</b> {exAnteweightedAvg.toPrecision(2)}%<br />
             </p>
       
-            <p>
-                Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
-            </p>
-
-            Estimated annual charges in pounds, based on values at end of period:<br />
+            Estimated annual charges in pounds, based on values at end of period:
+            <br /> <br />
             <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
             <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
 
@@ -95,12 +98,13 @@ const FundLevelFees = () => {
     return (
         <div>
             <ModuleWrapper module={ModuleTypeFundLevelFees} />
+            <br />
 
             {report.Policies.map(p => {
                 let policyFunds = report.PolicyFunds.filter(pf => pf.PolicyId === p.Id);
                 return policyFunds.length ? (
                     <Paper elevation={2} key={p.Id}>
-                        <PolicyFunds review      = {report}
+                        <PolicyFunds report      = {report}
                                      policy      = {p}
                                      policyFunds = {policyFunds} />
                     </Paper>

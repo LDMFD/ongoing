@@ -12,7 +12,7 @@ import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrappe
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
 
-const PolicyPortfolios = ({ policy, portfolios }) => {
+const PolicyPortfolios = ({ report, policy, portfolios }) => {
     const downloadFile = useCallback(params => () => {
         Download(params.row.fileUid);
     }, []);
@@ -56,9 +56,15 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
     let ocfPounds    = weightedOcf    / 100 * policy.EndValue;
     let exAntePounds = weightedExAnte / 100 * policy.EndValue;
 
+    let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
+
     return (
-       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '1rem' }}>
-            <h3>{policy.ExternalId}</h3>
+       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '2rem' }}>
+            <h3>{provider.Name} ({policy.ExternalId})</h3>
+
+            <p>
+                Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
+            </p>
 
             <DataGrid autoHeight {...data} />
 
@@ -67,10 +73,6 @@ const PolicyPortfolios = ({ policy, portfolios }) => {
                 <b>Weighted Ex Ante:</b> {weightedExAnte}%<br />
             </p>
       
-            <p>
-                Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
-            </p>
-
             Estimated annual charges in pounds, based on values at end of period:<br />
             <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
             <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
@@ -120,9 +122,13 @@ const PortfolioLevelFees = () => {
     return (
         <>
             <ModuleWrapper module={ModuleTypePortfolioLevelFees} />
+            <br />
 
             {report.Policies.map(p => 
-                <PolicyPortfolios policy={p} portfolios={portfolios} key={p.Id} />
+                <PolicyPortfolios report={report}
+                                  policy={p}
+                                  portfolios={portfolios}
+                                  key={p.Id} />
             )}
         </>
     );

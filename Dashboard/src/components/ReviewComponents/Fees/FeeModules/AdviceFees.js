@@ -52,7 +52,7 @@ const AdviceFees = () => {
         columns: columns,
     }
 
-    let feesReport = report.FeesReports.map(fr => {
+    let feesReport = report.FeesReports?.map(fr => {
         return {
             id:        fr.Id,
             submitted: Day(fr.Submitted).format('DD-MM-YYYY'),
@@ -68,11 +68,15 @@ const AdviceFees = () => {
             <p>
                 Advice fee: {client.Fee}%
 
-                <br />
-                Fees report: <button onClick={downloadFile(feesReport.file.Uid)} className='ong-openFileIcon'>
-                    {feesReport.file.Filename}
-                    <DownloadIcon />
-                </button>
+                {feesReport && (
+                    <>
+                        <br />
+                        Fees report: <button onClick={downloadFile(feesReport.file.Uid)} className='ong-openFileIcon'>
+                            {feesReport.file.Filename}
+                            <DownloadIcon />
+                        </button>
+                    </>
+                )}
             </p>
 
             <DataGrid autoHeight {...data} />

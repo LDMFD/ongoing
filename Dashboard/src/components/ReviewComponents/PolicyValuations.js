@@ -17,6 +17,8 @@ const PolicyValuations = () => {
         Download(uid);
     }, []);
 
+    let includeNotes = report.Policies.some(p => p.Notes?.length && p.Notes !== '<p><br></p>');
+
     let columns = [
         {
             Header: 'Policy',
@@ -38,7 +40,9 @@ const PolicyValuations = () => {
             accessor: 'contributions',
             width: 12,
         },
-        {
+    ];
+    if (includeNotes) {
+        columns.push({
             Header: 'Notes',
             accessor: 'notes',
             width: 40,
@@ -47,8 +51,8 @@ const PolicyValuations = () => {
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.notes }} />
                 )
             ),
-        },
-    ];
+        });
+    }
     
     let valuations = report.Policies.map(p => {
         let contributions;
@@ -75,16 +79,19 @@ const PolicyValuations = () => {
             </div>
         )
 
-        return {
+        let col = {
             id:            p.Id,
             externalId:    p.ExternalId,
             policy:        policyCell,
             startValue:    CurrencyFormatter.format(p.StartValue),
             endValue:      CurrencyFormatter.format(p.EndValue),
             contributions: `${contributions}`,
-            notes:         p.Notes,
             fileUid:       p.File?.Uid,
         };
+        if (includeNotes) {
+            col.notes = p.Notes;
+        }
+        return col;
     }).sort((p,q) => (p.externalId < q.externalId) ? -1 : ((p.externalId > q.externalId) ? 1 : 0));
 
     return (
