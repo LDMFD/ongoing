@@ -1,0 +1,8 @@
+.iconGroup .MuiSvgIcon-root {
+    margin-right: 2rem;
+    color: grey;
+}
+.iconGroup .MuiSvgIcon-root:hover {
+    color: rgb(82, 82, 82);
+    transition: all 0.25s;
+}

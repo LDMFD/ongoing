@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
@@ -10,9 +9,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
 import { ModuleTypeSelectSpec } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import Table from 'Components/Widgets/Table';
+import IconGroup from 'Components/Widgets/IconGroup';
 
 const ModulePresetList = () => {
-    let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
     const getModulePresets = useCallback(() => {
@@ -23,29 +23,30 @@ const ModulePresetList = () => {
         getModulePresets();
     }, [ getModulePresets ]);
     
-    const onDelete = useCallback(params => async () => {
-        if (window.confirm(`Delete modulePreset?`)) {
-            await Api.Global.ModulePresets.Delete(params.row.id)
-            await Api.Global.Entities.Read(dispatch);
-        }        
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(params => () => {
-        let id = params.row.id;
-        history.push(`/review-config/module-presets/id/${id}/edit`);
-    }, [ history ]);
-
     const columns = [
-        { field: 'moduleType', headerName: 'Module Type',     flex: 0.5, },
-        { field: 'text',       headerName: 'Intro paragraph', flex: 0.5, },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .01,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            accessor: 'moduleType',
+            Header: 'Module Type',
+            width: 1,
+        },
+        {
+            accessor: 'text',
+            Header: 'Intro paragraph',
+            width: 1,
+        },
+        {
+            accessor: 'actions',
+            width: .2,
+            Cell: ({ row }) => (
+                <IconGroup>
+                    <Link to={`/review-config/module-presets/id/${row.original.id}/delete`}>
+                        <DeleteIcon />
+                    </Link>
+                    <Link to={`/review-config/module-presets/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
+            ),
         },
     ];
 
@@ -57,18 +58,13 @@ const ModulePresetList = () => {
         };
     });
 
-    let data = {
-        rows: modulePresets,
-        columns: columns,
-    }
-
     return (
         <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: '/review-config/module-presets/add' }}><Button>Add new Module Preset</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={modulePresets} />
         </>
     );
 }

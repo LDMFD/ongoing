@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import ModulePresetList from './ModulePresetList';
 import AddModulePreset from './AddModulePreset';
 import EditModulePreset from './EditModulePreset';
+import DeleteModulePreset from './DeleteModulePreset';
 
 const ModulePresetRoutes = () => {
     let { path } = useRouteMatch();
@@ -25,6 +26,9 @@ const ModulePresetRoutes = () => {
             </Route>
             <Route path={`${path}/id/:modulePresetId/edit`}>
                 <EditModulePreset />
+            </Route>
+            <Route path={`${path}/id/:modulePresetId/delete`}>
+                <DeleteModulePreset />
             </Route>
         </div>
     );
