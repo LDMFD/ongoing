@@ -94,7 +94,8 @@ const ClientDialog = ({ client, setClient, submitLabel, submitHandler }) => {
                                margin   = "dense"
                                id       = "fee"
                                label    = "Fee"
-                               type     = "fee"
+                               type     = "number"
+                               step     = "any"
                                variant  = "standard"
                                fullWidth />
 

@@ -29,15 +29,15 @@ const advisorItems = [
         link: '/clients',
     },
     {
-        label: 'Models',
-        link: '/models',
-    },
-    {
         label: 'Funds',
         link: '/funds',
     },
     {
-        label: 'Operators',
+        label: 'Models',
+        link: '/models',
+    },
+    {
+        label: 'Model Operators',
         link: '/operators',
     },
     {

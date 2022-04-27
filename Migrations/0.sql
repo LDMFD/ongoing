@@ -169,8 +169,8 @@ CREATE TABLE policies (
     "monthly_contributions"   int,    -- 0 for none, null for no data
     "start_value"             int,
     "end_value"               int,
-    -- "start_date"              timestamp default null,
-    -- "end_date"                timestamp default null,
+    "start_date"              timestamp default null,
+    "end_date"                timestamp default null,
     "notes"                   text not null,
     "file_id"                 int,
     "timestamp"               timestamp default current_timestamp,
