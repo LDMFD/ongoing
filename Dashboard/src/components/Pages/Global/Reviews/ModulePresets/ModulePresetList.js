@@ -27,16 +27,16 @@ const ModulePresetList = () => {
         {
             accessor: 'moduleType',
             Header: 'Module Type',
-            width: 1,
+            width: 2,
         },
         {
             accessor: 'text',
             Header: 'Intro paragraph',
-            width: 1,
+            width: 5,
         },
         {
             accessor: 'actions',
-            width: .2,
+            width: 1,
             Cell: ({ row }) => (
                 <IconGroup>
                     <Link to={`/review-config/module-presets/id/${row.original.id}/delete`}>
