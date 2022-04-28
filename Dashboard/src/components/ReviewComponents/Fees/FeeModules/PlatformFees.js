@@ -3,7 +3,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import Table from 'Components/Widgets/Table';
+import Table from 'Components/Library/Table';
 
 const PlatformFees = () => {
     let report = GetReport();

@@ -10,7 +10,7 @@ import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/M
 import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 
 const PolicyPortfolios = ({ report, policy, portfolios }) => {
     const downloadFile = useCallback(params => () => {

@@ -14,7 +14,7 @@ import './PolicyList.css';
 import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { CurrencyFormatter } from 'Utils/Strings';
 
 const PolicyList = () => {

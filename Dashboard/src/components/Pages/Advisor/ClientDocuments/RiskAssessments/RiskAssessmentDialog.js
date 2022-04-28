@@ -17,7 +17,7 @@ import Day from 'dayjs';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
-import FileUploader from 'Components/Widgets/FileHandling/FileUploader';
+import FileUploader from 'Components/Library/FileHandling/FileUploader';
 
 export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, submitHandler }) => {
     let history = useHistory();

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import RichTextEditor from 'Components/Widgets/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor';
 
 import './PolicyProviderDialog.css';
 

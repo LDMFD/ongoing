@@ -12,8 +12,8 @@ import Day from 'dayjs';
 import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
-import Table from 'Components/Widgets/Table';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const FactFindList = () => {
     let history = useHistory();

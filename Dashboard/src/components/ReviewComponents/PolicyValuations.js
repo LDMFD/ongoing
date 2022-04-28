@@ -5,8 +5,8 @@ import { ModuleTypePolicyValuations } from 'State/ApiCommands/Global/Reviews/Mod
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetReport } from './GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
-import Table from '../Widgets/Table';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from '../Library/Table';
 
 import './PolicyValuations.css';
 

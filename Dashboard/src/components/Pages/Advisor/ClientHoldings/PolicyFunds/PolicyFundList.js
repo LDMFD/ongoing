@@ -11,7 +11,7 @@ import {
 
 import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 
 const PolicyFundList = () => {
     let history = useHistory();

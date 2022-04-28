@@ -9,8 +9,8 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
 import { ModuleTypeSelectSpec } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import Table from 'Components/Widgets/Table';
-import IconGroup from 'Components/Widgets/IconGroup';
+import Table from 'Components/Library/Table';
+import IconGroup from 'Components/Library/IconGroup';
 
 const ModulePresetList = () => {
     const [ state, dispatch] = useContext(Context);

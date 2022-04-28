@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import FileUploader from 'Components/Widgets/FileHandling/FileUploader';
+import FileUploader from 'Components/Library/FileHandling/FileUploader';
 
 export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
     let history = useHistory();

@@ -10,7 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { Context, Api } from 'State'
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 
 const ModelList = () => {
     let history = useHistory();

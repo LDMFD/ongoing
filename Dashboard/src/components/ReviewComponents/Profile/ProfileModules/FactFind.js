@@ -3,7 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Day from 'dayjs';
 
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { ModuleTypeFactFind } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 

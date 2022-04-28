@@ -3,8 +3,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Day from 'dayjs';
 
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
-import Table from '../../../Widgets/Table';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from '../../../Library/Table';
 
 const RiskQuestionnaire = () => {
     let report = GetReport();

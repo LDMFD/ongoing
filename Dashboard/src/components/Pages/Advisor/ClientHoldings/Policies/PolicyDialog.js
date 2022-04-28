@@ -13,11 +13,11 @@ import {
     MenuItem,
     Select,
 } from '@mui/material';
-import RichTextEditor from 'Components/Widgets/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
-import FileUploader from 'Components/Widgets/FileHandling/FileUploader';
+import FileUploader from 'Components/Library/FileHandling/FileUploader';
 
 const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
     let history = useHistory();

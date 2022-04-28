@@ -10,7 +10,7 @@ import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrappe
 import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 
 const PolicyFunds = ({ report, policy, policyFunds }) => {
     const downloadFile = useCallback(params => () => {

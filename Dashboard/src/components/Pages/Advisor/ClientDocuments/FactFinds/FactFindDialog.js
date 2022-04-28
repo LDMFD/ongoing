@@ -12,7 +12,7 @@ import {
 import Day from 'dayjs';
 
 import { GoBack } from 'Utils/Routing';
-import FileUploader from 'Components/Widgets/FileHandling/FileUploader';
+import FileUploader from 'Components/Library/FileHandling/FileUploader';
 
 export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandler }) => {
     let history = useHistory();

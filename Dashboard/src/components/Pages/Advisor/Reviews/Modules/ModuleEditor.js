@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import RichTextEditor from 'Components/Widgets/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor';
 
 import './EditModule.css';
 import { Api } from 'State';

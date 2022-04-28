@@ -8,7 +8,7 @@ import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Widgets/FileHandling/FileDownloader';
+import { Download } from 'Components/Library/FileHandling/FileDownloader';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);
