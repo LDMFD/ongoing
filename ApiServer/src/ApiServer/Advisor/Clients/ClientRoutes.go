@@ -42,7 +42,6 @@ func AddRoutes(r *gin.RouterGroup) {
 	reviewGroup := r.Group("/:ClientId/reviews")
 	reviewGroup.POST("", Reviews.CreateReview)
 	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
-	reviewGroup.POST("/:ReviewId/publish", Reviews.Publish)
 
 	factFindGroup := r.Group("/:ClientId/fact-finds")
 	factFindGroup.POST("", FactFinds.CreateFactFind)

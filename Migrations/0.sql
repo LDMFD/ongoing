@@ -94,7 +94,6 @@ CREATE TABLE funds (
 
 -- Attitude To Risk Questionnaire
 
--- TODO
 CREATE TABLE risk_providers (
     "id"                      int primary key generated always as identity,
     "uid"                     text not null unique,
@@ -102,7 +101,6 @@ CREATE TABLE risk_providers (
     "timestamp"               timestamp default current_timestamp
 );
 
--- TODO
 CREATE TABLE risk_levels (
     "id"                      int primary key generated always as identity,
     "uid"                     text not null unique,
