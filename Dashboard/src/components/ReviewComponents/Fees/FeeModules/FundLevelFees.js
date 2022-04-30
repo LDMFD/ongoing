@@ -3,7 +3,6 @@ import {
     Button,
     Paper,
 } from '@mui/material';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
@@ -11,27 +10,50 @@ import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const PolicyFunds = ({ report, policy, policyFunds }) => {
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(fileUid => () => {
+        Download(fileUid);
     }, []);
 
     const columns = [
-        { field: 'fund',       headerName: 'Fund name',                flex: 0.1, },
-        { field: 'ocf',        headerName: 'OCF (% pa)',               flex: 0.1, },
-        { field: 'exAnte',     headerName: 'ex-Ante (% pa)',           flex: 0.1, },
-        { field: 'percentage', headerName: 'Percentage of policy', flex: 0.1, },
-        // { field: 'wOcf',headerName: 'weight ocf', flex: 0.1, },
-        // { field: 'wEx', headerName: 'weight ex-ante', flex: 0.1, },
         {
-            field: 'actions',
-            headerName: 'Factsheet',
+            accessor: 'fund',
+            Header: 'Fund name',
+            width: 1,
+        },
+        {
+            accessor: 'ocf',
+            Header: 'OCF (% pa)',
+            width: 1,
+        },
+        {
+            accessor: 'exAnte',
+            Header: 'ex-Ante (% pa)',
+            width: 1,
+        },
+        {
+            accessor: 'percentage',
+            Header: 'Percentage of policy',
+            width: 1,
+        },
+        // { accessor: 'wOcf',Header: 'weight ocf', width: 1, },
+        // { accessor: 'wEx', Header: 'weight ex-ante', width: 1, },
+        {
+            accessor: 'actions',
+            Header: 'Factsheet',
             type: 'actions',
-            flex: .05,
-            getActions: (params) => params.row.fileUid ? [
-                <GridActionsCellItem icon={<DownloadIcon />}   onClick={downloadFile(params)} label="Download factsheet" />,
-            ] : [],
+            width: .5,
+            Cell: ({ row }) => (
+                <>
+                    {row.original.fileUid &&
+                        <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                            <DownloadIcon />
+                        </button>
+                    }
+                </>
+            ),
         },
     ];
 
@@ -49,11 +71,6 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
         };
     });
 
-    let data = {
-        rows: policyFunds,
-        columns,
-    }
-
     let ocfWeightedAvg    = policyFunds.map(p => p.wOcf).reduce((p, q) => p + q, 0);
     let exAnteweightedAvg = policyFunds.map(p => p.wEx).reduce((p, q) => p + q, 0);
 
@@ -70,7 +87,7 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
                 Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
             </p>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={policyFunds} />
 
             <p>
                 <b>Weighted OCF:</b> {ocfWeightedAvg.toPrecision(2)}%<br />

@@ -1,6 +1,5 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -16,6 +15,7 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { CurrencyFormatter } from 'Utils/Strings';
+import Table from 'Components/Library/Table';
 
 const PolicyList = () => {
     let history = useHistory();
@@ -27,44 +27,65 @@ const PolicyList = () => {
 
     let report = GetReport();
 
-    const deletePolicy = useCallback(params => async () => {
+    const deletePolicy = useCallback(id => async () => {
         if (window.confirm(`Delete policy?`)) {
-            await Api.Advisor.Policies.Delete(client.Id, params.row.id);
+            await Api.Advisor.Policies.Delete(client.Id, id);
             await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }
     }, [ dispatch, client.Id ]);
 
-    const editPolicy = useCallback(params => () => {
-        let id = params.row.id;
+    const editPolicy = useCallback(id => () => {
         history.push(`/clients/id/${client.Id}/holdings/policies/id/${id}/edit`);
     }, [ history, client.Id ]);
 
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(fileUid => () => {
+        Download(fileUid);
     }, []);
 
     const columns = [
-        { field: 'policyNumber',     headerName: 'Policy Number',         flex: 0.1, },
-        { field: 'platformDiscount', headerName: 'Platform Discount',     flex: 0.1, },
-        { field: 'monthlies',        headerName: 'Monthly Contributions', flex: 0.1, },
-        { field: 'startValue',       headerName: 'Start Value',           flex: 0.1, },
-        { field: 'endValue',         headerName: 'End Value',             flex: 0.1, },
-        { field: 'type',             headerName: 'Type',                  flex: 0.1, },
-        { field: 'provider',         headerName: 'Provider',              flex: 0.1, },
-        { field: 'notes',            headerName: 'Notes',                 flex: 0.1, },
-        {
-            field: 'actions',
-            type: 'actions',
-            flex: .1,
-            getActions: (params) => ([
-                params.row.fileUid
-                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
-                    : null,
-                <GridActionsCellItem icon={<EditIcon />}     onClick={editPolicy(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />}   onClick={deletePolicy(params)} label="Delete" />,
-            ].filter(t => t)),
-        },
+        { accessor: 'policyNumber',     Header: 'Policy Number',         width: 1, },
+        { accessor: 'platformDiscount', Header: 'Platform Discount',     width: 1, },
+        { accessor: 'monthlies',        Header: 'Monthly Contributions', width: 1, },
+        { accessor: 'startValue',       Header: 'Start Value',           width: 1, },
+        { accessor: 'endValue',         Header: 'End Value',             width: 1, },
+        { accessor: 'type',             Header: 'Type',                  width: 1, },
+        { accessor: 'provider',         Header: 'Provider',              width: 1, },
     ];
+
+    let includeNotes = report.Policies.some(p => p.Notes?.length && p.Notes !== '<p><br></p>');
+    if (includeNotes) {
+        columns.push({
+            Header: 'Notes',
+            accessor: 'notes',
+            width: 3,
+            Cell: ({ row }) => (
+                row.original.notes && (
+                    <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.notes }} />
+                )
+            ),
+        });
+    }
+
+    columns.push({
+        accessor: 'actions',
+        Header: '',
+        width: 1,
+        Cell: ({ row }) => (
+            <>
+                {row.original.fileUid &&
+                    <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                        <DownloadIcon />
+                    </button>
+                }
+                <button onClick={editPolicy(row.original.id)} className='ong-openFileIcon'>
+                    <EditIcon />
+                </button>
+                <button onClick={deletePolicy(row.original.id)} className='ong-openFileIcon'>
+                    <DeleteIcon />
+                </button>
+            </>
+        ),
+    });
 
     let policies = report.Policies.map(policy => {
         let type = report.PolicyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
@@ -98,18 +119,13 @@ const PolicyList = () => {
         };
     }).sort((p,q) => (p.policyNumber < q.policyNumber) ? -1 : ((p.policyNumber > q.policyNumber) ? 1 : 0));
 
-    let data = {
-        rows: policies,
-        columns: columns,
-    }
-
     return (
         <div className='ongoing-policyList'>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/holdings/policies/add` }}><Button>Add policy</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={policies} />
         </div>
     );
 }

@@ -3,7 +3,6 @@ import {
     Button,
     Paper,
 } from '@mui/material';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
@@ -11,27 +10,52 @@ import { CurrencyFormatter } from 'Utils/Strings';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const PolicyPortfolios = ({ report, policy, portfolios }) => {
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(fileUid => () => {
+        Download(fileUid);
     }, []);
 
     const columns = [
-        { field: 'model',              headerName: 'Model',                flex: 0.1, },
-        { field: 'ocfFee',             headerName: 'OCF Fee (%)',          flex: 0.1, },
-        { field: 'exAnteFee',          headerName: 'Ex Ante Fee (%)',      flex: 0.1, },
-        { field: 'proportionStr',      headerName: 'Proportion' ,          flex: 0.1, },
-        // { field: 'weightedOcfFee',     headerName: 'Weighted OCF (%)', flex: 0.1, },
-        // { field: 'weightedExAnteFee',  headerName: 'Weighted Ex Ante (%)', flex: 0.1, },
         {
-            field: 'actions',
-            headerName: 'Factsheet',
+            accessor: 'model',
+            headerName: 'Model',
+            width: 1,
+        }, {
+            accessor: 'ocfFee',
+            headerName: 'OCF Fee (%)',
+            width: 1,
+        }, {
+            accessor: 'exAnteFee',
+            headerName: 'Ex Ante Fee (%)',
+            width: 1,
+        }, {
+            accessor: 'proportionStr',
+            headerName: 'Proportion' ,
+            width: 1,
+        // // {
+        //     accessor: 'weightedOcfFee',
+        //     headerName: 'Weighted OCF (%)',
+        //     width: 1,
+        // }, // {
+        //     accessor: 'weightedExAnteFee',
+        //     headerName: 'Weighted Ex Ante (%)',
+        //     width: 1,
+        }, {
+            accessor: 'actions',
+            Header: 'Factsheet',
             type: 'actions',
-            flex: .05,
-            getActions: (params) => params.row.fileUid ? [
-                <GridActionsCellItem icon={<DownloadIcon />}   onClick={downloadFile(params)} label="Download factsheet" />,
-            ] : [],
+            width: .5,
+            Cell: ({ row }) => (
+                <>
+                    {row.original.fileUid &&
+                        <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                            <DownloadIcon />
+                        </button>
+                    }
+                </>
+            ),
         },
     ];
 
@@ -43,11 +67,6 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
 
     if (!portfolios.length) {
         return null;
-    }
-
-    let data = {
-        rows: portfolios,
-        columns: columns,
     }
 
     let weightedOcf    = portfolios.map(p => p.ocf * p.proportion).reduce((p, q) => p + q, 0);
@@ -66,7 +85,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
                 Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
             </p>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={portfolios} />
 
             <p>
                 <b>Weighted OCF:</b> {weightedOcf}%<br />

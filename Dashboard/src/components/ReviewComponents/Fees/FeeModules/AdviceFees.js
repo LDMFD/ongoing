@@ -1,5 +1,4 @@
 import React, { useContext, useCallback } from 'react';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DownloadIcon from '@mui/icons-material/Download';
 import Day from 'dayjs';
 
@@ -9,6 +8,7 @@ import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrappe
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);
@@ -33,24 +33,30 @@ const AdviceFees = () => {
     }, []);
 
     const columns = [
-        { field: 'policyNumber', headerName: 'Policy Number', flex: 0.1, },
-        { field: 'fee',          headerName: 'Fee',           flex: 0.1, },
         {
-            field: 'actions',
+            accessor: 'policyNumber',
+            Header: 'Policy Number',
+            width: 1,
+        }, {
+            accessor: 'fee',
+            Header: 'Fee',
+            width: 1,
+        }, {
+            accessor: 'actions',
+            Header: 'Policy file',
             type: 'actions',
-            flex: .01,
-            getActions: (params) => ([
-                params.row.fileUid
-                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params.row.fileUid)} label="Download factsheet" />
-                    : null,
-            ].filter(t => t)),
+            width: .2,
+            Cell: ({ row }) => (
+                <>
+                    {row.original.fileUid &&
+                        <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                            <DownloadIcon />
+                        </button>
+                    }
+                </>
+            ),
         },
     ];
-
-    let data = {
-        rows: policies,
-        columns: columns,
-    }
 
     let feesReport = report.FeesReports?.map(fr => {
         return {
@@ -79,7 +85,7 @@ const AdviceFees = () => {
                 )}
             </p>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={policies} />
         </>
     );
 }

@@ -1,6 +1,5 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
     Toolbar,
@@ -9,34 +8,51 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
+import Table from 'Components/Library/Table';
 
 const PolicyProviderList = () => {
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const onDelete = useCallback(params => async () => {
+    const onDelete = useCallback(id => async () => {
         if (window.confirm(`Delete policy provider?`)) {
-            await window.ApiClient.delete(`advisor/policy-providers/${params.row.id}`)
+            await window.ApiClient.delete(`advisor/policy-providers/${id}`)
             await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
-    const onEdit = useCallback(params => () => {
-        let id = params.row.id;
+    const onEdit = useCallback(id => () => {
         history.push(`/policy-providers/id/${id}/edit`);
     }, [ history ]);
 
     const columns = [
-        { field: 'name',     headerName: 'Name',       flex: 0.1, },
-        { field: 'pricing',  headerName: 'Pricing',   flex: 0.1, },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .05,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            accessor: 'name',
+            Header: 'Name',
+            width: 1,
+        }, {
+            accessor: 'pricing',
+            Header: 'Pricing',
+            width: 3,
+            Cell: ({ row }) => (
+                row.original.pricing && (
+                    <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.pricing }} />
+                )
+            ),
+        }, {
+            accessor: 'actions',
+            Header: '',
+            width: 0.5,
+            Cell: ({ row }) => (
+                <>
+                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
+                        <EditIcon />
+                    </button>
+                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                        <DeleteIcon />
+                    </button>
+                </>
+            ),
         },
     ];
 
@@ -48,18 +64,13 @@ const PolicyProviderList = () => {
         };
     });
 
-    let data = {
-        rows: policyProviders,
-        columns: columns,
-    }
-
     return (
         <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: '/policy-providers/add' }}><Button>Add new policy provider</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={policyProviders} />
         </>
     );
 }
