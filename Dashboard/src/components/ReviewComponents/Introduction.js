@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import Day from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -8,13 +8,9 @@ import { ModuleTypeIntroduction } from 'State/ApiCommands/Global/Reviews/ModuleT
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
 
-import { Context } from 'State';
-
 const Introduction = () => {
     Day.extend(utc);
 
-    const [state,  ] = useContext(Context);
-    
     let report = GetReport();
     
     let totalStarting = report.Policies.map(p => p.StartValue).reduce((p, q) => p + q, 0);
