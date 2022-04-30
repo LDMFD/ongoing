@@ -15,6 +15,7 @@ push-image:
 up-api:
 	make build-image SERVICE=api
 	make push-image IMAGE=ongoing-api
+	make deploy-api
 
 build-dashboard:
 	rm -rf DashboardServer/build
@@ -35,3 +36,4 @@ push-dashboard:
 make up-dashboard:
 	make build-dashboard
 	make push-dashboard
+	make deploy-dashboard

@@ -36,12 +36,17 @@ const Reducer = (state, action) => {
             }
 
         case POPULATE_CLIENT: {
-            let { ClientContext, Report, Reviews } = action.payload;
+            let {
+                ClientContext,
+                Reviews,
+                Report,
+                Draft } = action.payload;
             return {
                 ...state,
                 ClientContext,
                 Reviews,
                 Report,
+                Draft,
             };
         }
 

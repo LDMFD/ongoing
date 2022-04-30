@@ -1,4 +1,4 @@
-package Reports
+package Reviews
 
 import (
 	"github.com/gin-gonic/gin"
@@ -34,21 +34,35 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 		panic(err.Error())
 	}
 
-	var report = Entities.ReportDetail{}
+	var report = &Entities.ReportDetail{}
 
-	// Module presets
+	generateModulePresets(c, report, db)
+	generateModules(report, client)
+	generateRisk(report, client) // Risk Assessments, Risk Providers, Risk Levels
+	generateFactFinds(report, client)
+	generateFees(report, client)
+	generatePolicies(report, client) // Policies, Policy Types, Policy Providers, Provider Charges
+	generateFunds(report, client)    // Funds, Policy Funds
+	generateModels(report, client)   // Models, Operators, Portfolios
+
+	return *report
+}
+
+func generateModulePresets(c *gin.Context, report *Entities.ReportDetail, db *bun.DB) {
 	report.ModulePresets = make([]Entities.ReportModulePreset, 0)
 	for _, preset := range Commands.GetModulePresetsInternal(c, db) {
 		report.ModulePresets = append(report.ModulePresets, preset.ToReport())
 	}
+}
 
-	// Modules
+func generateModules(report *Entities.ReportDetail, client Entities.Client) {
 	report.Modules = make([]Entities.ReportModule, len(client.Modules))
 	for ix, m := range client.Modules {
 		report.Modules[ix] = m.ToReport()
 	}
+}
 
-	// Risk Assessments, Risk Providers, Risk Levels
+func generateRisk(report *Entities.ReportDetail, client Entities.Client) {
 	report.RiskAssessments = make([]Entities.ReportRiskAssessment, 0)
 	var riskProviders = map[int64]*Entities.RiskProvider{}
 	var riskLevels = map[int64]*Entities.RiskLevel{}
@@ -65,20 +79,23 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	for _, l := range riskLevels {
 		report.RiskLevels = append(report.RiskLevels, l.ToReport())
 	}
+}
 
-	// Fact finds
+func generateFactFinds(report *Entities.ReportDetail, client Entities.Client) {
 	report.FactFinds = make([]Entities.ReportFactFind, 0)
 	for _, f := range client.FactFinds {
 		report.FactFinds = append(report.FactFinds, f.ToReport())
 	}
+}
 
-	// Fees Reports
+func generateFees(report *Entities.ReportDetail, client Entities.Client) {
 	report.FeesReports = make([]Entities.ReportFeesReport, 0)
 	for _, f := range client.FeesReports {
 		report.FeesReports = append(report.FeesReports, f.ToReport())
 	}
+}
 
-	// Policies, Policy Types, Policy Providers, Provider Charges
+func generatePolicies(report *Entities.ReportDetail, client Entities.Client) {
 	report.Policies = make([]Entities.ReportPolicy, 0)
 	var policyProviders = map[int64]*Entities.PolicyProvider{}
 	var policyTypes = map[int64]*Entities.PolicyType{}
@@ -97,8 +114,9 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	for _, p := range policyTypes {
 		report.PolicyTypes = append(report.PolicyTypes, p.ToReport())
 	}
+}
 
-	// Funds, Policy Funds
+func generateFunds(report *Entities.ReportDetail, client Entities.Client) {
 	report.PolicyFunds = make([]Entities.ReportPolicyFund, 0)
 	var funds = map[int64]*Entities.Fund{}
 	for _, pf := range client.PolicyFunds {
@@ -108,8 +126,9 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	for _, f := range funds {
 		report.Funds = append(report.Funds, f.ToReport())
 	}
+}
 
-	// Models, Operators, Portfolios
+func generateModels(report *Entities.ReportDetail, client Entities.Client) {
 	report.Portfolios = make([]Entities.ReportPortfolio, 0)
 	var models = map[int64]*Entities.Model{}
 	var operators = map[int64]*Entities.Operator{}
@@ -124,6 +143,4 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	for _, o := range operators {
 		report.Operators = append(report.Operators, o.ToReport())
 	}
-
-	return report
 }

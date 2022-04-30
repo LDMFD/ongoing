@@ -1,12 +1,10 @@
 package Reviews
 
 import (
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"net/http"
-	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile/Reports"
 	"ongoing/Entities"
 	"strings"
 	"time"
@@ -25,34 +23,32 @@ func CreateReview(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+
 	// Only 1 review in draft state at once
-	//if exists, err := db.NewSelect().Model((*Entities.Review)(nil)).Where("state != ?", Entities.ReviewStateFinal).Exists(c); err != nil {
-	//	panic(err)
-	//} else if exists {
-	//	c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
-	//	return
-	//}
+	if exists, err := db.NewSelect().
+		Model((*Entities.Review)(nil)).
+		Where("client_id = ?", client.Id).
+		Where("state = ?", Entities.ReviewStateDraft).
+		Exists(c); err != nil {
+		panic(err)
+	} else if exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
+		return
+	}
 
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
-
-	report := Reports.GenerateReport(c, client.Id)
-
-	b, err := json.Marshal(report)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-	reportJson := string(b)
+	startDate := time.Now().AddDate(0, -4, 0)
+	endDate := time.Now()
 
 	review := &Entities.Review{
-		Uid:           uid,
-		ClientId:      client.Id,
-		Report:        &reportJson,
-		FinalizedDate: time.Now(),
-		//State:    Entities.ReviewStateDraft,
+		Uid:       uid,
+		ClientId:  client.Id,
+		State:     Entities.ReviewStateDraft,
+		StartDate: &startDate,
+		EndDate:   &endDate,
 	}
 
 	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {

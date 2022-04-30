@@ -58,8 +58,7 @@ Local dev
 
 Deployment
 
-    make up-<service> to build and push image
-    make deploy-<service> to deploy
+    make up-<service> to build, push and deploy image
 
-    make up-dashboard && make deploy-dashboard
-    make up-api && make deploy-api
+    make up-dashboard
+    make up-api

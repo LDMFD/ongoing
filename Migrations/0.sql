@@ -255,16 +255,16 @@ CREATE TABLE riskassessment_templates (
     "timestamp"               timestamp default current_timestamp
 );
 
---CREATE TYPE review_state AS ENUM (
---    'draft',
---    'final'
---);
+CREATE TYPE review_state AS ENUM (
+   'draft',
+   'final'
+);
 
 CREATE TABLE reviews (
     "id"                      int primary key generated always as identity,
     "uid"                     text not null unique,
     "client_id"               int not null,
-    --"state"                   review_state default 'draft' not null,
+    "state"                   review_state default 'draft' not null,
     "report"                  json default null,
     "start_date"              timestamp default null,
     "end_date"                timestamp default null,

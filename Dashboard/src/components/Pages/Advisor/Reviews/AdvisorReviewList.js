@@ -1,28 +1,23 @@
 import React, { useContext, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DeleteIcon from '@mui/icons-material/Delete';
+
 import Day from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 import { Context } from 'State/StateProvider'
 import { Api } from 'State';
 
 const ReviewList = () => {
+    Day.extend(utc);
+
     let history = useHistory();
     const [state, dispatch ] = useContext(Context);
     let {
         ClientContext: client,
     } = state;
-
-    const addReview = async () => {
-        await Api.Advisor.Reviews.Create(client.Id);
-        await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
-    };
 
     const onEdit = useCallback(params => () => {
         history.push(`/clients/id/${client.Id}/reviews/id/${params.row.id}/modules/introduction`);
@@ -36,11 +31,9 @@ const ReviewList = () => {
     }, [ dispatch, client.Id ]);
 
     const columns = [
-        // { field: 'idLabel',       headerName: 'ID',             flex: 0.1, },
-        // { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
-        // { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
+        { field: 'startDateStr',     headerName: 'Start Date',     flex: 0.1, },
+        { field: 'endDateStr',       headerName: 'End Date',       flex: 0.1, },
         { field: 'finalizedDateStr', headerName: 'Finalized Date', flex: 0.1, },
-        // { field: 'state',         headerName: 'State',          flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -59,7 +52,9 @@ const ReviewList = () => {
             startDate:        review.Meta.StartDate,
             endDate:          review.Meta.EndDate,
             date:             review.Meta.FinalizedDate,
-            finalizedDateStr: Day(review.Meta.FinalizedDate).format('DD-MM-YYYY HH:mm:ss'),
+            startDateStr:     Day(review.Meta.StartDate).utc(false).format('DD-MM-YYYY'),
+            endDateStr:       Day(review.Meta.EndDate).utc(false).format('DD-MM-YYYY'),
+            finalizedDateStr: Day(review.Meta.FinalizedDate).format('DD-MM-YYYY'),
             // state:         review.Meta.State,
         };
     }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0));
@@ -71,10 +66,7 @@ const ReviewList = () => {
 
     return (
         <>
-            <Toolbar className="breadcrumb-action">
-                <Button onClick={addReview}>Add review</Button>
-            </Toolbar>
-
+            <br />
             <DataGrid autoHeight {...data} />
         </>
     );

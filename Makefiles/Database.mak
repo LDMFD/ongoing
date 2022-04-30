@@ -41,7 +41,7 @@ db-proxy:
 		--name db-proxy \
 		--platform linux/amd64 \
 		--network ongoing_default \
-		-p "5432:5432" \
+		-p "5433:5432" \
 		-v `pwd`/Config/CloudSql/ongoing-test-54a6bc368aca.json:/config \
 		gcr.io/cloudsql-docker/gce-proxy:1.29.0 /cloud_sql_proxy \
 		-instances=ongoing-test:us-central1:ongoing-test=tcp:0.0.0.0:5432 \

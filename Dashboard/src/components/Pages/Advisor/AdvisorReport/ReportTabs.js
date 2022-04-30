@@ -15,12 +15,13 @@ const ReportTabs = ({ children }) => {
 
     function ReportTabsComponent() {
         let routeMatch = RouteMatch(pathname, [
-            '/clients/id/:clientId/modules/state',
             '/clients/id/:clientId/modules/introduction',
             '/clients/id/:clientId/modules/profile',
             '/clients/id/:clientId/modules/policy-valuations',
             '/clients/id/:clientId/modules/fees',
             '/clients/id/:clientId/modules/conclusions',
+            '/clients/id/:clientId/modules/dates',
+            '/clients/id/:clientId/modules/publish',
             '/clients/id/:clientId',
         ]);
         let currentTab = routeMatch?.path;
@@ -35,6 +36,8 @@ const ReportTabs = ({ children }) => {
                 <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`}          component={Link} />
                 <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/intro`}                 component={Link} />
                 <Tab label="Conclusions"       value={`${basePath}/conclusions`}       to={`${baseTarget}/conclusions/advice-given`}   component={Link} />
+                <Tab label="Dates"             value={`${basePath}/dates`}             to={`${baseTarget}/dates`}                      component={Link} />
+                <Tab label="Publish"           value={`${basePath}/publish`}           to={`${baseTarget}/publish`}                    component={Link} />
             </Tabs>
         );
     }

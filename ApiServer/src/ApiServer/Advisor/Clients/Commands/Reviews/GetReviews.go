@@ -1,4 +1,4 @@
-package Reports
+package Reviews
 
 import (
 	"bytes"
@@ -16,7 +16,7 @@ func GetReviews(c *gin.Context, client *Entities.Client) []Entities.ReportReview
 	if err := db.NewSelect().
 		Model(&reviews).
 		Where("client_id = ?", client.Id).
-		//Where("state = ?", Entities.ReviewStateFinal).
+		Where("state = ?", Entities.ReviewStateFinal).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

@@ -7,6 +7,7 @@ import (
 	Policies "ongoing/ApiServer/Advisor/Clients/Commands/Policies"
 	PolicyFunds "ongoing/ApiServer/Advisor/Clients/Commands/PolicyFunds"
 	Portfolios "ongoing/ApiServer/Advisor/Clients/Commands/Portfolios"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ReviewModules"
 	Reviews "ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
 	"ongoing/ApiServer/Advisor/Clients/Commands/RiskAssessments"
 
@@ -36,11 +37,13 @@ func AddRoutes(r *gin.RouterGroup) {
 	policyFundGroup.DELETE("/:PolicyFundId", PolicyFunds.DeletePolicyFund)
 
 	moduleGroup := r.Group("/:ClientId/modules")
-	moduleGroup.PUT("/:Module", Reviews.UpdateReviewModule)
-	moduleGroup.DELETE("/:Module/field/:Field", Reviews.DeleteReviewModule)
+	moduleGroup.PUT("/:Module", ReviewModules.UpdateReviewModule)
+	moduleGroup.DELETE("/:Module/field/:Field", ReviewModules.DeleteReviewModule)
 
 	reviewGroup := r.Group("/:ClientId/reviews")
 	reviewGroup.POST("", Reviews.CreateReview)
+	reviewGroup.PUT("/:ReviewId", Reviews.UpdateReview)
+	reviewGroup.POST("/:ReviewId/publish", Reviews.PublishReview)
 	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
 
 	factFindGroup := r.Group("/:ClientId/fact-finds")

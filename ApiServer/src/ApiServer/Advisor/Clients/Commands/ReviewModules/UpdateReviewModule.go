@@ -1,4 +1,4 @@
-package Reviews
+package ReviewModules
 
 import (
 	"github.com/gin-gonic/gin"
