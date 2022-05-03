@@ -34,7 +34,7 @@ function AuthControl() {
         });
 
         // Reload page
-        // window.location = '/'; // TODO can cause loop if no internet connection?
+        window.location = '/';
     }, [ dispatch ]);
 
     const loginFn = useCallback((token, email, name, photoURL) => {
@@ -66,6 +66,15 @@ function AuthControl() {
             ShowLogin(loginFn);
         }
     }, [ loginFn, state.Auth ]);
+
+    // Fire a request to see if the session has expired (will trigger the auth-refresh pane)
+    window.onfocus = () => {
+        if (state.Auth) {
+            window.ApiClient.get(`/common/user`, {
+                baseURL: ONGOING_API_URL,
+            })
+        }
+    };    
 
     return (
         <div>
