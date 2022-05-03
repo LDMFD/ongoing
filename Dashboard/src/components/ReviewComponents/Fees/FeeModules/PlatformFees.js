@@ -59,10 +59,10 @@ const PlatformFees = () => {
 
         let cols = [{
             accessor: 'Desc',
-            Header: 'Tier',
+            Header: 'Tier (£)',
         }, {
             accessor: 'Charge',
-            Header: 'Fee',
+            Header: 'Annual Fee (%)',
         }];
 
         let markup = ReactDOMServer.renderToStaticMarkup(

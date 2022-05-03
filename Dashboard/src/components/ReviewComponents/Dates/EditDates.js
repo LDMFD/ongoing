@@ -54,7 +54,7 @@ export const EditDates = () => {
     return (
         <Dialog open={true} onClose={goBack}>
             <form onSubmit={okCallback}>
-                <DialogTitle>Set dates</DialogTitle>
+                <DialogTitle>Edit dates</DialogTitle>
                 <DialogContent>
                     Enter new review start and end dates
                 </DialogContent>

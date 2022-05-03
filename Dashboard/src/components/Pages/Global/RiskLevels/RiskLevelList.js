@@ -74,7 +74,7 @@ const RiskLevelList = () => {
                 label:  m.Label,
                 desc:   m.Desc,
             })
-        );
+        ).sort((p, q) => (p.level < q.level) ? -1 : ((p.level > q.level) ? 1 : 0));
 
     return (
         <Dialog open={true} onClose={goBack}>

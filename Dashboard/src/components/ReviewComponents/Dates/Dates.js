@@ -34,7 +34,7 @@ const Dates = () => {
         <div>
             <br />
             <Link to={`/clients/id/${clientId}/modules/dates/edit`}>
-                Set dates
+                Edit dates
             </Link>
 
             <p>
