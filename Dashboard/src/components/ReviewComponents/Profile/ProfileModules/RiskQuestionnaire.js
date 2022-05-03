@@ -70,6 +70,7 @@ const RiskQuestionnaire = () => {
 
     return (
         <div className='ongoing-riskassessmentList'>
+            <br />
             <Table columns={columns} data={assessments} />
         </div>
     );

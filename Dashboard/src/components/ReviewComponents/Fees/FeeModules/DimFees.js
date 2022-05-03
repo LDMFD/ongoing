@@ -1,8 +1,8 @@
 import React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
 import { ModuleTypeDimFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import Table from 'Components/Library/Table';
 
 const DimFees = () => {
     let report = GetReport();
@@ -21,21 +21,22 @@ const DimFees = () => {
     });
 
     const columns = [
-        { field: 'name', headerName: 'Name', flex: 0.1, },
-        { field: 'fee',  headerName: 'Fee',  flex: 0.1, },
-    ];
-
-    let data = {
-        rows: operators,
-        columns: columns,
-    }
+        {
+            accessor: 'name',
+            Header: 'Name',
+            width: 1,
+        }, {
+            accessor: 'fee',
+            Header: 'Fee',
+            width: 1,
+        }, ];
 
     return (
         <>
             <br />
             <ModuleWrapper module={ModuleTypeDimFee} />
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={operators} />
         </>
     );
 }
