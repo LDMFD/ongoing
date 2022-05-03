@@ -33,7 +33,7 @@ const ReviewList = () => {
     const columns = [
         { field: 'startDateStr',     headerName: 'Start Date',     flex: 0.1, },
         { field: 'endDateStr',       headerName: 'End Date',       flex: 0.1, },
-        { field: 'finalizedDateStr', headerName: 'Finalized Date', flex: 0.1, },
+        { field: 'finalizedDateStr', headerName: 'Finalised Date', flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',

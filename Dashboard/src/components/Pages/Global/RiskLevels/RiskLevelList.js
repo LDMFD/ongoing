@@ -1,6 +1,5 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
     Toolbar,
@@ -14,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { GoBack } from 'Utils/Routing';
 
 import { Context, Api } from 'State'
+import Table from 'Components/Library/Table';
 
 const RiskLevelList = () => {
     let history = useHistory();
@@ -22,29 +22,47 @@ const RiskLevelList = () => {
 
     let { riskProviderId } = useParams();
 
-    const onDelete = useCallback(params => async () => {
+    const onDelete = useCallback(id => async () => {
         if (window.confirm(`Delete risk level?`)) {
-            await Api.Global.RiskLevels.Delete(params.row.id);
+            await Api.Global.RiskLevels.Delete(id);
             await Api.Global.Entities.Read(dispatch);
         }
     }, [ dispatch ]);
 
-    const onEdit = useCallback(params => () => {
-        history.push(`/risk-providers/id/${riskProviderId}/risk-levels/${params.row.id}/edit`);
+    const onEdit = useCallback(id => () => {
+        history.push(`/risk-providers/id/${riskProviderId}/risk-levels/${id}/edit`);
     }, [ history, riskProviderId ]);
 
     const columns = [
-        { field: 'level',  headerName: 'Level',  flex: 0.2, },
-        { field: 'label',  headerName: 'Label',  flex: 0.2, },
-        { field: 'desc',   headerName: 'Desc',   flex: 0.2, },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .1,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            accessor: 'level',
+            Header: 'Level',
+            width: 100,
+        }, {
+            accessor: 'label',
+            Header: 'Label',
+            width: 100,
+        }, {
+            accessor: 'desc',
+            Header: 'Description',
+            width: 200,
+            Cell: ({ row }) => (
+                <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.desc }} />
+            ),
+        }, {
+            accessor: 'actions',
+            Header: '',
+            width: 100,
+            Cell: ({ row }) => (
+                <>
+                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
+                        <EditIcon />
+                    </button>
+                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                        <DeleteIcon />
+                    </button>
+                </>
+            ),
         },
     ];
     
@@ -58,11 +76,6 @@ const RiskLevelList = () => {
             })
         );
 
-    let data = {
-        rows: riskLevels,
-        columns: columns,
-    }
-
     return (
         <Dialog open={true} onClose={goBack}>
             <DialogTitle>Provider risk levels</DialogTitle>
@@ -72,7 +85,7 @@ const RiskLevelList = () => {
                         <Link to={{ pathname: `/risk-providers/id/${riskProviderId}/risk-levels/add` }}><Button>Add new level</Button></Link>
                     </Toolbar>
 
-                    <DataGrid autoHeight {...data} />
+                    <Table columns={columns} data={riskLevels} />
 
                 </DialogContent>
                 <DialogActions>

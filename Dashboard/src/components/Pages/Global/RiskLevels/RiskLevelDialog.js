@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
+import RichTextEditor from 'Components/Library/RichTextEditor';
 
 export const RiskLevelDialog = ({ riskLevel, setRiskLevel, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -19,7 +20,7 @@ export const RiskLevelDialog = ({ riskLevel, setRiskLevel, submitLabel, submitHa
     const handlers = {
         EditLevel: (event) => { setRiskLevel({ ...riskLevel, Level: parseInt(event.target.value) }); },
         EditLabel: (event) => { setRiskLevel({ ...riskLevel, Label: event.target.value }); },
-        EditDesc:  (event) => { setRiskLevel({ ...riskLevel, Desc:  event.target.value }); },
+        EditDesc: (html) => { setRiskLevel({ ...riskLevel, Desc:  html }); },
     };
     
     return (
@@ -47,13 +48,8 @@ export const RiskLevelDialog = ({ riskLevel, setRiskLevel, submitLabel, submitHa
                                type     = "text"
                                fullWidth />
 
-                    <TextField value    = {riskLevel.Desc}
-                               onChange = {handlers.EditDesc}
-                               margin   = "dense"
-                               id       = "desc"
-                               label    = "Desc"
-                               type     = "text"
-                               fullWidth />
+                    <RichTextEditor initialValue = {riskLevel.Desc}
+                                    onChange     = {handlers.EditDesc} />
 
                 </DialogContent>
                 <DialogActions>

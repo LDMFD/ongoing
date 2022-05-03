@@ -34,17 +34,17 @@ export const ProviderChargeDialog = ({ providerCharge, setProviderCharge, submit
                                onChange = {handlers.EditDesc}
                                margin   = "dense"
                                id       = "desc"
-                               label    = "Desc"
+                               label    = "Tier (£)"
                                type     = "text"
                                autoFocus fullWidth />
 
                     <TextField value = {providerCharge.Charge}
-                            onChange = {handlers.EditCharge}
-                            margin   = "dense"
-                            id       = "charge"
-                            label    = "Charge"
-                            type     = "number"
-                            fullWidth />
+                               onChange = {handlers.EditCharge}
+                               margin   = "dense"
+                               id       = "charge"
+                               label    = "Annual Fee (%)"
+                               type     = "number"
+                               fullWidth />
 
                 </DialogContent>
                 <DialogActions>
