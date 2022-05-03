@@ -45,7 +45,7 @@ const RiskLevelList = () => {
         }, {
             accessor: 'desc',
             Header: 'Description',
-            width: 200,
+            width: 400,
             Cell: ({ row }) => (
                 <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.desc }} />
             ),
@@ -77,7 +77,7 @@ const RiskLevelList = () => {
         ).sort((p, q) => (p.level < q.level) ? -1 : ((p.level > q.level) ? 1 : 0));
 
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack} fullWidth={true} maxWidth='lg'>
             <DialogTitle>Provider risk levels</DialogTitle>
                 <DialogContent>
 
