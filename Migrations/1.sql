@@ -82,6 +82,7 @@ SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"models"',           'id')), (SELE
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"operators"',        'id')), (SELECT (MAX("id") + 1) FROM "operators"),        FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"policies"',         'id')), (SELECT (MAX("id") + 1) FROM "policies"),         FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"policy_funds"',     'id')), (SELECT (MAX("id") + 1) FROM "policy_funds"),     FALSE);
+SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"policy_types"',     'id')), (SELECT (MAX("id") + 1) FROM "policy_types"),     FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"policy_providers"', 'id')), (SELECT (MAX("id") + 1) FROM "policy_providers"), FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"portfolios"',       'id')), (SELECT (MAX("id") + 1) FROM "portfolios"),       FALSE);
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"reviews"',          'id')), (SELECT (MAX("id") + 1) FROM "reviews"),          FALSE);
