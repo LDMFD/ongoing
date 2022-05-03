@@ -74,3 +74,17 @@ export function Logout() {
     }
     firebase.auth().signOut();
 }
+
+// css in App.css
+export const ForceRefresh = () => (
+    <div id='auth-refresh'>
+        <div className='auth-refresh-background' />
+        <div className='auth-refresh-button'>
+            <button onClick={() => {
+                window.location.reload();
+            }}>
+                Your session has expired - please reload the page
+            </button>
+        </div>
+    </div>
+);

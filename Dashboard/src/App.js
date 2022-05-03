@@ -7,9 +7,9 @@ import {
 
 import AppDrawer from 'Components/AppDrawer'
 import StateProvider from 'State/StateProvider'
-// import { Logout } from './Auth';
 
 import './App.css';
+import { ForceRefresh } from "Auth";
 
 // API server
 export const ONGOING_API_URL = process.env.NODE_ENV !== 'production'
@@ -36,17 +36,11 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
 
     if (err?.response?.status === 403) {
         console.log(403);
+
+        document.getElementById('auth-refresh').style.display = 'block';
+
         throw err;  // prevent goBack() on error
     }
-    //     // alert("Your have been logged out");
-    //     Logout();
-    //     if (window.ApiClient.headers) {
-    //         delete window.ApiClient.headers['Authentication'];
-    //     }
-    //     // window.location.reload();
-    //     window.location = '/';
-    //     return;
-    // }
 
     const responseError = err?.response?.data;
 
@@ -65,6 +59,8 @@ function App() {
             <Router>
                 <AppDrawer />
             </Router>
+
+            <ForceRefresh />
         </StateProvider>
     );
 }
