@@ -79,7 +79,8 @@ export const EditModuleText = () => {
                 <DialogTitle>Edit Module Text</DialogTitle>
                 <DialogContent>
                     <CardContent>
-                        <RichTextEditor initialValue = {moduleState[capsField]}
+                        <RichTextEditor label        = 'Module text'
+                                        initialValue = {moduleState[capsField]}
                                         onChange     = {onChange} />
                     </CardContent>
                 </DialogContent>

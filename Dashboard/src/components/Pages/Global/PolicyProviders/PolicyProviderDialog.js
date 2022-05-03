@@ -43,12 +43,8 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                                    type     = "text"
                                    autoFocus fullWidth />
 
-                        &nbsp;
-                        <DialogContentText>
-                            Pricing
-                        </DialogContentText>
-                        
-                        <RichTextEditor initialValue = {policyProvider.Pricing}
+                        <RichTextEditor label        = 'Pricing'
+                                        initialValue = {policyProvider.Pricing}
                                         onChange     = {handlers.SetPricing} />
 
                         <Link to={{ pathname: `/policy-providers/id/${policyProvider.Id}/provider-charges` }}>Provider charges</Link>

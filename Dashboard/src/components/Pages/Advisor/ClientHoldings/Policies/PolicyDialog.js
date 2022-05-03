@@ -124,7 +124,8 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                         </Select>
                     </FormControl>
 
-                    <RichTextEditor initialValue = {policy.Notes || ''}
+                    <RichTextEditor label        = 'Notes'
+                                    initialValue = {policy.Notes || ''}
                                     onChange     = {handlers.SetNotes} />
 
                     <FileUploader file         = {policy.File}

@@ -50,10 +50,8 @@ export const ModulePresetDialog = ({ modulePreset, setModulePreset, submitLabel,
                                 ))}
                     </Select>
 
-                    <h4>
-                        Preset text:
-                    </h4>
-                    <RichTextEditor initialValue = {modulePreset.Text}
+                    <RichTextEditor label        = 'Preset text'
+                                    initialValue = {modulePreset.Text}
                                     onChange     = {handlers.SetText} />
 
                 </DialogContent>

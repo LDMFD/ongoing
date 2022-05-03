@@ -48,7 +48,8 @@ export const RiskLevelDialog = ({ riskLevel, setRiskLevel, submitLabel, submitHa
                                type     = "text"
                                fullWidth />
 
-                    <RichTextEditor initialValue = {riskLevel.Desc}
+                    <RichTextEditor label        = 'Description'
+                                    initialValue = {riskLevel.Desc}
                                     onChange     = {handlers.EditDesc} />
 
                 </DialogContent>

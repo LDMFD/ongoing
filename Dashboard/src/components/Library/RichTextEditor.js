@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 import './RichTextEditor.css';
 
-const RichTextEditor = ({ initialValue, onChange }) => {
+let toolbarId = 0;
+
+const RichTextEditor = ({ label, initialValue, onChange }) => {
+    let tId = useRef(toolbarId++);
+
     let modules = {
         toolbar: {
-            container: '#rich-toolbar',
+            container: `#rich-toolbar-${tId.current}`,
         },
         clipboard: {
             matchVisual: false,
@@ -23,7 +27,8 @@ const RichTextEditor = ({ initialValue, onChange }) => {
 
     return (
         <div className="text-editor">
-            <div id="rich-toolbar">
+            {label}
+            <div id={`rich-toolbar-${tId.current}`}>
                 <select className="ql-header" defaultValue={""} onChange={e => e.persist()}>
                     <option value="1"></option>
                     <option value="2"></option>
@@ -41,11 +46,11 @@ const RichTextEditor = ({ initialValue, onChange }) => {
                 <button className="ql-link"></button>
                 <button className="ql-clean"></button>
             </div>
-            <ReactQuill theme='snow'
-                        modules={modules}
-                        formats={formats}
-                        value={initialValue}
-                        onChange={onChange} />
+            <ReactQuill theme    = 'snow'
+                        modules  = {modules}
+                        formats  = {formats}
+                        value    = {initialValue}
+                        onChange = {onChange} />
         </div>
     )
 }

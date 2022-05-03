@@ -20,19 +20,19 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
     const columns = [
         {
             accessor: 'model',
-            headerName: 'Model',
+            Header: 'Model',
             width: 1,
         }, {
             accessor: 'ocfFee',
-            headerName: 'OCF Fee (%)',
+            Header: 'OCF Fee (%)',
             width: 1,
         }, {
             accessor: 'exAnteFee',
-            headerName: 'Ex Ante Fee (%)',
+            Header: 'Ex Ante Fee (%)',
             width: 1,
         }, {
             accessor: 'proportionStr',
-            headerName: 'Proportion' ,
+            Header: 'Proportion' ,
             width: 1,
         // // {
         //     accessor: 'weightedOcfFee',
