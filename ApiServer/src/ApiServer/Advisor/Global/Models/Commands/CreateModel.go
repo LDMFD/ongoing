@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"ongoing/Entities"
 	"strings"
+	"time"
 
 	"github.com/uptrace/bun"
 
@@ -16,7 +17,8 @@ type CreateOrUpdateModelRequestBody struct {
 	OperatorId        string  `binding:"required"`
 	WeightedOcfFee    float64 `binding:"required"`
 	WeightedExAnteFee float64 `binding:"required"`
-	File *Entities.RequestFile
+	Modified          string
+	File              *Entities.RequestFile
 }
 
 func CreateModel(c *gin.Context) {
@@ -53,12 +55,22 @@ func CreateModel(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	var modified time.Time
+	var err error
+	if body.Modified != "" {
+		if modified, err = time.Parse("2006-01-02", body.Modified); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
+			return
+		}
+	}
+
 	var model = Entities.Model{
 		Uid:               uid,
 		Name:              body.Name,
 		OperatorId:        operator.Id,
 		WeightedOcfFee:    body.WeightedOcfFee,
 		WeightedExAnteFee: body.WeightedExAnteFee,
+		Modified:          &modified,
 		FileId:            fileId,
 	}
 	if _, err := db.NewInsert().Model(&model).Exec(c); err != nil {

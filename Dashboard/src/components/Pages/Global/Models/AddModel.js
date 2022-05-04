@@ -18,7 +18,6 @@ const AddModel = () => {
     const submitHandler = async (e) => {
         e.preventDefault();
         await Api.Global.Models.Create(model);
-        // TODO FileUid: model?.File?.Uid,
         await Api.Global.Entities.Read(dispatch);
         goBack();
         return false;

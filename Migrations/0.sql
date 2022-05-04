@@ -72,6 +72,7 @@ CREATE TABLE models (
     "weighted_ocf_fee"        decimal not null,
     "weighted_ex_ante_fee"    decimal not null,
     "file_id"                 int,              -- factsheet
+    "modified"                timestamp,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_operator FOREIGN KEY(operator_id) REFERENCES operators(id) ON DELETE RESTRICT,
     CONSTRAINT fk_file FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
@@ -88,6 +89,7 @@ CREATE TABLE funds (
     "isin_number"             text,
     "citicode"                text,
     "file_id"                 int,
+    "modified"                timestamp,
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_file FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
 );

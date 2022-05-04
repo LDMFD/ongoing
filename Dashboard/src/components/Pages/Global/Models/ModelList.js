@@ -1,6 +1,5 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
     Toolbar,
@@ -9,44 +8,79 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 
+import Day from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const ModelList = () => {
+    Day.extend(utc);
+
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const onDelete = useCallback(params => async () => {
+    const onDelete = useCallback(id => async () => {
         if (window.confirm(`Delete model?`)) {
-            await window.ApiClient.delete(`advisor/models/${params.row.id}`)
+            await window.ApiClient.delete(`advisor/models/${id}`)
             await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
-    const onEdit = useCallback(params => () => {
-        history.push(`/models/id/${params.row.id}/edit`);
+    const onEdit = useCallback(id => () => {
+        history.push(`/models/id/${id}/edit`);
     }, [ history ]);
 
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(fileUid => () => {
+        Download(fileUid);
     }, []);
 
     const columns = [
-        { field: 'name',              headerName: 'Name',                 flex: 0.2, },
-        { field: 'operator',          headerName: 'Operator',             flex: 0.2, },
-        { field: 'weightedOcfFee',    headerName: 'Weighted OCF Fee',     flex: 0.1, },
-        { field: 'weightedExAnteFee', headerName: 'Weighted Ex Ante Fee', flex: 0.1, },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .1,
-            getActions: (params) => ([
-                params.row.fileUid
-                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
-                    : null,
-                <GridActionsCellItem icon={<EditIcon />}     onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />}   onClick={onDelete(params)} label="Delete" />,
-            ].filter(t => t)),
+            accessor: 'name',
+            Header: 'Name',
+            width: 100,
+        }, {
+            accessor: 'operator',
+            Header: 'Operator',
+            width: 50,
+        }, {
+            accessor: 'weightedOcfFee',
+            Header: 'Weighted OCF Fee',
+            width: 50,
+        }, {
+            accessor: 'weightedExAnteFee',
+            Header: 'Weighted Ex Ante Fee',
+            width: 50,
+        }, {
+            accessor: 'modified',
+            Header: 'Last updated',
+            width: 60,
+        }, {
+            accessor: 'file',
+            Header: 'File',
+            width: 100,
+            Cell: ({ row }) => row.original.fileUid && (
+                <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                    {row.original.filename}
+                    <DownloadIcon />
+                </button>
+            ),
+        }, {
+            accessor: 'actions',
+            Header: '',
+            width: 50,
+            Cell: ({ row }) => (
+                <>
+                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
+                        <EditIcon />
+                    </button>
+                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                        <DeleteIcon />
+                    </button>
+                </>
+            ),
         },
     ];
 
@@ -56,16 +90,13 @@ const ModelList = () => {
             id:                m.Id,
             name:              m.Name,
             operator:          op,
-            weightedOcfFee:    m.WeightedOcfFee,
-            weightedExAnteFee: m.WeightedExAnteFee,
+            weightedOcfFee:    `${m.WeightedOcfFee}%`,
+            weightedExAnteFee: `${m.WeightedExAnteFee}%`,
+            modified:          m.Modified ? Day(m.Modified).utc(false).format('DD-MM-YYYY') : '',
+            filename:          m.File?.Filename,
             fileUid:           m.File?.Uid,
         };
     });
-
-    let data = {
-        rows: models,
-        columns: columns,
-    }
 
     return (
         <>
@@ -73,7 +104,7 @@ const ModelList = () => {
                 <Link to={{ pathname: '/models/add' }}><Button>Add new model</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={models} />
         </>
     );
 }

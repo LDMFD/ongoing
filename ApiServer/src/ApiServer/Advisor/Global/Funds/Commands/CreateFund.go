@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"ongoing/Entities"
 	"strings"
+	"time"
 
 	"github.com/uptrace/bun"
 
@@ -15,6 +16,7 @@ type CreateOrUpdateFundRequestBody struct {
 	Name      string  `binding:"required"`
 	OcfFee    float64 `binding:"required"`
 	ExAnteFee float64 `binding:"required"`
+	Modified  string
 	File      *Entities.RequestFile
 }
 
@@ -43,12 +45,22 @@ func CreateFund(c *gin.Context) {
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
+	var modified time.Time
+	var err error
+	if body.Modified != "" {
+		if modified, err = time.Parse("2006-01-02", body.Modified); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
+			return
+		}
+	}
+
 	var fund = Entities.Fund{
 		Uid:       uid,
 		Name:      body.Name,
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,
 		FileId:    fileId,
+		Modified:  &modified,
 	}
 	if _, err := db.NewInsert().Model(&fund).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

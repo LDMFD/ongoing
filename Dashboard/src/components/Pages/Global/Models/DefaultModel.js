@@ -3,5 +3,6 @@ export const DefaultModel = {
     OperatorId: 'select',
     WeightedOcfFee: '',
     WeightedExAnteFee: '',
+    Modified: '',
     FileUid: null,
 };

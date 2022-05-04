@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
     Toolbar,
@@ -9,10 +8,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 
+import Day from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const FundList = () => {
+    Day.extend(utc);
+
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
@@ -24,55 +29,77 @@ const FundList = () => {
         getFunds();
     }, [ getFunds ]);
     
-    const onDelete = useCallback(params => async () => {
+    const onDelete = useCallback(id => async () => {
         if (window.confirm(`Delete fund?`)) {
-            await window.ApiClient.delete(`advisor/funds/${params.row.id}`)
+            await window.ApiClient.delete(`advisor/funds/${id}`)
             await Api.Global.Entities.Read(dispatch);
         }        
     }, [ dispatch ]);
 
-    const onEdit = useCallback(params => () => {
-        let id = params.row.id;
+    const onEdit = useCallback(id => () => {
         history.push(`/funds/id/${id}/edit`);
     }, [ history ]);
 
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(fileUid => () => {
+        Download(fileUid);
     }, []);
 
     const columns = [
-        { field: 'name',      headerName: 'Name',        flex: 0.3, },
-        { field: 'ocfFee',    headerName: 'OCF Fee',     flex: 0.1, },
-        { field: 'exAnteFee', headerName: 'Ex Ante Fee', flex: 0.1, },
-        // TODO SEDOL, ISIN, Citicode
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .05,
-            getActions: (params) => ([
-                params.row.fileUid
-                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
-                    : null,
-                <GridActionsCellItem icon={<EditIcon />}     onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />}   onClick={onDelete(params)} label="Delete" />,
-            ].filter(t => t)),
+            accessor: 'name',
+            Header: 'Name',
+            width: 120,
+        }, {
+            accessor: 'ocfFee',
+            Header: 'OCF Fee',
+            width: 50,
+        }, {
+            accessor: 'exAnteFee',
+            Header: 'Ex Ante Fee',
+            width: 50,
+        }, {
+            accessor: 'modified',
+            Header: 'Last updated',
+            width: 50,
+        }, {
+            accessor: 'factsheet',
+            Header: 'Fact sheet',
+            width: 100,
+            Cell: ({ row }) => row.original.fileUid && (
+                <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                    {row.original.filename}
+                    <DownloadIcon />
+                </button>
+            ),
+        }, {
+            accessor: 'actions',
+            Header: '',
+            width: 50,
+            Cell: ({ row }) => (
+                <>
+                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
+                        <EditIcon />
+                    </button>
+                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                        <DeleteIcon />
+                    </button>
+                </>
+            ),
         },
     ];
+
 
     let funds = state.Entities.Funds.map(f => {
         return {
             id:        f.Id,
             name:      f.Name,
-            ocfFee:    f.OcfFee,
-            exAnteFee: f.ExAnteFee,
+            ocfFee:    `${f.OcfFee}%`,
+            exAnteFee: `${f.ExAnteFee}%`,
+            modified:  f.Modified ? Day(f.Modified).utc(false).format('DD-MM-YYYY') : '',
+            filename:  f.File?.Filename,
             fileUid:   f.File?.Uid,
         };
     });
-
-    let data = {
-        rows: funds,
-        columns: columns,
-    }
 
     return (
         <>
@@ -80,7 +107,7 @@ const FundList = () => {
                 <Link to={{ pathname: '/funds/add' }}><Button>Add new fund</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={funds} />
         </>
     );
 }

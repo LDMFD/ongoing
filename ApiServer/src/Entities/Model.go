@@ -16,6 +16,7 @@ type Model struct {
 	WeightedOcfFee    float64      `bun:"weighted_ocf_fee,notnull"`
 	WeightedExAnteFee float64      `bun:"weighted_ex_ante_fee,notnull"`
 	FileId            *int64       `bun:"file_id"`
+	Modified          *time.Time   `bun:",nullzero"`
 	Timestamp         time.Time    `bun:",nullzero,notnull,default:current_timestamp"`
 
 	File              *File        `bun:"rel:has-one,join:file_id=id"`
@@ -29,6 +30,7 @@ type ReportModel struct {
 	OperatorId        string
 	WeightedOcfFee    float64
 	WeightedExAnteFee float64
+	Modified          string
 	File              struct {
 		Uid      string
 		Filename string
@@ -42,6 +44,9 @@ func (p *Model) ToReport() ReportModel {
 		OperatorId:        p.Operator.Uid,
 		WeightedOcfFee:    p.WeightedOcfFee,
 		WeightedExAnteFee: p.WeightedExAnteFee,
+	}
+	if p.Modified != nil {
+		rm.Modified = p.Modified.String()
 	}
 	if p.File != nil {
 		rm.File = ReportFile{

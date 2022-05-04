@@ -3,6 +3,7 @@ package Commands
 import (
 	"net/http"
 	"ongoing/Entities"
+	"time"
 
 	"github.com/uptrace/bun"
 
@@ -41,10 +42,20 @@ func UpdateFund(c *gin.Context) {
 		fileId = &file.Id
 	}
 
+	var modified time.Time
+	var err error
+	if body.Modified != "" {
+		if modified, err = time.Parse("2006-01-02", body.Modified); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
+			return
+		}
+	}
+
 	var fund = Entities.Fund{
 		Name:      body.Name,
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,
+		Modified:  &modified,
 		FileId:    fileId,
 	}
 	if _, err := db.NewUpdate().Model(&fund).Where("uid = ?", path.FundId).
@@ -52,6 +63,7 @@ func UpdateFund(c *gin.Context) {
 		Column("ocf_fee").
 		Column("ex_ante_fee").
 		Column("file_id").
+		Column("modified").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

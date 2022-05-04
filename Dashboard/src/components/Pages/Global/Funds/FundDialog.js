@@ -9,18 +9,36 @@ import {
     DialogTitle,
     TextField,
 } from '@mui/material';
+import Day from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 
 export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
+    Day.extend(utc);
+
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetName:         (event) => { setFund({ ...fund, Name:        event.target.value, }); },
-        EditOcfFee:      (event) => { setFund({ ...fund, OcfFee:      parseFloat(event.target.value) }); },
-        EditExAnteFee:   (event) => { setFund({ ...fund, ExAnteFee:   parseFloat(event.target.value) }); },
+        SetName:         (event) => { setFund({ ...fund, Name:      event.target.value, }); },
+        EditOcfFee:      (event) => { setFund({ ...fund, OcfFee:    parseFloat(event.target.value) }); },
+        EditExAnteFee:   (event) => { setFund({ ...fund, ExAnteFee: parseFloat(event.target.value) }); },
+        SetModified: (event) => {
+            let modified = Day(event.target.value);
+            if (modified.isValid()) {
+                setFund({
+                    ...fund,
+                    Modified: modified.format('YYYY-MM-DD'),
+                });
+            } else {
+                setFund({
+                    ...fund,
+                    Modified: '',
+                });
+            }
+        },
     };
     
     return (
@@ -56,6 +74,14 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                id       = "exAnteFee"
                                label    = "Ex Ante Fee"
                                type     = "number"
+                               fullWidth />
+
+                    <TextField value    = {Day(fund.Modified).utc(false).format('YYYY-MM-DD')}
+                               onChange = {handlers.SetModified}
+                               margin   = "dense"
+                               id       = "modified"
+                               label    = "Last updated"
+                               type     = "date"
                                fullWidth />
 
                     <FileUploader file         = {fund.File}

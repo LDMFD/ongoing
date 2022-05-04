@@ -11,12 +11,16 @@ import {
     Select,
     TextField,
 } from '@mui/material';
+import Day from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 
 export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, includeFiles }) => {
+    Day.extend(utc);
+
     let history = useHistory();
     let goBack = GoBack(history);
 
@@ -27,6 +31,20 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
         EditWeightedOcfFee:    (event) => { setModel({ ...model, WeightedOcfFee:    parseFloat(event.target.value) }); },
         EditWeightedExAnteFee: (event) => { setModel({ ...model, WeightedExAnteFee: parseFloat(event.target.value) }); },
         SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        event.target.value, }); },
+        SetModified: (event) => {
+            let modified = Day(event.target.value);
+            if (modified.isValid()) {
+                setModel({
+                    ...model,
+                    Modified: modified.format('YYYY-MM-DD'),
+                });
+            } else {
+                setModel({
+                    ...model,
+                    Modified: '',
+                });
+            }
+        },
     };
     
     return (
@@ -76,6 +94,14 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             label    = "Weighted Ex Ante Fee"
                             type     = "number"
                             fullWidth />
+
+                    <TextField value    = {Day(model.Modified).utc(false).format('YYYY-MM-DD')}
+                               onChange = {handlers.SetModified}
+                               margin   = "dense"
+                               id       = "modified"
+                               label    = "Last updated"
+                               type     = "date"
+                               fullWidth />
 
                     <FileUploader file         = {model.File}
                                   stateUpdater = {setModel}
