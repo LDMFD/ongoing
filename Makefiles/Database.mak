@@ -26,6 +26,17 @@ xxx_db_migrate:
 				 --password \
 				 --file=/app/migrations/${MIGRATION}.sql
 
+# Local:
+db-dump:
+	docker run -it --rm \
+		--name db-dump \
+		--network ongoing_default \
+		postgres \
+			pg_dump --host=db-proxy \
+					--dbname=postgres \
+					--username=postgres \
+					--password
+
 db-up:
 	make _db_migrate MIGRATION=0
 	make _db_migrate MIGRATION=1
