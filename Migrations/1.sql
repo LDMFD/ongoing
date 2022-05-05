@@ -31,7 +31,7 @@ DELETE FROM risk_assessments;
 DELETE FROM risk_levels;
 DELETE FROM risk_providers;
 
-INSERT INTO policy_providers ("id", "name", "pricing", "uid")                                       OVERRIDING SYSTEM VALUE VALUES (1, 'Aviva Wrap', '<p>Aviva charges on a tiered basis according to the following table:</p><p><br></p><p>{{ charges }}</p>', 'b7f8f4e5104043429c5993be7fdf930d');
+INSERT INTO policy_providers ("id", "name", "pricing", "uid", "custom_pricing")                     OVERRIDING SYSTEM VALUE VALUES (1, 'Aviva Wrap', '<p>Aviva charges on a tiered basis according to the following table:</p><p>{{ table }}</p>', 'b7f8f4e5104043429c5993be7fdf930d', '');
 INSERT INTO policy_types     ("id", "name","uid")                                                   OVERRIDING SYSTEM VALUE VALUES (1, 'Pension', '7ec08af90397470285aef69c5f5b6a86');
 INSERT INTO policy_types     ("id", "name","uid")                                                   OVERRIDING SYSTEM VALUE VALUES (2, 'ISA', 'ae132a8a68c94f2a8a20cd2268592991');
 INSERT INTO operators        ("id", "type","name","fee", "uid")                                     OVERRIDING SYSTEM VALUE VALUES (1, 'dim', 'LGT Vestra', 0.12, '598f683493e34cdbb0f786a06f2a92ea');
@@ -49,10 +49,10 @@ INSERT INTO users            ("id", "type", "email", "uid")                     
 INSERT INTO users            ("id", "type", "email", "uid")                                         OVERRIDING SYSTEM VALUE VALUES (2, 'advisor', 'company@tp1.org', 'bcc64c156d5f49df98c249909cd49a42');
 INSERT INTO users            ("id", "type", "email", "uid")                                         OVERRIDING SYSTEM VALUE VALUES (3, 'client',  'ac@tp1.org',      'e04357a2150c4671b57bcd98d4db6825');
 INSERT INTO clients          ("id", "user_id","forenames","surname","fee")                          OVERRIDING SYSTEM VALUE VALUES (1, 3, 'Darren', 'Grant', 0.75);
-INSERT INTO policies         ("id", "external_id","platform_discount","client_id","policy_type_id","policy_provider_id","monthly_contributions","start_value","end_value","notes","uid") OVERRIDING SYSTEM VALUE VALUES 
-	 (1,'pol_a', 0.05, 1, 2, 1, 100, 120000, 150000, '', '432750f27b7343a0bccfbf19b50937a4'),
-	 (2,'pol_b', 0.04, 1, 1, 1, 100, 20000,  78216, '', '1e328d3daa2844cfb8e61475e2b93e5d'),
-	 (3,'pol_c', 0,    1, 2, 1, 100, 120000,  150000, '', '91bbbe4f242b48ed98fecd20acf48e63');
+INSERT INTO policies         ("id", "external_id","client_id","policy_type_id","policy_provider_id","monthly_contributions","start_value","end_value","notes","uid") OVERRIDING SYSTEM VALUE VALUES 
+	 (1,'pol_a', 1, 2, 1, 100, 120000, 150000, '', '432750f27b7343a0bccfbf19b50937a4'),
+	 (2,'pol_b', 1, 1, 1, 100, 20000,  78216, '', '1e328d3daa2844cfb8e61475e2b93e5d'),
+	 (3,'pol_c', 1, 2, 1, 100, 120000,  150000, '', '91bbbe4f242b48ed98fecd20acf48e63');
 INSERT INTO portfolios       ("id", "client_id","policy_id","model_id","proportion", "uid")         OVERRIDING SYSTEM VALUE VALUES 
 	 (1, 1, 1, 2, 0.6, 'd0ea24231c86494d880d38730e5a3f0a'),
 	 (2, 1, 1, 3, 0.4, 'ee0e475ab10e466c9e2b20107e11c50a'),

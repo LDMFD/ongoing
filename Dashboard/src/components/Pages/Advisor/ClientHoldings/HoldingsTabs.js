@@ -18,6 +18,7 @@ const HoldingsTabs = ({ children }) => {
         let baseTarget = `/clients/id/${clientId}/holdings`;
 
         let routeMatch = RouteMatch(pathname, [
+            `${basePath}/provider-discounts`,
             `${basePath}/policies`,
             `${basePath}/policy-funds`,
             `${basePath}/portfolios`,
@@ -26,9 +27,10 @@ const HoldingsTabs = ({ children }) => {
         
         return (
             <Tabs value={currentTab}>
-                <Tab label="Policies"     value={`${basePath}/policies`}     to={`${baseTarget}/policies`}     component={Link} />
-                <Tab label="Policy funds" value={`${basePath}/policy-funds`} to={`${baseTarget}/policy-funds`} component={Link} />
-                <Tab label="Portfolios"   value={`${basePath}/portfolios`}   to={`${baseTarget}/portfolios`}   component={Link} />
+                <Tab label="Provider discounts" value={`${basePath}/provider-discounts`} to={`${baseTarget}/provider-discounts`} component={Link} />
+                <Tab label="Policies"           value={`${basePath}/policies`}           to={`${baseTarget}/policies`}           component={Link} />
+                <Tab label="Policy funds"       value={`${basePath}/policy-funds`}       to={`${baseTarget}/policy-funds`}       component={Link} />
+                <Tab label="Portfolios"         value={`${basePath}/portfolios`}         to={`${baseTarget}/portfolios`}         component={Link} />
             </Tabs>
         );
     }

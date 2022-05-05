@@ -7,6 +7,7 @@ import (
 	Policies "ongoing/ApiServer/Advisor/Clients/Commands/Policies"
 	PolicyFunds "ongoing/ApiServer/Advisor/Clients/Commands/PolicyFunds"
 	Portfolios "ongoing/ApiServer/Advisor/Clients/Commands/Portfolios"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ProviderDiscount"
 	"ongoing/ApiServer/Advisor/Clients/Commands/ReviewModules"
 	Reviews "ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
 	"ongoing/ApiServer/Advisor/Clients/Commands/RiskAssessments"
@@ -20,6 +21,11 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.GET("/:ClientId", ClientProfile.GetClient)
 	r.PUT("/:ClientId", ClientProfile.UpdateClient)
 	r.DELETE("/:ClientId", ClientProfile.DeleteClient)
+
+	providerDiscountGroup := r.Group("/:ClientId/provider-discounts")
+	providerDiscountGroup.POST("", ProviderDiscount.CreateProviderDiscount)
+	providerDiscountGroup.PUT("/:ProviderDiscountId", ProviderDiscount.UpdateProviderDiscount)
+	providerDiscountGroup.DELETE("/:ProviderDiscountId", ProviderDiscount.DeleteProviderDiscount)
 
 	policyGroup := r.Group("/:ClientId/policies")
 	policyGroup.POST("", Policies.CreatePolicy)

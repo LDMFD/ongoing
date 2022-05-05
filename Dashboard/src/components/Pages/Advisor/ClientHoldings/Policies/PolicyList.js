@@ -43,13 +43,13 @@ const PolicyList = () => {
     }, []);
 
     const columns = [
-        { accessor: 'policyNumber',     Header: 'Policy Number',         width: 1, },
-        { accessor: 'platformDiscount', Header: 'Platform Discount',     width: 1, },
-        { accessor: 'monthlies',        Header: 'Monthly Contributions', width: 1, },
-        { accessor: 'startValue',       Header: 'Start Value',           width: 1, },
-        { accessor: 'endValue',         Header: 'End Value',             width: 1, },
-        { accessor: 'type',             Header: 'Type',                  width: 1, },
-        { accessor: 'provider',         Header: 'Provider',              width: 1, },
+        { accessor: 'policyNumber',     Header: 'Policy Number',           width: 1, },
+        { accessor: 'platformDiscount', Header: 'Discounted Platform Fee', width: 1, },
+        { accessor: 'monthlies',        Header: 'Monthly Contributions',   width: 1, },
+        { accessor: 'startValue',       Header: 'Start Value',             width: 1, },
+        { accessor: 'endValue',         Header: 'End Value',               width: 1, },
+        { accessor: 'type',             Header: 'Type',                    width: 1, },
+        { accessor: 'provider',         Header: 'Provider',                width: 1, },
     ];
 
     let includeNotes = report.Policies.some(p => p.Notes?.length && p.Notes !== '<p><br></p>');
@@ -90,6 +90,7 @@ const PolicyList = () => {
     let policies = report.Policies.map(policy => {
         let type = report.PolicyTypes.find(t => t.Id === policy.PolicyTypeId).Name;
         let provider = report.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
+        let providerDiscount = report.ProviderDiscounts.find(t => t.PolicyProviderId === policy.PolicyProviderId);
 
         // TODO refactor with PolicyValuations.js
         let contributions;
@@ -108,7 +109,7 @@ const PolicyList = () => {
         return {
             id:               policy.Id,
             policyNumber:     policy.ExternalId,
-            platformDiscount: `${policy.PlatformDiscount * 100}%`,
+            platformDiscount: providerDiscount ? `${providerDiscount.Discount}%` : '-',
             monthlies:        contributions,
             startValue:       CurrencyFormatter.format(policy.StartValue),
             endValue:         CurrencyFormatter.format(policy.EndValue),

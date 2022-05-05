@@ -32,7 +32,6 @@ const PlatformFees = () => {
         provider: Provider
         policies: []Policy,
         pricing:  string,
-        platformDiscount: float,
     }*/ ];
 
     report.Policies.forEach(policy => {
@@ -43,11 +42,13 @@ const PlatformFees = () => {
             }
         } else {
             let provider = report.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId);
+            let discount = report.ProviderDiscounts.find(pd => pd.PolicyProviderId === policy.PolicyProviderId);
             rows.push({
-                provider: provider,
-                policies: [ policy ],
-                platformDiscount: policy.PlatformDiscount,
-                pricing: policy.PlatformDiscount ? policy.PlatformDiscount : provider.Pricing,
+                provider:         provider,
+                policies:         [ policy ],
+                discount:         discount,
+                pricing:          provider.Pricing,
+                customPricing:    provider.CustomPricing,
             })
         }
     });
@@ -69,7 +70,9 @@ const PlatformFees = () => {
             <Table columns={cols} data={charges} />
         );
 
-        let pricing = r.provider.Pricing.replace('{{ charges }}', markup);
+        let pricing = r.discount
+            ? r.customPricing.replace('{{ charge }}', r.discount.Discount)
+            : r.pricing.replace('{{ table }}', markup);
 
         let policies = (
             <ul style={{ paddingLeft: '1rem' }}>

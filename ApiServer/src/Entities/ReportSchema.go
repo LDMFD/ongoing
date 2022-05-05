@@ -7,21 +7,22 @@ type ReportReview struct {
 }
 
 type ReportDetail struct {
-	Id            string
-	ModulePresets   []ReportModulePreset
-	Modules         []ReportModule
-	PolicyTypes     []ReportPolicyType
-	PolicyProviders []ReportPolicyProvider
-	ProviderCharges []ReportProviderCharge
-	Policies        []ReportPolicy
-	Funds           []ReportFund
-	PolicyFunds     []ReportPolicyFund
-	Operators       []ReportOperator
-	Models          []ReportModel
-	Portfolios      []ReportPortfolio
-	RiskProviders   []ReportRiskProvider
-	RiskLevels      []ReportRiskLevel
-	RiskAssessments []ReportRiskAssessment
-	FactFinds       []ReportFactFind
-	FeesReports     []ReportFeesReport
+	Id                string
+	ModulePresets     []ReportModulePreset
+	Modules           []ReportModule
+	PolicyTypes       []ReportPolicyType
+	PolicyProviders   []ReportPolicyProvider
+	ProviderCharges   []ReportProviderCharge
+	ProviderDiscounts []ReportProviderDiscount
+	Policies          []ReportPolicy
+	Funds             []ReportFund
+	PolicyFunds       []ReportPolicyFund
+	Operators         []ReportOperator
+	Models            []ReportModel
+	Portfolios        []ReportPortfolio
+	RiskProviders     []ReportRiskProvider
+	RiskLevels        []ReportRiskLevel
+	RiskAssessments   []ReportRiskAssessment
+	FactFinds         []ReportFactFind
+	FeesReports       []ReportFeesReport
 }

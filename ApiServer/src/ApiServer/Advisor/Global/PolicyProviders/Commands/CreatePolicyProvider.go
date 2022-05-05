@@ -11,9 +11,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreatePolicyProviderRequest struct {
-	Name string `binding:"required"`
-	Pricing string `binding:"required"`
+type CreateOrUpdatePolicyProviderRequest struct {
+	Name          string `binding:"required"`
+	Pricing       string
+	CustomPricing string
 }
 
 func CreatePolicyProvider(c *gin.Context) {
@@ -22,16 +23,17 @@ func CreatePolicyProvider(c *gin.Context) {
 	uid := uuid.NewString()
 	uid = strings.ReplaceAll(uid, "-", "")
 
-	var req CreatePolicyProviderRequest
+	var req CreateOrUpdatePolicyProviderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
 	var policyProvider = Entities.PolicyProvider{
-		Uid: uid,
-		Name: req.Name,
-		Pricing: req.Pricing,
+		Uid:           uid,
+		Name:          req.Name,
+		Pricing:       req.Pricing,
+		CustomPricing: req.CustomPricing,
 	}
 	if _, err := db.NewInsert().Model(&policyProvider).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

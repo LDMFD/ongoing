@@ -40,6 +40,15 @@ const PolicyProviderList = () => {
                 )
             ),
         }, {
+            accessor: 'customPricing',
+            Header: 'Custom Pricing',
+            width: 3,
+            Cell: ({ row }) => (
+                row.original.pricing && (
+                    <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.customPricing }} />
+                )
+            ),
+        }, {
             accessor: 'actions',
             Header: '',
             width: 0.5,
@@ -58,9 +67,10 @@ const PolicyProviderList = () => {
 
     let policyProviders = state.Entities.PolicyProviders.map(p => {
         return {
-            id:       p.Id,
-            name:     p.Name,
-            pricing:  p.Pricing,
+            id:            p.Id,
+            name:          p.Name,
+            pricing:       p.Pricing,
+            customPricing: p.CustomPricing,
         };
     });
 

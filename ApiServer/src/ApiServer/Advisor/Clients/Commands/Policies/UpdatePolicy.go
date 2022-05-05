@@ -76,7 +76,6 @@ func UpdatePolicy(c *gin.Context) {
 	}
 
 	policy.ExternalId = body.ExternalId
-	policy.PlatformDiscount = body.PlatformDiscount
 	policy.MonthlyContributions = body.MonthlyContributions
 	policy.StartValue = body.StartValue
 	policy.EndValue = body.EndValue

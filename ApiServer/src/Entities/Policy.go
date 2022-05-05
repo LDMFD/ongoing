@@ -15,7 +15,6 @@ type Policy struct {
 	PolicyTypeId         int64     `bun:"policy_type_id,notnull"`
 	PolicyProviderId     int64     `bun:"policy_provider_id,notnull"`
 	ExternalId           string    `bun:"external_id,notnull"`
-	PlatformDiscount     float64   `bun:"platform_discount,notnull"`
 	MonthlyContributions *int64    `bun:"monthly_contributions,notnull"`
 	StartValue           int64     `bun:"start_value,notnull"`
 	EndValue             int64     `bun:"end_value,notnull"`
@@ -35,7 +34,6 @@ type ReportPolicy struct {
 	PolicyTypeId         string
 	PolicyProviderId     string
 	ExternalId           string
-	PlatformDiscount     float64
 	MonthlyContributions *int64
 	StartValue           int64
 	EndValue             int64
@@ -52,7 +50,6 @@ func (p *Policy) ToReport() ReportPolicy {
 		PolicyTypeId:         p.PolicyType.Uid,
 		PolicyProviderId:     p.PolicyProvider.Uid,
 		ExternalId:           p.ExternalId,
-		PlatformDiscount:     p.PlatformDiscount,
 		MonthlyContributions: p.MonthlyContributions,
 		StartValue:           p.StartValue,
 		EndValue:             p.EndValue,

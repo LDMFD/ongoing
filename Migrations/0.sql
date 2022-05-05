@@ -35,6 +35,7 @@ CREATE TABLE policy_providers (
     "uid"                     text not null unique,
     "name"                    text not null unique,          -- e.g. Aviva
     "pricing"                 text not null,
+    "custom_pricing"          text not null,
     "timestamp"               timestamp default current_timestamp
 );
 
@@ -116,6 +117,16 @@ CREATE TABLE risk_levels (
 
 -- client-related:
 
+CREATE TABLE clients (
+    "id"                      int primary key generated always as identity,
+    "user_id"                 int not null unique,
+    "forenames"               text not null,
+    "fee"                     decimal not null default 0.75,
+    "surname"                 text not null,
+    "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE RESTRICT
+);
+
 CREATE TABLE risk_assessments (
     "id"                      int primary key generated always as identity,
     "uid"                     text not null unique,
@@ -124,6 +135,7 @@ CREATE TABLE risk_assessments (
     "questionnaire_file_id"   int not null,
     "completed"               timestamp default null,
     "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_risk_level FOREIGN KEY(risk_level_id) REFERENCES risk_levels(id) ON DELETE RESTRICT,
     CONSTRAINT fk_questionnaire FOREIGN KEY(questionnaire_file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
@@ -135,6 +147,7 @@ CREATE TABLE fact_finds (
     "file_id"                 int not null,
     "submitted"               timestamp default null,
     "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_fact_find FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 
@@ -145,24 +158,26 @@ CREATE TABLE fees_reports (
     "file_id"                 int not null,
     "submitted"               timestamp default null,
     "timestamp"               timestamp default current_timestamp,
+    CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_fees_report FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 
-CREATE TABLE clients (
+CREATE TABLE provider_discounts (
     "id"                      int primary key generated always as identity,
-    "user_id"                 int not null unique,
-    "forenames"               text not null,
-    "fee"                     decimal not null default 0.75,
-    "surname"                 text not null,
+    "uid"                     text not null unique,
+    "client_id"               int not null,
+    "policy_provider_id"      int not null,
+    "discount"                decimal default null,
     "timestamp"               timestamp default current_timestamp,
-    CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE RESTRICT
+    UNIQUE ("client_id", "policy_provider_id"),
+    CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_policy_provider FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE RESTRICT
 );
 
 CREATE TABLE policies (
     "id"                      int primary key generated always as identity,
     "uid"                     text not null unique,
     "external_id"             text not null unique,         -- Policy number, e.g., AV1234-001
-    "platform_discount"       decimal default null,
     "client_id"               int not null,
     "policy_type_id"          int not null,
     "policy_provider_id"      int not null,
@@ -176,7 +191,8 @@ CREATE TABLE policies (
     "timestamp"               timestamp default current_timestamp,
     CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy_type FOREIGN KEY(policy_type_id) REFERENCES policy_types(id) ON DELETE RESTRICT,
-    CONSTRAINT fk_policy_provider FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE RESTRICT
+    CONSTRAINT fk_policy_provider FOREIGN KEY(policy_provider_id) REFERENCES policy_providers(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_file FOREIGN KEY(file_id) REFERENCES files(id) ON DELETE RESTRICT
 );
 
 -- Funds attached to a policy, no model
@@ -189,6 +205,7 @@ CREATE TABLE policy_funds (
     "proportion"              decimal not null,
     "timestamp"               timestamp default current_timestamp,
     UNIQUE ("client_id", "policy_id", "fund_id"),
+    CONSTRAINT fk_client FOREIGN KEY(client_id) REFERENCES clients(id) ON DELETE RESTRICT,
     CONSTRAINT fk_fund FOREIGN KEY(fund_id) REFERENCES funds(id) ON DELETE RESTRICT,
     CONSTRAINT fk_policy FOREIGN KEY(policy_id) REFERENCES policies(id) ON DELETE RESTRICT
 );

@@ -20,8 +20,9 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
     let goBack = GoBack(history);
 
     const handlers = {
-        SetName:    (event) => { setPolicyProvider({ ...policyProvider, Name: event.target.value, }); },
-        SetPricing: (html) => { setPolicyProvider({ ...policyProvider, Pricing: html, }); },
+        SetName:          (event) => { setPolicyProvider({ ...policyProvider, Name: event.target.value, }); },
+        SetPricing:       (html) => { setPolicyProvider({ ...policyProvider, Pricing: html,       }); },
+        SetCustomPricing: (html) => { setPolicyProvider({ ...policyProvider, CustomPricing: html, }); },
     };
 
     return (
@@ -46,8 +47,17 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                         <RichTextEditor label        = 'Pricing'
                                         initialValue = {policyProvider.Pricing}
                                         onChange     = {handlers.SetPricing} />
+                        <small>Use <code>{'{{ table }}'}</code> to embed the charges table.</small>
+                        <br /><br />
 
-                        <Link to={{ pathname: `/policy-providers/id/${policyProvider.Id}/provider-charges` }}>Provider charges</Link>
+                        <RichTextEditor label        = 'Custom Pricing'
+                                        initialValue = {policyProvider.CustomPricing}
+                                        onChange     = {handlers.SetCustomPricing} />
+                        <small>Use <code>{'{{ charge }}'}</code> to embed the discount.</small>
+
+                        <p>
+                            Switch to <Link to={{ pathname: `/policy-providers/id/${policyProvider.Id}/provider-charges` }}>Charges table</Link>.
+                        </p>
 
                     </DialogContent>
                     <DialogActions>

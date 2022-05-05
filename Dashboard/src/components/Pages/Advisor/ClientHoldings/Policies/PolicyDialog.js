@@ -27,7 +27,6 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
 
     const handlers = {
         SetExternalId:   (event) => { setPolicy({ ...policy, ExternalId:           event.target.value }); },
-        SetDiscount:     (event) => { setPolicy({ ...policy, PlatformDiscount:     parseFloat(event.target.value), }); },
         SetMonthlies:    (event) => { setPolicy({ ...policy, MonthlyContributions: parseInt(event.target.value), }); },
         SetStartValue:   (event) => { setPolicy({ ...policy, StartValue:           parseInt(event.target.value), }); },
         SetEndValue:     (event) => { setPolicy({ ...policy, EndValue:             parseInt(event.target.value), }); },
@@ -52,14 +51,6 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                label    = "Policy number"
                                type     = "text"
                                autoFocus fullWidth />
-
-                    <TextField value    = {policy.PlatformDiscount}
-                               onChange = {handlers.SetDiscount}
-                               margin   = "dense"
-                               id       = "platformDiscount"
-                               label    = "Platform Discount"
-                               type     = "number"
-                               fullWidth />
 
                     <TextField value    = {policy.MonthlyContributions}
                                onChange = {handlers.SetMonthlies}
