@@ -88,7 +88,6 @@ func UpdatePolicy(c *gin.Context) {
 		Model(&policy).
 		WherePK().
 		Column("external_id").
-		Column("platform_discount").
 		Column("monthly_contributions").
 		Column("start_value").
 		Column("end_value").
