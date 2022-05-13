@@ -7,11 +7,10 @@ import {
 } from '@mui/material';
 
 import { Context } from 'State'
-import { ONGOING_DASHBOARD_URL } from 'App';
 
 function SendSignInLink(email) {
     const actionCodeSettings = {
-        url: ONGOING_DASHBOARD_URL,
+        url: window.Config.DashboardHost,
         handleCodeInApp: true,    // This must be true according to the docs.
     };
     

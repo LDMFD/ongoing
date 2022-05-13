@@ -1,22 +1,16 @@
 version: '3'
 
-volumes:
-  node_modules_prod:
-
 services:
-  dash-builder:
-    container_name: ongoing-dash-builder
+  react-dashboard-builder:
+    container_name: ongoing-react-dashboard-builder
     build:
       context: ./Dashboard
       dockerfile: Builder.Dockerfile
     volumes:
-      - ./Dashboard:/app
-      - "node_modules_prod:/app/node_modules"
       - "./Dashboard/build:/app/build"
 
-  dashboard:
+  dashboard-server:
     container_name: ongoing-dashboard
-    image: ongoing-dashboard
     build:
       context: ./DashboardServer
       dockerfile: Dockerfile
@@ -24,4 +18,5 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./DashboardServer:/app
+      - ./DashboardServer/build:/app/build
+      - ~/.ongoing/secrets/firebase-client-key.json:/app/Config/Firebase/key.json

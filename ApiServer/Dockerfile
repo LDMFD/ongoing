@@ -16,7 +16,9 @@ COPY --from=deps /go /go
 ADD src /go/src
 RUN go build
 
-FROM builder AS runtime
-COPY --from=builder /go/src/ongoing /go/bin
+FROM alpine:3.15 AS runtime
+COPY --from=builder /go/src/ongoing /go/bin/ongoing
+
+ENV GIN_MODE=release
 
 CMD /go/bin/ongoing

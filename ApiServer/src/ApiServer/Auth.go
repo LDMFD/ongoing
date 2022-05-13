@@ -6,8 +6,10 @@ import (
 	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
+	"google.golang.org/api/option"
 	"net/http"
 	"ongoing/Entities"
+	"os"
 )
 
 const OFFLINE_AUTH = false
@@ -32,7 +34,8 @@ func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 		if OFFLINE_AUTH && jwt[len(jwt)-8:] == "@tp1.org" {
 			email = jwt
 		} else {
-			if app, err = firebase.NewApp(context.Background(), nil); err != nil {
+			opt := option.WithCredentialsFile(os.Getenv("FIREBASE_CONFIG"))
+			if app, err = firebase.NewApp(context.Background(), nil, opt); err != nil {
 				panic(err)
 			}
 			if client, err = app.Auth(context.Background()); err != nil {

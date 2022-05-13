@@ -1,0 +1,20 @@
+{
+  "hosting": {
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "ongoing-api",
+          "region": "europe-west2"
+        }
+      },
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "ongoing-dashboard",
+          "region": "europe-west2"
+        }
+      }
+   ]
+  }
+}

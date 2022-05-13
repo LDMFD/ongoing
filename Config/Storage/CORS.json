@@ -1,12 +1,13 @@
 [
   {
-    "maxAgeSeconds": 20,
+    "maxAgeSeconds": 60,
     "method": [
       "GET",
       "POST"
     ],
     "origin": [
       "http://localhost.ongoing.tp1.org:3000",
+      "https://staging.ongoing.tp1.org",
       "https://ongoing.tp1.org"
     ],
     "responseHeader": [

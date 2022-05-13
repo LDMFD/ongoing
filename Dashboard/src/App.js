@@ -11,20 +11,53 @@ import StateProvider from 'State/StateProvider'
 import './App.css';
 import { ForceRefresh } from "Auth";
 
-// API server
-export const ONGOING_API_URL = process.env.NODE_ENV !== 'production'
-    ? 'http://localhost:8000'
-    : 'https://ong-api.tp1.org';
+import * as firebaseui from 'firebaseui'
+import firebase from 'firebase/compat/app';
+import json5 from 'json5';
 
-// Link to embed in email links
-export const ONGOING_DASHBOARD_URL = process.env.NODE_ENV !== 'production'
-    ? 'http://localhost.ongoing.tp1.org:3000'
-    : 'http://ongoing.tp1.org';
+if (window.Config === '__CONFIG_EMBED__') {
+    let firebaseConfigB64 = atob(process.env.REACT_APP_ONGOING_REACT_FIREBASE_CONFIG);
+    window.Config = {
+        ApiHost: process.env.REACT_APP_ONGOING_API_HOST,
+        DashboardHost: process.env.REACT_APP_ONGOING_DASHBOARD_HOST,
+        FirebaseClientId: process.env.REACT_APP_ONGOING_REACT_FIREBASE_CLIENT_ID,
+        FirebaseConfig: json5.parse(firebaseConfigB64),
+    };
+}
 
-console.log(`ONGOING_API_URL: ${ONGOING_API_URL}`);
+// Bypass Firebase
+export const OFFLINE_AUTH = false;
+
+const FirebaseUiConfig = {
+    signInFlow: 'redirect',
+    signInOptions: [
+        {
+            provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            clientId: window.Config.FirebaseClientId,
+        },
+        {
+            provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            requireDisplayName: true,
+            signInMethod: 'emailLink', // or 'password'
+        },
+    ],
+    callbacks: {
+        signInSuccessWithAuthResult: () => false,  // don't redirect
+    },
+    tosUrl: '/terms',
+    privacyPolicyUrl: '/privacy',
+};
+
+if (!OFFLINE_AUTH) {
+    firebase.initializeApp(window.Config.FirebaseConfig);
+    const authUI = new firebaseui.auth.AuthUI(firebase.auth());
+    authUI.disableAutoSignIn();
+
+    authUI.start('#firebaseui-container', FirebaseUiConfig);
+}
 
 window.ApiClient = axios.create({
-    baseURL: `${ONGOING_API_URL}`,
+    baseURL: window.Config.ApiHost,
     // withCredentials: true,
 });
 
@@ -51,7 +84,7 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
     }
 
     throw err;  // prevent goBack() on error
-});
+});    
 
 function App() {
     return (

@@ -70,7 +70,7 @@ func (s *ApiServer) ListenAndServe() error {
 
 	AddApiRoutes(r)
 
-	r.Run(":8000")
+	r.Run(":" + os.Getenv("ONGOING_API_PORT"))
 
 	return nil
 }

@@ -1,10 +1,56 @@
-firebase-create-key:
-	gcloud iam service-accounts keys create key-file \
-		--iam-account=firebase-adminsdk-8yz3m@ongoing-test.iam.gserviceaccount.com
+_gcp-firebase-setup:
+	make _firebase-create-sa-key
+	make _firebase-create-secret-key_json
+	make _firebase-create-secret-client_id
+	make _firebase-set-client-id
+	make _firebase-set-client-key
 
-# https://stackoverflow.com/a/65637663
-firebase-enable-logging:
+_firebase-create-sa-key: import-env
+	gcloud iam service-accounts keys create ${HOME}/.ongoing/secrets/firebase-key.json \
+		--iam-account=${FIREBASE_SA_ID_${ENV}}
+
+	gcloud secrets create firebase-sa-key \
+	    --replication-policy="automatic"
+
+	gcloud secrets versions add firebase-sa-key --data-file=${HOME}/.ongoing/secrets/firebase-key.json
+
+_firebase-create-secret-key_json: import-env
+	gcloud secrets create firebase-client-key \
+	    --replication-policy="automatic"
+
+_firebase-create-secret-client_id: import-env
+	gcloud secrets create firebase-client-id \
+	    --replication-policy="automatic"
+
+_firebase-set-client-id:
+	SECRET=firebase-client-id \
+		Makefiles/Helpers/firebase-input-key.sh
+
+_firebase-set-client-key:
+	SECRET=firebase-client-key \
+		Makefiles/Helpers/firebase-input-key.sh
+
+# ---
+
+_gcp-firebase-teardown: import-env
+	gcloud iam service-accounts delete ${FIREBASE_SA_ID_${ENV}}
+	gcloud secrets delete firebase-sa-key
+	gcloud secrets delete firebase-client-key
+	gcloud secrets delete firebase-client-id
+
+# ---
+
+# Entrypoint
+# To enable better logging, see https://stackoverflow.com/a/65637663
+# TOKEN will be ya29...
+firebase-enable-logging: import-env
 	curl -d "{'monitoring':{'requestLogging':{'enabled':true}}}" \
-		-H 'Authorization: Bearer ya29.A0ARrdaM8TEkqv6mH1x252Qec3oSdBTomG7NDu537MVtU5rRbyyWE8DZEqX_W_pGh7RpTpvq-T-AXH9cupSzrO89yVjT-vLg_a_QK38KKHXxLaL7ZrFbCdrusPBGRB__w7yJqvdOWPvfuHtHFw59bXvQHAsFvQ' \
+		-H 'Authorization: Bearer ${TOKEN}' \
 		-X PATCH -H 'Content-Type: application/json' \
-		https://identitytoolkit.googleapis.com/admin/v2/projects/ongoing-test/config?updateMask=monitoring.requestLogging.enabled
+		https://identitytoolkit.googleapis.com/admin/v2/projects/ongoing-${ENV}/config?updateMask=monitoring.requestLogging.enabled
+
+# ---
+
+firebase-deploy:
+	cd Config/Firebase && \
+	firebase deploy --only hosting --project ongoing-staging

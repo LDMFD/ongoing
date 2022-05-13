@@ -3,7 +3,7 @@ import {
 } from "State/Reducer";
 
 const Read = (dispatch) => {
-    return window.ApiClient.get(`client-space`).then(res => {
+    return window.ApiClient.get(`client-detail`).then(res => {
         dispatch({
             type: POPULATE_CLIENT_SPACE,
             payload: res.data,

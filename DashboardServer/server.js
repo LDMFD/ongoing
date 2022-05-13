@@ -1,13 +1,25 @@
-const express = require('express');
+const fs = require('fs');
 const path = require('path');
+
+const JSON5 = require('json5')
+const express = require('express');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+let content = fs.readFileSync(path.join(__dirname, 'index.html')).toString();
+let config = JSON.stringify({
+  ApiHost: process.env.ONGOING_API_HOST,
+  DashboardHost: process.env.ONGOING_DASHBOARD_HOST,
+  FirebaseClientId: process.env.ONGOING_REACT_FIREBASE_CLIENT_ID,
+  FirebaseConfig: JSON5.parse(fs.readFileSync('/app/Config/Firebase/key.json').toString()),  // move string to env var
+});
+let indexResponse = content.replace("\"__CONFIG_EMBED__\"", config);
+
+app.get([ '*' ], function (req, res) {
+  res.send(indexResponse);
 });
 
 console.log('Server starting');
 
-app.listen(8080);
+app.listen(8080, '0.0.0.0');

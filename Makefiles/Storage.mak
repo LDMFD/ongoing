@@ -1,20 +1,46 @@
-gcloud-storage-create-service-account:
+_gcp-storage-setup:
+	make _gcp-storage-create-service-account
+	make _gcp-storage-create-bucket
+	make _gcp-storage-create-principle
+	make _gcp-storage-set-cors
+	make _gcp-storage-create-key
+	make _gcp-storage-create-secret
+
+_gcp-storage-create-service-account:
 	gcloud iam service-accounts create storage
 
-gcloud-storage-create-key:
-	gcloud iam service-accounts keys create key-file \
-		--iam-account=storage@ongoing-test.iam.gserviceaccount.com
+_gcp-storage-create-bucket: import-env
+	gsutil mb -l ${REGION_${ENV}} gs://ongoing-${ENV}-docs
 
-gcloud-storage-create-bucket:
-	gsutil mb gs://ongoing-test-docs
-
-gcloud-storage-create-principle:
+_gcp-storage-create-principle: import-env
 	gsutil iam ch \
-		serviceaccount:storage@ongoing-test.iam.gserviceaccount.com:roles/storage.objectAdmin \
-		gs://ongoing-test-docs
+		serviceaccount:storage@ongoing-${ENV}.iam.gserviceaccount.com:roles/storage.objectAdmin \
+		gs://ongoing-${ENV}-docs
 
-gcloud-storage-get-cors:
-	gsutil cors get gs://ongoing-test-docs|jq
+_gcp-storage-set-cors: import-env
+	gsutil cors set Config/Storage/CORS.json gs://ongoing-${ENV}-docs
 
-gcloud-storage-set-cors:
-	gsutil cors set Config/Storage/CORS.json gs://ongoing-test-docs
+# Commands from ApiServer/pkg/mod/cloud.google.com/go/storage@v1.18.2/storage.go
+_gcp-storage-create-key: import-env
+	gcloud iam service-accounts keys create ~/.ongoing/secrets/storage.p12 \
+		--key-file-type=p12 \
+		--iam-account=storage@ongoing-${ENV}.iam.gserviceaccount.com	
+	openssl pkcs12 -in ~/.ongoing/secrets/storage.p12 -passin pass:notasecret -out ~/.ongoing/secrets/storage.pem -nodes
+	rm ~/.ongoing/secrets/storage.p12
+
+_gcp-storage-create-secret: import-env
+	gcloud secrets create storage-credential --replication-policy=automatic --data-file=${HOME}/.ongoing/secrets/storage.pem
+
+# ---
+
+# Entrypoint
+gcp-storage-update-secret: import-env
+	gcloud secrets versions add storage-credential --data-file=${HOME}/.ongoing/secrets/storage2.pem
+
+# ---
+
+_gcp-storage-teardown: import-env
+	gcloud iam service-accounts delete storage@ongoing-${ENV}.iam.gserviceaccount.com
+	gsutil rm -r gs://ongoing-${ENV}-docs
+	gcloud secrets delete storage-credential
+	rm ~/.ongoing/secrets/storage.pem

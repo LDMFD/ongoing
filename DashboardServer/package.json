@@ -3,7 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-        "express": "^4.17.3"
+        "express": "^4.17.3",
+        "json5": "^2.0.0"
     }
   }
   
