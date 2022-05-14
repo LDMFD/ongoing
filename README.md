@@ -10,6 +10,7 @@ Install firebase CLI:
 Add the following domains to /etc/hosts:
 
 - ongoing-db
+- ongoing-api
 - localhost.<your domain>
 
 Choose environment:

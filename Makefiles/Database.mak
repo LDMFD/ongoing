@@ -76,7 +76,7 @@ _db_migrate-local: import-env
 		-v `pwd`/pgpass:/app/pgpass \
 		-e PGPASSFILE=/app/pgpass \
 		postgres \
-			psql --host=ongoing-db
+			psql --host=ongoing-db \
 				 --dbname=postgres \
 				 --username=postgres \
 				 --file=/app/migrations/${MIGRATION}.sql
