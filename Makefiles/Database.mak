@@ -67,7 +67,7 @@ _gcp-sql-teardown: import-env
 # ---
 
 # Local:
-_db_migrate-local:
+_db_migrate-local: import-env
 	docker run \
 		-it \
 		--rm \
@@ -76,7 +76,7 @@ _db_migrate-local:
 		-v `pwd`/pgpass:/app/pgpass \
 		-e PGPASSFILE=/app/pgpass \
 		postgres \
-			psql --host=${DB_INSTANCE_${ENV}} \
+			psql --host=ongoing-db
 				 --dbname=postgres \
 				 --username=postgres \
 				 --file=/app/migrations/${MIGRATION}.sql
@@ -130,8 +130,8 @@ db-dump:
 					--data-only --no-acl --column-inserts --no-comments
 
 db-up:
-	make _db_migrate_local MIGRATION=0
-	make _db_migrate_local MIGRATION=1
+	make _db_migrate-local MIGRATION=0
+	make _db_migrate-local MIGRATION=1
 
 # Run this, then `make db-up`
 db-clean:

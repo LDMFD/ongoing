@@ -23,3 +23,8 @@ print-secrets: import-env
 	@echo STORAGE_BUCKET=ongoing-${ENV}-docs
 	@echo STORAGE_CREDENTIAL=\$$USER_HOME\$$/.ongoing/secrets/storage.pem
 	@echo STORAGE_SA=storage@ongoing-${ENV}.iam.gserviceaccount.com
+	@echo 
+	@echo POSTGRES_ADDR=ongoing-db:5432
+	@echo POSTGRES_DB=postgres
+	@echo POSTGRES_PASSWORD=p
+	@echo POSTGRES_USER=postgres
