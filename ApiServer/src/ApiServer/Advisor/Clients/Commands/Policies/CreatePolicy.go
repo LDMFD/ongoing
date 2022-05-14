@@ -17,9 +17,9 @@ type CreatePolicyRequestPath struct {
 
 type CreateOrUpdatePolicyRequestBody struct {
 	ExternalId           string  `binding:"required"`
-	MonthlyContributions *int64
-	StartValue           int64   `binding:"required"`
-	EndValue             int64   `binding:"required"`
+	MonthlyContributions int64
+	StartValue           int64
+	EndValue             int64
 	PolicyTypeId         string  `binding:"required"`
 	PolicyProviderId     string  `binding:"required"`
 	Notes                string

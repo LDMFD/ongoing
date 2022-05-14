@@ -15,7 +15,7 @@ type Policy struct {
 	PolicyTypeId         int64     `bun:"policy_type_id,notnull"`
 	PolicyProviderId     int64     `bun:"policy_provider_id,notnull"`
 	ExternalId           string    `bun:"external_id,notnull"`
-	MonthlyContributions *int64    `bun:"monthly_contributions,notnull"`
+	MonthlyContributions int64     `bun:"monthly_contributions,notnull"`
 	StartValue           int64     `bun:"start_value,notnull"`
 	EndValue             int64     `bun:"end_value,notnull"`
 	Timestamp            time.Time `bun:",nullzero,notnull,default:current_timestamp"`
@@ -34,7 +34,7 @@ type ReportPolicy struct {
 	PolicyTypeId         string
 	PolicyProviderId     string
 	ExternalId           string
-	MonthlyContributions *int64
+	MonthlyContributions int64
 	StartValue           int64
 	EndValue             int64
 	Notes                string
