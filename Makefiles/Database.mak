@@ -73,11 +73,11 @@ _db_migrate-local: import-env
 		--rm \
 		--network ongoing_default \
 		-v `pwd`/Migrations:/app/migrations \
-		-v `pwd`/pgpass:/app/pgpass \
-		-e PGPASSFILE=/app/pgpass \
+		-v `pwd`/pgpass:/root/.pgpass \
+		-e PGPASSFILE=/root/.pgpass \
 		postgres \
 			psql --host=ongoing-db \
-				 --dbname=postgres \
+				 --dbname=ef \
 				 --username=postgres \
 				 --file=/app/migrations/${MIGRATION}.sql
 
@@ -151,3 +151,16 @@ db-proxy: import-env
 		gcr.io/cloudsql-docker/gce-proxy:${SQL_PROXY_VERSION} /cloud_sql_proxy \
 		-instances=ongoing-${ENV}:${REGION_${ENV}}:${DB_INSTANCE_${ENV}}=tcp:0.0.0.0:5432 \
 		-credential_file=/credential.json
+
+# ---
+
+db-scaffold:
+	cd Entities && \
+		dotnet ef dbcontext scaffold "Host=ongoing-db;Database=postgres;Username=postgres;Password=p" Npgsql.EntityFrameworkCore.PostgreSQL
+
+db-reset:
+	cd Entities && \
+		dotnet ef database drop -f && \
+		rm -rf Migrations/ && \
+		dotnet ef migrations add "Initial migration" && \
+		dotnet ef database update

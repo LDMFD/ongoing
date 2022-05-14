@@ -7,6 +7,10 @@ Install firebase CLI:
     curl -sL https://firebase.tools | upgrade=true bash
     firebase login
 
+Install Dotnet and Entity Framework:
+
+    dotnet tool install --global dotnet-ef
+
 Add the following domains to /etc/hosts:
 
 - ongoing-db
@@ -61,6 +65,17 @@ Then:
 To create .env:
 
     make print-secrets
+
+### Migrations
+
+Entity Framework:
+
+    dotnet ef migrations add "comment"
+    dotnet ef database update
+
+Run Migration/0.sql:
+
+    make _db_migrate-local MIGRATION=0
 ### Dashboard
 
     make db-clean
