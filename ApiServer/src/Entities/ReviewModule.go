@@ -9,26 +9,26 @@ var (
     ModuleTypeIntroduction       = "introduction"
 
     ModuleTypeProfile            = "profile"
-    ModuleTypeFactFind           = "profile:fact-find"
-    ModuleTypeRisk               = "profile:risk"
-    ModuleTypeObjectives         = "profile:objectives"
+    ModuleTypeFactFind           = "profile_fact_find"
+    ModuleTypeRisk               = "profile_risk"
+    ModuleTypeObjectives         = "profile_objectives"
 
-    ModuleTypePolicyValuations   = "policy-valuations"
-    ModuleTypeValuation          = "policy-valuations:valuation"
-    ModuleTypeContributions      = "policy-valuations:contributions"
+    ModuleTypePolicyValuations   = "policy_valuations"
+    ModuleTypeValuation          = "policy_valuations_valuation"
+    ModuleTypeContributions      = "policy_valuations_contributions"
 
     ModuleTypeFees               = "fees"
-    ModuleTypeAdviceFee          = "fees:advice-fee"
-    ModuleTypePolicyFees         = "fees:policy-fees"
-    ModuleTypeFundLevelFees      = "fees:fund-level"
-    ModuleTypePortfolioLevelFees = "fees:portfolio-level"
-    ModuleTypeDimFee             = "fees:dim"
+    ModuleTypeAdviceFee          = "fees_advice_fee"
+    ModuleTypePolicyFees         = "fees_policy_fees"
+    ModuleTypeFundLevelFees      = "fees_fund_level"
+    ModuleTypePortfolioLevelFees = "fees_portfolio_level"
+    ModuleTypeDimFee             = "fees_dim"
 
     ModuleTypeConclusions        = "conclusions"
-    ModuleTypeAdviceGiven        = "conclusions:advice-given"
-    ModuleTypeDueDiligence       = "conclusions:due-diligence"
-    ModuleTypeOngoingSuitability = "conclusions:ongoing-suitability"
-    ModuleTypeActionPoints       = "conclusions:action-points"
+    ModuleTypeAdviceGiven        = "conclusions_advice_given"
+    ModuleTypeDueDiligence       = "conclusions_due_diligence"
+    ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability"
+    ModuleTypeActionPoints       = "conclusions_action_points"
 )
 
 type Module struct {

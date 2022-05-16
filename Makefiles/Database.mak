@@ -75,9 +75,9 @@ _db_migrate-local: import-env
 		-v `pwd`/Migrations:/app/migrations \
 		-v `pwd`/pgpass:/root/.pgpass \
 		-e PGPASSFILE=/root/.pgpass \
-		postgres \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
 			psql --host=ongoing-db \
-				 --dbname=ef \
+				 --dbname=postgres \
 				 --username=postgres \
 				 --file=/app/migrations/${MIGRATION}.sql
 
@@ -86,20 +86,22 @@ db-clean-remote:
 		--name db-migration \
 		--network ongoing_default \
 		-v ~/.ongoing/clean.sql:/app/migrations/clean.sql \
-		postgres \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
 			psql --host=db-proxy \
 				 --dbname=postgres \
 				 --username=postgres \
 				 --password \
 				 --file=/app/migrations/clean.sql
 
-db-restore-remote:
+# Params:
+# FROM - the .sql file to import from
+db-restore:
 	docker run -it --rm \
 		--name db-migration \
 		--network ongoing_default \
-		-v ~/.ongoing/dump.sql:/app/migrations/dump.sql \
-		postgres \
-			psql --host=db-proxy \
+		-v ${FROM}:/app/migrations/dump.sql \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
+			psql --host=ongoing-db \
 				 --dbname=postgres \
 				 --username=postgres \
 				 --password \
@@ -110,24 +112,37 @@ db-migrate-remote:
 		--name db-migration \
 		--network ongoing_default \
 		-v `pwd`/Migrations:/app/migrations \
-		postgres \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
 			psql --host=db-proxy \
 				 --dbname=postgres \
 				 --username=postgres \
 				 --password \
 				 --file=/app/migrations/${MIGRATION}.sql
 
-# Local:
-db-dump:
+# Variant: --data-only to --schema-only
+db-dump-local:
 	docker run -it --rm \
 		--name db-dump \
 		--network ongoing_default \
-		postgres \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
+			pg_dump --host=ongoing-db \
+					--dbname=postgres \
+					--username=postgres \
+					--password \
+					--no-comments \
+					--data-only --no-acl --column-inserts --no-comments
+
+db-dump-remote:
+	docker run -it --rm \
+		--name db-dump \
+		--network ongoing_default \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
 			pg_dump --host=db-proxy \
 					--dbname=postgres \
 					--username=postgres \
 					--password \
-					--data-only --no-acl --column-inserts --no-comments
+					--no-comments \
+					--no-acl --column-inserts --no-comments
 
 db-up:
 	make _db_migrate-local MIGRATION=0
@@ -156,11 +171,21 @@ db-proxy: import-env
 
 db-scaffold:
 	cd Entities && \
-		dotnet ef dbcontext scaffold "Host=ongoing-db;Database=postgres;Username=postgres;Password=p" Npgsql.EntityFrameworkCore.PostgreSQL
+		dotnet ef dbcontext scaffold \
+			--data-annotations \
+			--output-dir src/Entities \
+			--context-dir src \
+			--context EfContext \
+			"Host=ongoing-db;Database=postgres;Username=postgres;Password=p" Npgsql.EntityFrameworkCore.PostgreSQL
+
 
 db-reset:
 	cd Entities && \
 		dotnet ef database drop -f && \
 		rm -rf Migrations/ && \
 		dotnet ef migrations add "Initial migration" && \
+		dotnet ef database update
+
+db-update:
+	cd Entities && \
 		dotnet ef database update
