@@ -1,0 +1,15 @@
+ALTER TYPE module_type RENAME VALUE 'profile:fact-find'               TO 'profile_fact_find';
+ALTER TYPE module_type RENAME VALUE 'profile:risk'                    TO 'profile_risk';
+ALTER TYPE module_type RENAME VALUE 'profile:objectives'              TO 'profile_objectives';
+ALTER TYPE module_type RENAME VALUE 'policy-valuations'               TO 'policy_valuations';
+ALTER TYPE module_type RENAME VALUE 'policy-valuations:valuation'     TO 'policy_valuations_valuation';
+ALTER TYPE module_type RENAME VALUE 'policy-valuations:contributions' TO 'policy_valuations_contributions';
+ALTER TYPE module_type RENAME VALUE 'fees:advice-fee'                 TO 'fees_advice_fee';
+ALTER TYPE module_type RENAME VALUE 'fees:policy-fees'                TO 'fees_policy_fees';
+ALTER TYPE module_type RENAME VALUE 'fees:fund-level'                 TO 'fees_fund_level';
+ALTER TYPE module_type RENAME VALUE 'fees:portfolio-level'            TO 'fees_portfolio_level';
+ALTER TYPE module_type RENAME VALUE 'fees:dim'                        TO 'fees_dim';
+ALTER TYPE module_type RENAME VALUE 'conclusions:advice-given'        TO 'conclusions_advice_given';
+ALTER TYPE module_type RENAME VALUE 'conclusions:due-diligence'       TO 'conclusions_due_diligence';
+ALTER TYPE module_type RENAME VALUE 'conclusions:ongoing-suitability' TO 'conclusions_ongoing_suitability';
+ALTER TYPE module_type RENAME VALUE 'conclusions:action-points'       TO 'conclusions_action_points';

@@ -2,26 +2,26 @@
 export const ModuleTypeIntroduction       = "introduction";
 
 export const ModuleTypeProfile            = "profile";
-export const ModuleTypeFactFind           = "profile:fact-find";
-export const ModuleTypeRisk               = "profile:risk";
-export const ModuleTypeObjectives         = "profile:objectives";
+export const ModuleTypeFactFind           = "profile_fact_find";
+export const ModuleTypeRisk               = "profile_risk";
+export const ModuleTypeObjectives         = "profile_objectives";
 
-export const ModuleTypePolicyValuations   = "policy-valuations";
-export const ModuleTypeValuation          = "policy-valuations:valuation";
-export const ModuleTypeContributions      = "policy-valuations:contributions";
+export const ModuleTypePolicyValuations   = "policy_valuations";
+export const ModuleTypeValuation          = "policy_valuations_valuation";
+export const ModuleTypeContributions      = "policy_valuations_contributions";
 
 export const ModuleTypeFees               = "fees";
-export const ModuleTypeAdviceFee          = "fees:advice-fee";
-export const ModuleTypePolicyFees         = "fees:policy-fees";
-export const ModuleTypeFundLevelFees      = "fees:fund-level";
-export const ModuleTypePortfolioLevelFees = "fees:portfolio-level";
-export const ModuleTypeDimFee             = "fees:dim";
+export const ModuleTypeAdviceFee          = "fees_advice_fee";
+export const ModuleTypePolicyFees         = "fees_policy_fees";
+export const ModuleTypeFundLevelFees      = "fees_fund_level";
+export const ModuleTypePortfolioLevelFees = "fees_portfolio_level";
+export const ModuleTypeDimFee             = "fees_dim";
 
 export const ModuleTypeConclusions        = "conclusions";
-export const ModuleTypeAdviceGiven        = "conclusions:advice-given";
-export const ModuleTypeDueDiligence       = "conclusions:due-diligence";
-export const ModuleTypeOngoingSuitability = "conclusions:ongoing-suitability";
-export const ModuleTypeActionPoints       = "conclusions:action-points";
+export const ModuleTypeAdviceGiven        = "conclusions_advice_given";
+export const ModuleTypeDueDiligence       = "conclusions_due_diligence";
+export const ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability";
+export const ModuleTypeActionPoints       = "conclusions_action_points";
 
 export const ModuleTypeSelectSpec = [
     { id: ModuleTypeIntroduction,       label: "Introduction" },

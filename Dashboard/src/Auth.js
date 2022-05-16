@@ -40,10 +40,12 @@ export const ForceRefresh = () => (
     <div id='auth-refresh'>
         <div className='auth-refresh-background' />
         <div className='auth-refresh-button'>
+            Your session has expired - please reload the page
+            <br />
             <button onClick={() => {
                 window.location.reload();
             }}>
-                Your session has expired - please reload the page
+                Reload
             </button>
         </div>
     </div>
