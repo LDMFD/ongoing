@@ -22,7 +22,7 @@ FIREBASE_SA_ID_staging				:= firebase-adminsdk-tqmwj@ongoing-staging.iam.gservic
 
 DOMAIN_staging						:= ongoing.tp1.org
 
-SECRET_DATABASE_CONNECTION_staging	:= 3
+SECRET_DATABASE_CONNECTION_staging	:= 4
 SECRET_DB_PROXY_VERSION_staging		:= 1
 SECRET_FIREBASE_CLIENT_ID_staging	:= 1
 SECRET_FIREBASE_CLIENT_KEY_staging	:= 1

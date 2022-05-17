@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"google.golang.org/api/option"
+	"log"
 	"net/http"
 	"ongoing/Entities"
 	"os"
@@ -44,6 +45,7 @@ func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 
 			// Check valid Google token
 			if token, err = client.VerifyIDToken(context.Background(), jwt); err != nil {
+				log.Println("Token verification failed:", err)
 				c.AbortWithStatus(http.StatusForbidden)
 				return
 			}
@@ -53,6 +55,7 @@ func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 		user := &Entities.User{}
 
 		if count, err := db.NewSelect().Model(user).Where("email = ?", email).ScanAndCount(c); err != nil {
+			log.Println("Unauthorized access attempt by:", email)
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		} else {
@@ -60,11 +63,13 @@ func AuthMiddleware(typeFilter *string) gin.HandlerFunc {
 		}
 
 		if !exists && typeFilter != nil {
+			log.Println("Unauthorized access attempt by:", email)
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}
 
 		if !userPassesTypeCheck(user, typeFilter) {
+			log.Println("Unauthorized access attempt by known user:", email)
 			c.AbortWithStatus(http.StatusForbidden)
 			return
 		}

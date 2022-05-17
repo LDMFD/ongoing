@@ -52,17 +52,12 @@ namespace Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=postgres;Username=postgres;Password=p");
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=p");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            // modelBuilder.HasPostgresEnum("module_type", new[] { "introduction", "profile", "profile:fact-find", "profile:risk", "profile:objectives", "policy-valuations", "policy-valuations:valuation", "policy-valuations:contributions", "fees", "fees:advice-fee", "fees:policy-fees", "fees:fund-level", "fees:portfolio-level", "fees:dim", "conclusions", "conclusions:advice-given", "conclusions:due-diligence", "conclusions:ongoing-suitability", "conclusions:action-points" })
-            //     .HasPostgresEnum("operator_type", new[] { "dim", "firm", "individual", "none" })
-            //     .HasPostgresEnum("review_state", new[] { "draft", "final" })
-            //     .HasPostgresEnum("user_type", new[] { "admin", "advisor", "client" });
-
             builder.HasPostgresEnum<ModuleType>();
             builder.HasPostgresEnum<OperatorType>();
             builder.HasPostgresEnum<ReviewState>();
