@@ -25,4 +25,5 @@ type ReportDetail struct {
 	RiskAssessments   []ReportRiskAssessment
 	FactFinds         []ReportFactFind
 	FeesReports       []ReportFeesReport
+	Forecasts         []ReportForecast
 }

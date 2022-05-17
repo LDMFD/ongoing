@@ -1,0 +1,41 @@
+package Entities
+
+import (
+	"time"
+
+	"github.com/uptrace/bun"
+)
+
+type Forecast struct {
+	bun.BaseModel `bun:"table:forecasts"`
+
+	Id        int64     `bun:"id,pk,autoincrement"`
+	Uid       string    `bun:"uid,notnull"`
+	ClientId  int64     `bun:"client_id,notnull"`
+	FileId    *int64    `bun:"file_id"`
+	Submitted time.Time `bun:",nullzero,notnull"`
+	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+
+	Client *Client `bun:"rel:has-one,join:client_id=id"`
+	File   *File   `bun:"rel:has-one,join:file_id=id"`
+}
+
+type ReportForecast struct {
+	Id        string
+	Submitted string
+	File      struct {
+		Uid      string
+		Filename string
+	}
+}
+
+func (a *Forecast) ToReport() ReportForecast {
+	return ReportForecast{
+		Id: a.Uid,
+		Submitted: a.Submitted.Format("2006-01-02"),
+		File: ReportFile{
+			Uid:      a.File.Uid,
+			Filename: a.File.Filename,
+		},
+	}
+}

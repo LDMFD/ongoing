@@ -23,6 +23,7 @@ namespace Entities.Entities
         Conclusions,
         ConclusionsGoals,
         ConclusionsAdviceGiven,
+        ConclusionsForecast,
         ConclusionsDueDiligence,
         ConclusionsOngoingSuitability,
         ConclusionsActionPoints,

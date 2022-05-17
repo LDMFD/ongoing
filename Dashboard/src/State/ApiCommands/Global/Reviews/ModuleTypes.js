@@ -1,4 +1,4 @@
-// This list also found in ReviewModule.go and Module.cs
+// This list also found in ReviewModule.go and Entities/Module.cs
 export const ModuleTypeIntroduction       = "introduction";
 
 export const ModuleTypeProfile            = "profile";
@@ -21,6 +21,7 @@ export const ModuleTypeConclusions        = "conclusions";
 export const ModuleTypeGoals              = "conclusions_goals";
 export const ModuleTypeAdviceGiven        = "conclusions_advice_given";
 export const ModuleTypeDueDiligence       = "conclusions_due_diligence";
+export const ModuleTypeForecast           = "conclusions_forecast";
 export const ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability";
 export const ModuleTypeActionPoints       = "conclusions_action_points";
 
@@ -43,6 +44,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypeGoals,              label: "Conclusions - Goals" },
     { id: ModuleTypeAdviceGiven,        label: "Conclusions - Advice Given" },
     { id: ModuleTypeDueDiligence,       label: "Conclusions - Due Digilence" },
+    { id: ModuleTypeForecast,           label: "Conclusions - Forecast" },
     { id: ModuleTypeOngoingSuitability, label: "Conclusions - Ongoing Suitability" },
     { id: ModuleTypeActionPoints,       label: "Conclusions - Action Points" },   
 ];

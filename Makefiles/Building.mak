@@ -35,3 +35,7 @@ make up-dashboard:
 	make push-image IMAGE=ongoing_dashboard-server
 	make cloudrun-deploy-dashboard
 	make firebase-deploy
+
+up-all:
+	make up-api
+	make up-dashboard

@@ -34,7 +34,7 @@ const ReviewTabs = ({ children }) => {
                 <Tab label="Profile"           value={`${basePath}/profile`}           to={`${baseTarget}/profile/risk-questionnaire`} component={Link} />
                 <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`}          component={Link} />
                 <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/intro`}                 component={Link} />
-                <Tab label="Conclusions"       value={`${basePath}/assessments`}       to={`${baseTarget}/assessments/advice-given`}   component={Link} />
+                <Tab label="Conclusions"       value={`${basePath}/assessments`}       to={`${baseTarget}/assessments/goals`}          component={Link} />
             </Tabs>
         );
     }

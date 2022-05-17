@@ -4,6 +4,7 @@ import (
 	ClientProfile "ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/ApiServer/Advisor/Clients/Commands/FactFinds"
 	"ongoing/ApiServer/Advisor/Clients/Commands/FeesReports"
+	"ongoing/ApiServer/Advisor/Clients/Commands/Forecasts"
 	Policies "ongoing/ApiServer/Advisor/Clients/Commands/Policies"
 	PolicyFunds "ongoing/ApiServer/Advisor/Clients/Commands/PolicyFunds"
 	Portfolios "ongoing/ApiServer/Advisor/Clients/Commands/Portfolios"
@@ -56,6 +57,11 @@ func AddRoutes(r *gin.RouterGroup) {
 	factFindGroup.POST("", FactFinds.CreateFactFind)
 	factFindGroup.PUT("/:FactFindId", FactFinds.UpdateFactFind)
 	factFindGroup.DELETE("/:FactFindId", FactFinds.DeleteFactFind)
+
+	forecastGroup := r.Group("/:ClientId/forecasts")
+	forecastGroup.POST("", Forecasts.CreateForecast)
+	forecastGroup.PUT("/:ForecastId", Forecasts.UpdateForecast)
+	forecastGroup.DELETE("/:ForecastId", Forecasts.DeleteForecast)
 
 	riskAssessmentGroup := r.Group("/:ClientId/risk-assessments")
 	riskAssessmentGroup.POST("", RiskAssessments.CreateRiskAssessment)

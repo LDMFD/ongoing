@@ -2,6 +2,7 @@ import ClientDetail      from './ClientDetail';
 import Clients           from './Clients';
 import FactFinds         from './FactFinds';
 import FeesReports       from './FeesReports';
+import Forecasts         from './Forecasts';
 import ProviderDiscounts from './ProviderDiscounts';
 import Policies          from './Policies';
 import PolicyFunds       from './PolicyFunds';
@@ -15,6 +16,7 @@ const defaults = {
     Clients,
     FactFinds,
     FeesReports,
+    Forecasts,
     ProviderDiscounts,
     Policies,
     PolicyFunds,

@@ -14,6 +14,7 @@ namespace Entities.Entities
         {
             FactFinds = new HashSet<FactFind>();
             FeesReports = new HashSet<FeesReport>();
+            Forecasts = new HashSet<Forecast>();
             Modules = new HashSet<Module>();
             Policies = new HashSet<Policy>();
             PolicyFunds = new HashSet<PolicyFund>();
@@ -52,6 +53,9 @@ namespace Entities.Entities
         
         [InverseProperty("Client")]
         public virtual ICollection<FeesReport> FeesReports { get; set; }
+        
+        [InverseProperty("Client")]
+        public virtual ICollection<Forecast> Forecasts { get; set; }
         
         [InverseProperty("Client")]
         public virtual ICollection<Module> Modules { get; set; }

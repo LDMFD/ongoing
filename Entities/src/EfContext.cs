@@ -28,6 +28,7 @@ namespace Entities
         public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<FactFind> FactFinds { get; set; } = null!;
         public virtual DbSet<FeesReport> FeesReports { get; set; } = null!;
+        public virtual DbSet<Forecast> Forecasts { get; set; } = null!;
         public virtual DbSet<Entities.File> Files { get; set; } = null!;
         public virtual DbSet<Fund> Funds { get; set; } = null!;
         public virtual DbSet<Model> Models { get; set; } = null!;
@@ -67,6 +68,7 @@ namespace Entities
             builder.ApplyConfiguration(new FactFindConfig());
             builder.ApplyConfiguration(new FeesReportConfig());
             builder.ApplyConfiguration(new FileConfig());
+            builder.ApplyConfiguration(new ForecastConfig());
             builder.ApplyConfiguration(new FundConfig());
             builder.ApplyConfiguration(new ModelConfig());
             builder.ApplyConfiguration(new ModuleConfig());

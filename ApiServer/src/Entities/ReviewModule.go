@@ -28,6 +28,7 @@ var (
     ModuleTypeAdviceGiven        = "conclusions_advice_given"
     ModuleTypeGoals              = "conclusions_goals"
     ModuleTypeDueDiligence       = "conclusions_due_diligence"
+    ModuleTypeForecast           = "conclusions_forecast"
     ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability"
     ModuleTypeActionPoints       = "conclusions_action_points"
 )

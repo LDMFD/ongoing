@@ -148,7 +148,7 @@ db-proxy: import-env
 		--name db-proxy \
 		--platform linux/amd64 \
 		--network ongoing_default \
-		-p "5433:5432" \
+		-p "5432:5432" \
 		-v ~/.ongoing/secrets/cloudsql-credential.json:/credential.json \
 		gcr.io/cloudsql-docker/gce-proxy:${SQL_PROXY_VERSION} /cloud_sql_proxy \
 		-instances=ongoing-${ENV}:${REGION_${ENV}}:${DB_INSTANCE_${ENV}}=tcp:0.0.0.0:5432 \

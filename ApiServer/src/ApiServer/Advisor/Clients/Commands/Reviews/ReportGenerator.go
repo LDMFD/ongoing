@@ -18,6 +18,7 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 		Relation("RiskAssessments.Questionnaire").
 		Relation("FactFinds.File").
 		Relation("FeesReports.File").
+		Relation("Forecasts.File").
 		Relation("Policies.PolicyProvider.Charges.PolicyProvider").
 		Relation("ProviderDiscounts.PolicyProvider").
 		Relation("Policies.PolicyType").
@@ -42,6 +43,7 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 	generateRisk(report, client) // Risk Assessments, Risk Providers, Risk Levels
 	generateFactFinds(report, client)
 	generateFees(report, client)
+	generateForecasts(report, client)
 	generatePolicies(report, client) // Policies, Policy Types & Providers, Provider Charges & Discounts
 	generateFunds(report, client)    // Funds, Policy Funds
 	generateModels(report, client)   // Models, Operators, Portfolios
@@ -93,6 +95,13 @@ func generateFees(report *Entities.ReportDetail, client Entities.Client) {
 	report.FeesReports = make([]Entities.ReportFeesReport, 0)
 	for _, f := range client.FeesReports {
 		report.FeesReports = append(report.FeesReports, f.ToReport())
+	}
+}
+
+func generateForecasts(report *Entities.ReportDetail, client Entities.Client) {
+	report.Forecasts = make([]Entities.ReportForecast, 0)
+	for _, f := range client.Forecasts {
+		report.Forecasts = append(report.Forecasts, f.ToReport())
 	}
 }
 
