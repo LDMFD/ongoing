@@ -47,12 +47,18 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             label    = "Policy"
                             type     = "text"
                             fullWidth>
-                        <MenuItem value='select'>Select policy</MenuItem>
-                        {state.Report.Policies.map(t => (
-                            <MenuItem value={t.Id} key={t.Id}>
-                                {t.ExternalId}
-                            </MenuItem>
-                        ))}
+                        <MenuItem value='select'>
+                            Select policy
+                        </MenuItem>
+                        {state.Report.Policies.map(policy => {
+                            let provider = state.Entities.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId);
+                            let type = state.Entities.PolicyTypes.find(pt => pt.Id === policy.PolicyTypeId);
+                            return (
+                                <MenuItem value={policy.Id} key={policy.Id}>
+                                    {policy.ExternalId} - {provider.Name} {type.Name}
+                                </MenuItem>
+                            );
+                        })}
                     </Select>
 
                     <Select value    = {portfolio.ModelId}

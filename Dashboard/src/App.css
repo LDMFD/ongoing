@@ -12,21 +12,22 @@
 #auth-refresh {
   display: none;
 }
-.auth-refresh-button {
+.auth-refresh-content {
   background: #d0d0d0;
   position: absolute;
   top: 50%;
   left: 50%;
   width: 400px;
-  height: 200px;
+  height: 180px;
   margin-top: -100px;
   margin-left: -200px;
   text-align: center;
   border-radius: 5px;
   z-index: 10001;
+  padding-top: 20px;
 }
-.auth-refresh-button button {
-  margin-top: 80px;
+.auth-refresh-content button {
+  margin-top: 20px;
   padding: 5px 10px;
   background: white;
   border: thin solid grey;

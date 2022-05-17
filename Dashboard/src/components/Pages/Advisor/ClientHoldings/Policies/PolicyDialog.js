@@ -56,24 +56,27 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                onChange = {handlers.SetMonthlies}
                                margin   = "dense"
                                id       = "monthlyContributions"
-                               label    = "Monthly Contribution"
+                               label    = "Monthly Contribution (£)"
                                type     = "number"
+                               step     = "any"
                                fullWidth />
 
                     <TextField value    = {policy.StartValue}
                                onChange = {handlers.SetStartValue}
                                margin   = "dense"
                                id       = "startValue"
-                               label    = "Start Value"
+                               label    = "Start Value (£)"
                                type     = "number"
+                               step     = "any"
                                fullWidth />
 
                     <TextField value    = {policy.EndValue}
                                onChange = {handlers.SetEndValue}
                                margin   = "dense"
                                id       = "endValue"
-                               label    = "End Value"
+                               label    = "End Value (£)"
                                type     = "number"
+                               step     = "any"
                                fullWidth />
 
                     <FormControl sx={{ width: `30ch` }}>

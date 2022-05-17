@@ -102,7 +102,7 @@ const PolicyList = () => {
                 contributions = `No regular contributions`;
                 break;
             default:
-                contributions = `Annual regular (£${policy.MonthlyContributions})`;
+                contributions = `Monthly regular (£${policy.MonthlyContributions})`;
                 break;
         }
 

@@ -39,9 +39,10 @@ export function Logout() {
 export const ForceRefresh = () => (
     <div id='auth-refresh'>
         <div className='auth-refresh-background' />
-        <div className='auth-refresh-button'>
-            Your session has expired - please reload the page
-            <br />
+        <div className='auth-refresh-content'>
+            <p>
+                Your session has expired - please reload the page
+            </p>
             <button onClick={() => {
                 window.location.reload();
             }}>

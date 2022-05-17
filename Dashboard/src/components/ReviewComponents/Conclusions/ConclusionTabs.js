@@ -28,7 +28,7 @@ const ConclusionTabs = ({ basePath, baseTarget, children }) => {
                 <Tab label="Goals"               value={`${basePath}/goals`        }       to={`${baseTarget}/goals`}               component={Link} />
                 <Tab label="Ongoing suitability" value={`${basePath}/ongoing-suitability`} to={`${baseTarget}/ongoing-suitability`} component={Link} />
                 <Tab label="Due diligence"       value={`${basePath}/due-diligence`}       to={`${baseTarget}/due-diligence`}       component={Link} />
-                {report.Forecasts.length &&
+                {report.Forecasts?.length &&  // BackwardsCompatibility
                     <Tab label="Forecast"            value={`${basePath}/forecast`}            to={`${baseTarget}/forecast`}            component={Link} />
                 }
                 <Tab label="Advice given"        value={`${basePath}/advice-given`}        to={`${baseTarget}/advice-given`}        component={Link} />
