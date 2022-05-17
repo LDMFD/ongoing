@@ -67,7 +67,7 @@ _gcp-sql-teardown: import-env
 # ---
 
 # Local:
-_db_migrate-local: import-env
+db-migrate-local: import-env
 	docker run \
 		-it \
 		--rm \
@@ -81,32 +81,6 @@ _db_migrate-local: import-env
 				 --username=postgres \
 				 --file=/app/migrations/${MIGRATION}.sql
 
-db-clean-remote:
-	docker run -it --rm \
-		--name db-migration \
-		--network ongoing_default \
-		-v ~/.ongoing/clean.sql:/app/migrations/clean.sql \
-		postgres:${POSTGRES_VERSION_NUMERIC} \
-			psql --host=db-proxy \
-				 --dbname=postgres \
-				 --username=postgres \
-				 --password \
-				 --file=/app/migrations/clean.sql
-
-# Params:
-# FROM - the .sql file to import from
-db-restore:
-	docker run -it --rm \
-		--name db-migration \
-		--network ongoing_default \
-		-v ${FROM}:/app/migrations/dump.sql \
-		postgres:${POSTGRES_VERSION_NUMERIC} \
-			psql --host=ongoing-db \
-				 --dbname=postgres \
-				 --username=postgres \
-				 --password \
-				 --file=/app/migrations/dump.sql
-
 db-migrate-remote:
 	docker run -it --rm \
 		--name db-migration \
@@ -119,7 +93,20 @@ db-migrate-remote:
 				 --password \
 				 --file=/app/migrations/${MIGRATION}.sql
 
-# Variant: --data-only to --schema-only
+# Param FROM: the .sql file to import from
+db-restore:
+	docker run -it --rm \
+		--name db-migration \
+		--network ongoing_default \
+		-v ${FROM}:/app/migrations/dump.sql \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
+			psql --host=db-proxy \
+				 --dbname=postgres \
+				 --username=postgres \
+				 --password \
+				 --file=/app/migrations/dump.sql
+
+# In these, change --data-only to --schema-only to control output.
 db-dump-local:
 	docker run -it --rm \
 		--name db-dump \
@@ -130,7 +117,7 @@ db-dump-local:
 					--username=postgres \
 					--password \
 					--no-comments \
-					--data-only --no-acl --column-inserts --no-comments
+					--schema-only --no-acl --column-inserts --no-comments
 
 db-dump-remote:
 	docker run -it --rm \
@@ -142,7 +129,7 @@ db-dump-remote:
 					--username=postgres \
 					--password \
 					--no-comments \
-					--no-acl --column-inserts --no-comments
+					--data-only --no-acl --column-inserts --no-comments
 
 db-up:
 	make _db_migrate-local MIGRATION=0
