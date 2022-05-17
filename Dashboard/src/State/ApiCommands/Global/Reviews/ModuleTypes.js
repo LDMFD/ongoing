@@ -1,4 +1,4 @@
-// This list also found in 0.sql and ReviewModule.go
+// This list also found in ReviewModule.go and Module.cs
 export const ModuleTypeIntroduction       = "introduction";
 
 export const ModuleTypeProfile            = "profile";
@@ -18,6 +18,7 @@ export const ModuleTypePortfolioLevelFees = "fees_portfolio_level";
 export const ModuleTypeDimFee             = "fees_dim";
 
 export const ModuleTypeConclusions        = "conclusions";
+export const ModuleTypeGoals              = "conclusions_goals";
 export const ModuleTypeAdviceGiven        = "conclusions_advice_given";
 export const ModuleTypeDueDiligence       = "conclusions_due_diligence";
 export const ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability";
@@ -39,6 +40,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypePortfolioLevelFees, label: "Fees - Portfolio Level" },
     { id: ModuleTypeDimFee,             label: "Fees - DIM" },
     { id: ModuleTypeConclusions,        label: "Conclusions page" },
+    { id: ModuleTypeGoals,              label: "Conclusions - Goals" },
     { id: ModuleTypeAdviceGiven,        label: "Conclusions - Advice Given" },
     { id: ModuleTypeDueDiligence,       label: "Conclusions - Due Digilence" },
     { id: ModuleTypeOngoingSuitability, label: "Conclusions - Ongoing Suitability" },

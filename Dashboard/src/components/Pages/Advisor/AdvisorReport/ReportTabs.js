@@ -19,7 +19,7 @@ const ReportTabs = ({ children }) => {
             '/clients/id/:clientId/modules/profile',
             '/clients/id/:clientId/modules/policy-valuations',
             '/clients/id/:clientId/modules/fees',
-            '/clients/id/:clientId/modules/conclusions',
+            '/clients/id/:clientId/modules/assessments',
             '/clients/id/:clientId/modules/dates',
             '/clients/id/:clientId/modules/publish',
             '/clients/id/:clientId',
@@ -36,7 +36,7 @@ const ReportTabs = ({ children }) => {
                 <Tab label="Profile"           value={`${basePath}/profile`}           to={`${baseTarget}/profile/risk-questionnaire`} component={Link} />
                 <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`}          component={Link} />
                 <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/intro`}                 component={Link} />
-                <Tab label="Conclusions"       value={`${basePath}/conclusions`}       to={`${baseTarget}/conclusions/advice-given`}   component={Link} />
+                <Tab label="Assessment"        value={`${basePath}/assessments`}       to={`${baseTarget}/assessments/advice-given`}   component={Link} />
                 <Tab label="Publish"           value={`${basePath}/publish`}           to={`${baseTarget}/publish`}                    component={Link} />
             </Tabs>
         );

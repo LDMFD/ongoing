@@ -28,7 +28,7 @@ const ClientSpaceReviewRoutes = () => {
                             <Route path={`${basePath}/profile`}           component={ProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
                             <Route path={`${basePath}/fees`}              component={FeeRoutes} />
-                            <Route path={`${basePath}/conclusions`}       component={ConclusionRoutes} />
+                            <Route path={`${basePath}/assessments`}       component={ConclusionRoutes} />
                         </Switch>
                     </ClientSpaceReviewTabs>
                 </Route>

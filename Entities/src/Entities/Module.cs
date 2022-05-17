@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Entities
 {
+    // This list also found in ReviewModule.go and ModuleTypes.js
     public enum ModuleType
     {
         Introduction,
@@ -20,6 +21,7 @@ namespace Entities.Entities
         FeesPortfolioLevel,
         FeesDim,
         Conclusions,
+        ConclusionsGoals,
         ConclusionsAdviceGiven,
         ConclusionsDueDiligence,
         ConclusionsOngoingSuitability,

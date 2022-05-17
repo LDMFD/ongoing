@@ -4,7 +4,7 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// This list also found in 0.sql and ModuleTypes.js
+// This list also found in ModuleTypes.js and Modules.cs
 var (
     ModuleTypeIntroduction       = "introduction"
 
@@ -26,6 +26,7 @@ var (
 
     ModuleTypeConclusions        = "conclusions"
     ModuleTypeAdviceGiven        = "conclusions_advice_given"
+    ModuleTypeGoals              = "conclusions_goals"
     ModuleTypeDueDiligence       = "conclusions_due_diligence"
     ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability"
     ModuleTypeActionPoints       = "conclusions_action_points"

@@ -32,7 +32,7 @@ const ReviewRoutes = () => {
                             <Route path={`${basePath}/profile`}           component={ProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
                             <Route path={`${basePath}/fees`}              component={FeeRoutes} />
-                            <Route path={`${basePath}/conclusions`}       component={ConclusionRoutes} />
+                            <Route path={`${basePath}/assessments`}       component={ConclusionRoutes} />
                         </Switch>
                     </ReviewTabs>
                     <Route path={`${basePath}/:page/edit/:rmod/:field`} component={EditModuleText} />

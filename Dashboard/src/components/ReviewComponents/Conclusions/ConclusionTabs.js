@@ -10,9 +10,10 @@ const ConclusionTabs = ({ basePath, baseTarget, children }) => {
     const { pathname } = useLocation();
 
     let routeMatch = RouteMatch(pathname, [
-        `${basePath}/advice-given`,
-        `${basePath}/due-diligence`,
+        `${basePath}/goals`,
         `${basePath}/ongoing-suitability`,
+        `${basePath}/due-diligence`,
+        `${basePath}/advice-given`,
         `${basePath}/action-points`,
     ]);
     let currentTab = routeMatch?.path;
@@ -20,9 +21,10 @@ const ConclusionTabs = ({ basePath, baseTarget, children }) => {
     return (
         <>
             <Tabs value={currentTab}>
-                <Tab label="Advice given"        value={`${basePath}/advice-given`}        to={`${baseTarget}/advice-given`}        component={Link} />
-                <Tab label="Due diligence"       value={`${basePath}/due-diligence`}       to={`${baseTarget}/due-diligence`}       component={Link} />
+                <Tab label="Goals"               value={`${basePath}/goals`        }       to={`${baseTarget}/goals`}               component={Link} />
                 <Tab label="Ongoing suitability" value={`${basePath}/ongoing-suitability`} to={`${baseTarget}/ongoing-suitability`} component={Link} />
+                <Tab label="Due diligence"       value={`${basePath}/due-diligence`}       to={`${baseTarget}/due-diligence`}       component={Link} />
+                <Tab label="Advice given"        value={`${basePath}/advice-given`}        to={`${baseTarget}/advice-given`}        component={Link} />
                 <Tab label="Action points"       value={`${basePath}/action-points`}       to={`${baseTarget}/action-points`}       component={Link} />
             </Tabs>
 

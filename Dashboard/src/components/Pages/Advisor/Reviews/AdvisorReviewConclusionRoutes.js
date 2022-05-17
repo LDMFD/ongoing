@@ -11,7 +11,7 @@ const AdvisorReviewConclusionRoutes = () => {
     let report = GetReport();
 
     let basePath = '/clients/id/:clientId/reviews/id/:reviewId/modules/:module';
-    let baseTarget = `/clients/id/${client.Id}/reviews/id/${report.Id}/modules/conclusions`;
+    let baseTarget = `/clients/id/${client.Id}/reviews/id/${report.Id}/modules/assessments`;
 
     return (
         <ConclusionRoutesBase basePath   = {basePath}

@@ -46,7 +46,7 @@ const ReportRoutes = () => {
                                 <Route path={`${basePath}/profile`}                  component={ReportProfileRoutes} />
                                 <Route path={`${basePath}/policy-valuations`}        component={PolicyValuations} />
                                 <Route path={`${basePath}/fees`}                     component={ReportFeeRoutes} />
-                                <Route path={`${basePath}/conclusions`}              component={ReportConclusionRoutes} />
+                                <Route path={`${basePath}/assessments`}              component={ReportConclusionRoutes} />
                                 <Route path={`${basePath}/publish`}                  component={Publish} />
                                 <Route path={`${basePath}/dates`}                    component={Dates} />
                             </Switch>

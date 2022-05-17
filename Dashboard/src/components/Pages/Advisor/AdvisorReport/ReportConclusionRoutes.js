@@ -8,7 +8,7 @@ const ReportConclusionRoutes = () => {
     let client = state.ClientContext;
 
     let basePath = '/clients/id/:clientId/modules/:module';
-    let baseTarget = `/clients/id/${client.Id}/modules/conclusions`;
+    let baseTarget = `/clients/id/${client.Id}/modules/assessments`;
 
     return (
         <ConclusionRoutesBase basePath   = {basePath}

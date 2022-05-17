@@ -21,7 +21,7 @@ namespace Entities.Migrations
                 .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "module_type", new[] { "introduction", "profile", "profile_fact_find", "profile_risk", "profile_objectives", "policy_valuations", "policy_valuations_valuation", "policy_valuations_contributions", "fees", "fees_advice_fee", "fees_policy_fees", "fees_fund_level", "fees_portfolio_level", "fees_dim", "conclusions", "conclusions_advice_given", "conclusions_due_diligence", "conclusions_ongoing_suitability", "conclusions_action_points" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "module_type", new[] { "introduction", "profile", "profile_fact_find", "profile_risk", "profile_objectives", "policy_valuations", "policy_valuations_valuation", "policy_valuations_contributions", "fees", "fees_advice_fee", "fees_policy_fees", "fees_fund_level", "fees_portfolio_level", "fees_dim", "conclusions", "conclusions_goals", "conclusions_advice_given", "conclusions_due_diligence", "conclusions_ongoing_suitability", "conclusions_action_points" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "operator_type", new[] { "dim", "firm", "individual", "none" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "review_state", new[] { "draft", "final" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin", "advisor", "client" });
