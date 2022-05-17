@@ -1375,7 +1375,7 @@ namespace Entities.Migrations
                     b.HasOne("Entities.Entities.RiskProvider", "RiskProvider")
                         .WithMany("RiskLevels")
                         .HasForeignKey("RiskProviderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_risk_provider");
 
                     b.Navigation("RiskProvider");

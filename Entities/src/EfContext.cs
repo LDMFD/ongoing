@@ -52,7 +52,7 @@ namespace Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=postgres;Username=postgres;Password=AAA2BFD549B24AD7A08A5E1E49C5A7D10");
+                optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=postgres;Username=postgres;Password=p");
             }
         }
 
