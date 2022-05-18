@@ -17,7 +17,7 @@ export const RiskProviderDialog = ({ riskProvider, setRiskProvider, submitLabel,
     let goBack = GoBack(history);
 
     const handlers = {
-        SetName:    (event) => { setRiskProvider({ ...riskProvider, Name: event.target.value, }); },
+        SetName: (event) => { setRiskProvider({ ...riskProvider, Name: event.target.value, }); },
     };
 
     return (
@@ -39,7 +39,9 @@ export const RiskProviderDialog = ({ riskProvider, setRiskProvider, submitLabel,
                                    type     = "text"
                                    autoFocus fullWidth />
 
-                        <Link to={{ pathname: `/risk-providers/id/${riskProvider.Id}/risk-levels` }}>Risk Provider Levels</Link>
+                        {submitLabel.toLowerCase() === 'update' &&  // hack
+                            <Link to={{ pathname: `/risk-providers/id/${riskProvider.Id}/risk-levels` }}>Risk Provider Levels</Link>
+                        }
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={goBack}>Cancel</Button>

@@ -35,20 +35,22 @@ export const ModulePresetDialog = ({ modulePreset, setModulePreset, submitLabel,
                         Enter Module Preset details
                     </DialogContentText>
 
-                    <Select value    = {modulePreset.ModuleType ? modulePreset.ModuleType : 'select'}
-                            onChange = {handlers.SetModuleType}
-                            margin   = "dense"
-                            id       = "type"
-                            label    = "Type"
-                            type     = "text"
-                            autoFocus fullWidth>
-                                <MenuItem value='select'>Select module</MenuItem>
-                                {ModuleTypeSelectSpec.map(m => (
-                                    <MenuItem value={m.id} key={m.id}>
-                                        {m.label}
-                                    </MenuItem>
-                                ))}
-                    </Select>
+                    {submitLabel.toLowerCase() === 'add' &&  // hack
+                        <Select value    = {modulePreset.ModuleType ? modulePreset.ModuleType : 'select'}
+                                onChange = {handlers.SetModuleType}
+                                margin   = "dense"
+                                id       = "type"
+                                label    = "Type"
+                                type     = "text"
+                                autoFocus fullWidth>
+                                    <MenuItem value='select'>Select module</MenuItem>
+                                    {ModuleTypeSelectSpec.map(m => (
+                                        <MenuItem value={m.id} key={m.id}>
+                                            {m.label}
+                                        </MenuItem>
+                                    ))}
+                        </Select>
+                    }
 
                     <RichTextEditor label        = 'Preset text'
                                     initialValue = {modulePreset.Text}
