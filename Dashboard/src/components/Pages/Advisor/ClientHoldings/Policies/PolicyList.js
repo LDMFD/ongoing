@@ -42,15 +42,45 @@ const PolicyList = () => {
         Download(fileUid);
     }, []);
 
-    const columns = [
-        { accessor: 'policyNumber',     Header: 'Policy Number',           width: 1, },
-        { accessor: 'platformDiscount', Header: 'Discounted Platform Fee', width: 1, },
-        { accessor: 'monthlies',        Header: 'Monthly Contributions',   width: 1, },
-        { accessor: 'startValue',       Header: 'Start Value',             width: 1, },
-        { accessor: 'endValue',         Header: 'End Value',               width: 1, },
-        { accessor: 'type',             Header: 'Type',                    width: 1, },
-        { accessor: 'provider',         Header: 'Provider',                width: 1, },
-    ];
+    const columns = [{
+        accessor: 'policyNumber',
+        Header: 'Policy',
+        width: 1,
+        Cell: ({ row }) => (
+            <>
+                {row.original.policyNumber}
+                {row.original.fileUid &&
+                    <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                        <DownloadIcon />
+                    </button>
+                }
+            </>
+        ),
+    }, {
+        accessor: 'platformDiscount',
+        Header: 'Discounted Platform Fee',
+        width: 1,
+    }, {
+        accessor: 'monthlies',
+        Header: 'Monthly Contributions',
+        width: 1,
+    }, {
+        accessor: 'startValue',
+        Header: 'Start Value',
+        width: 1,
+    }, {
+        accessor: 'endValue',
+        Header: 'End Value',
+        width: 1,
+    }, {
+        accessor: 'type',
+        Header: 'Type',
+        width: 1,
+    }, {
+        accessor: 'provider',
+        Header: 'Provider',
+        width: 1,
+    }];
 
     let includeNotes = report.Policies.some(p => p.Notes?.length && p.Notes !== '<p><br></p>');
     if (includeNotes) {
@@ -72,11 +102,6 @@ const PolicyList = () => {
         width: 1,
         Cell: ({ row }) => (
             <>
-                {row.original.fileUid &&
-                    <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
-                        <DownloadIcon />
-                    </button>
-                }
                 <button onClick={editPolicy(row.original.id)} className='ong-openFileIcon'>
                     <EditIcon />
                 </button>

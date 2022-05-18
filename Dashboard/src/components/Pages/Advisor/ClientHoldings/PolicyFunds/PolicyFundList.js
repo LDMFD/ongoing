@@ -1,6 +1,5 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -12,6 +11,7 @@ import {
 import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table';
 
 const PolicyFundList = () => {
     let history = useHistory();
@@ -23,39 +23,57 @@ const PolicyFundList = () => {
 
     let report = GetReport();
 
-    const deletePolicyFund = useCallback(params => async () => {
+    const deletePolicyFund = useCallback(id => async () => {
         if (window.confirm(`Delete policy fund?`)) {
-            await Api.Advisor.PolicyFunds.Delete(client.Id, params.row.id);
+            await Api.Advisor.PolicyFunds.Delete(client.Id, id);
             await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         }        
     }, [ dispatch, client.Id ]);
 
-    const editPolicyFund = useCallback(params => () => {
-        let id = params.row.id;
+    const editPolicyFund = useCallback(id => () => {
         history.push(`/clients/id/${client.Id}/holdings/policy-funds/id/${id}/edit`);
     }, [ history, client.Id ]);
 
-    const downloadFile = useCallback(params => () => {
-        Download(params.row.fileUid);
+    const downloadFile = useCallback(fileUid => () => {
+        Download(fileUid);
     }, []);
 
-    const columns = [
-        { field: 'policy',     headerName: 'Policy',      flex: 0.1, },
-        { field: 'fund',       headerName: 'Fund',       flex: 0.1, },
-        { field: 'proportion', headerName: 'Proportion',  flex: 0.1, },
-        {
-            field: 'actions',
-            type: 'actions',
-            flex: .05,
-            getActions: (params) => ([
-                params.row.fileUid
-                    ? <GridActionsCellItem icon={<DownloadIcon />} onClick={downloadFile(params)} label="Download factsheet" />
-                    : null,
-                <GridActionsCellItem icon={<EditIcon />}     onClick={editPolicyFund(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />}   onClick={deletePolicyFund(params)} label="Delete" />,
-            ].filter(t => t)),
-        },
-    ];
+    const columns = [{
+        accessor: 'policy',
+        Header: 'Policy',
+        width: 100,
+    }, {
+        accessor: 'fund',
+        Header: 'Fund',
+        width: 100,
+        Cell: ({ row }) => (
+            <>
+                {row.original.fund}
+                {row.original.fileUid && 
+                    <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
+                        <DownloadIcon />
+                    </button>
+                }
+            </>
+        ),
+    }, {
+        accessor: 'proportion',
+        Header: 'Proportion',
+        width: 100,
+    }, {
+        accessor: 'actions',
+        width: 20,
+        Cell: ({ row }) => (
+            <>
+                <button onClick={editPolicyFund(row.original.id)} className='ong-openFileIcon'>
+                    <EditIcon />
+                </button>
+                <button onClick={deletePolicyFund(row.original.id)} className='ong-openFileIcon'>
+                    <DeleteIcon />
+                </button>
+            </>
+        ),
+    }];
 
     let policyFunds = report.PolicyFunds.map(policyFund => {
         let policy = report.Policies.find(p => p.Id === policyFund.PolicyId).ExternalId;
@@ -70,18 +88,13 @@ const PolicyFundList = () => {
         };
     });
 
-    let data = {
-        rows: policyFunds,
-        columns: columns,
-    }
-
     return (
         <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: `/clients/id/${client.Id}/holdings/policy-funds/add` }}><Button>Add policy fund</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={policyFunds} />
         </>
     );
 }
