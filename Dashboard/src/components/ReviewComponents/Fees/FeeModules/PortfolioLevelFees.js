@@ -88,13 +88,17 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             <Table columns={columns} data={portfolios} />
 
             <p>
-                <b>Weighted OCF:</b> {weightedOcf}%<br />
-                <b>Weighted Ex Ante:</b> {weightedExAnte}%<br />
+                <b>Weighted OCF:</b> {weightedOcf.toPrecision(2)}%<br />
+                <b>Weighted Ex Ante:</b> {weightedExAnte.toPrecision(2)}%<br />
             </p>
       
-            Estimated annual charges in pounds, based on values at end of period:<br />
-            <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
-            <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
+            {portfolios.length > 1 &&
+                <>
+                    Total of estimated annual charges in pounds, based on values at end of period:<br />
+                    <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
+                    <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
+                </>
+            }
 
             {policy.File.Uid &&
                 <p>
