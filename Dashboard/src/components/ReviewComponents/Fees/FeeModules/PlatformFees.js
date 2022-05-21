@@ -1,7 +1,7 @@
 import React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import Table from 'Components/Library/Table';
 
@@ -93,7 +93,7 @@ const PlatformFees = () => {
     return (
         <>
             <br />
-            <ModuleWrapper module={ModuleTypePolicyFees} />
+            <Module module={ModuleTypePolicyFees} />
 
             <Table columns={columns} data={tableRows} />
         </>

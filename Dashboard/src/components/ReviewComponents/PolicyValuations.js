@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePolicyValuations } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetReport } from './GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
@@ -96,7 +96,7 @@ const PolicyValuations = () => {
 
     return (
         <>
-            <ModuleWrapper module = {ModuleTypePolicyValuations} />
+            <Module module = {ModuleTypePolicyValuations} />
             <br />
 
             <Table columns={columns} data={valuations} />

@@ -7,7 +7,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table';
@@ -144,7 +144,7 @@ const PortfolioLevelFees = () => {
 
     return (
         <>
-            <ModuleWrapper module={ModuleTypePortfolioLevelFees} />
+            <Module module={ModuleTypePortfolioLevelFees} />
             <br />
 
             {report.Policies.map(p => 

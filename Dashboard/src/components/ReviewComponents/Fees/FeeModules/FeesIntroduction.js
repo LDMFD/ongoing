@@ -1,12 +1,12 @@
 import React from 'react';
 import { ModuleTypeFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const FeesIntroduction = () => {
     return (
         <>
             <br />
-            <ModuleWrapper module={ModuleTypeFees} />
+            <Module module={ModuleTypeFees} />
         </>
     );
 }

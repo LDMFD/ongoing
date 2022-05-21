@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 
 import { RouteMatch } from 'Utils/Routing';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { ModuleTypeProfile } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { Context } from 'State';
 
@@ -25,8 +25,8 @@ const ProfileTabs = ({ basePath, baseTarget, children }) => {
 
     return (
         <>
-            <ModuleWrapper client = {client}
-                           module = {ModuleTypeProfile} />
+            <Module client = {client}
+                    module = {ModuleTypeProfile} />
             <br />
 
             <Tabs value={currentTab}>

@@ -3,7 +3,7 @@ import React from 'react';
 import Day from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { ModuleTypeIntroduction } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
@@ -23,7 +23,7 @@ const Introduction = () => {
 
     return (
         <div>
-            <ModuleWrapper module = {ModuleTypeIntroduction} />
+            <Module module = {ModuleTypeIntroduction} />
 
             <p>This review covers the period from {startDate} to {endDate}.</p>
 

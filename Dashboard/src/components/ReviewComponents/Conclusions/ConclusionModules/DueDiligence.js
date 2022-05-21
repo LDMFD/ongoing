@@ -1,12 +1,12 @@
 import React from 'react';
 import { ModuleTypeDueDiligence } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const DueDiligence = () => {
     return (
         <>
             <br />
-            <ModuleWrapper module={ModuleTypeDueDiligence} />
+            <Module module={ModuleTypeDueDiligence} />
         </>
     );
 }

@@ -2,22 +2,22 @@ import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Context,  } from 'State'
-import { Module } from 'Components/Pages/ClientSpace/Modules/Module';
-import { ModuleEditor } from './ModuleEditor';
+import { ClientModule } from 'Components/Pages/ClientSpace/Modules/ClientModule';
+import { AdvisorModule } from './AdvisorModule';
 
-const ModuleWrapper = ({ client, module }) => {
+const Module = ({ client, module }) => {
     const [state,  ] = useContext(Context);
     const { reviewId } = useParams();
 
     if (state.Auth.UserType === 'client' || reviewId) {
         return (
-            <Module client={client} module={module} />
+            <ClientModule client={client} module={module} />
         );
     } else {
         return (
-            <ModuleEditor client={client} module={module} />
+            <AdvisorModule module={module} />
         );
     }
 }
 
-export default ModuleWrapper;
+export default Module;

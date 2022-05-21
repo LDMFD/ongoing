@@ -5,7 +5,7 @@ import ReviewTabs from './ReviewTabs';
 
 import Introduction          from 'Components/ReviewComponents/Introduction';
 import PolicyValuations      from 'Components/ReviewComponents/PolicyValuations';
-import { EditModuleText }    from './Modules/ModuleEditor';
+import { ModuleEditor }      from './Modules/ModuleEditor';
 import FeeRoutes             from './AdvisorReviewFeeRoutes';
 import ConclusionRoutes      from './AdvisorReviewConclusionRoutes';
 import PublishState          from './PublishState';
@@ -35,7 +35,7 @@ const ReviewRoutes = () => {
                             <Route path={`${basePath}/assessments`}       component={ConclusionRoutes} />
                         </Switch>
                     </ReviewTabs>
-                    <Route path={`${basePath}/:page/edit/:rmod/:field`} component={EditModuleText} />
+                    <Route path={`${basePath}/:page/edit/:rmod/:field`} component={ModuleEditor} />
                     <Route path={`${basePath}/state/edit`}              component={EditReviewStateDialog} />
                 </Route>
             </Switch>

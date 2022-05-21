@@ -4,7 +4,7 @@ import Day from 'dayjs';
 
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
@@ -69,7 +69,7 @@ const AdviceFees = () => {
     return (
         <>
             <br />
-            <ModuleWrapper module={ModuleTypeAdviceFee} />
+            <Module module={ModuleTypeAdviceFee} />
 
             <p>
                 Advice fee: {client.Fee}%

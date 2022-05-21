@@ -1,12 +1,12 @@
 import React from 'react';
 import { ModuleTypeOngoingSuitability } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const OngoingSuitability = () => {
     return (
         <>
             <br />
-            <ModuleWrapper module={ModuleTypeOngoingSuitability} />
+            <Module module={ModuleTypeOngoingSuitability} />
         </>
     );
 }

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useParams } from "react-router-dom";
 
-import './Module.css';
+import './ClientModule.css';
 import { Context } from 'State/StateProvider'
 import { DefaultModule } from './DefaultModule';
 
-export const Module = ({ module }) => {
+export const ClientModule = ({ module }) => {
     const [ state,  ] = useContext(Context);
 
     let { reviewId } = useParams();

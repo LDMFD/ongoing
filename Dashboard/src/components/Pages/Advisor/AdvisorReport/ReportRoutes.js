@@ -7,7 +7,7 @@ import {
 
 import { Api }                from 'State';
 import { Context }            from 'State/StateProvider'
-import { EditModuleText }     from '../Reviews/Modules/ModuleEditor';
+import { ModuleEditor }       from '../Reviews/Modules/ModuleEditor';
 import Dates                  from 'Components/ReviewComponents/Dates/Dates';
 import EditDates              from 'Components/ReviewComponents/Dates/EditDates';
 import Introduction           from 'Components/ReviewComponents/Introduction';
@@ -51,8 +51,8 @@ const ReportRoutes = () => {
                                 <Route path={`${basePath}/dates`}                    component={Dates} />
                             </Switch>
                         </ReportTabs>
-                        <Route path={`${basePath}/:page/edit/:rmod/:field`}          component={EditModuleText} />
-                        <Route path={`${basePath}/:page/:subpage/edit/:rmod/:field`} component={EditModuleText} />
+                        <Route path={`${basePath}/:page/edit/:rmod/:field`}          component={ModuleEditor} />
+                        <Route path={`${basePath}/:page/:subpage/edit/:rmod/:field`} component={ModuleEditor} />
                         <Route path={`${basePath}/dates/edit`}                       component={EditDates} />
                     </Route>
                 </Switch>

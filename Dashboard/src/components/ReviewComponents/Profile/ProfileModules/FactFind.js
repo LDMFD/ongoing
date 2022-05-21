@@ -5,7 +5,7 @@ import Day from 'dayjs';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { ModuleTypeFactFind } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const FactFind = () => {
     let report = GetReport();
@@ -24,7 +24,7 @@ const FactFind = () => {
 
     return (
         <>
-            <ModuleWrapper module={ModuleTypeFactFind} />
+            <Module module={ModuleTypeFactFind} />
  
             {factFind &&
                 <p>

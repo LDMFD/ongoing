@@ -5,7 +5,7 @@ import Day from 'dayjs';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { ModuleTypeForecast } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const Forecast = () => {
     let report = GetReport();
@@ -25,7 +25,7 @@ const Forecast = () => {
     return (
         <>
             <br />
-            <ModuleWrapper module={ModuleTypeForecast} />
+            <Module module={ModuleTypeForecast} />
 
             {forecast &&
                 <p>

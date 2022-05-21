@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import ModuleWrapper from 'Components/Pages/Advisor/Reviews/Modules/ModuleWrapper';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
@@ -114,7 +114,7 @@ const FundLevelFees = () => {
 
     return (
         <div>
-            <ModuleWrapper module={ModuleTypeFundLevelFees} />
+            <Module module={ModuleTypeFundLevelFees} />
             <br />
 
             {report.Policies.map(p => {
