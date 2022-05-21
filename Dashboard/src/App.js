@@ -51,7 +51,7 @@ const FirebaseUiConfig = {
 if (!OFFLINE_AUTH) {
     firebase.initializeApp(window.Config.FirebaseConfig);
     const authUI = new firebaseui.auth.AuthUI(firebase.auth());
-    authUI.disableAutoSignIn();
+    // authUI.disableAutoSignIn();
 
     authUI.start('#firebaseui-container', FirebaseUiConfig);
 }
