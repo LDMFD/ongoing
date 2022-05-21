@@ -70,12 +70,29 @@ To create .env:
 
 Entity Framework:
 
+    cd Entities/
     dotnet ef migrations add "comment"
     dotnet ef database update
 
-Run Migration/0.sql:
+Also `dotnet ef database update` to create db.
 
-    make _db_migrate-local MIGRATION=0
+Populate test data:
+
+    make db-migrate-local MIGRATION=1
+
+Populate only users:
+
+    make db-migrate-local MIGRATION=users
+
+Truncate all tables:
+
+    make db-migrate-local MIGRATION=truncate
+
+Drop DB and re-create:
+
+    make db-clean
+    docker-compose up postgres
+
 ### Dashboard
 
     make db-clean

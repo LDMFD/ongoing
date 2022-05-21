@@ -132,8 +132,8 @@ db-dump-remote:
 					--data-only --no-acl --column-inserts --no-comments
 
 db-up:
-	make _db_migrate-local MIGRATION=0
-	make _db_migrate-local MIGRATION=1
+	make db-migrate-local MIGRATION=0
+	make db-migrate-local MIGRATION=1
 
 # Run this, then `make db-up`
 db-clean:

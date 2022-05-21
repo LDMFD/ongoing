@@ -19,6 +19,8 @@ export function ShowLogin(callback) {
     firebase.auth().onAuthStateChanged((user) => {
         if (user) {
             user.getIdToken(/* forceRefresh */ true).then((idToken) => {
+                console.log('getIdToken:',idToken)
+                // Call loginFn in AuthControl.js
                 callback(idToken, user.email, user.displayName, user.photoURL);
             }).catch(function (error) {
                 console.log('error', error);

@@ -1,3 +1,5 @@
+Legacy - do not use
+
 CREATE TYPE user_type AS ENUM (
     'admin',
     'advisor',
