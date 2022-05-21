@@ -16,7 +16,7 @@ export function ShowLogin(callback) {
         return;
     }
 
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onIdTokenChanged((user) => {
         if (user) {
             user.getIdToken(/* forceRefresh */ true).then((idToken) => {
                 console.log('getIdToken:',idToken)
