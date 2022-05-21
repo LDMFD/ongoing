@@ -21,6 +21,12 @@ export const ModuleEditor = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
+    let checkGoBack = () => {
+        if (moduleState.editCount < 1 || window.confirm('Discard unsaved changes?')) {
+            goBack();
+        }
+    }
+
     const [ state, dispatch ] = useContext(Context);
 
     let { clientId, rmod: module, field } = useParams();
@@ -51,7 +57,11 @@ export const ModuleEditor = () => {
     }
             
     let onChange = (html) => {
-        setModuleState({ ...moduleState, [capsField]: html, });
+        setModuleState({
+            ...moduleState,
+            [capsField]: html,
+            editCount: moduleState.editCount + 1,
+        });
     };
 
     let onSubmit = async (e) => {
@@ -72,7 +82,7 @@ export const ModuleEditor = () => {
     let deleteDisabled = preset === undefined && moduleState[capsField] === '';  // TODO doesn't disable on first try for some reason..
 
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={checkGoBack}>
             <form onSubmit={onSubmit}>
                 <DialogTitle>Edit Module Text</DialogTitle>
                 <DialogContent>
@@ -83,7 +93,7 @@ export const ModuleEditor = () => {
                     </CardContent>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={goBack}>Cancel</Button>
+                    <Button onClick={checkGoBack}>Cancel</Button>
                     <Button disabled={deleteDisabled} variant='outlined' onClick={onDelete}>{deleteLabel}</Button>
                     <Button type='submit' variant='contained' onClick={onSubmit}>Update</Button>
                 </DialogActions>
