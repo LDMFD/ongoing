@@ -24,7 +24,7 @@ namespace Entities.Entities
         public int RiskLevelId { get; set; }
         
         [Column("questionnaire_file_id")]
-        public int QuestionnaireFileId { get; set; }
+        public int? QuestionnaireFileId { get; set; }
         
         [Column("completed", TypeName = "timestamp without time zone")]
         public DateTime? Completed { get; set; }
@@ -39,7 +39,7 @@ namespace Entities.Entities
         
         [ForeignKey("QuestionnaireFileId")]
         [InverseProperty("RiskAssessments")]
-        public virtual File QuestionnaireFile { get; set; } = null!;
+        public virtual File? QuestionnaireFile { get; set; } = null!;
         
         [ForeignKey("RiskLevelId")]
         [InverseProperty("RiskAssessments")]

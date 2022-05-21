@@ -34,14 +34,17 @@ type ReportRiskAssessment struct {
 }
 
 func (a *RiskAssessment) ToReport() ReportRiskAssessment {
-	return ReportRiskAssessment{
+	report := ReportRiskAssessment{
 		Id:             a.Uid,
 		RiskProviderId: a.RiskLevel.RiskProvider.Uid,
 		RiskLevelId:    a.RiskLevel.Uid,
 		Completed:      a.Completed.Format("2006-01-02"),
-		Questionnaire: ReportFile{
+	}
+	if a.Questionnaire != nil {
+		report.Questionnaire = ReportFile{
 			Uid:      a.Questionnaire.Uid,
 			Filename: a.Questionnaire.Filename,
-		},
+		}
 	}
+	return report
 }

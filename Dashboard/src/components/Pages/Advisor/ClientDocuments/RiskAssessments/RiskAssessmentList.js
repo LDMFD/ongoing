@@ -70,7 +70,7 @@ const RiskAssessmentList = () => {
             accessor: 'questionnaire',
             Header: 'Questionnaire',
             width: 3,
-            Cell: ({ row }) => (
+            Cell: ({ row }) => row.original.questionnaire.Uid && (
                 <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
                     {row.original.questionnaire.Filename}
                     <DownloadIcon />

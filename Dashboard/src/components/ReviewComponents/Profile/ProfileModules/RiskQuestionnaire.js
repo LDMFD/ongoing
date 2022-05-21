@@ -13,7 +13,7 @@ const RiskQuestionnaire = () => {
         Download(fileUid);
     }, []);
 
-    const columns = [
+    let columns = [
         {
             accessor: 'provider',
             Header: 'Provider',
@@ -39,17 +39,6 @@ const RiskQuestionnaire = () => {
             Header: 'Completed',
             width: 1,
         },
-        {
-            accessor: 'questionnaire',
-            Header: 'Questionnaire',
-            width: 3,
-            Cell: ({ row }) => (
-                <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
-                    {row.original.questionnaire.Filename}
-                    <DownloadIcon />
-                </button>
-            ),
-        },
     ];
 
     let assessments = report.RiskAssessments.map(ra => {
@@ -67,6 +56,20 @@ const RiskQuestionnaire = () => {
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
     
     assessments = assessments.length ? [ assessments[0] ] : [];
+
+    if (assessments.length && assessments[0].questionnaire.Uid) {
+        columns.push({
+            accessor: 'questionnaire',
+            Header: 'Questionnaire',
+            width: 3,
+            Cell: ({ row }) => row.original.questionnaire.Uid && (
+                <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
+                    {row.original.questionnaire.Filename}
+                    <DownloadIcon />
+                </button>
+            ),
+        });
+    }
 
     return (
         <div className='ongoing-riskassessmentList'>

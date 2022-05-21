@@ -945,7 +945,7 @@ namespace Entities.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("completed");
 
-                    b.Property<int>("QuestionnaireFileId")
+                    b.Property<int?>("QuestionnaireFileId")
                         .HasColumnType("integer")
                         .HasColumnName("questionnaire_file_id");
 
@@ -1420,7 +1420,6 @@ namespace Entities.Migrations
                         .WithMany("RiskAssessments")
                         .HasForeignKey("QuestionnaireFileId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
                         .HasConstraintName("fk_questionnaire");
 
                     b.HasOne("Entities.Entities.RiskLevel", "RiskLevel")
