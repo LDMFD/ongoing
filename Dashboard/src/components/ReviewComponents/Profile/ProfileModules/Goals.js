@@ -5,7 +5,6 @@ import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 const Goals = () => {
     return (
         <>
-            <br />
             <Module module={ModuleTypeGoals} />
         </>
     );

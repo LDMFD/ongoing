@@ -11,7 +11,7 @@ const ConclusionTabs = ({ basePath, baseTarget, children }) => {
     const { pathname } = useLocation();
 
     let routeMatch = RouteMatch(pathname, [
-        `${basePath}/goals`,
+        `${basePath}/objectives`,
         `${basePath}/ongoing-suitability`,
         `${basePath}/due-diligence`,
         `${basePath}/forecast`,
@@ -25,7 +25,7 @@ const ConclusionTabs = ({ basePath, baseTarget, children }) => {
     return (
         <>
             <Tabs value={currentTab}>
-                <Tab label="Goals"               value={`${basePath}/goals`        }       to={`${baseTarget}/goals`}               component={Link} />
+                <Tab label="Objectives"          value={`${basePath}/objectives`   }       to={`${baseTarget}/objectives`}          component={Link} />
                 <Tab label="Ongoing suitability" value={`${basePath}/ongoing-suitability`} to={`${baseTarget}/ongoing-suitability`} component={Link} />
                 <Tab label="Due diligence"       value={`${basePath}/due-diligence`}       to={`${baseTarget}/due-diligence`}       component={Link} />
                 {report.Forecasts?.length &&  // BackwardsCompatibility

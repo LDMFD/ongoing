@@ -5,6 +5,7 @@ import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 const Objectives = () => {
     return (
         <>
+            <br />
             <Module module={ModuleTypeObjectives} />
         </>
     );

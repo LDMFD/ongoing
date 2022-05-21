@@ -8,7 +8,7 @@ import DueDiligence       from './ConclusionModules/DueDiligence';
 import Forecast           from './ConclusionModules/Forecast';
 import OngoingSuitability from './ConclusionModules/OngoingSuitability';
 import ActionPoints       from './ConclusionModules/ActionPoints';
-import Goals              from './ConclusionModules/Goals';
+import Objectives         from './ConclusionModules/Objectives';
 
 const ConclusionRoutesBase = ({ basePath, baseTarget }) => {
     let { path } = useRouteMatch();
@@ -23,7 +23,7 @@ const ConclusionRoutesBase = ({ basePath, baseTarget }) => {
                 <Route path={`${path}`}>
                     <ConclusionTabs basePath={basePath} baseTarget={baseTarget}>
                         <Switch>
-                            <Route path={`${basePath}/goals`}               component={Goals} />
+                            <Route path={`${basePath}/objectives`}          component={Objectives} />
                             <Route path={`${basePath}/ongoing-suitability`} component={OngoingSuitability} />
                             <Route path={`${basePath}/due-diligence`}       component={DueDiligence} />
                             <Route path={`${basePath}/forecast`}            component={Forecast} />

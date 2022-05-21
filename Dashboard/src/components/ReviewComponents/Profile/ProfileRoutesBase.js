@@ -5,7 +5,7 @@ import ProfileTabs from './ProfileTabs';
 
 import FactFind          from './ProfileModules/FactFind';
 import RiskQuestionnaire from './ProfileModules/RiskQuestionnaire';
-import Objectives        from './ProfileModules/Objectives';
+import Goals             from './ProfileModules/Goals';
 
 const ProfileRoutesBase = ({ basePath, baseTarget }) => {
     let { path } = useRouteMatch();
@@ -22,7 +22,7 @@ const ProfileRoutesBase = ({ basePath, baseTarget }) => {
                         <Switch>
                             <Route path={`${basePath}/fact-find`}          component={FactFind} />
                             <Route path={`${basePath}/risk-questionnaire`} component={RiskQuestionnaire} />
-                            <Route path={`${basePath}/objectives`}         component={Objectives} />
+                            <Route path={`${basePath}/goals`}              component={Goals} />
                         </Switch>
                     </ProfileTabs>
                 </Route>

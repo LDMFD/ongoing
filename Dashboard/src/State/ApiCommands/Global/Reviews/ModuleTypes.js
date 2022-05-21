@@ -4,7 +4,7 @@ export const ModuleTypeIntroduction       = "introduction";
 export const ModuleTypeProfile            = "profile";
 export const ModuleTypeFactFind           = "profile_fact_find";
 export const ModuleTypeRisk               = "profile_risk";
-export const ModuleTypeObjectives         = "profile_objectives";
+export const ModuleTypeGoals              = "profile_objectives";
 
 export const ModuleTypePolicyValuations   = "policy_valuations";
 export const ModuleTypeValuation          = "policy_valuations_valuation";
@@ -18,7 +18,7 @@ export const ModuleTypePortfolioLevelFees = "fees_portfolio_level";
 export const ModuleTypeDimFee             = "fees_dim";
 
 export const ModuleTypeConclusions        = "conclusions";
-export const ModuleTypeGoals              = "conclusions_goals";
+export const ModuleTypeObjectives         = "conclusions_goals";
 export const ModuleTypeAdviceGiven        = "conclusions_advice_given";
 export const ModuleTypeDueDiligence       = "conclusions_due_diligence";
 export const ModuleTypeForecast           = "conclusions_forecast";
@@ -30,7 +30,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypeProfile,            label: "Profile (Fact find, Risk profile & Objectives page)" },
     { id: ModuleTypeFactFind,           label: "Profile - Fact-Find" },
     { id: ModuleTypeRisk,               label: "Profile - Attitude To Risk Questionnaire" },
-    { id: ModuleTypeObjectives,         label: "Profile - Objectives" },
+    { id: ModuleTypeGoals,              label: "Profile - Goals" },
     { id: ModuleTypePolicyValuations,   label: "Policy Valuations page" },
     { id: ModuleTypeValuation,          label: "Policy Valuations - Policy Valuation" },
     { id: ModuleTypeContributions,      label: "Policy Valuations - Policy Contributions" },
@@ -41,7 +41,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypePortfolioLevelFees, label: "Fees - Portfolio Level" },
     { id: ModuleTypeDimFee,             label: "Fees - DIM" },
     { id: ModuleTypeConclusions,        label: "Assessments page" },
-    { id: ModuleTypeGoals,              label: "Assessments - Goals" },
+    { id: ModuleTypeObjectives,         label: "Assessments - Objectives" },
     { id: ModuleTypeAdviceGiven,        label: "Assessments - Advice Given" },
     { id: ModuleTypeDueDiligence,       label: "Assessments - Due Digilence" },
     { id: ModuleTypeForecast,           label: "Assessments - Forecast" },
