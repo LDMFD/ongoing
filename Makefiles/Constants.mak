@@ -15,6 +15,7 @@ DB_INSTANCE_staging					:= ongoing-staging2
 POSTGRES_VERSION					:= POSTGRES_14
 POSTGRES_VERSION_NUMERIC			:= 14.2
 SQL_PROXY_VERSION					:= 1.29.0
+LOCAL_POSTGRES_IMAGE				:= postgres:14.2
 
 API_IMAGE							:= ongoing-api
 

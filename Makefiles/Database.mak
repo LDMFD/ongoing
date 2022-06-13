@@ -1,8 +1,8 @@
 # Caller: gcp-init (GCP.mak)
 _gcp-sql-setup:
 	make _gcp-sql-create
-	make _gcp-sql-create-secret
-	make _gcp-sql-set-password
+	make _gcp-sql-create-secrets
+	make gcp-sql-cycle-password
 	make _gcp-allow-cloud-run-to-access-database
 	make _gcp-create-db-proxy-service-account
 
@@ -26,18 +26,32 @@ _gcp-sql-create: import-env
 		--project=ongoing-${ENV} \
 		ongoing-${ENV}
 
-_gcp-sql-create-secret:
+_gcp-sql-create-secrets:
 	gcloud secrets create database-connection \
 	    --replication-policy="automatic"
 
-_gcp-sql-set-password: import-env
-	read -s -p "Enter postgres password:" PASSWORD; \
-	echo -n unix://postgres:$$PASSWORD@/cloudsql/ongoing-${ENV}:${REGION}:${DB_INSTANCE_${ENV}}/.s.PGSQL.5432?sslmode=disable \
-		| gcloud secrets versions add database-connection --data-file=- ; \
-	\
+	gcloud secrets create database-password \
+	    --replication-policy="automatic"
+
+gcp-sql-cycle-password:
+	mkdir -p ~/.ongoing/secrets/cloud-sql
+	$(eval PASSWORD := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
+
+	echo -n ${PASSWORD} > ~/.ongoing/secrets/cloud-sql/password
+
+	echo -n unix://postgres:${PASSWORD}@/cloudsql/${GCP_PROJECT}:${REGION}:${DB_INSTANCE}/.s.PGSQL.5432?sslmode=disable \
+		> ~/.ongoing/secrets/cloud-sql/db-connection-unix
+
+	echo -n Host=localhost\;Port=5432\;Database=postgres\;Username=postgres\;Password=${PASSWORD} \
+		> ~/.ongoing/secrets/cloud-sql/db-connection-dotnet
+
+	gcloud secrets versions add database-connection --data-file=${HOME}/.ongoing/secrets/cloud-sql/db-connection-unix
+
+	gcloud secrets versions add database-password --data-file=${HOME}/.ongoing/secrets/cloud-sql/password
+	
 	gcloud sql users set-password postgres \
-		--instance=${DB_INSTANCE_${ENV}} \
-		--password=$$PASSWORD
+		--instance=${DB_INSTANCE} \
+		--password=${PASSWORD}
 
 # Allow Cloud Run to read secrets and connect to DB
 _gcp-allow-cloud-run-to-access-database: import-env
@@ -50,10 +64,11 @@ _gcp-allow-cloud-run-to-access-database: import-env
 		--role=roles/cloudsql.client
 
 _gcp-create-db-proxy-service-account: import-env
+	mkdir -p ~/.ongoing/secrets/cloud-sql
 	gcloud iam service-accounts create cloudsql-proxy --display-name "cloudsql-proxy"
 	gcloud projects add-iam-policy-binding ${GCP_PROJECT_${ENV}} --member serviceAccount:cloudsql-proxy@${GCP_PROJECT_${ENV}}.iam.gserviceaccount.com --role roles/cloudsql.client
-	gcloud iam service-accounts keys create ${HOME}/.ongoing/secrets/dbproxy-credentials.json --iam-account cloudsql-proxy@${GCP_PROJECT_${ENV}}.iam.gserviceaccount.com
-	gcloud secrets create db-proxy --replication-policy=automatic --data-file=${HOME}/.ongoing/secrets/dbproxy-credentials.json
+	gcloud iam service-accounts keys create ${HOME}/.ongoing/secrets/cloud-sql/dbproxy-credentials.json --iam-account cloudsql-proxy@${GCP_PROJECT_${ENV}}.iam.gserviceaccount.com
+	gcloud secrets create db-proxy --replication-policy=automatic --data-file=${HOME}/.ongoing/secrets/cloud-sql/dbproxy-credentials.json
 #rm ~/.ongoing/secrets/dbproxy-credentials.json
 
 # ---
@@ -94,23 +109,28 @@ db-migrate-remote:
 				 --file=/app/migrations/${MIGRATION}.sql
 
 # Param FROM: the .sql file to import from
-db-restore:
+db-restore-local:
 	docker run -it --rm \
-		--name db-migration \
+		--name db-restorer \
+		--platform linux/amd64 \
 		--network ongoing_default \
-		-v ${FROM}:/app/migrations/dump.sql \
-		postgres:${POSTGRES_VERSION_NUMERIC} \
-			psql --host=db-proxy \
-				 --dbname=postgres \
-				 --username=postgres \
-				 --password \
-				 --file=/app/migrations/dump.sql
+		-v ${HOME}/.ongoing/dumps/dump.sql:/app/dump.sql \
+        ${LOCAL_POSTGRES_IMAGE} \
+            /bin/bash \
+            -c "PGPASSWORD=p psql -U postgres -h ongoing-db < /app/dump.sql"
+#		/bin/bash \
+#			psql --host=db-proxy \
+#				 --dbname=postgres \
+#				 --username=postgres \
+#				 --password \
+#				 --file=/app/migrations/dump.sql
 
 # In these, change --data-only to --schema-only to control output.
 db-dump-local:
 	docker run -it --rm \
 		--name db-dump \
 		--network ongoing_default \
+		-v ${HOME}/.ongoing/dumps/dump.sql:/app/dump.sql \
 		postgres:${POSTGRES_VERSION_NUMERIC} \
 			pg_dump --host=ongoing-db \
 					--dbname=postgres \
@@ -120,19 +140,17 @@ db-dump-local:
 					--schema-only --no-acl --column-inserts --no-comments
 
 db-dump-remote:
-	docker run -it --rm \
-		--name db-dump \
-		--network ongoing_default \
-		postgres:${POSTGRES_VERSION_NUMERIC} \
-			pg_dump --host=db-proxy \
-					--dbname=postgres \
-					--username=postgres \
-					--password \
-					--no-comments \
-					--data-only --no-acl --column-inserts --no-comments
+	$(eval PASSWORD := $(shell cat ~/.ongoing/secrets/cloud-sql/password))
+	mkdir -p ~/.ongoing/dumps
+	docker run -i \
+		--platform linux/amd64 \
+	    --network ongoing_default \
+		${LOCAL_POSTGRES_IMAGE} \
+		/bin/bash \
+		-c "PGPASSWORD=${PASSWORD} pg_dump -h db-proxy --username postgres --data-only --no-acl" \
+		> ~/.ongoing/dumps/dump.sql
 
 db-up:
-	make db-migrate-local MIGRATION=0
 	make db-migrate-local MIGRATION=1
 
 # Run this, then `make db-up`
@@ -142,14 +160,14 @@ db-clean:
 	docker volume rm -f ongoing_postgres
 
 db-proxy: import-env
-	mkdir -p ~/.ongoing/secrets
-	gcloud secrets versions access ${SECRET_DB_PROXY_VERSION_${ENV}} --secret="db-proxy" > ~/.ongoing/secrets/cloudsql-credential.json
+	mkdir -p ~/.ongoing/secrets/cloud-sql
+	gcloud secrets versions access ${SECRET_DB_PROXY_VERSION_${ENV}} --secret="db-proxy" > ~/.ongoing/secrets/cloud-sql/cloudsql-credential.json
 	docker run -it --rm \
 		--name db-proxy \
 		--platform linux/amd64 \
 		--network ongoing_default \
 		-p "5432:5432" \
-		-v ~/.ongoing/secrets/cloudsql-credential.json:/credential.json \
+		-v ~/.ongoing/secrets/cloud-sql/cloudsql-credential.json:/credential.json \
 		gcr.io/cloudsql-docker/gce-proxy:${SQL_PROXY_VERSION} /cloud_sql_proxy \
 		-instances=ongoing-${ENV}:${REGION_${ENV}}:${DB_INSTANCE_${ENV}}=tcp:0.0.0.0:5432 \
 		-credential_file=/credential.json
