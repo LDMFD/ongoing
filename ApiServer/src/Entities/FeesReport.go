@@ -32,7 +32,7 @@ type ReportFeesReport struct {
 func (a *FeesReport) ToReport() ReportFeesReport {
 	return ReportFeesReport{
 		Id: a.Uid,
-		Submitted: a.Submitted.Format("2006-01-02"),
+		Submitted: a.Submitted.Format("02-01-2006"),
 		File: ReportFile{
 			Uid:      a.File.Uid,
 			Filename: a.File.Filename,

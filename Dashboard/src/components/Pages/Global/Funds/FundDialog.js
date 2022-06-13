@@ -30,7 +30,7 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
             if (modified.isValid()) {
                 setFund({
                     ...fund,
-                    Modified: modified.format('YYYY-MM-DD'),
+                    Modified: modified.utc(false).format('DD-MM-YYYY'),
                 });
             } else {
                 setFund({
@@ -76,7 +76,7 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                type     = "number"
                                fullWidth />
 
-                    <TextField value    = {Day(fund.Modified).utc(false).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(fund.Modified).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetModified}
                                margin   = "dense"
                                id       = "modified"

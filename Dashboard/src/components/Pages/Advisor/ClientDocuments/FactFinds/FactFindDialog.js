@@ -31,7 +31,7 @@ export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandl
                         Upload Fact Find document
                     </DialogContentText>
 
-                    <TextField value    = {Day(factFind.Submitted).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(factFind.Submitted).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetSubmitted}
                                margin   = "dense"
                                id       = "submitted"

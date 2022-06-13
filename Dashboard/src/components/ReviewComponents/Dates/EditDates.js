@@ -36,8 +36,8 @@ export const EditDates = () => {
     const okCallback = async (e) => {
         e.preventDefault();
 
-        draft.StartDate = Day(draft.StartDate).format('YYYY-MM-DD');
-        draft.EndDate = Day(draft.EndDate).format('YYYY-MM-DD');
+        draft.StartDate = Day(draft.StartDate).utc(false).format('DD-MM-YYYY');
+        draft.EndDate = Day(draft.EndDate).utc(false).format('DD-MM-YYYY');
 
         await Api.Advisor.Reviews.Update(clientId, draft);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
@@ -47,8 +47,8 @@ export const EditDates = () => {
     };
 
     const handlers = {
-        SetStartDate: (event) => { setDraft({ ...draft, StartDate: Day(event.target.value).format('YYYY-MM-DD') }); },
-        SetEndDate:   (event) => { setDraft({ ...draft, EndDate:   Day(event.target.value).format('YYYY-MM-DD') }); },
+        SetStartDate: (event) => { setDraft({ ...draft, StartDate: Day(event.target.value).utc(false).format('DD-MM-YYYY') }); },
+        SetEndDate:   (event) => { setDraft({ ...draft, EndDate:   Day(event.target.value).utc(false).format('DD-MM-YYYY') }); },
     };
 
     return (
@@ -59,7 +59,7 @@ export const EditDates = () => {
                     Enter new review start and end dates
                 </DialogContent>
                 <DialogActions>
-                    <TextField value    = {Day(draft.StartDate).utc(false).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(draft.StartDate).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetStartDate}
                                margin   = "dense"
                                id       = "startDate"
@@ -67,7 +67,7 @@ export const EditDates = () => {
                                type     = "date"
                                fullWidth />
 
-                    <TextField value    = {Day(draft.EndDate).utc(false).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(draft.EndDate).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetEndDate}
                                margin   = "dense"
                                id       = "endDate"

@@ -77,7 +77,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                         ))}
                     </Select>
 
-                    <TextField value    = {Day(assessment.Completed).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(assessment.Completed).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetCompleted}
                                margin   = "dense"
                                id       = "completed"

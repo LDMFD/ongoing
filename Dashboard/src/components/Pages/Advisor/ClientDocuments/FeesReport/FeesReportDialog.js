@@ -31,7 +31,7 @@ export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submi
                         Upload Fees Report document
                     </DialogContentText>
 
-                    <TextField value    = {Day(feesReport.Submitted).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(feesReport.Submitted).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetSubmitted}
                                margin   = "dense"
                                id       = "submitted"

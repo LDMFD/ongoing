@@ -31,7 +31,7 @@ export const ForecastDialog = ({ forecast, setForecast, submitLabel, submitHandl
                         Upload Forecast document
                     </DialogContentText>
 
-                    <TextField value    = {Day(forecast.Submitted).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(forecast.Submitted).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetSubmitted}
                                margin   = "dense"
                                id       = "submitted"

@@ -36,7 +36,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
             if (modified.isValid()) {
                 setModel({
                     ...model,
-                    Modified: modified.format('YYYY-MM-DD'),
+                    Modified: modified.utc(false).format('DD-MM-YYYY'),
                 });
             } else {
                 setModel({
@@ -95,7 +95,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             type     = "number"
                             fullWidth />
 
-                    <TextField value    = {Day(model.Modified).utc(false).format('YYYY-MM-DD')}
+                    <TextField value    = {Day(model.Modified).utc(false).format('DD-MM-YYYY')}
                                onChange = {handlers.SetModified}
                                margin   = "dense"
                                id       = "modified"

@@ -54,7 +54,7 @@ const ReviewList = () => {
             date:             review.Meta.FinalizedDate,
             startDateStr:     Day(review.Meta.StartDate).utc(false).format('DD-MM-YYYY'),
             endDateStr:       Day(review.Meta.EndDate).utc(false).format('DD-MM-YYYY'),
-            finalizedDateStr: Day(review.Meta.FinalizedDate).format('DD-MM-YYYY'),
+            finalizedDateStr: Day(review.Meta.FinalizedDate).utc(false).format('DD-MM-YYYY'),
             // state:         review.Meta.State,
         };
     }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0));

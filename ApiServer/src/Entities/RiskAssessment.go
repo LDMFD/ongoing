@@ -38,7 +38,7 @@ func (a *RiskAssessment) ToReport() ReportRiskAssessment {
 		Id:             a.Uid,
 		RiskProviderId: a.RiskLevel.RiskProvider.Uid,
 		RiskLevelId:    a.RiskLevel.Uid,
-		Completed:      a.Completed.Format("2006-01-02"),
+		Completed:      a.Completed.Format("02-01-2006"),
 	}
 	if a.Questionnaire != nil {
 		report.Questionnaire = ReportFile{

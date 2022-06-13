@@ -77,7 +77,7 @@ const ForecastList = () => {
     let forecasts = report.Forecasts.map(ff => {
         return {
             id:        ff.Id,
-            submitted: Day(ff.Submitted).format('DD-MM-YYYY'),
+            submitted: Day(ff.Submitted).utc(false).format('DD-MM-YYYY'),
             forecast:  ff.File,
         };
     }).sort((p,q) => (p.submitted < q.submitted) ? -1 : ((p.submitted > q.submitted) ? 1 : 0));

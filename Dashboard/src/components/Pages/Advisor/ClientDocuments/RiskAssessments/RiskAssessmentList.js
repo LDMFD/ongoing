@@ -103,7 +103,7 @@ const RiskAssessmentList = () => {
             level:                level.Level,
             label:                level.Label,
             desc:                 level.Desc,
-            completed:            Day(ra.Completed).format('DD-MM-YYYY'),
+            completed:            Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
             questionnaire:        ra.Questionnaire,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
