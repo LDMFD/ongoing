@@ -1,6 +1,7 @@
 package Entities
 
 import (
+	Date "ongoing/Utils"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -40,10 +41,7 @@ func (f *Fund) ToReport() ReportFund {
 		Name:      f.Name,
 		OcfFee:    f.OcfFee,
 		ExAnteFee: f.ExAnteFee,
-		Modified:  "",
-	}
-	if f.Modified != nil {
-		rf.Modified = f.Modified.String()
+		Modified:  Date.ToCanonical(f.Modified),
 	}
 	if f.File != nil {
 		rf.File = ReportFile{

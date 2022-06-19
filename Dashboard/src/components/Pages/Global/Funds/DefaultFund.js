@@ -1,7 +1,7 @@
 const defaultFund = {
     Name: '',
     Proportion: 1,
-    Modified: '',
+    Modified: null,
 };
 
 export default defaultFund;

@@ -5,21 +5,24 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
-    TextField,
 } from '@mui/material';
-import Day from 'dayjs';
 
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetSubmitted: (event) => { setFeesReport({ ...feesReport, Submitted: event.target.value, }); },
+        SetSubmitted: (event) => {
+            setFeesReport({
+                ...feesReport,
+                Submitted: event,
+            });
+        },
     };
 
     return (
@@ -27,17 +30,9 @@ export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submi
             <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Fees Report</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Upload Fees Report document
-                    </DialogContentText>
-
-                    <TextField value    = {Day(feesReport.Submitted).utc(false).format('DD-MM-YYYY')}
-                               onChange = {handlers.SetSubmitted}
-                               margin   = "dense"
-                               id       = "submitted"
-                               label    = "Submitted"
-                               type     = "date"
-                               fullWidth />
+                    
+                    <DateSelector selected = {feesReport.Submitted}
+                                  onChange = {handlers.SetSubmitted} />
 
                     <FileUploader file         = {feesReport.File}
                                   stateUpdater = {setFeesReport}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
     Button,
-    Paper
 } from '@mui/material';
 import axios from 'axios';
 import Day from 'dayjs';
@@ -84,7 +83,6 @@ const FileInput = ({ completionCallback }) => {
     return (
         <>
             <label>
-                Upload file:
                 <input type="file" multiple onChange={triggerUpload} ref={input} />
             </label>
             <br />
@@ -126,18 +124,19 @@ const FileUploader = ({file, stateUpdater, state, property='File' }) => {
     };
     
     return (
-        <Paper elevation={2}>
+        <>
+            <b>File upload</b>
+            <br />
             {file?.Uid ? (
-                <>
+                <div>
                     {file.Filename} (uploaded {`${Day(file.Date)}`})
                     <Button onClick={download.bind(null, file.Uid)}>Download</Button>
                     <Button onClick={remove}>Remove</Button>
-                </>
-            ) : <>No files</>}
+                </div>
+            ) : <p>No files</p>}
 
-            <p>Upload new:</p>
             <FileInput completionCallback={fileUploaded} />
-        </Paper>
+        </>
     );
 }
 

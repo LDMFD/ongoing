@@ -1,6 +1,7 @@
 package Entities
 
 import (
+	Date "ongoing/Utils"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -44,9 +45,7 @@ func (p *Model) ToReport() ReportModel {
 		OperatorId:        p.Operator.Uid,
 		WeightedOcfFee:    p.WeightedOcfFee,
 		WeightedExAnteFee: p.WeightedExAnteFee,
-	}
-	if p.Modified != nil {
-		rm.Modified = p.Modified.String()
+		Modified:          Date.ToCanonical(p.Modified),
 	}
 	if p.File != nil {
 		rm.File = ReportFile{

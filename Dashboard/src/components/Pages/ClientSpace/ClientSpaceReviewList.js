@@ -3,14 +3,10 @@ import { useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import InventoryIcon from '@mui/icons-material/Inventory';
 
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import { Context } from 'State/StateProvider'
+import { FromCanonical } from 'Utils/DateTime';
 
 const ReviewList = () => {
-    Day.extend(utc);
-
     let history = useHistory();
     const [ state, ] = useContext(Context);
 
@@ -19,8 +15,8 @@ const ReviewList = () => {
     }, [ history ]);
 
     const columns = [
-        { field: 'startDateStr', headerName: 'Start date',   flex: 0.1, },
-        { field: 'endDateStr',   headerName: 'End date',   flex: 0.1, },
+        { field: 'startDate', headerName: 'Start date',   flex: 0.1, },
+        { field: 'endDate',   headerName: 'End date',   flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -36,9 +32,9 @@ const ReviewList = () => {
             id:               review.Id,
             idLabel:          `#${review.Id}`,
             date:             review.Meta.FinalizedDate,
-            startDateStr:     Day(review.Meta.StartDate).utc(false).format('DD-MM-YYYY'),
-            endDateStr:       Day(review.Meta.EndDate).utc(false).format('DD-MM-YYYY'),
-            // finalizedDateStr: Day(review.Meta.FinalizedDate).utc(false).format('DD-MM-YYYY'),
+            startDate:        FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
+            endDate:          FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB'),
+            // no finalizedDate
             // state:      review.Meta.State,
         };
     }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0));

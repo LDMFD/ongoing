@@ -5,21 +5,24 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
     DialogTitle,
-    TextField,
 } from '@mui/material';
-import Day from 'dayjs';
 
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetSubmitted: (event) => { setFactFind({ ...factFind, Submitted: event.target.value, }); },
+        SetSubmitDate: (event) => {
+            setFactFind({
+                ...factFind,
+                Submitted: event,
+            });
+        },
     };
 
     return (
@@ -27,21 +30,13 @@ export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandl
             <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Fact Find</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Upload Fact Find document
-                    </DialogContentText>
 
-                    <TextField value    = {Day(factFind.Submitted).utc(false).format('DD-MM-YYYY')}
-                               onChange = {handlers.SetSubmitted}
-                               margin   = "dense"
-                               id       = "submitted"
-                               label    = "Submitted"
-                               type     = "date"
-                               fullWidth />
+                    <DateSelector selected = {factFind.Submitted}
+                                    onChange = {handlers.SetSubmitDate} />
 
                     <FileUploader file         = {factFind.File}
-                                  stateUpdater = {setFactFind}
-                                  state        = {factFind} />
+                                    stateUpdater = {setFactFind}
+                                    state        = {factFind} />
 
                 </DialogContent>
                 <DialogActions>

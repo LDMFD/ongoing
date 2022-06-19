@@ -8,16 +8,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table';
+import { FromCanonical } from 'Utils/DateTime';
 
 const ModelList = () => {
-    Day.extend(utc);
-
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
@@ -92,7 +88,7 @@ const ModelList = () => {
             operator:          op,
             weightedOcfFee:    `${m.WeightedOcfFee}%`,
             weightedExAnteFee: `${m.WeightedExAnteFee}%`,
-            modified:          m.Modified ? Day(m.Modified).utc(false).format('DD-MM-YYYY') : '',
+            modified:          FromCanonical(m.Modified)?.toLocaleDateString('en-GB'),
             filename:          m.File?.Filename,
             fileUid:           m.File?.Uid,
         };

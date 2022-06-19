@@ -4,15 +4,11 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import { Context } from 'State/StateProvider'
 import { Api } from 'State';
+import { FromCanonical } from 'Utils/DateTime';
 
 const ReviewList = () => {
-    Day.extend(utc);
-
     let history = useHistory();
     const [state, dispatch ] = useContext(Context);
     let {
@@ -31,9 +27,9 @@ const ReviewList = () => {
     }, [ dispatch, client.Id ]);
 
     const columns = [
-        { field: 'startDateStr',     headerName: 'Start Date',     flex: 0.1, },
-        { field: 'endDateStr',       headerName: 'End Date',       flex: 0.1, },
-        { field: 'finalizedDateStr', headerName: 'Finalised Date', flex: 0.1, },
+        { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
+        { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
+        { field: 'finalizedDate', headerName: 'Finalised Date', flex: 0.1, },
         {
             field: 'actions',
             type: 'actions',
@@ -47,17 +43,15 @@ const ReviewList = () => {
 
     let reviews = state.Reviews.map(review => {
         return {
-            id:               review.Id,
-            idLabel:          `#${review.Id}`,
-            startDate:        review.Meta.StartDate,
-            endDate:          review.Meta.EndDate,
-            date:             review.Meta.FinalizedDate,
-            startDateStr:     Day(review.Meta.StartDate).utc(false).format('DD-MM-YYYY'),
-            endDateStr:       Day(review.Meta.EndDate).utc(false).format('DD-MM-YYYY'),
-            finalizedDateStr: Day(review.Meta.FinalizedDate).utc(false).format('DD-MM-YYYY'),
+            id:            review.Id,
+            idLabel:       `#${review.Id}`,
+            date:          review.Meta.FinalizedDate,
+            startDate:     FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
+            endDate:       FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB'),
+            finalizedDate: FromCanonical(review.Meta.FinalizedDate)?.toLocaleDateString('en-GB'),
             // state:         review.Meta.State,
         };
-    }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0));
+    }).sort((p,q) => (p.startDate < q.startDate) ? 1 : ((p.startDate > q.startDate) ? -1 : 0));
 
     let data = {
         rows: reviews,

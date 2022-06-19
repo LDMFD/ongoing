@@ -11,39 +11,48 @@ import {
     Select,
     TextField,
 } from '@mui/material';
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, includeFiles }) => {
-    Day.extend(utc);
-
     let history = useHistory();
     let goBack = GoBack(history);
 
     const [ state ] = useContext(Context);
 
     const handlers = {
-        EditName:              (event) => { setModel({ ...model, Name:              event.target.value }); },
-        EditWeightedOcfFee:    (event) => { setModel({ ...model, WeightedOcfFee:    parseFloat(event.target.value) }); },
-        EditWeightedExAnteFee: (event) => { setModel({ ...model, WeightedExAnteFee: parseFloat(event.target.value) }); },
-        SetOperatorId:         (event) => { setModel({ ...model, OperatorId:        event.target.value, }); },
+        EditName: (event) => {
+            setModel({
+                ...model,
+                Name: event.target.value
+            });
+        },
+        EditWeightedOcfFee: (event) => {
+            setModel({
+                ...model,
+                WeightedOcfFee: parseFloat(event.target.value)
+            });
+        },
+        EditWeightedExAnteFee: (event) => {
+            setModel({
+                ...model,
+                WeightedExAnteFee: parseFloat(event.target.value)
+            });
+        },
+        SetOperatorId: (event) => {
+            setModel({
+                ...model,
+                OperatorId: event.target.value,
+            });
+        },
         SetModified: (event) => {
-            let modified = Day(event.target.value);
-            if (modified.isValid()) {
-                setModel({
-                    ...model,
-                    Modified: modified.utc(false).format('DD-MM-YYYY'),
-                });
-            } else {
-                setModel({
-                    ...model,
-                    Modified: '',
-                });
-            }
+            setModel({
+                ...model,
+                Modified: event,
+            });
         },
     };
     
@@ -95,13 +104,8 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                             type     = "number"
                             fullWidth />
 
-                    <TextField value    = {Day(model.Modified).utc(false).format('DD-MM-YYYY')}
-                               onChange = {handlers.SetModified}
-                               margin   = "dense"
-                               id       = "modified"
-                               label    = "Last updated"
-                               type     = "date"
-                               fullWidth />
+                    <DateSelector selected = {model.Modified}
+                                  onChange = {handlers.SetModified} />
 
                     <FileUploader file         = {model.File}
                                   stateUpdater = {setModel}

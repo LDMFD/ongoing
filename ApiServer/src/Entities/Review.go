@@ -1,6 +1,7 @@
 package Entities
 
 import (
+	Date "ongoing/Utils"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -35,9 +36,9 @@ type ReportReviewMeta struct {
 
 func (r *Review) ToReportMeta() ReportReviewMeta {
 	return ReportReviewMeta{
-		StartDate:     r.StartDate.String(),
-		EndDate:       r.EndDate.String(),
-		FinalizedDate: r.FinalizedDate.String(),
+		StartDate:     Date.ToCanonical(r.StartDate),
+		EndDate:       Date.ToCanonical(r.EndDate),
+		FinalizedDate: Date.ToCanonical(&r.FinalizedDate),
 		//State:         r.State,
 	}
 }

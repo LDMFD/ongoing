@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
+	Date "ongoing/Utils"
 	"strings"
 	"time"
 
@@ -82,7 +83,7 @@ func CreateRiskAssessment(c *gin.Context) {
 
 	var completed time.Time
 	var err error
-	if completed, err = time.Parse("2006-01-02", body.Completed); err != nil {
+	if completed, err = Date.FromCanonical(body.Completed); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'completed' timestamp"})
 		return
 	}

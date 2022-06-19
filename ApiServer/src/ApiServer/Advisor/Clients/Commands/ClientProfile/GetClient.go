@@ -1,11 +1,11 @@
 package ClientProfile
 
 import (
+	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
 	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	Date "ongoing/Utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,10 +49,10 @@ func GetClient(c *gin.Context) {
 				endDate string
 			)
 			if draftReviews[0].StartDate != nil {
-				startDate = draftReviews[0].StartDate.String()
+				startDate = Date.ToCanonical(draftReviews[0].StartDate)
 			}
 			if draftReviews[0].StartDate != nil {
-				endDate = draftReviews[0].EndDate.String()
+				endDate = Date.ToCanonical(draftReviews[0].EndDate)
 			}
 
 			draft = gin.H{

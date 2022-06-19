@@ -1,6 +1,7 @@
 package Entities
 
 import (
+	Date "ongoing/Utils"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -38,7 +39,7 @@ func (a *RiskAssessment) ToReport() ReportRiskAssessment {
 		Id:             a.Uid,
 		RiskProviderId: a.RiskLevel.RiskProvider.Uid,
 		RiskLevelId:    a.RiskLevel.Uid,
-		Completed:      a.Completed.Format("02-01-2006"),
+		Completed:      Date.ToCanonical(&a.Completed),
 	}
 	if a.Questionnaire != nil {
 		report.Questionnaire = ReportFile{

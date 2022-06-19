@@ -6,25 +6,20 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    TextField,
 } from '@mui/material';
-
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 
 import { GoBack } from 'Utils/Routing';
 import { Context } from 'State/StateProvider'
 import { Api } from 'State';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const EditDates = () => {
-    Day.extend(utc);
-
     let history = useHistory();
     let goBack = GoBack(history);
 
     let { clientId } = useParams();
 
-    const [state, dispatch ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     let [ draft, setDraft ] = useState(null);
 
@@ -35,10 +30,7 @@ export const EditDates = () => {
 
     const okCallback = async (e) => {
         e.preventDefault();
-
-        draft.StartDate = Day(draft.StartDate).utc(false).format('DD-MM-YYYY');
-        draft.EndDate = Day(draft.EndDate).utc(false).format('DD-MM-YYYY');
-
+        
         await Api.Advisor.Reviews.Update(clientId, draft);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
 
@@ -47,8 +39,18 @@ export const EditDates = () => {
     };
 
     const handlers = {
-        SetStartDate: (event) => { setDraft({ ...draft, StartDate: Day(event.target.value).utc(false).format('DD-MM-YYYY') }); },
-        SetEndDate:   (event) => { setDraft({ ...draft, EndDate:   Day(event.target.value).utc(false).format('DD-MM-YYYY') }); },
+        SetStartDate: (event) => {
+            setDraft({
+                ...draft,
+                StartDate: event,
+            });
+        },
+        SetEndDate: (event) => {
+            setDraft({
+                ...draft,
+                EndDate: event,
+            });
+        },
     };
 
     return (
@@ -59,21 +61,12 @@ export const EditDates = () => {
                     Enter new review start and end dates
                 </DialogContent>
                 <DialogActions>
-                    <TextField value    = {Day(draft.StartDate).utc(false).format('DD-MM-YYYY')}
-                               onChange = {handlers.SetStartDate}
-                               margin   = "dense"
-                               id       = "startDate"
-                               label    = "Start date"
-                               type     = "date"
-                               fullWidth />
 
-                    <TextField value    = {Day(draft.EndDate).utc(false).format('DD-MM-YYYY')}
-                               onChange = {handlers.SetEndDate}
-                               margin   = "dense"
-                               id       = "endDate"
-                               label    = "End Date"
-                               type     = "date"
-                               fullWidth />
+                    <DateSelector selected = {draft.StartDate}
+                                  onChange = {handlers.SetStartDate} />
+
+                    <DateSelector selected = {draft.EndDate}
+                                  onChange = {handlers.SetEndDate} />
 
                     <Button onClick={goBack}>Cancel</Button>
                     <Button type='submit' onClick={okCallback}>Confirm</Button>

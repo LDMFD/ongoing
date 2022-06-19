@@ -1,16 +1,12 @@
 import React from 'react';
 
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { ModuleTypeIntroduction } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
+import { FromCanonical } from 'Utils/DateTime';
 
 const Introduction = () => {
-    Day.extend(utc);
-
     let report = GetReport();
     
     let totalStarting = report.Policies.map(p => p.StartValue).reduce((p, q) => p + q, 0);
@@ -18,8 +14,8 @@ const Introduction = () => {
 
     let meta = GetMeta();
 
-    let startDate = Day(meta.StartDate).utc(false).format('DD-MM-YYYY');
-    let endDate =   Day(meta.EndDate).utc(false).format('DD-MM-YYYY');
+    let startDate = FromCanonical(meta.StartDate)?.toLocaleDateString('en-GB');
+    let endDate =   FromCanonical(meta.EndDate)?.toLocaleDateString('en-GB');
 
     return (
         <div>

@@ -1,6 +1,7 @@
 package Entities
 
 import (
+	Date "ongoing/Utils"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -32,7 +33,7 @@ type ReportFeesReport struct {
 func (a *FeesReport) ToReport() ReportFeesReport {
 	return ReportFeesReport{
 		Id: a.Uid,
-		Submitted: a.Submitted.Format("02-01-2006"),
+		Submitted: Date.ToCanonical(&a.Submitted),
 		File: ReportFile{
 			Uid:      a.File.Uid,
 			Filename: a.File.Filename,

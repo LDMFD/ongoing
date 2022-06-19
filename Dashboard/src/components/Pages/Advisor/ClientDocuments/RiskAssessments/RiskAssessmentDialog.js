@@ -9,15 +9,14 @@ import {
     DialogTitle,
     MenuItem,
     Select,
-    TextField,
     FormControl,
     InputLabel,
 } from '@mui/material';
-import Day from 'dayjs';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, submitHandler }) => {
     let history = useHistory();
@@ -26,9 +25,24 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
     const [ state ] = useContext(Context);
 
     const handlers = {
-        SetProviderId:  (event) => { setAssessment({ ...assessment, RiskProviderId: event.target.value, }); },
-        SetLevelId:     (event) => { setAssessment({ ...assessment, RiskLevelId:    event.target.value, }); },
-        SetCompleted:   (event) => { setAssessment({ ...assessment, Completed:      event.target.value, }); },
+        SetProviderId: (event) => {
+            setAssessment({
+                ...assessment,
+                RiskProviderId: event.target.value,
+            });
+        },
+        SetLevelId: (event) => {
+            setAssessment({
+                ...assessment,
+                RiskLevelId: event.target.value,
+            });
+        },
+        SetCompleted: (event) => {
+            setAssessment({
+                ...assessment,
+                Completed: event,
+            });
+        },
     };
     
     return (
@@ -77,13 +91,8 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                         ))}
                     </Select>
 
-                    <TextField value    = {Day(assessment.Completed).utc(false).format('DD-MM-YYYY')}
-                               onChange = {handlers.SetCompleted}
-                               margin   = "dense"
-                               id       = "completed"
-                               label    = "Completed"
-                               type     = "date"
-                               fullWidth />
+                    <DateSelector selected = {assessment.Completed}
+                                  onChange = {handlers.SetCompleted} />
 
                     <FileUploader file         = {assessment.Questionnaire}
                                   stateUpdater = {setAssessment}

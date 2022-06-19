@@ -3,6 +3,7 @@ package Commands
 import (
 	"net/http"
 	"ongoing/Entities"
+	Date "ongoing/Utils"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -32,7 +33,7 @@ func UpdateModel(c *gin.Context) {
 	var modified time.Time
 	var err error
 	if body.Modified != "" {
-		if modified, err = time.Parse("2006-01-02", body.Modified); err != nil {
+		if modified, err = Date.FromCanonical(body.Modified); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
 			return
 		}
