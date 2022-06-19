@@ -7,19 +7,23 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    TextField,
 } from '@mui/material';
-import Day from 'dayjs';
 
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const ForecastDialog = ({ forecast, setForecast, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetSubmitted: (event) => { setForecast({ ...forecast, Submitted: event.target.value, }); },
+        SetSubmitted: (event) => {
+            setForecast({
+                ...forecast,
+                Submitted: event,
+            });
+        },
     };
 
     return (
@@ -31,13 +35,9 @@ export const ForecastDialog = ({ forecast, setForecast, submitLabel, submitHandl
                         Upload Forecast document
                     </DialogContentText>
 
-                    <TextField value    = {Day(forecast.Submitted).format('YYYY-MM-DD')}
-                               onChange = {handlers.SetSubmitted}
-                               margin   = "dense"
-                               id       = "submitted"
-                               label    = "Submitted"
-                               type     = "date"
-                               fullWidth />
+                    <DateSelector label    = 'Submit date'
+                                  selected = {forecast.Submitted}
+                                  onChange = {handlers.SetSubmitted} />
 
                     <FileUploader file         = {forecast.File}
                                   stateUpdater = {setForecast}

@@ -7,6 +7,7 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
+	Date "ongoing/Utils"
 )
 
 func GetReviews(c *gin.Context, client *Entities.Client) []Entities.ReportReview {
@@ -35,9 +36,9 @@ func GetReviews(c *gin.Context, client *Entities.Client) []Entities.ReportReview
 		res = append(res, Entities.ReportReview{
 			Id: r.Uid,
 			Meta: Entities.ReportReviewMeta{
-				StartDate:     r.StartDate.String(),
-				EndDate:       r.EndDate.String(),
-				FinalizedDate: r.FinalizedDate.String(),
+				StartDate:     Date.ToCanonical(r.StartDate),
+				EndDate:       Date.ToCanonical(r.EndDate),
+				FinalizedDate: Date.ToCanonical(&r.FinalizedDate),
 				//State:         r.State,
 			},
 			Report: rep,

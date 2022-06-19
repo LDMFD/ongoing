@@ -5,6 +5,7 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
+	Date "ongoing/Utils"
 	"time"
 )
 
@@ -48,13 +49,13 @@ func UpdateReview(c *gin.Context) {
 
 	var startDate time.Time
 	var err error
-	if startDate, err = time.Parse("2006-01-02", body.StartDate); err != nil {
+	if startDate, err = Date.FromCanonical(body.StartDate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'startDate' timestamp"})
 		return
 	}
 
 	var endDate time.Time
-	if endDate, err = time.Parse("2006-01-02", body.EndDate); err != nil {
+	if endDate, err = Date.FromCanonical(body.EndDate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'endDate' timestamp"})
 		return
 	}

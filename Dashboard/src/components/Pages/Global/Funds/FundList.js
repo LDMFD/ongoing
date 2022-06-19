@@ -8,16 +8,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table';
+import { FromCanonical } from 'Utils/DateTime';
 
 const FundList = () => {
-    Day.extend(utc);
-
     let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
@@ -87,15 +83,14 @@ const FundList = () => {
             ),
         },
     ];
-
-
+    
     let funds = state.Entities.Funds.map(f => {
         return {
             id:        f.Id,
             name:      f.Name,
             ocfFee:    `${f.OcfFee}%`,
             exAnteFee: `${f.ExAnteFee}%`,
-            modified:  f.Modified ? Day(f.Modified).utc(false).format('DD-MM-YYYY') : '',
+            modified:  FromCanonical(f.Modified)?.toLocaleDateString('en-GB'),
             filename:  f.File?.Filename,
             fileUid:   f.File?.Uid,
         };

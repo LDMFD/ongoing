@@ -13,7 +13,7 @@ import {
     MenuItem,
     Select,
 } from '@mui/material';
-import RichTextEditor from 'Components/Library/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
 
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';

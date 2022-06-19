@@ -19,16 +19,17 @@ node-install-package-server:
 	make _node-generate-package-lock IMAGE=ongoing_dash-server DEST=DashboardServer/
 
 node-install-package:
-	docker exec -ti ${CONTAINER} npm install ${PACKAGE}
-	docker cp ${CONTAINER}:/app/package.json ${FOLDER}/
-	docker cp ${CONTAINER}:/app/package-lock.json ${FOLDER}/
+	docker exec -ti ongoing-dash npm install --legacy-peer-deps ${PACKAGE}
+	docker cp ongoing-dash:/app/package.json Dashboard/
+	docker cp ongoing-dash:/app/package-lock.json Dashboard/
 
 _node-generate-package-lock:
 	docker exec -ti ${IMAGE} npm i --package-lock-only
 	docker cp ${IMAGE}:/app/package-lock.json ${DEST}
 
-# TODO
 node-update-packages:
 	docker exec -ti ongoing-dash \
 		npm i -g npm-check-updates && \
 		ncu -u
+	docker cp ${CONTAINER}:/app/package.json ${FOLDER}/
+	docker cp ${CONTAINER}:/app/package-lock.json ${FOLDER}/

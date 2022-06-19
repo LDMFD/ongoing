@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import RichTextEditor from 'Components/Library/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
 
 import './AdvisorModule.css';
 import { Api } from 'State';

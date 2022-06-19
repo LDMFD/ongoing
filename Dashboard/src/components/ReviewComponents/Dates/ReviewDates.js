@@ -1,34 +1,18 @@
 import React, { useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
 import { Context } from 'State/StateProvider'
+import { FromCanonical } from 'Utils/DateTime';
 
 const Dates = () => {
-    Day.extend(utc);
-
     let { clientId } = useParams();
 
     const [ state ] = useContext(Context);
 
     let draft = state.Draft;
 
-    let startDate = Day(draft.StartDate);
-    let endDate = Day(draft.EndDate);
-
-    if (!startDate.isValid()) {
-        startDate = 'Not set';
-    } else {
-        startDate = startDate.utc(false).format('DD-MM-YYYY')
-    }
-    
-    if (!endDate.isValid()) {
-        endDate = 'Not set';
-    } else {
-        endDate = endDate.utc(false).format('DD-MM-YYYY')
-    }
+    let startDate = FromCanonical(draft.StartDate)?.toLocaleDateString('en-GB');
+    let endDate =   FromCanonical(draft.EndDate)?.toLocaleDateString('en-GB');
 
     return (
         <div>

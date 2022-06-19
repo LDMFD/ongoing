@@ -61,7 +61,7 @@ const AdviceFees = () => {
     let feesReport = report.FeesReports?.map(fr => {
         return {
             id:        fr.Id,
-            submitted: Day(fr.Submitted).format('DD-MM-YYYY'),
+            submitted: Day(fr.Submitted).utc(false).format('DD-MM-YYYY'),
             file:      fr.File,
         };
     }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0))[0];

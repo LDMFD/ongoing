@@ -17,7 +17,7 @@ const Forecast = () => {
     let forecast = report.Forecasts.map(ff => {
         return {
             id:        ff.Id,
-            submitted: Day(ff.Submitted).format('DD-MM-YYYY'),
+            submitted: Day(ff.Submitted).utc(false).format('DD-MM-YYYY'),
             file:      ff.File,
         };
     }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0))[0];
@@ -29,7 +29,7 @@ const Forecast = () => {
 
             {forecast &&
                 <p>
-                    Submitted: {Day(forecast.Submitted).format('DD-MM-YYYY')}
+                    Submitted: {Day(forecast.Submitted).utc(false).format('DD-MM-YYYY')}
 
                     <br />
                     <button onClick={downloadFile(forecast.file.Uid)} className='ong-openFileIcon'>

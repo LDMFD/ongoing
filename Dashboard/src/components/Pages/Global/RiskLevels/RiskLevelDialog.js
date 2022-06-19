@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { GoBack } from 'Utils/Routing';
-import RichTextEditor from 'Components/Library/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
 
 export const RiskLevelDialog = ({ riskLevel, setRiskLevel, submitLabel, submitHandler }) => {
     let history = useHistory();

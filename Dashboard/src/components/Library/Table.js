@@ -1,13 +1,15 @@
 import React from 'react'
 import { useTable, useFlexLayout } from 'react-table'
 
-import MaUTable from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow 
+} from '@mui/material';
 
-function Table({ columns, data }) {
+function OgTable({ columns, data }) {
     columns = React.useMemo(() => columns, [columns]);
     data = React.useMemo(() => data, [data]);
 
@@ -21,7 +23,7 @@ function Table({ columns, data }) {
 
     return (
         <div className="tableWrap">
-            <MaUTable {...getTableProps()}>
+            <Table {...getTableProps()}>
                 <TableHead>
                     {headerGroups.map(headerGroup => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -47,9 +49,9 @@ function Table({ columns, data }) {
                         )
                     })}
                 </TableBody>
-            </MaUTable>
+            </Table>
         </div>
     )
 }
 
-export default Table;
+export default OgTable;

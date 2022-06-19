@@ -2,7 +2,7 @@ FROM node:16-alpine AS base
 WORKDIR /app
 COPY package*.json .
 #ENV NODE_OPTIONS --openssl-legacy-provider
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 FROM base
 WORKDIR /app

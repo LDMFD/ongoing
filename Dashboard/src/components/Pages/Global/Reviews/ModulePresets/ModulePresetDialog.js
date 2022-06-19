@@ -10,7 +10,7 @@ import {
     Select,
     MenuItem,
 } from '@mui/material';
-import RichTextEditor from 'Components/Library/RichTextEditor';
+import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
 
 import { GoBack } from 'Utils/Routing';
 import { ModuleTypeSelectSpec } from 'State/ApiCommands/Global/Reviews/ModuleTypes';

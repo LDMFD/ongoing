@@ -9,38 +9,42 @@ import {
     DialogTitle,
     TextField,
 } from '@mui/material';
-import Day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 
 import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
-    Day.extend(utc);
-
     let history = useHistory();
     let goBack = GoBack(history);
 
     const handlers = {
-        SetName:         (event) => { setFund({ ...fund, Name:      event.target.value, }); },
-        EditOcfFee:      (event) => { setFund({ ...fund, OcfFee:    parseFloat(event.target.value) }); },
-        EditExAnteFee:   (event) => { setFund({ ...fund, ExAnteFee: parseFloat(event.target.value) }); },
+        SetName: (event) => {
+            setFund({
+                ...fund,
+                Name: event.target.value,
+            });
+        },
+        EditOcfFee: (event) => {
+            setFund({
+                ...fund,
+                OcfFee: parseFloat(event.target.value)
+            });
+        },
+        EditExAnteFee: (event) => {
+            setFund({
+                ...fund,
+                ExAnteFee: parseFloat(event.target.value)
+            });
+        },
         SetModified: (event) => {
-            let modified = Day(event.target.value);
-            if (modified.isValid()) {
-                setFund({
-                    ...fund,
-                    Modified: modified.format('YYYY-MM-DD'),
-                });
-            } else {
-                setFund({
-                    ...fund,
-                    Modified: '',
-                });
-            }
+            setFund({
+                ...fund,
+                Modified: event,
+            });
         },
     };
-    
+
     return (
         <Dialog open={true} onClose={goBack}>
             <form onSubmit={submitHandler}>
@@ -76,13 +80,11 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                type     = "number"
                                fullWidth />
 
-                    <TextField value    = {Day(fund.Modified).utc(false).format('YYYY-MM-DD')}
-                               onChange = {handlers.SetModified}
-                               margin   = "dense"
-                               id       = "modified"
-                               label    = "Last updated"
-                               type     = "date"
-                               fullWidth />
+                    <br />
+                    <br />
+                    <DateSelector label    = 'Modification date'
+                                  selected = {fund.Modified}
+                                  onChange = {handlers.SetModified} />
 
                     <FileUploader file         = {fund.File}
                                   stateUpdater = {setFund}

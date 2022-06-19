@@ -5,6 +5,7 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
+	Date "ongoing/Utils"
 	"strings"
 	"time"
 
@@ -55,7 +56,7 @@ func CreateForecast(c *gin.Context) {
 
 	var submitted time.Time
 	var err error
-	if submitted, err = time.Parse("2006-01-02", body.Submitted); err != nil {
+	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
 		return
 	}
