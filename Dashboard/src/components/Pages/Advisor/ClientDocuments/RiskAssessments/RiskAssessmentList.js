@@ -59,7 +59,12 @@ const RiskAssessmentList = () => {
         {
             accessor: 'desc',
             Header: 'Description',
-            width: 1,
+            width: 10,
+            Cell: ({ row }) => (
+                row.original.desc && (
+                    <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.desc }} />
+                )
+            ),
         },
         {
             accessor: 'completed',
@@ -69,7 +74,7 @@ const RiskAssessmentList = () => {
         {
             accessor: 'questionnaire',
             Header: 'Questionnaire',
-            width: 3,
+            width: 2,
             Cell: ({ row }) => row.original.questionnaire.Uid && (
                 <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
                     {row.original.questionnaire.Filename}
@@ -80,7 +85,7 @@ const RiskAssessmentList = () => {
         {
             accessor: 'actions',
             Header: '',
-            width: 0.5,
+            width: 1,
             Cell: ({ row }) => (
                 <>
                     <button onClick={editRiskAssessment(row.original.id)} className='ong-openFileIcon'>
