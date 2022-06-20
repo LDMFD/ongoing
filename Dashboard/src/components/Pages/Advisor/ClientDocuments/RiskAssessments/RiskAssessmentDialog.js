@@ -18,6 +18,8 @@ import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
+import './RiskAssessmentDialog.css';
+
 export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -46,7 +48,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
     };
     
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack} className='riskassessment-dialog'>
             <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Risk Assessment</DialogTitle>
                 <DialogContent>
@@ -71,6 +73,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                                 </MenuItem>
                             ))}
                         </Select>
+                        <br />
                     </FormControl>
 
                     <Select value    = {assessment.RiskLevelId}

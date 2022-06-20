@@ -13,6 +13,8 @@ import { Context } from 'State/StateProvider'
 import { Api } from 'State';
 import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
+import './EditDatesDialog.css';
+
 export const EditDatesDialog = () => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -54,11 +56,13 @@ export const EditDatesDialog = () => {
     };
 
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack} className='editdates-dialog'>
             <form onSubmit={okCallback}>
                 <DialogTitle>Edit dates</DialogTitle>
                 <DialogContent>
                     Enter new review start and end dates
+                    <br />
+                    <br />
                     <br />
                     <br />
 
@@ -67,9 +71,15 @@ export const EditDatesDialog = () => {
                                   onChange = {handlers.SetStartDate} />
                                   {/* </Box> */}
 
+                    <br />
+                    <br />
+
                     <DateSelector label='End date'
                                   selected = {draft.EndDate}
                                   onChange = {handlers.SetEndDate} />
+
+                    <br />
+                    <br />
 
                     <DialogActions>
                         <Button onClick={goBack}>Cancel</Button>

@@ -13,6 +13,8 @@ import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
+import './ForecastDialog.css';
+
 export const ForecastDialog = ({ forecast, setForecast, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -27,7 +29,7 @@ export const ForecastDialog = ({ forecast, setForecast, submitLabel, submitHandl
     };
 
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack} className='forecast-dialog'>
             <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Forecast</DialogTitle>
                 <DialogContent>

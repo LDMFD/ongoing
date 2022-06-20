@@ -12,6 +12,8 @@ import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
+import './FeesReportDialog.css';
+
 export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -26,7 +28,7 @@ export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submi
     };
 
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog open={true} onClose={goBack} className='feesreport-dialog'>
             <form onSubmit={submitHandler}>
                 <DialogTitle>{submitLabel} Fees Report</DialogTitle>
                 <DialogContent>

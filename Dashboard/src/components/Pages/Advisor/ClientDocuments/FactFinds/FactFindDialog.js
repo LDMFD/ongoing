@@ -12,6 +12,8 @@ import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
+import './FactFindDialog.css';
+
 export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandler }) => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -27,7 +29,7 @@ export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandl
 
     return (
         <Dialog open={true} onClose={goBack}>
-            <form onSubmit={submitHandler}>
+            <form onSubmit={submitHandler} className='factfind-dialog'>
                 <DialogTitle>{submitLabel} Fact Find</DialogTitle>
                 <DialogContent>
 
