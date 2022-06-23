@@ -10,7 +10,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 import { FromCanonical } from 'Utils/DateTime';
 
 const ModelList = () => {

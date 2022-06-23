@@ -3,7 +3,7 @@ package Commands
 import (
 	"net/http"
 	"ongoing/Entities"
-	Date "ongoing/Utils"
+	"ongoing/Utils/Date"
 	"time"
 
 	"github.com/uptrace/bun"

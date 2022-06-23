@@ -1,7 +1,7 @@
 package Entities
 
 import (
-	Date "ongoing/Utils"
+	"ongoing/Utils/Date"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -32,7 +32,7 @@ type ReportFactFind struct {
 
 func (a *FactFind) ToReport() ReportFactFind {
 	return ReportFactFind{
-		Id: a.Uid,
+		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
 		File: ReportFile{
 			Uid:      a.File.Uid,

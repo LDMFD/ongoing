@@ -15,7 +15,7 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { CurrencyFormatter } from 'Utils/Strings';
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const PolicyList = () => {
     let history = useHistory();

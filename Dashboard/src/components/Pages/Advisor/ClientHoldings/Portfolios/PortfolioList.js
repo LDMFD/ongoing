@@ -11,7 +11,7 @@ import {
 import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const PortfolioList = () => {
     let history = useHistory();

@@ -10,7 +10,7 @@ import {
 import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const ProviderDiscountList = () => {
     let history = useHistory();

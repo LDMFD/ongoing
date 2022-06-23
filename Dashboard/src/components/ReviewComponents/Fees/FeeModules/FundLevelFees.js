@@ -10,7 +10,7 @@ import { CurrencyFormatter } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const PolicyFunds = ({ report, policy, policyFunds }) => {
     const downloadFile = useCallback(fileUid => () => {

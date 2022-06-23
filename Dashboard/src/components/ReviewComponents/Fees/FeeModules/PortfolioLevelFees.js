@@ -10,7 +10,7 @@ import { CurrencyFormatter } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const PolicyPortfolios = ({ report, policy, portfolios }) => {
     const downloadFile = useCallback(fileUid => () => {

@@ -1,7 +1,7 @@
 package Entities
 
 import (
-	Date "ongoing/Utils"
+	"ongoing/Utils/Date"
 	"time"
 
 	"github.com/uptrace/bun"

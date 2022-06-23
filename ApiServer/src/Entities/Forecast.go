@@ -1,7 +1,7 @@
 package Entities
 
 import (
-	Date "ongoing/Utils"
+	"ongoing/Utils/Date"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -32,7 +32,7 @@ type ReportForecast struct {
 
 func (a *Forecast) ToReport() ReportForecast {
 	return ReportForecast{
-		Id: a.Uid,
+		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
 		File: ReportFile{
 			Uid:      a.File.Uid,

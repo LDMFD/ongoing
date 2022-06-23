@@ -6,7 +6,7 @@ import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetReport } from './GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import Table from '../Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 import './PolicyValuations.css';
 

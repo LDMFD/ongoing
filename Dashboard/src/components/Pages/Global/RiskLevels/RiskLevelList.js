@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { GoBack } from 'Utils/Routing';
 
 import { Context, Api } from 'State'
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const RiskLevelList = () => {
     let history = useHistory();

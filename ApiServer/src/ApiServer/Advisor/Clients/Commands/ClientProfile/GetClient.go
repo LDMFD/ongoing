@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
 	"ongoing/Entities"
-	Date "ongoing/Utils"
+	"ongoing/Utils/Date"
 
 	"github.com/gin-gonic/gin"
 )

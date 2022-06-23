@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
-import Table from 'Components/Library/Table';
+import Table from 'Components/Library/Table/Table';
 
 const PolicyProviderList = () => {
     let history = useHistory();

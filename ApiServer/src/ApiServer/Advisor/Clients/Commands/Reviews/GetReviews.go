@@ -7,7 +7,7 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
-	Date "ongoing/Utils"
+	"ongoing/Utils/Date"
 )
 
 func GetReviews(c *gin.Context, client *Entities.Client) []Entities.ReportReview {
