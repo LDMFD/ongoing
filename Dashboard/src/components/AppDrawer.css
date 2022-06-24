@@ -6,3 +6,10 @@
     text-decoration: none;
     color: inherit;
 }
+
+.request-spinner {
+    position: absolute;
+    top: 12px;
+    left: 1rem;
+    z-index: 10001;
+}

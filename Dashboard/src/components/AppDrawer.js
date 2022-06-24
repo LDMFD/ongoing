@@ -13,6 +13,7 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import './AppDrawer.css';
 
@@ -147,6 +148,10 @@ export default function PermanentDrawerLeft() {
                     <Routes />
                 </InitialState>
             </Box>
+
+            <div className='request-spinner'>
+                <CircularProgress />
+            </div>
         </Box>
     );
 }

@@ -61,10 +61,39 @@ window.ApiClient = axios.create({
     // withCredentials: true,
 });
 
-// TODO check https://stackoverflow.com/a/59693754
-window.ApiClient.interceptors.response.use((response) => response, (err) => {
-    console.log(`error: ${err}`);
+let ConcurrentRequestCount = 0;
 
+function ShowSpinner() {
+    if (++ConcurrentRequestCount > 0) {
+        document.querySelectorAll('.request-spinner')?.forEach(element => {
+            element.style.display = 'block';
+        });
+    }
+}
+
+function HideSpinner() {
+    if (--ConcurrentRequestCount <= 0) {
+        document.querySelectorAll('.request-spinner')?.forEach(element => {
+            element.style.display = 'none';
+        });
+    }
+}
+
+window.ApiClient.interceptors.request.use((response) => {
+    ShowSpinner();
+    return response;
+}, (err) => {
+    HideSpinner();
+    return Promise.reject(err);
+});
+
+// TODO check https://stackoverflow.com/a/59693754
+window.ApiClient.interceptors.response.use((response) => {
+    HideSpinner();
+    return response;
+}, (err) => {
+    HideSpinner();
+    console.log(`error: ${err}`);
     const str = err.toString();
 
     if (err?.response?.status === 403) {
@@ -81,10 +110,11 @@ window.ApiClient.interceptors.response.use((response) => response, (err) => {
         alert(responseError.error);
     } else {
         alert(str);
+        console.log(`response error: ${str}`);
     }
 
     throw err;  // prevent goBack() on error
-});    
+});
 
 function App() {
     return (
