@@ -806,6 +806,10 @@ namespace Entities.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("policy_provider_id");
 
+                    b.Property<int>("Sequence")
+                        .HasColumnType("integer")
+                        .HasColumnName("sequence");
+
                     b.Property<DateTime?>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")

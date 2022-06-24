@@ -7,6 +7,8 @@ import (
 )
 
 func AddRoutes(r *gin.RouterGroup) {
+	r.POST("/:ProviderId/sequence", Commands.ReorderProviderCharges)
+
 	r.POST("", Commands.CreateProviderCharge)
 	r.PUT("/:ProviderChargeId", Commands.UpdateProviderCharge)
 	r.DELETE("/:ProviderChargeId", Commands.DeleteProviderCharge)

@@ -14,6 +14,7 @@ import { GoBack } from 'Utils/Routing';
 
 import { Context, Api } from 'State'
 import Table from 'Components/Library/Table/Table';
+import { PROVIDER_CHARGE_REORDER } from 'State/Reducer';
 
 const ProviderChargeList = () => {
     let history = useHistory();
@@ -62,11 +63,28 @@ const ProviderChargeList = () => {
     let providerCharges = state.Entities.ProviderCharges
         .filter(pc => pc.ProviderId === policyProviderId)
         .map(m => ({
-                id:                m.Id,
-                desc:              m.Desc,
-                charge:            m.Charge,
+                id:     m.Id,
+                desc:   m.Desc,
+                charge: m.Charge,
+                seq:    m.Sequence,
             })
-        );
+        ).sort((a, b) => (
+            a.seq > b.seq ? 1 : ((a.seq < b.seq) ? -1 : 0)
+        ));
+
+    let reorderCallback = async (from, to) => {
+        dispatch({
+            type: PROVIDER_CHARGE_REORDER,
+            payload: {
+                providerId: policyProviderId,
+                from,
+                to,
+            },
+        });
+
+        await Api.Global.ProviderCharges.Reorder(policyProviderId, from, to);
+        await Api.Global.Entities.Read(dispatch);
+    };
 
     return (
         <Dialog open={true} onClose={goBack}>
@@ -79,7 +97,9 @@ const ProviderChargeList = () => {
                         <Link to={{ pathname: `/policy-providers/id/${policyProviderId}/provider-charges/add` }}><Button>Add new charge</Button></Link>
                     </Toolbar>
 
-                    <Table columns={columns} data={providerCharges} />
+                    <Table columns   = {columns}
+                           data      = {providerCharges}
+                           reorderFn = {reorderCallback} />
 
                 </DialogContent>
                 <DialogActions>

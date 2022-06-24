@@ -26,6 +26,9 @@ namespace Entities.Entities
         [Column("charge")]
         public decimal Charge { get; set; }
         
+        [Column("sequence")]
+        public int Sequence { get; set; }
+        
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime? Timestamp { get; set; }
 
