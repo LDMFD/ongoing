@@ -21,8 +21,7 @@ import Routes from './Routes';
 import AuthControl from './AuthControl';
 import { Context } from 'State/StateProvider';
 import InitialState from "State/InitialState";
-
-const drawerWidth = 240;
+import { FromCanonical } from 'Utils/DateTime';
 
 const advisorItems = [
     {
@@ -71,19 +70,10 @@ const Items = {
     ]),
     'client': [
         {
-            label: 'Your Reviews',
+            label: 'All reviews',
             link: '/client-space/reviews',
         },
     ],
-};
-
-const DrawerStyles = {
-    width: drawerWidth,
-    flexShrink: 0,
-    '& .MuiDrawer-paper': {
-        width: drawerWidth,
-        boxSizing: 'border-box',
-    },
 };
 
 export default function PermanentDrawerLeft() {
@@ -100,7 +90,34 @@ export default function PermanentDrawerLeft() {
         );
     }
     
+    let regex = /reviews\/(?<reviewId>[0-9a-f]{32})\/(?<tail>.*)/;
+    let res = location.pathname.match(regex);
+
     let items = Items[state.Auth.UserType];
+
+    if (state.Auth.UserType === 'client') {
+        items = items.concat(state.Reviews?.map(review => {
+            let to = FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB');
+            let tail = res?.groups?.tail || 'modules/introduction';
+            return {
+                label: `Review period ending ${to}`,
+                link: `/client-space/reviews/${review.Id}/${tail}`,
+                date: review.Meta.EndDate,
+            };
+        }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0)));
+    }
+
+    const drawerWidth = state.Auth.UserType === 'client' ? 360 : 240;
+
+    const drawerStyles = {
+        width: drawerWidth,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+        },
+    };
+    
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -109,29 +126,31 @@ export default function PermanentDrawerLeft() {
                     sx       = {{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        {state.Auth.UserType === 'client' ? 'Your Growth Report' : 'Ongoing Backend'}
+                        {state.Auth.UserType === 'client'
+                            ? 'Amplifa Client Portal'
+                            : 'Amplifa Advisor Portal'}
                     </Typography>
                     
                     <AuthControl />
                 </Toolbar>
             </AppBar>
 
-            <Drawer sx      = {DrawerStyles}
+            <Drawer sx      = {drawerStyles}
                     variant = "permanent"
                     anchor  = "left">
                 <Toolbar />
                 <Divider />
                 
                 <List>
-                    {items.map((iconSpec, index) => (
-                        <Link to={iconSpec.link} key={iconSpec.label}>
-                            <ListItemButton selected={location.pathname.startsWith(iconSpec.link)}>
+                    {items.map(item => item && (
+                        <Link to={item.link} key={item.label}>
+                            <ListItemButton selected={location.pathname.startsWith(item.link)}>
                                 <ListItemIcon>
-                                    {iconSpec.icon}
+                                    {item.icon}
                                 </ListItemIcon>
 
                                 <ListItemText primary={
-                                    iconSpec.label
+                                    item.label
                                 } />
                             </ListItemButton>
                         </Link>
