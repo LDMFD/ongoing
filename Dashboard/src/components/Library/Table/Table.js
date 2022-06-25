@@ -25,7 +25,7 @@ function OgTable({ columns, data, reorderFn }) {
         prepareRow,
     } = useTable({ columns, data }, useFlexLayout);
 
-    const onDrop = ({ from, to }) => {
+    const onDrop = ({ removedIndex: from, addedIndex: to }) => {
         reorderFn(from, to);
     };
 
