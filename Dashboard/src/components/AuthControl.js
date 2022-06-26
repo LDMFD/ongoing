@@ -36,7 +36,7 @@ function AuthControl() {
         window.location = '/';
     }, [ dispatch ]);
 
-    const loginFn = useCallback((token, email, name, photoURL) => {
+    const loginFn = useCallback((token, user) => { //email, name, photoURL) => {
         window.ApiClient.defaults.headers.common['Authentication'] = token;
 
         window.ApiClient.get(`/common/user`, {
@@ -47,9 +47,7 @@ function AuthControl() {
                 payload: {
                     Auth: {
                         token,
-                        email,
-                        name,
-                        photoURL,
+                        user,
                         UserType: res.data.UserType,
                     }
                 },
@@ -69,9 +67,11 @@ function AuthControl() {
     // Fire a request to see if the session has expired (will trigger the auth-refresh pane)
     window.onfocus = () => {
         if (state.Auth && state.Auth.UserType !== 'anonymous') {
-            window.ApiClient.get(`/common/user`, {
-                baseURL: window.Config.ApiHost,
-            })
+            state.Auth.user.getIdToken(true).then((idToken) => {
+                loginFn(idToken, state.Auth.user);
+            }).catch(function (error) {
+                console.log('error', error);
+            });
         }
     };    
 
@@ -83,11 +83,11 @@ function AuthControl() {
             {state.Auth &&
                 <>
                     <Button onClick={_logout} variant="h6">
-                        Log out {state.Auth.email}
+                        Log out {state.Auth.user.email}
                     </Button>
 
-                    <Avatar src     = {state.Auth.photoURL}
-                            alt     = {state.Auth.name}
+                    <Avatar src     = {state.Auth.user.photoURL}
+                            alt     = {state.Auth.user.name}
                             style   = {{ display: 'inline-block', verticalAlign: 'bottom' }} />
                 </>
             }

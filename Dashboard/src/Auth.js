@@ -20,7 +20,7 @@ export function ShowLogin(callback) {
         if (user) {
             user.getIdToken(/* forceRefresh */ true).then((idToken) => {
                 // Call loginFn in AuthControl.js
-                callback(idToken, user.email, user.displayName, user.photoURL);
+                callback(idToken, user);
             }).catch(function (error) {
                 console.log('error', error);
             });

@@ -80,6 +80,7 @@ function HideSpinner() {
 }
 
 window.ApiClient.interceptors.request.use((response) => {
+    // TODO consider refreshing auth token here
     ShowSpinner();
     return response;
 }, (err) => {
