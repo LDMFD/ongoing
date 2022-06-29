@@ -46,8 +46,7 @@ function AuthControl() {
                 type: 'LOGIN',
                 payload: {
                     Auth: {
-                        token,
-                        user,
+                        user,  // Duplicated by window.user from Auth.js ShowLogin() -> onIdTokenChanged()
                         UserType: res.data.UserType,
                     }
                 },

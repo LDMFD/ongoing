@@ -19,6 +19,9 @@ export function ShowLogin(callback) {
     firebase.auth().onIdTokenChanged((user) => {
         if (user) {
             user.getIdToken(/* forceRefresh */ true).then((idToken) => {
+
+                window.user = user;  // Duplicated by state.Auth.user from AuthControl.js AuthControl -> loginFn()
+    
                 // Call loginFn in AuthControl.js
                 callback(idToken, user);
             }).catch(function (error) {
@@ -29,10 +32,13 @@ export function ShowLogin(callback) {
 }
 
 export function Logout() {
+    window.user = null;
+
     if (OFFLINE_AUTH) {
         localStorage.clear();
         return;
     }
+
     firebase.auth().signOut();
 }
 

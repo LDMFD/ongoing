@@ -79,10 +79,16 @@ function HideSpinner() {
     }
 }
 
-window.ApiClient.interceptors.request.use((response) => {
-    // TODO consider refreshing auth token here
+window.ApiClient.interceptors.request.use((config) => {
     ShowSpinner();
-    return response;
+
+    window.user?.getIdToken(false).then((idToken) => {
+        window.ApiClient.defaults.headers.common['Authentication'] = idToken;
+    }).catch(function (error) {
+        console.log('error', error);
+    });
+
+    return config;
 }, (err) => {
     HideSpinner();
     return Promise.reject(err);
