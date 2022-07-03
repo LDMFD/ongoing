@@ -31,8 +31,11 @@ const ModulePresetList = () => {
         },
         {
             accessor: 'text',
-            Header: 'Intro paragraph',
+            Header: 'Module Preset',
             width: 5,
+            Cell: ({ row }) => (
+                <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.text }} />
+            )
         },
         {
             accessor: 'actions',

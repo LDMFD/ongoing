@@ -1,5 +1,5 @@
-import React from 'react'
-import { useTable, useFlexLayout } from 'react-table'
+import React, { Fragment } from 'react'
+import { useTable, useFlexLayout, useExpanded } from 'react-table'
 import { Container, Draggable } from "react-smooth-dnd";
 
 import {
@@ -13,7 +13,7 @@ import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 import './Table.css';
 
-function OgTable({ columns, data, reorderFn }) {
+function OgTable({ columns, data, reorderFn, renderRowSubComponent }) {
     columns = React.useMemo(() => columns, [columns]);
     data = React.useMemo(() => data, [data]);
 
@@ -23,7 +23,16 @@ function OgTable({ columns, data, reorderFn }) {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data }, useFlexLayout);
+        visibleColumns,
+        // state: { expanded },
+    } = useTable(
+        {
+            columns,
+            data
+        },
+        useFlexLayout,
+        useExpanded
+    );
 
     const onDrop = ({ removedIndex: from, addedIndex: to }) => {
         reorderFn(from, to);
@@ -50,20 +59,29 @@ function OgTable({ columns, data, reorderFn }) {
                         {rows.map((row, i) => {
                             prepareRow(row)
                             return (
-                                <Draggable key={id++}>
-                                    <TableRow {...row.getRowProps()}>
-                                        {reorderFn &&
-                                            <div className='drag-handle'>
-                                                <DragHandleIcon />
-                                            </div>
+                                <Fragment key={row.getRowProps().key}>
+                                    <Draggable key={id++}>
+                                        <TableRow {...row.getRowProps()}>
+                                            {reorderFn &&
+                                                <div className='drag-handle'>
+                                                    <DragHandleIcon />
+                                                </div>
+                                            }
+                                            {row.cells.map(cell => (
+                                                <TableCell {...cell.getCellProps()}>
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                        {row.isExpanded &&
+                                            <TableRow>
+                                                <TableCell colSpan={visibleColumns.length}>
+                                                    {renderRowSubComponent(row)}
+                                                </TableCell>
+                                            </TableRow>
                                         }
-                                        {row.cells.map(cell => (
-                                            <TableCell {...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </Draggable>
+                                    </Draggable>
+                                </Fragment>
                             )
                         })}
                     </Container>
