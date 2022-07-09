@@ -95,7 +95,7 @@ export const ModuleEditor = () => {
                 <DialogActions>
                     <Button onClick={checkGoBack}>Cancel</Button>
                     <Button disabled={deleteDisabled} variant='outlined' onClick={onDelete}>{deleteLabel}</Button>
-                    <Button type='submit' variant='contained' onClick={onSubmit}>Update</Button>
+                    <Button type='submit' variant='contained'>Update</Button>
                 </DialogActions>
             </form>
         </Dialog>

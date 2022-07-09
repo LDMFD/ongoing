@@ -43,7 +43,7 @@ export const EditReviewStateDialog = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' onClick={submitHandler}>Publish</Button>
+                    <Button type='submit'>Publish</Button>
                 </DialogActions>
             </form>
         </Dialog>

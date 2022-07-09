@@ -115,7 +115,7 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' onClick={submitHandler}>{submitLabel}</Button>
+                    <Button type='submit'>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

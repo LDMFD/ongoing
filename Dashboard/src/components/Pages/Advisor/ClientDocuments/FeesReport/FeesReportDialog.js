@@ -44,7 +44,7 @@ export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submi
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' onClick={submitHandler}>{submitLabel}</Button>
+                    <Button type='submit'>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>
