@@ -31,16 +31,15 @@ type Client struct {
 }
 
 type ReportClientIdentity struct {
-	Email       string
-	Forenames  	string
-	Surname    	string
+	Email     string
+	Forenames string
+	Surname   string
 }
 
 type ClientReport struct {
-	Id 			string
-	Identity    ReportClientIdentity
-	Fee         float64  // TODO refactor?
-	Reviews     []ReportReview
+	Id       string
+	Identity ReportClientIdentity
+	Fee      float64 // TODO refactor?
 }
 
 func (c *Client) ToReport() ClientReport {
