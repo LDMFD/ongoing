@@ -1,0 +1,8 @@
+- [Artifacts](https://console.cloud.google.com/artifacts?project=ongoing-staging)
+- [Cloud Run](https://console.cloud.google.com/run?project=ongoing-staging)
+- [Cloud SQL](https://console.cloud.google.com/sql/instances?project=ongoing-staging)
+- [IAM](https://console.cloud.google.com/iam-admin/cloudidentity/consumer?project=ongoing-staging)
+- [Secret Manager](https://console.cloud.google.com/security/secret-manager?project=ongoing-staging)
+- [OAuth Consent](https://console.cloud.google.com/apis/credentials/consent?project=ongoing-staging)
+- [Identity Providers](https://console.cloud.google.com/customer-identity/providers?project=ongoing-staging)
+- [Firebase](https://console.firebase.google.com/u/0/project/ongoing-staging/overview)

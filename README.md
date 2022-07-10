@@ -11,37 +11,80 @@ Install Dotnet and Entity Framework:
 
     dotnet tool install --global dotnet-ef
 
-Add the following domains to /etc/hosts:
+Add the following section to /etc/hosts:
 
-- ongoing-db
-- ongoing-api
-- localhost.<your domain>
+    127.0.0.1 ongoing-db
+    127.0.0.1 ongoing-api
+    127.0.0.1 localhost.example.com
 
 Choose environment:
 
-    make work-on-{test|staging}
+    make work-on-{staging|prod}
 
 # Cloud setup
+
+- Create a GCP project
+- Link a billing account
+
+## SendGrid setup
+
+- Email API -> Integration Guide -> SMTP Relay
+    - Copy the values for Firebase setup later.
+- Settings
+    - API keys - https://app.sendgrid.com/settings/api_keys
+        - This is used as SMTP password in Firebase.
+        - Restricted access; permissions:
+            - Mail Send
+    - Sender Authentication
+        - Set up DNS
+
+Permissions:
+
 ## Firebase setup
 
 Visit https://console.firebase.google.com
 
 Create Firebase project.
 
-- Auth
-    - Enable Google and Email auth. One account per email address.
-    - Add authorized domains;
-        - <your domain> e.g. example.com
-        - localhost.<your domain>
-    - Enable SMTP with SendGrid credentials.
-    - Jump to IAM principals - find Firebase user, put in `Constants.mk` `FIREBASE_SA_ID_${ENV}`
-- Add a web app, copy the firebaseConfig object, from the { to the }
-- Retrieve from https://console.cloud.google.com/apis/credentials :
-    - OAuth 2.0 Client IDs - Web client (auto created by Google Service)
-    - Run `make firebase-set-client-id` and paste it in.
-- Retrieve the `firebaseConfig` json object from the Firebase console project settings page,
-  then run `firebase-set-client-key` and paste it in.
-- Connect custom domain
+- From project landing page, add a web app
+- Go to https://console.cloud.google.com/apis/credentials :
+    - Find "OAuth 2.0 Client IDs - Web client (auto created by Google Service)"
+        - Copy the Client ID for later as the secret value for `firebase-client-id`.
+- Project settings
+    - General
+        - Environment type: unspecified / prod
+        - Set default resource location: europe-west2 for UK
+        - Public settings: set name
+        - Copy `firebaseConfig` (including the braces; `{...}`) to use later as the secret value for `firebase-client-key`.
+    - Integrations
+        - Google Analytics TODO
+    - Service accounts
+        - Firebase admin SDK
+            - Copy Firebase service account to `Constants.mk` `FIREBASE_SA_ID_${ENV}`
+- Authentication
+    - Create account
+    - Sign-in method
+        - Sign-in providers, enable:
+            - Email
+                - Passwordless link
+                - One account per email address.
+            - Google
+    - Authorized domains; add:
+        - `example.com`
+        - `localhost.example.com`
+    - Templates:
+        - Email address verification
+        - SMTP with SendGrid credentials (see https://app.sendgrid.com/guide/integrate/langs/smtp)
+            - Sender address: noreply@example.com
+            - Host: smtp.sendgrid.net
+            - Port: 465
+            - Username: apikey
+            - Password: ...
+            - Security: SSL
+- Hosting
+    - Map custom domain
+        - Add TXT and A records as instructed
+    - Add www and redirect
 
 ## GCP setup
 
@@ -51,14 +94,13 @@ Create Firebase project.
     # Run this, then enter db password twice when prompted
     make gcp-setup
 
-## SendGrid setup
-
-Generate API key; this is used as SMTP password.
-
 Then:
 
-    make gcp-setup
-    make firebase-set-client-key
+- Enable Google Identity Platform and add custom authorized domain;
+    https://console.cloud.google.com/apis/credentials/consent/edit?project=ongoing-prod
+- In APIs & Services -> Credentials https://console.cloud.google.com/apis/credentials?project=ongoing-prod
+    - Edit `OAuth 2.0 Client IDs` -> `Web client (auto created by Google Service)`
+    - Add `Authorized redirect URIs` -> `https://example.com/__/auth/handler`
 
 # Local dev
 

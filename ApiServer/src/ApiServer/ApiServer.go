@@ -10,6 +10,7 @@ import (
 	cors "github.com/rs/cors/wrapper/gin"
 	"github.com/uptrace/bun"
 )
+
 // TODO https://github.com/gin-gonic/gin#support-lets-encrypt
 
 type ApiServer struct {
@@ -43,12 +44,13 @@ func (s *ApiServer) ListenAndServe() error {
 	r.SetTrustedProxies(nil)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:     []string{
+		AllowedOrigins: []string{
+			"https://amplifa.co.uk",
 			"https://ongoing.tp1.org",
 			"http://localhost.ongoing.tp1.org:3000",
 		},
-		AllowedMethods:     []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
-		AllowedHeaders:     []string{"Authentication", "Content-Type"},
+		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
+		AllowedHeaders: []string{"Authentication", "Content-Type"},
 
 		AllowCredentials:   true,
 		OptionsPassthrough: false,

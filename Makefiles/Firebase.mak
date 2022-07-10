@@ -30,6 +30,10 @@ _firebase-set-client-key:
 	SECRET=firebase-client-key \
 		Makefiles/Helpers/firebase-input-key.sh
 
+firebase-update-client-key: import-env
+	gcloud secrets versions add firebase-client-key --data-file=${HOME}/.ongoing/envs/${ENV}/secrets/firebase/client-key.json
+
+
 # ---
 
 _gcp-firebase-teardown: import-env
@@ -51,6 +55,6 @@ firebase-enable-logging: import-env
 
 # ---
 
-firebase-deploy:
+firebase-deploy: import-env
 	cd Config/Firebase && \
-	firebase deploy --only hosting --project ongoing-staging
+	firebase deploy --only hosting --project ongoing-${ENV}

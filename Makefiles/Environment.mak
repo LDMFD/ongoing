@@ -7,11 +7,11 @@ gcp-login:
 gcp-configure-docker:
 	gcloud auth configure-docker
 
-# Depend on this target to set the Make variable ENV to the contents of ~/.ongoing-env (test/staging/prd)
+# Depend on this target to set the Make variable ENV to the contents of ~/.ongoing-env (test/staging/prod)
 # Exits with code 1 if the file is not found
 import-env:
 	$(eval ENV := $(shell cat ~/.ongoing/env.txt))
-	@test -n "$(ENV)" || (echo "Error: Run 'make work-on-{test|staging}' first" ; exit 1)
+	@test -n "$(ENV)" || (echo "Error: Run 'make work-on-{staging|prod}' first" ; exit 1)
 
 # Shows the current environment
 show-env: import-env
@@ -28,7 +28,22 @@ _work-on:
 
 # Entrypoints
 # Switch to respective GCP Project ("environments")
-work-on-test:
-	@make _work-on ENV=test PROJECT=${GCP_PROJECT_test}
 work-on-staging:
 	@make _work-on ENV=staging  PROJECT=${GCP_PROJECT_staging}
+work-on-prod:
+	@make _work-on ENV=prod PROJECT=${GCP_PROJECT_prod}
+
+docker-clean-hard:
+	docker stop $(docker ps -aq)
+	docker rm -f $(docker ps -aq)
+	docker rmi -f $(docker images -q)
+	docker volume rm -f $(docker volume ls -q)
+	docker network rm ongoing_default
+
+docker-clean:
+	docker rmi -f europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing_dashboard-server
+	docker rmi -f europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing-api
+	docker rmi -f ongoing_dashboard
+	docker rmi -f ongoing_dashboard-server
+	docker rmi -f ongoing_react-dashboard-builder
+	docker rmi -f ongoing-api

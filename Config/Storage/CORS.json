@@ -8,7 +8,8 @@
     "origin": [
       "http://localhost.ongoing.tp1.org:3000",
       "https://staging.ongoing.tp1.org",
-      "https://ongoing.tp1.org"
+      "https://ongoing.tp1.org",
+      "https://amplifa.co.uk"
     ],
     "responseHeader": [
       "Cache-Control",

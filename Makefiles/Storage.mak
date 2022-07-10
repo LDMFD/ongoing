@@ -10,7 +10,7 @@ _gcp-storage-create-service-account:
 	gcloud iam service-accounts create storage
 
 _gcp-storage-create-bucket: import-env
-	gsutil mb -l ${REGION_${ENV}} gs://ongoing-${ENV}-docs
+	gsutil mb -l ${REGION} gs://ongoing-${ENV}-docs
 
 _gcp-storage-create-principle: import-env
 	gsutil iam ch \
@@ -22,14 +22,14 @@ _gcp-storage-set-cors: import-env
 
 # Commands from ApiServer/pkg/mod/cloud.google.com/go/storage@v1.18.2/storage.go
 _gcp-storage-create-key: import-env
-	gcloud iam service-accounts keys create ~/.ongoing/secrets/storage.p12 \
+	gcloud iam service-accounts keys create ~/.ongoing/envs/${ENV}/secrets/storage.p12 \
 		--key-file-type=p12 \
 		--iam-account=storage@ongoing-${ENV}.iam.gserviceaccount.com	
-	openssl pkcs12 -in ~/.ongoing/secrets/storage.p12 -passin pass:notasecret -out ~/.ongoing/secrets/storage.pem -nodes
-	rm ~/.ongoing/secrets/storage.p12
+	openssl pkcs12 -in ~/.ongoing/envs/${ENV}/secrets/storage.p12 -passin pass:notasecret -out ~/.ongoing/envs/${ENV}/secrets/storage/credential.pem -nodes
+	rm ~/.ongoing/envs/${ENV}/secrets/storage.p12
 
 _gcp-storage-create-secret: import-env
-	gcloud secrets create storage-credential --replication-policy=automatic --data-file=${HOME}/.ongoing/secrets/storage.pem
+	gcloud secrets create storage-credential --replication-policy=automatic --data-file=${HOME}/.ongoing/secrets/storage/credential.pem
 
 # ---
 
@@ -43,4 +43,4 @@ _gcp-storage-teardown: import-env
 	gcloud iam service-accounts delete storage@ongoing-${ENV}.iam.gserviceaccount.com
 	gsutil rm -r gs://ongoing-${ENV}-docs
 	gcloud secrets delete storage-credential
-	rm ~/.ongoing/secrets/storage.pem
+	rm ~/.ongoing/envs/${ENV}/secrets/storage/credential.pem

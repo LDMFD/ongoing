@@ -2,7 +2,7 @@ gcp-setup:
 	#make _gcp-enable-services
 	#make _gcp-create-service-accounts
 	#make _gcp-sql-setup
-	#make _gcp-storage-setup
+	make _gcp-storage-setup
 	make _gcp-firebase-setup
 
 _gcp-enable-services:

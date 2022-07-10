@@ -19,4 +19,4 @@ services:
       - "8080:8080"
     volumes:
       - ./DashboardServer/build:/app/build
-      - ~/.ongoing/secrets/firebase-client-key.json:/app/Config/Firebase/key.json
+      - ~/.ongoing/envs/staging/secrets/firebase/client-key.json:/app/Config/Firebase/key.json
