@@ -9,7 +9,7 @@
 
 .request-spinner {
     position: absolute;
-    top: 12px;
+    bottom: 12px;
     left: 1rem;
     z-index: 10001;
 }
