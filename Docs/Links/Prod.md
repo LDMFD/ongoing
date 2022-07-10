@@ -1,4 +1,3 @@
-- [Artifacts](https://console.cloud.google.com/artifacts?project=ongoing-prod)
 - [Cloud Run](https://console.cloud.google.com/run?project=ongoing-prod)
 - [Cloud SQL](https://console.cloud.google.com/sql/instances?project=ongoing-prod)
 - [IAM](https://console.cloud.google.com/iam-admin/cloudidentity/consumer?project=ongoing-prod)

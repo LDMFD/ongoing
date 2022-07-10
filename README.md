@@ -161,7 +161,7 @@ Open a browser at http://localhost:8080/
 
 The API server has its own Makefile in ApiServer/Makefile
 
-# Routine deployment
+# Dev build deployment to Staging
 
     make up-<service> to build, push and deploy image
 
@@ -169,3 +169,12 @@ The API server has its own Makefile in ApiServer/Makefile
     make up-api
 
     Dashboard logs: https://console.cloud.google.com/run/detail/europe-west2/ongoing-dashboard/logs?project=ongoing-staging
+
+# Version the current build (tags and pushes Git and Docker tags)
+
+make release-{api|dashboard} VERSION=1.0.1
+
+# Deployment to Prod
+
+make work-on-prod
+make deploy-{api|dashboard} VERSION=1.0.1

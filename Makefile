@@ -12,6 +12,7 @@ include Makefiles/Firebase.mak
 include Makefiles/GCP.mak
 include Makefiles/Healthchecks.mak
 include Makefiles/Node.mak
+include Makefiles/Releasing.mak
 include Makefiles/Secrets.mak
 include Makefiles/Storage.mak
 
