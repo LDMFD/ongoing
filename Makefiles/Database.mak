@@ -42,7 +42,7 @@ gcp-sql-cycle-password: import-env
 	echo -n unix://postgres:${PASSWORD}@/cloudsql/${GCP_PROJECT_${ENV}}:${REGION}:${DB_INSTANCE_${ENV}}/.s.PGSQL.5432?sslmode=disable \
 		> ~/.ongoing/envs/${ENV}/secrets/cloud-sql/db-connection-unix
 
-	echo -n Host=localhost\;Port=5432\;Database=postgres\;Username=postgres\;Password=${PASSWORD} \
+	echo -n Host=localhost\;Port=5432\;Database=ongoing-${ENV}\;Username=postgres\;Password=${PASSWORD} \
 		> ~/.ongoing/envs/${ENV}/secrets/cloud-sql/db-connection-dotnet
 
 	gcloud secrets versions add database-connection --data-file=${HOME}/.ongoing/envs/${ENV}/secrets/cloud-sql/db-connection-unix
@@ -102,7 +102,7 @@ db-migrate-remote:
 		-v `pwd`/Migrations:/app/migrations \
 		postgres:${POSTGRES_VERSION_NUMERIC} \
 			psql --host=db-proxy \
-				 --dbname=postgres \
+				 --dbname=ongoing-${ENV} \
 				 --username=postgres \
 				 --password \
 				 --file=/app/migrations/${MIGRATION}.sql
@@ -126,7 +126,7 @@ db-restore-remote: import-env
 		--platform linux/amd64 \
         ${LOCAL_POSTGRES_IMAGE} \
             /bin/bash \
-            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy < /dump.sql"
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /dump.sql"
 
 # In these, change --data-only to --schema-only to control output.
 db-dump-local:
@@ -150,7 +150,7 @@ db-dump-remote: import-env
 	    --network ongoing_default \
 		${LOCAL_POSTGRES_IMAGE} \
 		/bin/bash \
-		-c "PGPASSWORD=${PASSWORD} pg_dump -h db-proxy --username postgres --data-only --no-acl" \
+		-c "PGPASSWORD=${PASSWORD} pg_dump -d ongoing-${ENV} -h db-proxy --username postgres --data-only --no-acl" \
 		> ~/.ongoing/envs/${ENV}/dumps/dump.sql
 
 db-up:
@@ -177,7 +177,7 @@ db-proxy: import-env
 
 # ---
 
-db-scaffold:
+db-scaffold-local:
 	cd Entities && \
 		dotnet ef dbcontext scaffold \
 			--data-annotations \
@@ -197,3 +197,12 @@ db-reset:
 db-update:
 	cd Entities && \
 		dotnet ef database update
+
+db-create-remote: import-env
+	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
+	docker run -i \
+	    --network ongoing_default \
+		--platform linux/amd64 \
+        ${LOCAL_POSTGRES_IMAGE} \
+            /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"ongoing-${ENV}\";'"

@@ -14,6 +14,7 @@ _deploy-api: import-env
 		--update-env-vars=STORAGE_SA=storage@ongoing-${ENV}.iam.gserviceaccount.com \
 		--update-env-vars=STORAGE_BUCKET=ongoing-${ENV}-docs \
 		--update-env-vars=STORAGE_CREDENTIAL=/app/Config/Storage/Storage.pem \
+		--update-env-vars=POSTGRES_DB=ongoing-${ENV} \
 		--update-secrets=POSTGRES_DSN=database-connection:${SECRET_DATABASE_CONNECTION_${ENV}} \
 		--update-secrets=/app/Config/Storage/Storage.pem=storage-credential:${SECRET_STORAGE_CREDENTIAL_${ENV}} \
 		--update-secrets=/app/Config/Firebase/config.json=firebase-sa-key:${SECRET_FIREBASE_SA_KEY_${ENV}}

@@ -14,7 +14,9 @@ var DB *bun.DB
 
 func New() (*bun.DB, error) {
 	dsn := os.Getenv("POSTGRES_DSN")
-	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
+	dbname := os.Getenv("POSTGRES_DB")
+	connector := pgdriver.NewConnector(pgdriver.WithDSN(dsn), pgdriver.WithDatabase(dbname))
+	sqldb := sql.OpenDB(connector)
 	DB := bun.NewDB(sqldb, pgdialect.New())
 	DB.AddQueryHook(bundebug.NewQueryHook())
 	//DB.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
