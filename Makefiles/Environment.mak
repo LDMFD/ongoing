@@ -34,11 +34,7 @@ work-on-prod:
 	@make _work-on ENV=prod PROJECT=${GCP_PROJECT_prod}
 
 docker-clean-hard:
-	docker stop $(docker ps -aq)
-	docker rm -f $(docker ps -aq)
-	docker rmi -f $(docker images -q)
-	docker volume rm -f $(docker volume ls -q)
-	docker network rm ongoing_default
+	Makefiles/Helpers/docker-clean.sh
 
 docker-clean:
 	docker rmi -f europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing_dashboard-server
