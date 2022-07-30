@@ -3,5 +3,5 @@ healthcheck-local:
 	@echo
 
 healthcheck-remote:
-	curl https://amplifa.co.uk/api/healthcheck
+	curl https://portal.amplifa.co.uk/api/healthcheck
 	@echo

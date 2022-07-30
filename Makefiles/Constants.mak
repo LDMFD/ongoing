@@ -24,7 +24,7 @@ FIREBASE_SA_ID_prod					:= firebase-adminsdk-uivho@ongoing-prod.iam.gserviceacco
 ARTIFACTORY_SA_ID_prod				:= firebase-adminsdk-uivho@ongoing-prod.iam.gserviceaccount.com
 
 DOMAIN_staging						:= ongoing.tp1.org
-DOMAIN_prod							:= amplifa.co.uk
+DOMAIN_prod							:= portal.amplifa.co.uk
 
 SECRET_DATABASE_CONNECTION_staging	:= 4
 SECRET_DATABASE_CONNECTION_prod		:= 12

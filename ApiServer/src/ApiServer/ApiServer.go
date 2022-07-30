@@ -45,7 +45,7 @@ func (s *ApiServer) ListenAndServe() error {
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{
-			"https://amplifa.co.uk",
+			"https://portal.amplifa.co.uk",
 			"https://ongoing.tp1.org",
 			"http://localhost.ongoing.tp1.org:3000",
 		},
