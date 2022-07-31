@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Entities.Migrations
+namespace Amplifa.Migrations
 {
     public partial class AddForecasts : Migration
     {

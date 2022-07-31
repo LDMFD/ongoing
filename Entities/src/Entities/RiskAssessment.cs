@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("risk_assessments")]
     [Index("Uid", Name = "risk_assessments_uid_key", IsUnique = true)]
@@ -44,5 +46,36 @@ namespace Entities.Entities
         [ForeignKey("RiskLevelId")]
         [InverseProperty("RiskAssessments")]
         public virtual RiskLevel RiskLevel { get; set; } = null!;
+    }
+}
+
+class RiskAssessmentConfig : IEntityTypeConfiguration<RiskAssessment>
+{
+    public void Configure(EntityTypeBuilder<RiskAssessment> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.Client)
+            .WithMany(p => p.RiskAssessments)
+            .HasForeignKey(d => d.ClientId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client");
+
+        builder.HasOne(d => d.QuestionnaireFile)
+            .WithMany(p => p.RiskAssessments)
+            .HasForeignKey(d => d.QuestionnaireFileId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_questionnaire");
+
+        builder.HasOne(d => d.RiskLevel)
+            .WithMany(p => p.RiskAssessments)
+            .HasForeignKey(d => d.RiskLevelId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_risk_level");
+        
+        // Uniqueness constraint
+        builder.HasAlternateKey(p => p.Uid);
     }
 }

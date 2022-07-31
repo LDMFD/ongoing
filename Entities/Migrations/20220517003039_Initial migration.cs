@@ -1,11 +1,11 @@
 ﻿using System;
-using Entities.Entities;
+using Amplifa.Entities;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Entities.Migrations
+namespace Amplifa.Migrations
 {
     public partial class Initialmigration : Migration
     {

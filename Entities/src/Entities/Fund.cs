@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("funds")]
     [Index("Name", Name = "funds_name_key", IsUnique = true)]
@@ -21,10 +21,10 @@ namespace Entities.Entities
         public int Id { get; set; }
         
         [Column("uid")]
-        public string Uid { get; set; }
+        public string Uid { get; set; } = null!;
         
         [Column("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         
         [Column("ocf_fee")]
         public decimal OcfFee { get; set; }
@@ -56,5 +56,24 @@ namespace Entities.Entities
         
         [InverseProperty("Fund")]
         public virtual ICollection<PolicyFund> PolicyFunds { get; set; }
+    }
+}
+
+class FundConfig : IEntityTypeConfiguration<Fund>
+{
+    public void Configure(EntityTypeBuilder<Fund> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.File)
+            .WithMany(p => p.Funds)
+            .HasForeignKey(d => d.FileId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_file");
+        
+        builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => e.Name);
     }
 }

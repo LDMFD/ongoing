@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("clients")]
     [Index("UserId", Name = "clients_user_id_key", IsUnique = true)]
@@ -32,7 +32,7 @@ namespace Entities.Entities
         public int UserId { get; set; }
         
         [Column("forenames")]
-        public string Forenames { get; set; }
+        public string Forenames { get; set; } = null!;
         
         [Column("surname")]
         public string Surname { get; set; } = null!;
@@ -77,5 +77,26 @@ namespace Entities.Entities
         
         [InverseProperty("Client")]
         public virtual ICollection<RiskAssessment> RiskAssessments { get; set; }
+    }
+}
+
+class ClientConfig : IEntityTypeConfiguration<Client>
+{
+    public void Configure(EntityTypeBuilder<Client> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Fee).HasDefaultValueSql("0.75");
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.User)
+            .WithOne(p => p.Client)
+            .HasForeignKey<Client>(d => d.UserId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_user");
+        
+        // Uniqueness constraint
+        builder.HasAlternateKey(p => p.UserId);
     }
 }

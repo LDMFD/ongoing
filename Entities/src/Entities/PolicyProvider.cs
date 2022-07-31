@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("policy_providers")]
     [Index("Name", Name = "policy_providers_name_key", IsUnique = true)]
@@ -46,5 +46,18 @@ namespace Entities.Entities
         
         [InverseProperty("PolicyProvider")]
         public virtual ICollection<ProviderDiscount> ProviderDiscounts { get; set; }
+    }
+}
+
+class PolicyProviderConfig : IEntityTypeConfiguration<PolicyProvider>
+{
+    public void Configure(EntityTypeBuilder<PolicyProvider> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+        
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        
+        builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => e.Name);
     }
 }

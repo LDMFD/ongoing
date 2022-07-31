@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("riskassessment_templates")]
     public class RiskAssessmentTemplate
@@ -21,5 +23,15 @@ namespace Entities.Entities
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime? Timestamp { get; set; }
+    }
+}
+
+class RiskAssessmentTemplateConfig : IEntityTypeConfiguration<RiskAssessment>
+{
+    public void Configure(EntityTypeBuilder<RiskAssessment> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+        
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
     }
 }

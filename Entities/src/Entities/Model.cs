@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("models")]
     [Index("Name", Name = "models_name_key", IsUnique = true)]
@@ -21,10 +21,10 @@ namespace Entities.Entities
         public int Id { get; set; }
 
         [Column("uid")]
-        public string Uid { get; set; }
+        public string Uid { get; set; } = null!;
         
         [Column("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         
         [Column("operator_id")]
         public int OperatorId { get; set; }
@@ -50,9 +50,34 @@ namespace Entities.Entities
         
         [ForeignKey("OperatorId")]
         [InverseProperty("Models")]
-        public virtual Operator Operator { get; set; }
+        public virtual Operator Operator { get; set; } = null!;
         
         [InverseProperty("Model")]
         public virtual ICollection<Portfolio> Portfolios { get; set; }
+    }
+}
+
+class ModelConfig : IEntityTypeConfiguration<Model>
+{
+    public void Configure(EntityTypeBuilder<Model> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.File)
+            .WithMany(p => p.Models)
+            .HasForeignKey(d => d.FileId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_file");
+
+        builder.HasOne(d => d.Operator)
+            .WithMany(p => p.Models)
+            .HasForeignKey(d => d.OperatorId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_operator");
+        
+        builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => e.Name);
     }
 }

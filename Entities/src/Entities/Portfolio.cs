@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Entities.Entities;
+using Amplifa.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("portfolios")]
     [Index("ClientId", "PolicyId", "ModelId", Name = "portfolios_client_id_policy_id_model_id_key", IsUnique = true)]
@@ -46,5 +45,36 @@ namespace Entities.Entities
         [ForeignKey("PolicyId")]
         [InverseProperty("Portfolios")]
         public virtual Policy Policy { get; set; } = null!;
+    }
+}
+
+class PortfolioConfig : IEntityTypeConfiguration<Portfolio>
+{
+    public void Configure(EntityTypeBuilder<Portfolio> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.Client)
+            .WithMany(p => p.Portfolios)
+            .HasForeignKey(d => d.ClientId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client");
+
+        builder.HasOne(d => d.Model)
+            .WithMany(p => p.Portfolios)
+            .HasForeignKey(d => d.ModelId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_model");
+
+        builder.HasOne(d => d.Policy)
+            .WithMany(p => p.Portfolios)
+            .HasForeignKey(d => d.PolicyId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_policy");
+        
+        builder.HasAlternateKey(p => p.Uid);
+        builder.HasAlternateKey(p => new { p.ClientId, p.PolicyId, p.ModelId });
     }
 }

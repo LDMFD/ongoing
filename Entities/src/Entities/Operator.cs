@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     public enum OperatorType
     {
@@ -29,10 +29,10 @@ namespace Entities.Entities
         public int Id { get; set; }
 
         [Column("uid")]
-        public string Uid { get; set; }
+        public string Uid { get; set; } = null!;
         
         [Column("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         
         [Column("fee")]
         public decimal Fee { get; set; }
@@ -45,5 +45,18 @@ namespace Entities.Entities
 
         [InverseProperty("Operator")]
         public virtual ICollection<Model> Models { get; set; }
+    }
+}
+
+class OperatorConfig : IEntityTypeConfiguration<Operator>
+{
+    public void Configure(EntityTypeBuilder<Operator> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        
+        builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => e.Name);
     }
 }

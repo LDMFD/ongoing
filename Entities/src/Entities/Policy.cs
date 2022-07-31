@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("policies")]
     [Index("ExternalId", Name = "policies_external_id_key", IsUnique = true)]
@@ -22,10 +22,10 @@ namespace Entities.Entities
         public int Id { get; set; }
         
         [Column("uid")]
-        public string Uid { get; set; }
+        public string Uid { get; set; } = null!;
         
         [Column("external_id")]
-        public string ExternalId { get; set; }
+        public string ExternalId { get; set; } = null!;
         
         [Column("client_id")]
         public int ClientId { get; set; }
@@ -52,7 +52,7 @@ namespace Entities.Entities
         public DateTime? EndDate { get; set; }
         
         [Column("notes")]
-        public string Notes { get; set; }
+        public string Notes { get; set; } = null!;
         
         [Column("file_id")]
         public int? FileId { get; set; }
@@ -82,5 +82,42 @@ namespace Entities.Entities
         
         [InverseProperty("Policy")]
         public virtual ICollection<Portfolio> Portfolios { get; set; }
+    }
+}
+
+class PolicyConfig : IEntityTypeConfiguration<Policy>
+{
+    public void Configure(EntityTypeBuilder<Policy> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.Client)
+            .WithMany(p => p.Policies)
+            .HasForeignKey(d => d.ClientId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client");
+
+        builder.HasOne(d => d.File)
+            .WithMany(p => p.Policies)
+            .HasForeignKey(d => d.FileId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_file");
+
+        builder.HasOne(d => d.PolicyProvider)
+            .WithMany(p => p.Policies)
+            .HasForeignKey(d => d.PolicyProviderId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_policy_provider");
+
+        builder.HasOne(d => d.PolicyType)
+            .WithMany(p => p.Policies)
+            .HasForeignKey(d => d.PolicyTypeId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_policy_type");
+        
+        builder.HasAlternateKey(p => p.Uid);
+        builder.HasAlternateKey(p => p.ExternalId);
     }
 }

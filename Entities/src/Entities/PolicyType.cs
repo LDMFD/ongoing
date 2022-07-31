@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("policy_types")]
     [Index("Name", Name = "policy_types_name_key", IsUnique = true)]
@@ -32,5 +34,18 @@ namespace Entities.Entities
         
         [InverseProperty("PolicyType")]
         public virtual ICollection<Policy> Policies { get; set; }
+    }
+}
+
+class PolicyTypeConfig : IEntityTypeConfiguration<PolicyType>
+{
+    public void Configure(EntityTypeBuilder<PolicyType> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+        
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        
+        builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => e.Name);
     }
 }

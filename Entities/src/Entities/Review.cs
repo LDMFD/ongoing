@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     public enum ReviewState
     {
@@ -44,5 +46,21 @@ namespace Entities.Entities
         [ForeignKey("ClientId")]
         [InverseProperty("Reviews")]
         public virtual Client Client { get; set; } = null!;
+    }
+}
+
+class ReviewConfig : IEntityTypeConfiguration<Review>
+{
+    public void Configure(EntityTypeBuilder<Review> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.HasOne(d => d.Client)
+            .WithMany(p => p.Reviews)
+            .HasForeignKey(d => d.ClientId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client");
+        
+        builder.HasAlternateKey(p => p.Uid);
     }
 }

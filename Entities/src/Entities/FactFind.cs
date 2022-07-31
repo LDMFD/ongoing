@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("fact_finds")]
     [Index("Uid", Name = "fact_finds_uid_key", IsUnique = true)]
@@ -15,7 +15,7 @@ namespace Entities.Entities
         public int Id { get; set; }
         
         [Column("uid")]
-        public string Uid { get; set; }
+        public string Uid { get; set; } = null!;
         
         [Column("client_id")]
         public int ClientId { get; set; }
@@ -37,5 +37,29 @@ namespace Entities.Entities
         [ForeignKey("FileId")]
         [InverseProperty("FactFinds")]
         public virtual File File { get; set; } = null!;
+    }
+}
+
+class FactFindConfig : IEntityTypeConfiguration<FactFind>
+{
+    public void Configure(EntityTypeBuilder<FactFind> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.Client)
+            .WithMany(p => p.FactFinds)
+            .HasForeignKey(d => d.ClientId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client");
+
+        builder.HasOne(d => d.File)
+            .WithMany(p => p.FactFinds)
+            .HasForeignKey(d => d.FileId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_fact_find");
+
+        builder.HasAlternateKey(p => p.Uid);
     }
 }

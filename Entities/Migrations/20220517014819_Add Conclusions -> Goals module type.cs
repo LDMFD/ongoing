@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Entities.Migrations
+namespace Amplifa.Migrations
 {
     public partial class AddConclusionsGoalsmoduletype : Migration
     {

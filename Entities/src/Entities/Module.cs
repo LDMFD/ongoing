@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     // This list also found in ReviewModule.go and ModuleTypes.js
     public enum ModuleType
@@ -43,13 +46,31 @@ namespace Entities.Entities
         public ModuleType Type { get; set; }
 
         [Column("intro")]
-        public string Intro { get; set; }
+        public string Intro { get; set; } = null!;
         
         [Column("text")]
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
 
         [ForeignKey("ClientId")]
         [InverseProperty("Modules")]
-        public virtual Client Client { get; set; }
+        public virtual Client Client { get; set; } = null!;
+    }
+}
+
+class ModuleConfig : IEntityTypeConfiguration<Module>
+{
+    public void Configure(EntityTypeBuilder<Module> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.HasOne(d => d.Client)
+            .WithMany(p => p.Modules)
+            .HasForeignKey(d => d.ClientId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client");
+        
+        builder.HasAlternateKey(p => new { p.ClientId, p.Type });
+        
+        builder.HasAlternateKey(p => new { p.ClientId, p.Type });
     }
 }

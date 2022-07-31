@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("risk_levels")]
     [Index("Uid", Name = "risk_levels_uid_key", IsUnique = true)]
@@ -44,5 +46,23 @@ namespace Entities.Entities
         
         [InverseProperty("RiskLevel")]
         public virtual ICollection<RiskAssessment> RiskAssessments { get; set; }
+    }
+}
+
+class RiskLevelConfig : IEntityTypeConfiguration<RiskLevel>
+{
+    public void Configure(EntityTypeBuilder<RiskLevel> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.RiskProvider)
+            .WithMany(p => p.RiskLevels)
+            .HasForeignKey(d => d.RiskProviderId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_risk_provider");
+        
+        builder.HasAlternateKey(e => e.Uid);
     }
 }

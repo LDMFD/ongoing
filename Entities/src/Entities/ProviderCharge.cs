@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Amplifa.Entities;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entities.Entities
+namespace Amplifa.Entities
 {
     [Table("provider_charges")]
     [Index("Uid", Name = "provider_charges_uid_key", IsUnique = true)]
@@ -36,5 +38,23 @@ namespace Entities.Entities
         [ForeignKey("PolicyProviderId")]
         [InverseProperty("ProviderCharges")]
         public virtual PolicyProvider PolicyProvider { get; set; } = null!;
+    }
+}
+
+class ProviderChargeConfig : IEntityTypeConfiguration<ProviderCharge>
+{
+    public void Configure(EntityTypeBuilder<ProviderCharge> builder)
+    {
+        builder.Property(e => e.Id).UseIdentityAlwaysColumn();
+
+        builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        builder.HasOne(d => d.PolicyProvider)
+            .WithMany(p => p.ProviderCharges)
+            .HasForeignKey(d => d.PolicyProviderId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_policy_provider");
+        
+        builder.HasAlternateKey(e => e.Uid);
     }
 }

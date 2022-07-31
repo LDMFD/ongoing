@@ -1,10 +1,9 @@
-﻿using Entities.Configuration;
-using Entities.Entities;
+﻿using Amplifa.Entities;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using File = System.IO.File;
 
-namespace Entities
+namespace Amplifa
 {
     public partial class EfContext : DbContext
     {
@@ -58,9 +57,6 @@ namespace Entities
                 // string home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 // string connection = File.ReadAllText($"{home}/.homedog/secrets/cloud-sql/db-connection-dotnet");
                 // optionsBuilder.UseNpgsql(connection);
-
-                // Localhost if not overridden by CLI args:
-                // optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=dfb0aaeb899e4855b337601578924737");
             }
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=p");
         }
