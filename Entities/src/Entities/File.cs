@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Amplifa.Entities
+namespace Ongoing.Entities
 {
     [Table("files")]
     [Index("Uid", Name = "files_uid_key", IsUnique = true)]
@@ -60,9 +60,9 @@ namespace Amplifa.Entities
     }
 }
 
-class FileConfig : IEntityTypeConfiguration<Amplifa.Entities.File>
+class FileConfig : IEntityTypeConfiguration<Ongoing.Entities.File>
 {
-    public void Configure(EntityTypeBuilder<Amplifa.Entities.File> builder)
+    public void Configure(EntityTypeBuilder<Ongoing.Entities.File> builder)
     {
         builder.Property(e => e.Id).UseIdentityAlwaysColumn();
         

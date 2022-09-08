@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using Amplifa.Entities;
+using Ongoing.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Amplifa.Entities
+namespace Ongoing.Entities
 {
     [Table("risk_assessments")]
     [Index("Uid", Name = "risk_assessments_uid_key", IsUnique = true)]

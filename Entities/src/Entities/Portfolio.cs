@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Amplifa.Entities;
+using Ongoing.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Amplifa.Entities
+namespace Ongoing.Entities
 {
     [Table("portfolios")]
     [Index("ClientId", "PolicyId", "ModelId", Name = "portfolios_client_id_policy_id_model_id_key", IsUnique = true)]

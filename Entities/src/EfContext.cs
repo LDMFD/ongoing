@@ -1,9 +1,9 @@
-﻿using Amplifa.Entities;
+﻿using Ongoing.Entities;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using File = System.IO.File;
 
-namespace Amplifa
+namespace Ongoing
 {
     public partial class EfContext : DbContext
     {

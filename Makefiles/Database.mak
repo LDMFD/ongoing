@@ -108,12 +108,12 @@ db-migrate-remote:
 				 --file=/app/migrations/${MIGRATION}.sql
 
 # Param FROM: the .sql file to import from
-db-restore-local:
+db-restore-local: import-env
 	docker run -it --rm \
 		--name db-restorer \
 		--platform linux/amd64 \
 		--network ongoing_default \
-		-v ${HOME}/.ongoing/dumps/dump.sql:/app/dump.sql \
+		-v ${HOME}/.ongoing/envs/${ENV}/dumps/dump.sql:/app/dump.sql \
         ${LOCAL_POSTGRES_IMAGE} \
             /bin/bash \
             -c "PGPASSWORD=p psql -U postgres -h ongoing-db < /app/dump.sql"

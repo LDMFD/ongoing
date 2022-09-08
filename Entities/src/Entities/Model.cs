@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using Amplifa.Entities;
+using Ongoing.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Amplifa.Entities
+namespace Ongoing.Entities
 {
     [Table("models")]
     [Index("Name", Name = "models_name_key", IsUnique = true)]

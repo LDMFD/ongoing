@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Amplifa.Migrations
+namespace Ongoing.Migrations
 {
     public partial class AddConclusionsForecastmoduletype : Migration
     {
