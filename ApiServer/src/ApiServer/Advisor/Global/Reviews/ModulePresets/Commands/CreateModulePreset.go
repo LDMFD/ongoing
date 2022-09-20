@@ -1,19 +1,18 @@
 package Commands
 
 import (
+	"github.com/google/uuid"
 	"net/http"
 	"ongoing/Entities"
 	"strings"
 
-	"github.com/uptrace/bun"
-
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 )
 
 type CreateOrUpdateModulePresetRequestBody struct {
-	ModuleType  string  `binding:"required"`  // TODO enum
-	Text        string  `binding:"required"`
+	ModuleType string `binding:"required"` // TODO enum
+	Text       string `binding:"required"`
 }
 
 func CreateModulePreset(c *gin.Context) {
@@ -29,8 +28,9 @@ func CreateModulePreset(c *gin.Context) {
 	}
 
 	var modulePreset = Entities.ModulePreset{
-		ModuleType:  body.ModuleType,
-		Text:        body.Text,
+		Uid:        uid,
+		ModuleType: body.ModuleType,
+		Text:       body.Text,
 	}
 	if _, err := db.NewInsert().Model(&modulePreset).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

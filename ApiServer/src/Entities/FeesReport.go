@@ -24,19 +24,13 @@ type FeesReport struct {
 type ReportFeesReport struct {
 	Id        string
 	Submitted string
-	File      struct {
-		Uid      string
-		Filename string
-	}
+	File      *ReportFile
 }
 
 func (a *FeesReport) ToReport() ReportFeesReport {
 	return ReportFeesReport{
 		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
-		File: ReportFile{
-			Uid:      a.File.Uid,
-			Filename: a.File.Filename,
-		},
+		File:      a.File.ToReport(),
 	}
 }

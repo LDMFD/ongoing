@@ -7,12 +7,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Ongoing.Entities
 {
     [Table("module_presets")]
+    [Index("Uid", Name = "module_presets_uid_key", IsUnique = true)]
     public class ModulePreset
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
         
+        [Column("uid")]
+        public string Uid { get; set; } = null!;
+
         [Column("text")]
         public string? Text { get; set; }
         
@@ -32,6 +36,7 @@ class ModulePresetConfig : IEntityTypeConfiguration<ModulePreset>
         
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
         
+        builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(p => p.ModuleType);
     }
 }

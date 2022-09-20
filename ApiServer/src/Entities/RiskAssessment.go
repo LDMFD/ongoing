@@ -28,10 +28,7 @@ type ReportRiskAssessment struct {
 	RiskProviderId string
 	RiskLevelId    string
 	Completed      string
-	Questionnaire  struct {
-		Uid      string
-		Filename string
-	}
+	Questionnaire  *ReportFile
 }
 
 func (a *RiskAssessment) ToReport() ReportRiskAssessment {
@@ -42,10 +39,7 @@ func (a *RiskAssessment) ToReport() ReportRiskAssessment {
 		Completed:      Date.ToCanonical(&a.Completed),
 	}
 	if a.Questionnaire != nil {
-		report.Questionnaire = ReportFile{
-			Uid:      a.Questionnaire.Uid,
-			Filename: a.Questionnaire.Filename,
-		}
+		report.Questionnaire = a.Questionnaire.ToReport()
 	}
 	return report
 }

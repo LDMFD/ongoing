@@ -24,19 +24,13 @@ type FactFind struct {
 type ReportFactFind struct {
 	Id        string
 	Submitted string
-	File      struct {
-		Uid      string
-		Filename string
-	}
+	File      *ReportFile
 }
 
 func (a *FactFind) ToReport() ReportFactFind {
 	return ReportFactFind{
 		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
-		File: ReportFile{
-			Uid:      a.File.Uid,
-			Filename: a.File.Filename,
-		},
+		File:      a.File.ToReport(),
 	}
 }

@@ -38,10 +38,7 @@ type ReportPolicy struct {
 	StartValue           int64
 	EndValue             int64
 	Notes                string
-	File       struct {
-		Uid      string
-		Filename string
-	}
+	File                 *ReportFile
 }
 
 func (p *Policy) ToReport() ReportPolicy {
@@ -56,10 +53,7 @@ func (p *Policy) ToReport() ReportPolicy {
 		Notes:                p.Notes,
 	}
 	if p.File != nil {
-		rp.File = ReportFile{
-			Uid:      p.File.Uid,
-			Filename: p.File.Filename,
-		}
+		rp.File = p.File.ToReport()
 	}
 	return rp
 }

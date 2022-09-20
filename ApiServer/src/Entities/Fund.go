@@ -24,15 +24,12 @@ type Fund struct {
 }
 
 type ReportFund struct {
-	Id         string
-	Name       string
-	OcfFee     float64
-	ExAnteFee  float64
-	Modified   string
-	File       struct {
-		Uid      string
-		Filename string
-	}
+	Id        string
+	Name      string
+	OcfFee    float64
+	ExAnteFee float64
+	Modified  string
+	File      *ReportFile
 }
 
 func (f *Fund) ToReport() ReportFund {
@@ -44,10 +41,7 @@ func (f *Fund) ToReport() ReportFund {
 		Modified:  Date.ToCanonical(f.Modified),
 	}
 	if f.File != nil {
-		rf.File = ReportFile{
-			Uid:      f.File.Uid,
-			Filename: f.File.Filename,
-		}
+		rf.File = f.File.ToReport()
 	}
 	return rf
 }

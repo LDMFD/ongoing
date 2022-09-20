@@ -113,7 +113,7 @@ db-restore-local: import-env
 		--name db-restorer \
 		--platform linux/amd64 \
 		--network ongoing_default \
-		-v ${HOME}/.ongoing/envs/${ENV}/dumps/dump.sql:/app/dump.sql \
+		-v ${PWD}/Migrations/prod-2022-09-18.sql:/app/dump.sql \
         ${LOCAL_POSTGRES_IMAGE} \
             /bin/bash \
             -c "PGPASSWORD=p psql -U postgres -h ongoing-db < /app/dump.sql"
@@ -147,10 +147,16 @@ db-dump-remote: import-env
 	mkdir -p ~/.ongoing/envs/${ENV}/dumps
 	docker run -i \
 		--platform linux/amd64 \
-	    --network ongoing_default \
+		--network ongoing_default \
 		${LOCAL_POSTGRES_IMAGE} \
 		/bin/bash \
-		-c "PGPASSWORD=${PASSWORD} pg_dump -d ongoing-${ENV} -h db-proxy --username postgres --data-only --no-acl" \
+		-c "PGPASSWORD=${PASSWORD} pg_dump -d ongoing-${ENV} \
+		                                   -h db-proxy \
+										   --username postgres \
+										   --data-only \
+										   --no-acl \
+										   --column-inserts \
+										   --no-comments" \
 		> ~/.ongoing/envs/${ENV}/dumps/dump.sql
 
 db-up:

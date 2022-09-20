@@ -9,21 +9,21 @@ import (
 type ModulePreset struct {
 	bun.BaseModel `bun:"table:module_presets"`
 
-	Id         int64     `bun:"id,pk,autoincrement"`
+	Uid        string    `bun:"uid,notnull"`
 	ModuleType string    `bun:"module_type,notnull"`
 	Text       string    `bun:"text,notnull"`
 	Timestamp  time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 }
 
 type ReportModulePreset struct {
-	Id         int64
+	Id         string
 	ModuleType string
 	Text       string
 }
 
 func (r *ModulePreset) ToReport() ReportModulePreset {
 	return ReportModulePreset{
-		Id:         r.Id,
+		Id:         r.Uid,
 		ModuleType: r.ModuleType,
 		Text:       r.Text,
 	}

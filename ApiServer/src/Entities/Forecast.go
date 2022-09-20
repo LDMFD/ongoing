@@ -24,19 +24,13 @@ type Forecast struct {
 type ReportForecast struct {
 	Id        string
 	Submitted string
-	File      struct {
-		Uid      string
-		Filename string
-	}
+	File      *ReportFile
 }
 
 func (a *Forecast) ToReport() ReportForecast {
 	return ReportForecast{
 		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
-		File: ReportFile{
-			Uid:      a.File.Uid,
-			Filename: a.File.Filename,
-		},
+		File:      a.File.ToReport(),
 	}
 }
