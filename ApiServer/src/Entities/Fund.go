@@ -12,6 +12,7 @@ type Fund struct {
 
 	Id        int64      `bun:"id,pk,autoincrement"`
 	Uid       string     `bun:"uid,notnull"`
+	OrgId     int64      `bun:"org_id"`
 	Name      string     `bun:"name,notnull"`
 	OcfFee    float64    `bun:"ocf_fee,notnull"`
 	ExAnteFee float64    `bun:"ex_ante_fee,notnull"`
@@ -19,6 +20,7 @@ type Fund struct {
 	Modified  *time.Time `bun:",nullzero"`
 	Timestamp time.Time  `bun:",nullzero,notnull,default:current_timestamp"`
 
+	Org         *Organisation `bun:"rel:has-one,join:org_id=id"`
 	File        *File         `bun:"rel:has-one,join:file_id=id"`
 	PolicyFunds []*PolicyFund `bun:"rel:has-many,join:id=fund_id"`
 }

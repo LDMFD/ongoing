@@ -28,8 +28,14 @@ namespace Ongoing.Entities
         [Column("id")]
         public int Id { get; set; }
         
+        [Column("uid")]
+        public string Uid { get; set; } = null!;
+
         [Column("user_id")]
         public int UserId { get; set; }
+        
+        [Column("org_id")]
+        public int OrgId { get; set; }
         
         [Column("forenames")]
         public string Forenames { get; set; } = null!;
@@ -46,37 +52,40 @@ namespace Ongoing.Entities
         
         [ForeignKey("UserId")]
         [InverseProperty("Client")]
-        public virtual User User { get; set; } = null!;
+        public User User { get; set; } = null!;
+        
+        [ForeignKey("OrgId")]
+        public Organisation Org { get; set; } = null!;
         
         [InverseProperty("Client")]
-        public virtual ICollection<FactFind> FactFinds { get; set; }
+        public ICollection<FactFind> FactFinds { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<FeesReport> FeesReports { get; set; }
+        public ICollection<FeesReport> FeesReports { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<Forecast> Forecasts { get; set; }
+        public ICollection<Forecast> Forecasts { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<Module> Modules { get; set; }
+        public ICollection<Module> Modules { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<Policy> Policies { get; set; }
+        public ICollection<Policy> Policies { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<PolicyFund> PolicyFunds { get; set; }
+        public ICollection<PolicyFund> PolicyFunds { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<Portfolio> Portfolios { get; set; }
+        public ICollection<Portfolio> Portfolios { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<ProviderDiscount> ProviderDiscounts { get; set; }
+        public ICollection<ProviderDiscount> ProviderDiscounts { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<Review> Reviews { get; set; }
+        public ICollection<Review> Reviews { get; set; }
         
         [InverseProperty("Client")]
-        public virtual ICollection<RiskAssessment> RiskAssessments { get; set; }
+        public ICollection<RiskAssessment> RiskAssessments { get; set; }
     }
 }
 
@@ -93,10 +102,11 @@ class ClientConfig : IEntityTypeConfiguration<Client>
         builder.HasOne(d => d.User)
             .WithOne(p => p.Client)
             .HasForeignKey<Client>(d => d.UserId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_user");
-        
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("fk_client_user");
+
         // Uniqueness constraint
+        builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(p => p.UserId);
     }
 }

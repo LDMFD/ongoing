@@ -100,7 +100,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
                 </>
             }
 
-            {policy.File.Uid &&
+            {policy.File &&
                 <p>
                     Factsheet: {policy.File.Filename}
                     <Button onClick={Download.bind(null, policy.File.Uid)}>Download</Button>

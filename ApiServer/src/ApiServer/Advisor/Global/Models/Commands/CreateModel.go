@@ -1,16 +1,19 @@
 package Commands
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
-	"strings"
+	"ongoing/Utils/UUID"
 	"time"
 
 	"github.com/uptrace/bun"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type CreateOrUpdateModelRequestBody struct {
@@ -24,6 +27,8 @@ type CreateOrUpdateModelRequestBody struct {
 
 func CreateModel(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var body CreateOrUpdateModelRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -44,9 +49,6 @@ func CreateModel(c *gin.Context) {
 		fileId = &file.Id
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
 	var operator = Entities.Operator{}
 	if err := db.NewSelect().
 		Model(&operator).
@@ -65,6 +67,8 @@ func CreateModel(c *gin.Context) {
 		}
 	}
 
+	uid := UUID.GenerateUID(c)
+
 	var model = Entities.Model{
 		Uid:               uid,
 		Name:              body.Name,
@@ -73,12 +77,37 @@ func CreateModel(c *gin.Context) {
 		WeightedExAnteFee: body.WeightedExAnteFee,
 		Modified:          &modified,
 		FileId:            fileId,
+		OrgId:             session.Org.Id,
 	}
-	if _, err := db.NewInsert().Model(&model).Exec(c); err != nil {
+
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewInsert().Model(&model).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	if body.File != nil {
+		if err := auth.CreateFile(nil, &session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"Model": model,
+		"Id": uid,
 	})
 }

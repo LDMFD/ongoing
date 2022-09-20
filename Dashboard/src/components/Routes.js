@@ -1,5 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 
+import SuperuserRoutes      from './Pages/Superuser/SuperuserRoutes';
+import StaffRoutes          from "./Pages/Advisor/Staff/StaffRoutes";
 import ClientRoutes         from './Pages/Advisor/AdvisorRoutes';
 import OperatorRoutes       from './Pages/Global/Operators/OperatorRoutes';
 import FundRoutes           from './Pages/Global/Funds/FundRoutes';
@@ -13,6 +15,9 @@ import ClientSpaceRoutes from "./Pages/ClientSpace/ClientSpaceRoutes";
   
 const routes = () => (
     <Switch>
+        <Route path="/admin"                          component={SuperuserRoutes} />
+        <Route path="/staff"                          component={StaffRoutes} />
+
         <Route path="/clients"                        component={ClientRoutes} />
         <Route path="/operators"                      component={OperatorRoutes} />
         <Route path="/funds"                          component={FundRoutes} />

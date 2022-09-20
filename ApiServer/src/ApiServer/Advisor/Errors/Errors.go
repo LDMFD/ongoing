@@ -6,7 +6,7 @@ import (
 
 const PolicyHasDependentPortfolios = "Unable to delete - policy has dependent portfolios"
 const PolicyFundDoesNotBelongToClient = "Policy fund does not belong to client"
-const ClientAlreadyExists = "Client with this email already exists"
+const UserAlreadyExists = "A user with this email already exists"
 const LevelDoesNotBelongToProvider = "Level does not belong to provider"
 
 func PolicyProviderHasDependentPolicies(policies string) string {

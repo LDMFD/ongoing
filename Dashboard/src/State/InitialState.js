@@ -36,10 +36,25 @@ const InitialState = ({ children }) => {
         getClientSpace,
     ]);
 
-    const getDependencies = state.Auth.UserType === UserType.UserTypeAdvisor
-                         || state.Auth.UserType === UserType.UserTypeAdmin
-        ? getAdvisorDependencies
-        : getClientSpaceDependencies;
+    // Admin
+    const getOrgs = useCallback(() => { return Api.Superuser.Organisations.Read(dispatch); }, [ dispatch ]);
+
+    const getSuperuserDependencies = useCallback(async () => {
+        await getOrgs();
+        setLoaded(true);
+    }, [
+        getOrgs,
+    ]);
+
+    let dependencyFetcher = {
+        [UserType.Superuser]: getSuperuserDependencies,
+        [UserType.OrgOwner]: getAdvisorDependencies,
+        [UserType.OrgAdmin]: getAdvisorDependencies,
+        [UserType.Advisor]: getAdvisorDependencies,
+        [UserType.Client]: getClientSpaceDependencies,
+    };
+
+    const getDependencies = dependencyFetcher[state.Session.Role];
 
     useEffect(() => {
         getDependencies();

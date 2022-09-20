@@ -17,6 +17,9 @@ namespace Ongoing.Entities
         [Column("uid")]
         public string Uid { get; set; } = null!;
 
+        [Column("org_id")]
+        public int OrgId { get; set; }
+
         [Column("text")]
         public string? Text { get; set; }
         
@@ -25,6 +28,10 @@ namespace Ongoing.Entities
 
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
+        
+
+        [ForeignKey("OrgId")]
+        public virtual Organisation Org { get; set; } = null!;
     }
 }
 

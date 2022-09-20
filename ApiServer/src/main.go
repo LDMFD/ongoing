@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 
 	"github.com/pkg/errors"
@@ -18,5 +19,11 @@ func main() {
 		log.Fatalf("%+v\n", errors.WithStack(err))
 	}
 
-	app.Run()
+	var importFlag = flag.String("import", "", "import path")
+	flag.Parse()
+	if *importFlag != "" {
+		app.Import(*importFlag)
+	} else {
+		app.Run()
+	}
 }

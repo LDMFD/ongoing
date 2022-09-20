@@ -5,15 +5,17 @@ import (
 	"ongoing/Entities"
 )
 
-func getUser(c *gin.Context) {
-	var userType string
-	if user, exists := c.Get("USER"); exists {
-		userType = user.(*Entities.User).Type
-	} else {
-		userType = "anonymous"
+func getUserInfo(c *gin.Context) {
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+
+	res := Entities.ClientSessionContext{
+		UserId: session.UserUid,
+		Email:  session.Email,
+		OrgId:  session.OrgId,
+		Role:   session.Role,
 	}
 
 	c.JSON(200, gin.H{
-		"UserType": userType,
+		"Context": res,
 	})
 }

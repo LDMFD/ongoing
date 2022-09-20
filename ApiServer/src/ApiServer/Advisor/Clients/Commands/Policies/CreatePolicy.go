@@ -1,12 +1,15 @@
 package Policies
 
 import (
-	"github.com/google/uuid"
-	"net/http"
-	"ongoing/Entities"
-	"strings"
-
+	"database/sql"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
+	"log"
+	"net/http"
+	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
+	"ongoing/Entities"
+	"ongoing/Utils/UUID"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,18 +19,19 @@ type CreatePolicyRequestPath struct {
 }
 
 type CreateOrUpdatePolicyRequestBody struct {
-	ExternalId           string  `binding:"required"`
+	ExternalId           string `binding:"required"`
 	MonthlyContributions int64
 	StartValue           int64
 	EndValue             int64
-	PolicyTypeId         string  `binding:"required"`
-	PolicyProviderId     string  `binding:"required"`
+	PolicyTypeId         string `binding:"required"`
+	PolicyProviderId     string `binding:"required"`
 	Notes                string
 	File                 *Entities.RequestFile
 }
 
 func CreatePolicy(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path CreatePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -38,7 +42,7 @@ func CreatePolicy(c *gin.Context) {
 	var body CreateOrUpdatePolicyRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
- 			panic(err.Error())
+		panic(err.Error())
 	}
 
 	var fileId *int64
@@ -46,18 +50,20 @@ func CreatePolicy(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		fileId = &file.Id
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		panic(err.Error())
+	}
 
 	var policyType = Entities.PolicyType{}
 	if err := db.NewSelect().
@@ -77,6 +83,8 @@ func CreatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	uid := UUID.GenerateUID(c)
+
 	var policy = Entities.Policy{
 		Uid:                  uid,
 		ClientId:             client.Id,
@@ -89,11 +97,35 @@ func CreatePolicy(c *gin.Context) {
 		Notes:                body.Notes,
 		FileId:               fileId,
 	}
-	if _, err := db.NewInsert().Model(&policy).Exec(c); err != nil {
+
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewInsert().Model(&policy).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	if body.File != nil {
+		if err := auth.CreateFile(&client.Uid, nil, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"Policy": policy,
+		"Id": uid,
 	})
 }

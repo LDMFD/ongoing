@@ -1,12 +1,11 @@
 package ProviderDiscount
 
 import (
-	"github.com/google/uuid"
-	"net/http"
-	"ongoing/Entities"
-	"strings"
-
 	"github.com/uptrace/bun"
+	"net/http"
+	"ongoing/ApiServer/Helpers"
+	"ongoing/Entities"
+	"ongoing/Utils/UUID"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,13 +31,14 @@ func CreateProviderDiscount(c *gin.Context) {
 	var body CreateOrUpdateProviderDiscountRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
- 			panic(err.Error())
+		panic(err.Error())
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 
 	var provider = Entities.PolicyProvider{}
 	if err := db.NewSelect().
@@ -48,6 +48,8 @@ func CreateProviderDiscount(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	uid := UUID.GenerateUID(c)
 
 	var providerDiscount = Entities.ProviderDiscount{
 		Uid:              uid,
@@ -59,5 +61,7 @@ func CreateProviderDiscount(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-	c.JSON(200, gin.H{})
+	c.JSON(200, gin.H{
+		"Id": uid,
+	})
 }

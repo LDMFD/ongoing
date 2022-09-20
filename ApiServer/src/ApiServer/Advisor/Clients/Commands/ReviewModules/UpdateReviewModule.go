@@ -4,17 +4,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 )
 
 type UpdateReviewModulePath struct {
 	ClientId string `binding:"required"`
-	Module string `binding:"required"`
+	Module   string `binding:"required"`
 }
 
 type UpdateReviewModuleRequestBody struct {
 	Intro string
-	Text string
+	Text  string
 }
 
 func UpdateReviewModule(c *gin.Context) {
@@ -32,13 +33,17 @@ func UpdateReviewModule(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 
 	module := &Entities.Module{
-		ClientId:  client.Id,
-		Type:      path.Module,
-		Intro:     body.Intro,
-		Text:      body.Text,
+		ClientId: client.Id,
+		Type:     path.Module,
+		Intro:    body.Intro,
+		Text:     body.Text,
 	}
 	if _, err := db.NewInsert().Model(module).
 		On("CONFLICT (client_id, \"type\") DO UPDATE").

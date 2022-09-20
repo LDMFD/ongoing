@@ -25,6 +25,9 @@ namespace Ongoing.Entities
         [Column("uid")]
         public string Uid { get; set; } = null!;
         
+        [Column("org_id")]
+        public int OrgId { get; set; }
+
         [Column("name")]
         public string Name { get; set; } = null!;
         
@@ -32,6 +35,9 @@ namespace Ongoing.Entities
         public DateTime? Timestamp { get; set; }
 
         
+        [ForeignKey("OrgId")]
+        public virtual Organisation Org { get; set; } = null!;
+
         [InverseProperty("RiskProvider")]
         public virtual ICollection<RiskLevel> RiskLevels { get; set; }
     }

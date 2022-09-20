@@ -11,11 +11,14 @@ import (
 
 func GetClients(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var clients []Entities.Client
 	if err := db.NewSelect().
 		Model(&clients).
 		Relation("User").
+		Relation("Organisation").
+		Where("organisation.uid = ?", session.OrgId).
 		OrderExpr("id ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

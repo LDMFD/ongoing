@@ -59,7 +59,7 @@ class PortfolioConfig : IEntityTypeConfiguration<Portfolio>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.Portfolios)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_client");
 
         builder.HasOne(d => d.Model)
@@ -71,7 +71,7 @@ class PortfolioConfig : IEntityTypeConfiguration<Portfolio>
         builder.HasOne(d => d.Policy)
             .WithMany(p => p.Portfolios)
             .HasForeignKey(d => d.PolicyId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_policy");
         
         builder.HasAlternateKey(p => p.Uid);

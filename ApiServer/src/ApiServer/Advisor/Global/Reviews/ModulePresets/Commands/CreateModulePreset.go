@@ -1,13 +1,11 @@
 package Commands
 
 import (
-	"github.com/google/uuid"
-	"net/http"
-	"ongoing/Entities"
-	"strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
+	"net/http"
+	"ongoing/Entities"
+	"ongoing/Utils/UUID"
 )
 
 type CreateOrUpdateModulePresetRequestBody struct {
@@ -17,9 +15,7 @@ type CreateOrUpdateModulePresetRequestBody struct {
 
 func CreateModulePreset(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var body CreateOrUpdateModulePresetRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -28,7 +24,8 @@ func CreateModulePreset(c *gin.Context) {
 	}
 
 	var modulePreset = Entities.ModulePreset{
-		Uid:        uid,
+		Uid:        UUID.GenerateUID(c),
+		OrgId:      session.Org.Id,
 		ModuleType: body.ModuleType,
 		Text:       body.Text,
 	}
@@ -37,7 +34,5 @@ func CreateModulePreset(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	c.JSON(200, gin.H{
-		"ModulePreset": modulePreset,
-	})
+	c.JSON(200, gin.H{})
 }

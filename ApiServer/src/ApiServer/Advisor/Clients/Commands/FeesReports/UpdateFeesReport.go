@@ -3,6 +3,7 @@ package FeesReports
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -39,7 +40,12 @@ func UpdateFeesReport(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
+
 	if feesReport.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Risk Assessment does not belong to client"})
 		return
@@ -59,7 +65,6 @@ func UpdateFeesReport(c *gin.Context) {
 	}
 
 	var submitted time.Time
-	var err error
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
 		return

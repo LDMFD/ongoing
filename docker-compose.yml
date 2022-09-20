@@ -13,9 +13,23 @@ services:
       - "5432:5432"
     volumes:
       - "postgres:/var/lib/postgresql/data"
-      #- ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql
     env_file:
       - .env
+  
+  spicedb:
+    container_name: spicedb
+    image: authzed/spicedb:v1.11.0
+    ports:
+      - "50051:50051"
+    environment:
+      - ONGOING_SPICEDB_HOST=localhost:50051
+      - ONGOING_SPICEDB_PSK=spice
+      - ONGOING_SUPERUSERS=darren@tp1.org
+      - SPICEDB_DATASTORE_ENGINE=postgres
+      - SPICEDB_DATASTORE_CONN_URI=postgres://postgres:p@ongoing-db:5432/spicedb?sslmode=disable
+      - SPICEDB_GRPC_PRESHARED_KEY=spice
+    command: serve --log-level=debug
 
   dashboard:
     depends_on:
@@ -36,13 +50,28 @@ services:
     container_name: ongoing-api
     image: ongoing-api
     build: ApiServer
-    platform: linux/amd64
     depends_on:
       - postgres
     volumes:
       - ./ApiServer/src:/go/src
-      #- ./creds:/app/creds
     ports:
       - "8000:8000"
     env_file:
       - .env
+    platform: linux/amd64
+
+  api-test:
+    container_name: ongoing-api-test
+    image: ongoing-api-test
+    build:
+      context: ./ApiServer
+      dockerfile: Tests.Dockerfile
+    depends_on:
+      - postgres
+    volumes:
+      - ./ApiServer/src:/go/src
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    platform: linux/amd64

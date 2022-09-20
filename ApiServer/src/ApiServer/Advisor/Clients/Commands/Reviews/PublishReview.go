@@ -1,10 +1,15 @@
 package Reviews
 
 import (
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"time"
 )
@@ -18,7 +23,11 @@ func PublishReview(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 
 	var review = Entities.Review{}
 	if err := db.NewSelect().
@@ -40,12 +49,35 @@ func PublishReview(c *gin.Context) {
 		return
 	}
 
-	report := GenerateReport(c, client.Id)
-
-	b, err := json.Marshal(report)
+	// Begin transaction
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
 		panic(err.Error())
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered: ", r)
+			tx.Rollback()
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	}()
+
+	report := GenerateReport(c, client.Id, true)
+	if report == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+	report.Id = review.Uid
+
+	b, err2 := json.Marshal(report)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err2.Error()})
+		panic(err2.Error())
 	}
 	reportJson := string(b)
 
@@ -53,7 +85,7 @@ func PublishReview(c *gin.Context) {
 	review.State = Entities.ReviewStateFinal
 	review.FinalizedDate = time.Now()
 
-	if _, err := db.NewUpdate().
+	if _, err := tx.NewUpdate().
 		Model(&review).
 		WherePK().
 		Column("report").
@@ -62,6 +94,12 @@ func PublishReview(c *gin.Context) {
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{})

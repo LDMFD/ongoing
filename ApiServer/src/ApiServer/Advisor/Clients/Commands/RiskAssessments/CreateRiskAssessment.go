@@ -1,14 +1,18 @@
 package RiskAssessments
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
-	"strings"
+	"ongoing/Utils/UUID"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 
 	"github.com/gin-gonic/gin"
@@ -27,6 +31,7 @@ type CreateOrUpdateRiskAssessmentRequestBody struct {
 
 func CreateRiskAssessment(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path CreateRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -40,10 +45,11 @@ func CreateRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 
 	var provider = Entities.RiskProvider{}
 	if err := db.NewSelect().
@@ -73,20 +79,21 @@ func CreateRiskAssessment(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.Questionnaire.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		questionnaireFileId = &file.Id
 	}
 
 	var completed time.Time
-	var err error
 	if completed, err = Date.FromCanonical(body.Completed); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'completed' timestamp"})
 		return
 	}
+
+	uid := UUID.GenerateUID(c)
 
 	var assessment = Entities.RiskAssessment{
 		Uid:                 uid,
@@ -95,11 +102,33 @@ func CreateRiskAssessment(c *gin.Context) {
 		QuestionnaireFileId: questionnaireFileId,
 		Completed:           completed,
 	}
-	if _, err := db.NewInsert().Model(&assessment).Exec(c); err != nil {
+
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewInsert().Model(&assessment).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	if err := auth.CreateFile(&client.Uid, nil, body.Questionnaire.Uid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"RiskAssessment": assessment,
+		"Id": uid,
 	})
 }

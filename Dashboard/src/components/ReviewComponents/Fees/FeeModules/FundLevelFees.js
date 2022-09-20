@@ -99,7 +99,7 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
             <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
             <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
 
-            {policy.File.Uid &&
+            {policy.File &&
                 <p>
                     Factsheet: {policy.File.Filename}
                     <Button onClick={Download.bind(null, policy.File.Uid)}>Download</Button>

@@ -1,6 +1,6 @@
-﻿using Ongoing.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using Ongoing.Entities;
 using File = System.IO.File;
 
 namespace Ongoing
@@ -25,6 +25,7 @@ namespace Ongoing
         {
         }
 
+        public virtual DbSet<Advisor> Advisors { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<FactFind> FactFinds { get; set; } = null!;
         public virtual DbSet<FeesReport> FeesReports { get; set; } = null!;
@@ -35,6 +36,7 @@ namespace Ongoing
         public virtual DbSet<Module> Modules { get; set; } = null!;
         public virtual DbSet<ModulePreset> ModulePresets { get; set; } = null!;
         public virtual DbSet<Operator> Operators { get; set; } = null!;
+        public virtual DbSet<Organisation> Organisation { get; set; } = null!;
         public virtual DbSet<Policy> Policies { get; set; } = null!;
         public virtual DbSet<PolicyFund> PolicyFunds { get; set; } = null!;
         public virtual DbSet<PolicyProvider> PolicyProviders { get; set; } = null!;
@@ -68,6 +70,7 @@ namespace Ongoing
             builder.HasPostgresEnum<ReviewState>();
             builder.HasPostgresEnum<UserType>();
 
+            builder.ApplyConfiguration(new AdvisorConfig());
             builder.ApplyConfiguration(new ClientConfig());
             builder.ApplyConfiguration(new FactFindConfig());
             builder.ApplyConfiguration(new FeesReportConfig());
@@ -78,6 +81,7 @@ namespace Ongoing
             builder.ApplyConfiguration(new ModuleConfig());
             builder.ApplyConfiguration(new ModulePresetConfig());
             builder.ApplyConfiguration(new OperatorConfig());
+            builder.ApplyConfiguration(new OrganisationConfig());
             builder.ApplyConfiguration(new PolicyConfig());
             builder.ApplyConfiguration(new PolicyFundConfig());
             builder.ApplyConfiguration(new PolicyProviderConfig());

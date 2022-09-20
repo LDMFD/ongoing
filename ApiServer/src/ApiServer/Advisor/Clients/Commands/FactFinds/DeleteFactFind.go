@@ -2,6 +2,7 @@ package FactFinds
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -32,10 +33,12 @@ func DeleteFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
-	if factFind.ClientId != client.Id {
+	if client, err := Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		panic(err.Error())
+	} else if factFind.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "FactFind does not belong to client"})
-		return
+		panic(err.Error())
 	}
 
 	if _, err := db.NewDelete().

@@ -26,7 +26,7 @@ if (window.Config === '__CONFIG_EMBED__') {
 }
 
 // Bypass Firebase
-export const OFFLINE_AUTH = false;
+export const OFFLINE_AUTH = process.env.REACT_APP_ONGOING_AUTH_BYPASS === 'true';
 
 const FirebaseUiConfig = {
     signInFlow: 'redirect',
@@ -63,6 +63,7 @@ window.ApiClient = axios.create({
 
 let ConcurrentRequestCount = 0;
 
+// TODO Refactor to Spinner.js and .css (see AppDrawer.js & .css)
 function ShowSpinner() {
     if (++ConcurrentRequestCount > 0) {
         document.querySelectorAll('.request-spinner')?.forEach(element => {

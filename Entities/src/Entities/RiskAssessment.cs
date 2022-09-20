@@ -38,10 +38,10 @@ namespace Ongoing.Entities
         [ForeignKey("ClientId")]
         [InverseProperty("RiskAssessments")]
         public virtual Client Client { get; set; } = null!;
-        
+
         [ForeignKey("QuestionnaireFileId")]
         [InverseProperty("RiskAssessments")]
-        public virtual File? QuestionnaireFile { get; set; } = null!;
+        public virtual File? QuestionnaireFile { get; set; }
         
         [ForeignKey("RiskLevelId")]
         [InverseProperty("RiskAssessments")]
@@ -60,19 +60,19 @@ class RiskAssessmentConfig : IEntityTypeConfiguration<RiskAssessment>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.RiskAssessments)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_client");
 
         builder.HasOne(d => d.QuestionnaireFile)
             .WithMany(p => p.RiskAssessments)
             .HasForeignKey(d => d.QuestionnaireFileId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_questionnaire");
 
         builder.HasOne(d => d.RiskLevel)
             .WithMany(p => p.RiskAssessments)
             .HasForeignKey(d => d.RiskLevelId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_risk_level");
         
         // Uniqueness constraint

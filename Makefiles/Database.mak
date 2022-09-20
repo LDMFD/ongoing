@@ -5,6 +5,7 @@ _gcp-sql-setup:
 	make gcp-sql-cycle-password
 	make _gcp-allow-cloud-run-to-access-database
 	make _gcp-create-db-proxy-service-account
+	make _db-create-remote-spicedb
 
 # Creates CloudSQL DB
 _gcp-sql-create: import-env
@@ -15,6 +16,7 @@ _gcp-sql-create: import-env
 		--zone ${ZONE} \
 		--availability-type=ZONAL  \
 		--backup-start-time="01:00" \
+		--backup-location=${REGION} \
 		--insights-config-query-insights-enabled \
 		--storage-auto-increase
 
@@ -53,6 +55,8 @@ gcp-sql-cycle-password: import-env
 		--instance=${DB_INSTANCE_${ENV}} \
 		--password=${PASSWORD}
 
+	gcloud secrets versions add spicedb-connection --data-file=${HOME}/.ongoing/envs/${ENV}/secrets/spicedb/connection
+
 # Allow Cloud Run to read secrets and connect to DB
 _gcp-allow-cloud-run-to-access-database: import-env
 	gcloud projects add-iam-policy-binding ${GCP_PROJECT_${ENV}} \
@@ -79,6 +83,9 @@ _gcp-sql-teardown: import-env
 	gcloud secrets delete db-proxy
 
 # ---
+
+db-seed-local:
+	make db-migrate-local MIGRATION=users
 
 # Local:
 db-migrate-local: import-env
@@ -131,6 +138,7 @@ db-restore-remote: import-env
 # In these, change --data-only to --schema-only to control output.
 db-dump-local:
 	docker run -it --rm \
+		--platform linux/amd64 \
 		--name db-dump \
 		--network ongoing_default \
 		-v ${HOME}/.ongoing/dumps/dump.sql:/app/dump.sql \
@@ -158,9 +166,6 @@ db-dump-remote: import-env
 										   --column-inserts \
 										   --no-comments" \
 		> ~/.ongoing/envs/${ENV}/dumps/dump.sql
-
-db-up:
-	make db-migrate-local MIGRATION=1
 
 # Run this, then `make db-up`
 db-clean:
@@ -204,6 +209,7 @@ db-update:
 	cd Entities && \
 		dotnet ef database update
 
+# Not necessary - `dotnet ef database update` does this
 db-create-remote: import-env
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
 	docker run -i \
@@ -212,3 +218,12 @@ db-create-remote: import-env
         ${LOCAL_POSTGRES_IMAGE} \
             /bin/bash \
             -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"ongoing-${ENV}\";'"
+
+_db-create-remote-spicedb: import-env
+	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
+	docker run -i \
+	    --network ongoing_default \
+		--platform linux/amd64 \
+        ${LOCAL_POSTGRES_IMAGE} \
+            /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"spicedb-${ENV}\";'"

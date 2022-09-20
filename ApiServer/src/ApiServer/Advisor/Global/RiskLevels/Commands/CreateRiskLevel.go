@@ -1,14 +1,12 @@
 package Commands
 
 import (
+	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
-	"strings"
-
-	"github.com/uptrace/bun"
+	"ongoing/Utils/UUID"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type CreateRiskLevelRequest struct {
@@ -27,9 +25,6 @@ func CreateRiskLevel(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
 	var provider = Entities.RiskProvider{}
 	if err := db.NewSelect().
 		Model(&provider).
@@ -38,6 +33,8 @@ func CreateRiskLevel(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	uid := UUID.GenerateUID(c)
 
 	var riskLevel = Entities.RiskLevel{
 		Uid:            uid,
@@ -51,6 +48,6 @@ func CreateRiskLevel(c *gin.Context) {
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"RiskLevel": riskLevel,
+		"Id": uid,
 	})
 }

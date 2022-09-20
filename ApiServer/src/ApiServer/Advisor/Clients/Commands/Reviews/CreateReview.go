@@ -2,11 +2,11 @@ package Reviews
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
-	"strings"
+	"ongoing/Utils/UUID"
 	"time"
 )
 
@@ -23,7 +23,13 @@ func CreateReview(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		// TODO implement levelled logging, so this stacktrace can be printed as a warning
+		//panic(err.Error())
+		return
+	}
 
 	// Only 1 review in draft state at once
 	if exists, err := db.NewSelect().
@@ -34,7 +40,7 @@ func CreateReview(c *gin.Context) {
 		panic(err)
 	} else if exists {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
-		return
+		panic(err)
 	}
 
 	t1 := time.Now()
@@ -56,11 +62,10 @@ func CreateReview(c *gin.Context) {
 		}
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
 	startDate := time.Date(t1.Year(), t1.Month(), t1.Day(), 0, 0, 0, 0, time.UTC)
 	endDate := time.Date(t2.Year(), t2.Month(), t2.Day(), 0, 0, 0, 0, time.UTC)
+
+	uid := UUID.GenerateUID(c)
 
 	review := &Entities.Review{
 		Uid:       uid,
@@ -75,6 +80,6 @@ func CreateReview(c *gin.Context) {
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"Review": review,
+		"Id": uid,
 	})
 }

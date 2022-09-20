@@ -2,6 +2,7 @@ package ProviderDiscount
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -10,7 +11,7 @@ import (
 )
 
 type DeleteProviderDiscountRequestPath struct {
-	ClientId string `binding:"required"`
+	ClientId           string `binding:"required"`
 	ProviderDiscountId string `binding:"required"`
 }
 
@@ -32,7 +33,12 @@ func DeleteProviderDiscount(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err)
+	}
+
 	if providerDiscount.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "ProviderDiscount does not belong to client"})
 		return

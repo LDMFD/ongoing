@@ -61,12 +61,12 @@ const FundList = () => {
             accessor: 'factsheet',
             Header: 'Fact sheet',
             width: 100,
-            Cell: ({ row }) => row.original.fileUid && (
+            Cell: ({ row }) => row.original.fileUid ? (
                 <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
                     {row.original.filename}
                     <DownloadIcon />
                 </button>
-            ),
+            ) : null,
         }, {
             accessor: 'actions',
             Header: '',

@@ -17,7 +17,9 @@ const File = ({ file, completionCallback }) => {
             Size: 0,
         };
 
-        window.ApiClient.get(`common/storage/upload?Filename=${file.name}`).then(res => {
+        window.ApiClient.post(`storage/files`, {
+            Filename: file.name,
+        }).then(res => {
             let postData = new FormData();
 
             Object.keys(res.data.Fields).forEach(f => {
@@ -40,7 +42,7 @@ const File = ({ file, completionCallback }) => {
                     Size:     file.size,
                 };
 
-                window.ApiClient.post('common/storage/upload', fileSpec)
+                window.ApiClient.post('storage/signal', fileSpec)
                 .then(() => {
                     setUploaded(true);
                     completionCallback(fileSpec);

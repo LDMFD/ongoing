@@ -66,7 +66,7 @@ class ModuleConfig : IEntityTypeConfiguration<Module>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.Modules)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_client");
         
         builder.HasAlternateKey(p => new { p.ClientId, p.Type });

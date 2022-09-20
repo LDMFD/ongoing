@@ -1,8 +1,8 @@
 package ApiServer
 
 import (
-	"log"
 	"net/http"
+	"ongoing/AuthService"
 	"os"
 	"time"
 
@@ -11,14 +11,13 @@ import (
 	"github.com/uptrace/bun"
 )
 
-// TODO https://github.com/gin-gonic/gin#support-lets-encrypt
-
 type ApiServer struct {
-	db     *bun.DB
-	server *http.Server
+	db         *bun.DB
+	server     *http.Server
+	authClient *AuthService.Client
 }
 
-func New(db *bun.DB) *ApiServer {
+func New(db *bun.DB, authClient *AuthService.Client) *ApiServer {
 	server := &ApiServer{
 		db: db,
 		server: &http.Server{
@@ -26,6 +25,7 @@ func New(db *bun.DB) *ApiServer {
 			WriteTimeout: 15 * time.Second,
 			ReadTimeout:  15 * time.Second,
 		},
+		authClient: authClient,
 	}
 	return server
 }
@@ -37,16 +37,21 @@ func AddDatabaseMiddleware(db *bun.DB) gin.HandlerFunc {
 	}
 }
 
-func (s *ApiServer) ListenAndServe() error {
-	log.Println("Running Api Server...")
+func AddAuthBackendMiddleware(authClient *AuthService.Client) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("AUTH", authClient)
+		c.Next()
+	}
+}
 
+func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 	r := gin.New()
 	r.SetTrustedProxies(nil)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{
-			"https://portal.amplifa.co.uk",
-			"https://ongoing.tp1.org",
+			"https://portal.amplifa.co.uk", // TODO put into configuration
+			"https://staging.amplifa.co.uk",
 			"http://localhost.ongoing.tp1.org:3000",
 		},
 		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
@@ -55,24 +60,21 @@ func (s *ApiServer) ListenAndServe() error {
 		AllowCredentials:   true,
 		OptionsPassthrough: false,
 
-		// Enable Debugging for testing, TODO consider disabling in production
-		Debug: true,
+		// Enable Debugging for testing, TODO consider disabling in production to reduce log noise?
+		Debug: false, // keep as false - enable via new env var - !Tests.TEST_BUILD,
 	})
 	r.Use(c)
 
-	// Logger middleware will write the logs to gin.DefaultWriter even if you set with GIN_MODE=release.
-	r.Use(gin.Logger())
+	r.Use(gin.ErrorLogger()) // TODO when to use `r.Use(gin.Logger())` ?
 
-	// Recover from panics and respond 500
 	r.Use(gin.Recovery())
 
 	// TODO add timing - see custom middleware example
 
 	r.Use(AddDatabaseMiddleware(s.db))
+	r.Use(AddAuthBackendMiddleware(s.authClient))
 
 	AddApiRoutes(r)
 
-	r.Run(":" + os.Getenv("ONGOING_API_PORT"))
-
-	return nil
+	return r, nil
 }

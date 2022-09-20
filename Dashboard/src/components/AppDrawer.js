@@ -18,27 +18,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 import './AppDrawer.css';
 
 import Routes from './Routes';
-import AuthControl from './AuthControl';
+import AuthControl, { UserType } from './AuthControl';
 import { Context } from 'State/StateProvider';
 import InitialState from "State/InitialState";
 import { FromCanonical } from 'Utils/DateTime';
 
-const advisorItems = [
+const tier1Items = [
     {
-        label: 'Clients',
-        link: '/clients',
-    },
-    {
-        label: 'Funds',
-        link: '/funds',
-    },
-    {
-        label: 'Models',
-        link: '/models',
-    },
-    {
-        label: 'Model Operators',
-        link: '/operators',
+        label: 'Module Presets',
+        link: '/review-config/module-presets',
     },
     {
         label: 'Policy Types',
@@ -54,26 +42,56 @@ const advisorItems = [
     },
 ];
 
-const Items = {
-    'anonymous': [],
-    'advisor': advisorItems,
-    'admin': advisorItems.concat([
-        {
-            label: 'Module Presets',
-            link: '/review-config/module-presets',
-        },
-        // {
-        //     label: 'Users',
-        //  
-        //     link: '/users',
-        // },
-    ]),
-    'client': [
-        {
-            label: 'All reviews',
-            link: '/client-space/reviews',
-        },
-    ],
+const tier2Items = [
+    {
+        label: 'Funds',
+        link: '/funds',
+    },
+    {
+        label: 'Models',
+        link: '/models',
+    },
+    {
+        label: 'Model Operators',
+        link: '/operators',
+    },
+
+];
+
+const clientsItem = [
+    {
+        label: 'Clients',
+        link: '/clients',
+    },
+];
+
+const staffItem = [
+    {
+        label: 'Staff users',
+        link: '/staff',
+    },
+];
+
+const orgsItem = [
+    {
+        label: 'Organisations',
+        link: '/admin/organisations',
+    },
+];
+
+const clientSpaceItem = [
+    {
+        label: 'All reviews',
+        link: '/client-space/reviews',
+    },
+]
+
+const Sidebars = {
+    [ UserType.Superuser ]: orgsItem,
+    [ UserType.OrgOwner ]:  [].concat( clientsItem, tier1Items, tier2Items, staffItem ),  // Can manage admins
+    [ UserType.OrgAdmin ]:  [].concat( clientsItem, tier1Items, tier2Items, staffItem ),  // Can manage advisors
+    [ UserType.Advisor ]:   [].concat( clientsItem, tier2Items ),
+    [ UserType.Client ]:    clientSpaceItem,
 };
 
 export default function PermanentDrawerLeft() {
@@ -81,7 +99,7 @@ export default function PermanentDrawerLeft() {
 
     let location = useLocation();
 
-    if (!state.Auth) {
+    if (!state.Session) {
         return (
             <>
                 <br /><br /><br /><br /><br /><br />
@@ -93,9 +111,10 @@ export default function PermanentDrawerLeft() {
     let regex = /reviews\/(?<reviewId>[0-9a-f]{32})\/(?<tail>.*)/;
     let res = location.pathname.match(regex);
 
-    let items = Items[state.Auth.UserType];
+    let items = [];
+    items.push(...Sidebars[state.Session.Role]);
 
-    if (state.Auth.UserType === 'client') {
+    if (state.Session.Role === 'client') {
         items = items.concat(state.Reviews?.map(review => {
             let to = FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB');
             let tail = res?.groups?.tail || 'modules/introduction';
@@ -107,7 +126,7 @@ export default function PermanentDrawerLeft() {
         }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0)));
     }
 
-    const drawerWidth = state.Auth.UserType === 'client' ? 360 : 240;
+    const drawerWidth = state.Session.Role === 'client' ? 360 : 240;
 
     const drawerStyles = {
         width: drawerWidth,
@@ -117,6 +136,8 @@ export default function PermanentDrawerLeft() {
             boxSizing: 'border-box',
         },
     };
+
+    let titleRole = state.Session.Role[0].toUpperCase() + state.Session.Role.substring(1);
     
     return (
         <Box sx={{ display: 'flex' }}>
@@ -126,9 +147,7 @@ export default function PermanentDrawerLeft() {
                     sx       = {{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-                        {state.Auth.UserType === 'client'
-                            ? 'Amplifa Client Portal'
-                            : 'Amplifa Advisor Portal'}
+                        Amplifa {titleRole} Portal
                     </Typography>
                     
                     <AuthControl />

@@ -6,7 +6,7 @@ import (
 )
 
 func AddRoutes(r *gin.RouterGroup) {
-	r.GET("/download", Commands.RequestDownload)
-	r.GET("/upload", Commands.RequestUpload)
-	r.POST("/upload", Commands.SignalUpload)
+	r.GET("/files", Commands.RequestDownload)
+	r.POST("/files", Commands.RequestUpload)
+	r.POST("/signal", Commands.SignalUpload)
 }

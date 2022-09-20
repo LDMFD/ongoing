@@ -8,6 +8,7 @@ package main
 
 import (
 	"ongoing/ApiServer"
+	"ongoing/AuthService"
 	"ongoing/Database"
 )
 
@@ -18,7 +19,8 @@ func buildApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	apiServer := ApiServer.New(db)
+	client := AuthService.New()
+	apiServer := ApiServer.New(db, client)
 	app := newApp(apiServer)
 	return app, nil
 }

@@ -3,6 +3,7 @@ package RiskAssessments
 import (
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -41,7 +42,12 @@ func UpdateRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
+
 	if assessment.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Risk Assessment does not belong to client"})
 		return
@@ -75,19 +81,18 @@ func UpdateRiskAssessment(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.Questionnaire.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		questionnaireFileId = &file.Id
 	}
 
 	var completed time.Time
-	var err error
 	if completed, err = Date.FromCanonical(body.Completed); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'completed' timestamp"})
-		return
+		panic(err.Error())
 	}
 
 	assessment.RiskLevelId = level.Id

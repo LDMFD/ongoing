@@ -3,6 +3,7 @@ package PolicyFunds
 import (
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -16,8 +17,8 @@ type UpdatePolicyFundRequestPath struct {
 }
 
 type CreateOrUpdatePolicyFundRequestBody struct {
-	FundId     string   `binding:"required"`
-	PolicyId   string   `binding:"required"`
+	FundId     string  `binding:"required"`
+	PolicyId   string  `binding:"required"`
 	Proportion float64 `binding:"required"`
 }
 
@@ -45,7 +46,12 @@ func UpdatePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
+
 	if policyFund.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyFundDoesNotBelongToClient})
 		return

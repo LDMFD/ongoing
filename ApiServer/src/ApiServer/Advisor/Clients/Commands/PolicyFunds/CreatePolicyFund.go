@@ -1,13 +1,12 @@
 package PolicyFunds
 
 import (
-	"github.com/google/uuid"
+	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
-	"strings"
-
-	"github.com/gin-gonic/gin"
+	"ongoing/Utils/UUID"
 )
 
 type CreatePolicyFundRequestPath struct {
@@ -29,10 +28,12 @@ func CreatePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		panic(err.Error())
+	}
 
 	var policy = Entities.Policy{}
 	if err := db.NewSelect().
@@ -52,6 +53,8 @@ func CreatePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	uid := UUID.GenerateUID(c)
+
 	var policyFund = Entities.PolicyFund{
 		Uid:        uid,
 		ClientId:   client.Id,
@@ -64,7 +67,6 @@ func CreatePolicyFund(c *gin.Context) {
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"PolicyFund": policyFund,
+		"Id": uid,
 	})
 }
-

@@ -3,6 +3,7 @@ package Forecasts
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -39,7 +40,11 @@ func UpdateForecast(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 	if forecast.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Risk Assessment does not belong to client"})
 		return
@@ -50,16 +55,15 @@ func UpdateForecast(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		fileId = &file.Id
 	}
 
 	var submitted time.Time
-	var err error
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
 		return

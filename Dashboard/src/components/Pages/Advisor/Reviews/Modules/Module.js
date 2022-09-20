@@ -9,7 +9,7 @@ const Module = ({ client, module }) => {
     const [state,  ] = useContext(Context);
     const { reviewId } = useParams();
 
-    if (state.Auth.UserType === 'client' || reviewId) {
+    if (state.Session.Role === 'client' || reviewId) {
         return (
             <ClientModule client={client} module={module} />
         );

@@ -13,6 +13,7 @@ import (
 	"ongoing/ApiServer/Advisor/Global/Reviews"
 	"ongoing/ApiServer/Advisor/Global/RiskLevels"
 	"ongoing/ApiServer/Advisor/Global/RiskProviders"
+	"ongoing/ApiServer/Superuser/Commands/Organisation"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
@@ -27,4 +28,6 @@ func AddRoutes(r *gin.RouterGroup) {
 	RiskProviders.AddRoutes(r.Group("/risk-providers"))
 	RiskLevels.AddRoutes(r.Group("/risk-levels"))
 	Reviews.AddRoutes(r.Group("/reviews"))
+
+	r.PUT("/organisations/:OrgId", Organisation.UpdateOrganisation)
 }

@@ -12,9 +12,9 @@ import (
 
 func GetClientSpace(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-	user := c.MustGet("USER").(*Entities.User)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	var client = Entities.Client{UserId: user.Id}
+	var client = Entities.Client{UserId: session.UserId}
 	if err := db.NewSelect().
 		Model(&client).
 		Relation("User").
@@ -29,6 +29,6 @@ func GetClientSpace(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"ClientContext": clientContext,
-		"Reviews": reviews,
+		"Reviews":       reviews,
 	})
 }

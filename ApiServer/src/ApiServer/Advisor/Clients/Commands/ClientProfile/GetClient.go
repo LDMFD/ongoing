@@ -4,6 +4,7 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 
@@ -23,14 +24,13 @@ func GetClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var client = Entities.Client{}
-	if err := db.NewSelect().
-		Model(&client).
-		Relation("User").
-		Where("uid = ?", path.ClientId).
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		// TODO implement levelled logging, so this stacktrace can be printed as a warning
+		//panic(err.Error())
+		return
 	}
 
 	var draft gin.H
@@ -46,7 +46,7 @@ func GetClient(c *gin.Context) {
 		if count == 1 {
 			var (
 				startDate string
-				endDate string
+				endDate   string
 			)
 			if draftReviews[0].StartDate != nil {
 				startDate = Date.ToCanonical(draftReviews[0].StartDate)
@@ -65,12 +65,12 @@ func GetClient(c *gin.Context) {
 		}
 	}
 
-	report := Reviews.GenerateReport(c, client.Id)
+	report := Reviews.GenerateReport(c, client.Id, false)
 
 	c.JSON(200, gin.H{
 		"ClientContext": client.ToReport(),
 		"Draft":         draft,
 		"Report":        report,
-		"Reviews":       Reviews.GetReviews(c, &client),
+		"Reviews":       Reviews.GetReviews(c, client),
 	})
 }

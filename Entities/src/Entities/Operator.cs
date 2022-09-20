@@ -31,6 +31,9 @@ namespace Ongoing.Entities
         [Column("uid")]
         public string Uid { get; set; } = null!;
         
+        [Column("org_id")]
+        public int OrgId { get; set; }
+
         [Column("name")]
         public string Name { get; set; } = null!;
         
@@ -42,6 +45,10 @@ namespace Ongoing.Entities
 
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
+
+        
+        [ForeignKey("OrgId")]
+        public virtual Organisation Org { get; set; } = null!;
 
         [InverseProperty("Operator")]
         public virtual ICollection<Model> Models { get; set; }

@@ -1,3 +1,4 @@
+export const APPLY                        = 'APPLY';
 export const LOGIN                        = 'LOGIN';
 export const LOGOUT                       = 'LOGOUT';
 export const POPULATE_CLIENT              = 'POPULATE_CLIENT';
@@ -6,6 +7,9 @@ export const SET_CLIENTS                  = 'SET_CLIENTS';
 export const SET_RISKASSESSMENT_TEMPLATES = 'SET_RISKASSESSMENT_TEMPLATES';
 export const SET_GLOBAL_ENTITIES          = 'SET_GLOBAL_ENTITIES';
 export const PROVIDER_CHARGE_REORDER      = 'PROVIDER_CHARGE_REORDER';
+export const SET_ORGANISATIONS            = 'SET_ORGANISATIONS';
+
+// TODO figure out how to make this scale
 
 const Reducer = (state, action) => {
     switch (action.type) {
@@ -87,6 +91,21 @@ const Reducer = (state, action) => {
                 ClientContext,
                 Reviews,
             };
+        }
+
+        case SET_ORGANISATIONS: {
+            return {
+                ...state,
+                ...action.payload,
+            }
+        }
+
+        case APPLY: {
+            console.log(action.payload)
+            return {
+                ...state,
+                ...action.payload,
+            }
         }
 
         default:

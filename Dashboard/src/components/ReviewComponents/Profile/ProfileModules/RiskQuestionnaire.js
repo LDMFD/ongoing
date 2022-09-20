@@ -34,7 +34,11 @@ const RiskQuestionnaire = () => {
             completed:            Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
             questionnaire:        ra.Questionnaire,
         };
-    }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0)), []);
+    }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0)), [
+        report.RiskAssessments,
+        report.RiskLevels,
+        report.RiskProviders,
+    ]);
     
     let columns = useMemo(() => [
         {
@@ -57,12 +61,12 @@ const RiskQuestionnaire = () => {
                 accessor: 'questionnaire',
                 Header: 'Questionnaire',
                 width: 2,
-                Cell: ({ row }) => row.original.questionnaire.Uid && (
+                Cell: ({ row }) => row.original.questionnaire.Uid ? (
                     <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
                         {row.original.questionnaire.Filename}
                         <DownloadIcon />
                     </button>
-                ),
+                ) : null,
         } : null,
         {
             accessor: 'desc',

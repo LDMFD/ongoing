@@ -1,10 +1,11 @@
 package ClientProfile
 
 import (
-	"net/http"
-	"ongoing/Entities"
-
 	"github.com/uptrace/bun"
+	"net/http"
+	"ongoing/ApiServer/Helpers"
+	"ongoing/Entities"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,8 +37,15 @@ func UpdateClient(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+	body.Identity.Email = strings.ToLower(body.Identity.Email)
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		panic(err.Error())
+	}
+
 	client.Forenames = body.Identity.Forenames
 	client.Surname = body.Identity.Surname
 	client.Fee = body.Fee
@@ -62,12 +70,11 @@ func UpdateClient(c *gin.Context) {
 
 	if body.Identity.Email != client.User.Email {
 		client.User.Email = body.Identity.Email
-		client.User.Verified = false
 		if _, err := db.NewUpdate().Model(&client.User).WherePK().
 			Column("email").
 			Exec(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		}
 	}
 

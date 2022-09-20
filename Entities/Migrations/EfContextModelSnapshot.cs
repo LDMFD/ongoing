@@ -24,8 +24,60 @@ namespace Ongoing.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "module_type", new[] { "introduction", "profile", "profile_fact_find", "profile_risk", "profile_objectives", "policy_valuations", "policy_valuations_valuation", "policy_valuations_contributions", "fees", "fees_advice_fee", "fees_policy_fees", "fees_fund_level", "fees_portfolio_level", "fees_dim", "conclusions", "conclusions_goals", "conclusions_advice_given", "conclusions_forecast", "conclusions_due_diligence", "conclusions_ongoing_suitability", "conclusions_action_points" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "operator_type", new[] { "dim", "firm", "individual", "none" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "review_state", new[] { "draft", "final" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin", "advisor", "client" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "superuser", "owner", "admin", "advisor", "client" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Ongoing.Entities.Advisor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Forenames")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("forenames");
+
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("surname");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uid");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Uid");
+
+                    b.HasAlternateKey("UserId");
+
+                    b.HasIndex("OrgId");
+
+                    b.HasIndex(new[] { "UserId" }, "advisors_user_id_key")
+                        .IsUnique();
+
+                    b.ToTable("advisors");
+                });
 
             modelBuilder.Entity("Ongoing.Entities.Client", b =>
                 {
@@ -47,6 +99,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("forenames");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("text")
@@ -58,13 +114,22 @@ namespace Ongoing.Migrations
                         .HasColumnName("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uid");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("Uid");
+
                     b.HasAlternateKey("UserId");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "UserId" }, "clients_user_id_key")
                         .IsUnique();
@@ -287,6 +352,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("ocf_fee");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<string>("SedolCode")
                         .HasColumnType("text")
                         .HasColumnName("sedol_code");
@@ -309,6 +378,8 @@ namespace Ongoing.Migrations
                     b.HasAlternateKey("Uid");
 
                     b.HasIndex("FileId");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "Name" }, "funds_name_key")
                         .IsUnique();
@@ -345,6 +416,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("operator_id");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -373,6 +448,8 @@ namespace Ongoing.Migrations
                     b.HasIndex("FileId");
 
                     b.HasIndex("OperatorId");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "Name" }, "models_name_key")
                         .IsUnique();
@@ -430,6 +507,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("module_type")
                         .HasColumnName("module_type");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<string>("Text")
                         .HasColumnType("text")
                         .HasColumnName("text");
@@ -450,6 +531,8 @@ namespace Ongoing.Migrations
                     b.HasAlternateKey("ModuleType");
 
                     b.HasAlternateKey("Uid");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "Uid" }, "module_presets_uid_key")
                         .IsUnique();
@@ -475,6 +558,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -496,6 +583,8 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
+                    b.HasIndex("OrgId");
+
                     b.HasIndex(new[] { "Name" }, "operators_name_key")
                         .IsUnique();
 
@@ -503,6 +592,58 @@ namespace Ongoing.Migrations
                         .IsUnique();
 
                     b.ToTable("operators");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.Organisation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("creator_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("integer")
+                        .HasColumnName("owner_id");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uid");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Name");
+
+                    b.HasAlternateKey("Uid");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex(new[] { "Name" }, "organisations_name_key")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "Uid" }, "organisations_uid_key")
+                        .IsUnique();
+
+                    b.ToTable("organisations");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Policy", b =>
@@ -668,6 +809,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<string>("Pricing")
                         .IsRequired()
                         .HasColumnType("text")
@@ -689,6 +834,8 @@ namespace Ongoing.Migrations
                     b.HasAlternateKey("Name");
 
                     b.HasAlternateKey("Uid");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "Name" }, "policy_providers_name_key")
                         .IsUnique();
@@ -713,6 +860,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<DateTime?>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -729,6 +880,8 @@ namespace Ongoing.Migrations
                     b.HasAlternateKey("Name");
 
                     b.HasAlternateKey("Uid");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "Name" }, "policy_types_name_key")
                         .IsUnique();
@@ -1008,6 +1161,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("label");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text")
@@ -1018,6 +1175,8 @@ namespace Ongoing.Migrations
                         .HasColumnName("timestamp");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrgId");
 
                     b.ToTable("riskassessment_templates");
                 });
@@ -1084,6 +1243,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
                     b.Property<DateTime?>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -1100,6 +1263,8 @@ namespace Ongoing.Migrations
                     b.HasAlternateKey("Name");
 
                     b.HasAlternateKey("Uid");
+
+                    b.HasIndex("OrgId");
 
                     b.HasIndex(new[] { "Name" }, "risk_providers_name_key")
                         .IsUnique();
@@ -1130,10 +1295,6 @@ namespace Ongoing.Migrations
                         .HasColumnName("timestamp")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<UserType>("Type")
-                        .HasColumnType("user_type")
-                        .HasColumnName("type");
-
                     b.Property<string>("Uid")
                         .IsRequired()
                         .HasColumnType("text")
@@ -1160,14 +1321,42 @@ namespace Ongoing.Migrations
                     b.ToTable("users");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.Advisor", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ongoing.Entities.User", "User")
+                        .WithOne("Advisor")
+                        .HasForeignKey("Ongoing.Entities.Advisor", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_advisor_user");
+
+                    b.Navigation("Org");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Client", b =>
                 {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Ongoing.Entities.User", "User")
                         .WithOne("Client")
                         .HasForeignKey("Ongoing.Entities.Client", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_user");
+                        .HasConstraintName("fk_client_user");
+
+                    b.Navigation("Org");
 
                     b.Navigation("User");
                 });
@@ -1177,14 +1366,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("FactFinds")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("FactFinds")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_fact_find");
 
@@ -1198,14 +1387,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("FeesReports")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("FeesReports")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_fees_report");
 
@@ -1219,14 +1408,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Forecasts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Forecasts")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_forecast");
 
@@ -1240,10 +1429,18 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Funds")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_file");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_fund_file");
+
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("File");
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Model", b =>
@@ -1251,8 +1448,8 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Models")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_file");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_model_file");
 
                     b.HasOne("Ongoing.Entities.Operator", "Operator")
                         .WithMany("Models")
@@ -1261,9 +1458,17 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_operator");
 
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("File");
 
                     b.Navigation("Operator");
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Module", b =>
@@ -1271,11 +1476,52 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Modules")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.ModulePreset", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Org");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.Operator", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Org");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.Organisation", b =>
+                {
+                    b.HasOne("Ongoing.Entities.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ongoing.Entities.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Policy", b =>
@@ -1283,15 +1529,15 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Policies")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_client");
+                        .HasConstraintName("fk_client_policy");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Policies")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_file");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasConstraintName("fk_policy_file");
 
                     b.HasOne("Ongoing.Entities.PolicyProvider", "PolicyProvider")
                         .WithMany("Policies")
@@ -1321,7 +1567,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("PolicyFunds")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1335,7 +1581,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Policy", "Policy")
                         .WithMany("PolicyFunds")
                         .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_policy");
 
@@ -1346,12 +1592,34 @@ namespace Ongoing.Migrations
                     b.Navigation("Policy");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.PolicyProvider", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Org");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.PolicyType", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Org");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Portfolio", b =>
                 {
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Portfolios")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1365,7 +1633,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Policy", "Policy")
                         .WithMany("Portfolios")
                         .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_policy");
 
@@ -1393,9 +1661,9 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("ProviderDiscounts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_client");
+                        .HasConstraintName("fk_client_provider_discount");
 
                     b.HasOne("Ongoing.Entities.PolicyProvider", "PolicyProvider")
                         .WithMany("ProviderDiscounts")
@@ -1414,7 +1682,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Reviews")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1426,20 +1694,20 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("RiskAssessments")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "QuestionnaireFile")
                         .WithMany("RiskAssessments")
                         .HasForeignKey("QuestionnaireFileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_questionnaire");
 
                     b.HasOne("Ongoing.Entities.RiskLevel", "RiskLevel")
                         .WithMany("RiskAssessments")
                         .HasForeignKey("RiskLevelId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_risk_level");
 
@@ -1448,6 +1716,17 @@ namespace Ongoing.Migrations
                     b.Navigation("QuestionnaireFile");
 
                     b.Navigation("RiskLevel");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.RiskAssessmentTemplate", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.RiskLevel", b =>
@@ -1459,6 +1738,17 @@ namespace Ongoing.Migrations
                         .HasConstraintName("fk_risk_provider");
 
                     b.Navigation("RiskProvider");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.RiskProvider", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Client", b =>
@@ -1549,6 +1839,9 @@ namespace Ongoing.Migrations
 
             modelBuilder.Entity("Ongoing.Entities.User", b =>
                 {
+                    b.Navigation("Advisor")
+                        .IsRequired();
+
                     b.Navigation("Client")
                         .IsRequired();
                 });

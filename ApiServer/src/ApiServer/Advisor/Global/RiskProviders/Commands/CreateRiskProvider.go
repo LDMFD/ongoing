@@ -1,14 +1,12 @@
 package Commands
 
 import (
+	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
-	"strings"
-
-	"github.com/uptrace/bun"
+	"ongoing/Utils/UUID"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type CreateRiskProviderRequest struct {
@@ -17,9 +15,7 @@ type CreateRiskProviderRequest struct {
 
 func CreateRiskProvider(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var req CreateRiskProviderRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -27,15 +23,18 @@ func CreateRiskProvider(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	uid := UUID.GenerateUID(c)
+
 	var riskProvider = Entities.RiskProvider{
-		Uid: uid,
-		Name: req.Name,
+		Uid:   uid,
+		Name:  req.Name,
+		OrgId: session.Org.Id,
 	}
 	if _, err := db.NewInsert().Model(&riskProvider).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"RiskProvider": riskProvider,
+		"Id": uid,
 	})
 }

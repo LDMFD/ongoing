@@ -13,3 +13,6 @@ build-dashboard:
 	find DashboardServer/build/ -name *.map -delete
 
 	docker-compose -f docker-compose.prod.yml build --no-cache dashboard-server
+
+cloc:
+	cloc ApiServer/src Dashboard/src Entities/src Makefiles/

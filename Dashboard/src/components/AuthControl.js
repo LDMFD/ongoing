@@ -6,14 +6,15 @@ import {
 
 import { Context } from 'State/StateProvider';
 import { Logout, ShowLogin } from 'Auth';
-import { LOGOUT } from 'State/Reducer';
+import { LOGIN, LOGOUT } from 'State/Reducer';
 
 // Keep in sync with ApiServer/src/ApiServer/Auth.go
 export const UserType = {
-    UserTypeUnauthenticated: 'unauthenticated',
-    UserTypeAdmin:           'admin',
-    UserTypeAdvisor:         'advisor',
-    UserTypeClient:          'client',
+    Superuser: 'superuser',
+    OrgOwner:  'owner',
+    OrgAdmin:  'administrator',
+    Advisor:   'advisor',
+    Client:    'client',
 };
 
 // <AuthControl /> renders either a login button or a logout button.
@@ -39,15 +40,17 @@ function AuthControl() {
     const loginFn = useCallback((token, user) => { //email, name, photoURL) => {
         window.ApiClient.defaults.headers.common['Authentication'] = token;
 
-        window.ApiClient.get(`/common/user`, {
+        window.ApiClient.get(`/user/info`, {
             baseURL: window.Config.ApiHost,
         }).then(res => {
             dispatch({
-                type: 'LOGIN',
+                type: LOGIN,
                 payload: {
-                    Auth: {
-                        user,  // Duplicated by window.user from Auth.js ShowLogin() -> onIdTokenChanged()
-                        UserType: res.data.UserType,
+                    Session: {
+                        PhotoURL: user.photoURL,
+                        Name: user.displayName,
+
+                        ...res.data.Context,
                     }
                 },
             });
@@ -58,35 +61,35 @@ function AuthControl() {
     }, [ dispatch, _logout ]);
 
     useEffect(() => {
-        if (!state.Auth) {
+        if (!state.Session) {
             ShowLogin(loginFn);
         }
-    }, [ loginFn, state.Auth ]);
+    }, [ loginFn, state.Session ]);
 
     // Fire a request to see if the session has expired (will trigger the auth-refresh pane)
     window.onfocus = () => {
-        if (state.Auth && state.Auth.UserType !== 'anonymous') {
-            state.Auth.user.getIdToken(true).then((idToken) => {
-                loginFn(idToken, state.Auth.user);
-            }).catch(function (error) {
-                console.log('error', error);
-            });
-        }
+        // if (state.Session && state.Session.UserType !== 'anonymous') {
+        //     state.Session.user.getIdToken(true).then((idToken) => {
+        //         loginFn(idToken, state.Session.user);
+        //     }).catch(function (error) {
+        //         console.log('error', error);
+        //     });
+        // }
     };    
 
     return (
         <div>
             <div id    = "firebaseui-container"
-                 style = {{ display: state.Auth ? 'none' : 'block' }} />
+                 style = {{ display: state.Session ? 'none' : 'block' }} />
 
-            {state.Auth &&
+            {state.Session &&
                 <>
                     <Button onClick={_logout} variant="h6">
-                        Log out {state.Auth.user.email}
+                        Log out {state.Session.Email}
                     </Button>
 
-                    <Avatar src     = {state.Auth.user.photoURL}
-                            alt     = {state.Auth.user.name}
+                    <Avatar src     = {state.Session.PhotoURL}
+                            alt     = {state.Session.Name}
                             style   = {{ display: 'inline-block', verticalAlign: 'bottom' }} />
                 </>
             }

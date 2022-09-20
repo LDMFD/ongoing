@@ -11,10 +11,12 @@ type PolicyType struct {
 
 	Id        int64     `bun:"id,pk,autoincrement"`
 	Uid       string    `bun:"uid,notnull"`
+	OrgId     int64     `bun:"org_id"`
 	Name      string    `bun:"name,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Policies  []*Policy `bun:"rel:has-many,join:id=policy_type_id"`
+	Org      *Organisation `bun:"rel:has-one,join:org_id=id"`
+	Policies []*Policy     `bun:"rel:has-many,join:id=policy_type_id"`
 }
 
 type ReportPolicyType struct {

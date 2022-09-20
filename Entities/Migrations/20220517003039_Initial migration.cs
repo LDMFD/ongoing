@@ -1,7 +1,7 @@
 ﻿using System;
-using Ongoing.Entities;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Ongoing.Entities;
 
 #nullable disable
 

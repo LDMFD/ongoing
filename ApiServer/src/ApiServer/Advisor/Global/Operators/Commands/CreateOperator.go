@@ -1,26 +1,22 @@
 package Commands
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
-	"strings"
-
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"ongoing/Utils/UUID"
 )
 
 type CreateOperatorRequestBody struct {
-	Name string `binding:"required"`
-	Type string `binding:"required,oneof=dim firm individual none"`
+	Name string  `binding:"required"`
+	Type string  `binding:"required,oneof=dim firm individual none"`
 	Fee  float64 `binding:"required"`
 }
 
 func CreateOperator(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var req CreateOperatorRequestBody
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -28,17 +24,20 @@ func CreateOperator(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	uid := UUID.GenerateUID(c)
+
 	var operator = Entities.Operator{
-		Uid:  uid,
-		Type: req.Type,
-		Name: req.Name,
-		Fee:  req.Fee,
+		Uid:   uid,
+		Type:  req.Type,
+		Name:  req.Name,
+		Fee:   req.Fee,
+		OrgId: session.Org.Id,
 	}
 	if _, err := db.NewInsert().Model(&operator).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"Operator": operator,
+		"Id": uid,
 	})
 }

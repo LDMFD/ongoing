@@ -10,6 +10,8 @@ namespace Ongoing.Entities
 {
     public enum UserType
     {
+        superuser,
+        owner,
         admin,
         advisor,
         client,
@@ -33,14 +35,14 @@ namespace Ongoing.Entities
         [Column("verified")]
         public bool Verified { get; set; }
         
-        [Column("type")]
-        public UserType Type { get; set; }
-
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
         
         [InverseProperty("User")]
         public virtual Client Client { get; set; } = null!;
+        
+        [InverseProperty("User")]
+        public virtual Advisor Advisor { get; set; } = null!;
     }
 }
 

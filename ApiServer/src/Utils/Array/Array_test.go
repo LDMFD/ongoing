@@ -1,7 +1,6 @@
 package Array
 
 import (
-	"log"
 	"testing"
 )
 
@@ -39,9 +38,9 @@ func TestSwap(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		input := []int64{0, 1, 2, 3, 4 }
+		input := []int64{0, 1, 2, 3, 4}
 
-		log.Println("running test", input, test.output, test.from, test.to)
+		//log.Println("running test", input, test.output, test.from, test.to)
 
 		Swap(&input, test.from, test.to)
 

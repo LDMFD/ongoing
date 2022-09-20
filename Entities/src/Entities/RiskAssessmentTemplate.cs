@@ -15,12 +15,19 @@ namespace Ongoing.Entities
         [Column("id")]
         public int Id { get; set; }
         
+        [Column("org_id")]
+        public int OrgId { get; set; }
+
         [Column("label")]
         public string Label { get; set; } = null!;
         
         [Column("text")]
         public string Text { get; set; } = null!;
         
+        
+        [ForeignKey("OrgId")]
+        public virtual Organisation Org { get; set; } = null!;
+
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime? Timestamp { get; set; }
     }

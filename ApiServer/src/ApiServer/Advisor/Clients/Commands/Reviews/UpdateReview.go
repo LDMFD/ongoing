@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -16,7 +17,7 @@ type UpdateOrPublishReviewRequestPath struct {
 
 type UpdateReviewRequestBody struct {
 	StartDate string `binding:"required"`
-	EndDate string `binding:"required"`
+	EndDate   string `binding:"required"`
 }
 
 func UpdateReview(c *gin.Context) {
@@ -34,7 +35,11 @@ func UpdateReview(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 
 	var review = Entities.Review{}
 	if err := db.NewSelect().
@@ -48,7 +53,6 @@ func UpdateReview(c *gin.Context) {
 	}
 
 	var startDate time.Time
-	var err error
 	if startDate, err = Date.FromCanonical(body.StartDate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'startDate' timestamp"})
 		return

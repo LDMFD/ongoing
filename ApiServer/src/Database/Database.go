@@ -1,32 +1,131 @@
 package Database
 
 import (
+	"context"
 	"database/sql"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/extra/bundebug"
 	"log"
+	"ongoing/Entities"
+	"ongoing/Utils/UUID"
 	"os"
+	"strings"
+	"time"
 )
 
 var DB *bun.DB
 
 func New() (*bun.DB, error) {
-	dsn := os.Getenv("POSTGRES_DSN")
 	dbname := os.Getenv("POSTGRES_DB")
+	db := connect(os.Getenv("POSTGRES_DSN"), dbname)
+
+	if os.Getenv("TRUNCATE_DB") == "true" {
+		if strings.Contains(dbname, "prod") {
+			panic("Refusing to wipe production database!")
+		}
+		wipeDatabases(db)
+	}
+
+	seedUserTable(db)
+
+	log.Println("DB: all startup tests passed - connections established.")
+
+	return db, nil
+}
+
+func connect(dsn, dbname string) *bun.DB {
+	//log.Println("Connecting to", dbname)
+
 	connector := pgdriver.NewConnector(pgdriver.WithDSN(dsn), pgdriver.WithDatabase(dbname))
 	sqldb := sql.OpenDB(connector)
-	DB := bun.NewDB(sqldb, pgdialect.New())
-	DB.AddQueryHook(bundebug.NewQueryHook())
-	//DB.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+	db := bun.NewDB(sqldb, pgdialect.New())
 
-	log.Println("Database connected")
+	// Normal logging:
+	db.AddQueryHook(bundebug.NewQueryHook())
 
-	DB.AddQueryHook(bundebug.NewQueryHook(
+	// Logs all queries - TODO control via env var
+	//db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
+
+	db.AddQueryHook(bundebug.NewQueryHook(
 		bundebug.WithVerbose(true),
 		bundebug.FromEnv("BUNDEBUG"),
 	))
 
-	return DB, nil
+	for {
+		_, err := db.Exec("SELECT 1")
+		if err == nil {
+			break
+		}
+		log.Println("DB test failed")
+		log.Println(err.Error())
+		time.Sleep(time.Second * 1)
+	}
+	return db
+}
+
+func wipeDatabases(appdb *bun.DB) {
+	log.Println("DB: truncating")
+
+	appdb.Exec("SELECT truncate_tables('public', 'postgres');")
+
+	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb") // TODO put spicedb in env var
+	defer func() {
+		spicedb.Close()
+	}()
+	spicedb.Exec("DELETE FROM relation_tuple")
+	spicedb.Exec("DELETE FROM relation_tuple_transaction WHERE id > 2;")
+}
+
+func seedUserTable(db *bun.DB) {
+	for _, su := range GetSuperusers() {
+		if len(su) > 0 {
+			insertSuperuser(db, su)
+		}
+	}
+}
+
+func insertSuperuser(db *bun.DB, email string) {
+	email = strings.TrimSpace(email)
+	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", email).Exists(context.TODO()); err != nil {
+		panic(err.Error())
+	} else if !exists {
+		log.Println("DB: seeding superuser")
+
+		var user = Entities.User{
+			Uid:   UUID.GenerateUID(nil),
+			Email: email,
+		}
+		if _, err := db.NewInsert().
+			Model(&user).
+			Returning("Id"). // not working
+			Exec(context.TODO()); err != nil {
+			log.Println(errors.WithStack(err))
+			panic(err.Error())
+		}
+	}
+}
+
+func RowCount(db *bun.DB) int {
+	var rowCounts []Entities.RowCount
+	if err := db.NewSelect().
+		Model(&rowCounts).
+		OrderExpr("n_live_tup DESC").Scan(context.TODO()); err != nil {
+		panic(err.Error())
+	}
+	total := 0
+	for _, rc := range rowCounts {
+		if rc.Table == "__EFMigrationsHistory" {
+			continue
+		}
+		total += rc.Count
+	}
+	return total
+}
+
+func GetSuperusers() []string {
+	superusers := os.Getenv("ONGOING_SUPERUSERS")
+	return strings.Split(superusers, ",")
 }

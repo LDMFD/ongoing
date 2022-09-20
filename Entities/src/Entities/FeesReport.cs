@@ -51,13 +51,13 @@ class FeesReportConfig : IEntityTypeConfiguration<FeesReport>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.FeesReports)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_client");
 
         builder.HasOne(d => d.File)
             .WithMany(p => p.FeesReports)
             .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_fees_report");
         
         builder.HasAlternateKey(p => p.Uid);

@@ -1,31 +1,12 @@
 import React, { useContext } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
 import {
     Button,
     Toolbar,
 } from '@mui/material';
 
 import { Context } from 'State'
-
-function SendSignInLink(email) {
-    const actionCodeSettings = {
-        url: window.Config.DashboardHost,
-        handleCodeInApp: true,    // This must be true according to the docs.
-    };
-    
-    const auth = getAuth();
-
-    sendSignInLinkToEmail(auth, email, actionCodeSettings).then(() => {
-        alert("Email sent");
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        alert(`${errorCode}, ${errorMessage}`);
-    });
-}
+import SendSignInLink from "Components/Library/Auth/AuthEmailer";
 
 const ClientAccountPage = () => {
     const [state] = useContext(Context);

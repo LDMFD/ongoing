@@ -2,6 +2,7 @@ package Forecasts
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -32,10 +33,14 @@ func DeleteForecast(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 	if forecast.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Forecast does not belong to client"})
-		return
+		panic(err.Error())
 	}
 
 	if _, err := db.NewDelete().

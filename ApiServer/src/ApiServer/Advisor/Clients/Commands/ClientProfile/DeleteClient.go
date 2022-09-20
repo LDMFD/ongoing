@@ -3,6 +3,7 @@ package ClientProfile
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/gin-gonic/gin"
@@ -21,10 +22,15 @@ func DeleteClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var client = Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		return
+	}
 
 	if _, err := db.NewDelete().
-		Model(&client).
+		Model(client).
 		Where("id = ?", client.Id).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

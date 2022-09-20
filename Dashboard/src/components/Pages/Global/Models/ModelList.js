@@ -57,12 +57,12 @@ const ModelList = () => {
             accessor: 'file',
             Header: 'File',
             width: 100,
-            Cell: ({ row }) => row.original.fileUid && (
+            Cell: ({ row }) => row.original.fileUid ? (
                 <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
                     {row.original.filename}
                     <DownloadIcon />
                 </button>
-            ),
+            ) : null,
         }, {
             accessor: 'actions',
             Header: '',

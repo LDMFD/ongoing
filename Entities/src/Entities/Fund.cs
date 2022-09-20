@@ -23,6 +23,9 @@ namespace Ongoing.Entities
         [Column("uid")]
         public string Uid { get; set; } = null!;
         
+        [Column("org_id")]
+        public int OrgId { get; set; }
+
         [Column("name")]
         public string Name { get; set; } = null!;
         
@@ -50,6 +53,10 @@ namespace Ongoing.Entities
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
 
+        
+        [ForeignKey("OrgId")]
+        public virtual Organisation Org { get; set; } = null!;
+
         [ForeignKey("FileId")]
         [InverseProperty("Funds")]
         public virtual File? File { get; set; }
@@ -70,8 +77,8 @@ class FundConfig : IEntityTypeConfiguration<Fund>
         builder.HasOne(d => d.File)
             .WithMany(p => p.Funds)
             .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_file");
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("fk_fund_file");
         
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);

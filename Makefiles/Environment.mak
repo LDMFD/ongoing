@@ -25,6 +25,10 @@ _work-on:
 	@gcloud config set project ${GCP_PROJECT_${ENV}}
 	@gcloud auth configure-docker ${REGION}-docker.pkg.dev
 	@gcloud config set run/region ${REGION}
+	make write-local-secrets
+
+write-local-secrets: import-env
+	Makefiles/Helpers/write-local-secrets.sh
 
 # Entrypoints
 # Switch to respective GCP Project ("environments")

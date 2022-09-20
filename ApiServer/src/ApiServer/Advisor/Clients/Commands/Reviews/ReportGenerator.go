@@ -5,15 +5,41 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Global/Reviews/ModulePresets/Commands"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 )
 
-func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
-	db := c.MustGet("DATABASE").(*bun.DB)
+type ReportGenerator struct {
+	context           *gin.Context
+	db                *bun.DB
+	authClient        *AuthService.Client
+	glientId          int64
+	grantClientAccess bool
+	client            *Entities.Client
+	report            *Entities.ReportDetail
+}
 
-	var client = Entities.Client{Id: clientId}
-	if err := db.NewSelect().
-		Model(&client).
+func GenerateReport(c *gin.Context, clientId int64, createRelationships bool) *Entities.ReportDetail {
+	gen := newReportGenerator(c, clientId, createRelationships)
+	gen.generateReport()
+	return gen.report
+}
+
+func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool) *ReportGenerator {
+	return &ReportGenerator{
+		context:           c,
+		db:                c.MustGet("DATABASE").(*bun.DB),
+		authClient:        c.MustGet("AUTH").(*AuthService.Client),
+		glientId:          clientId,
+		grantClientAccess: createRelationships,
+	}
+}
+
+func (gen *ReportGenerator) generateReport() {
+	gen.client = &Entities.Client{Id: gen.glientId}
+
+	if err := gen.db.NewSelect().
+		Model(gen.client).
 		Relation("RiskAssessments.RiskLevel.RiskProvider").
 		Relation("RiskAssessments.Questionnaire").
 		Relation("FactFinds.File").
@@ -31,132 +57,145 @@ func GenerateReport(c *gin.Context, clientId int64) Entities.ReportDetail {
 		Relation("Modules").
 		Relation("User").
 		WherePK().
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		Scan(gen.context); err != nil {
+		gen.context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	var report = &Entities.ReportDetail{}
+	gen.report = &Entities.ReportDetail{}
 
-	generateModulePresets(c, report, db)
-	generateModules(report, client)
-	generateRisk(report, client) // Risk Assessments, Risk Providers, Risk Levels
-	generateFactFinds(report, client)
-	generateFees(report, client)
-	generateForecasts(report, client)
-	generatePolicies(report, client) // Policies, Policy Types & Providers, Provider Charges & Discounts
-	generateFunds(report, client)    // Funds, Policy Funds
-	generateModels(report, client)   // Models, Operators, Portfolios
-
-	return *report
+	gen.generateModulePresets()
+	gen.generateModules()
+	gen.generateRisk() // Risk Assessments, Risk Providers, Risk Levels
+	gen.generateFactFinds()
+	gen.generateFees()
+	gen.generateForecasts()
+	gen.generatePolicies() // Policies, Policy Types & Providers, Provider Charges & Discounts
+	gen.generateFunds()    // Funds, Policy Funds
+	gen.generateModels()   // Models, Operators, Portfolios
 }
 
-func generateModulePresets(c *gin.Context, report *Entities.ReportDetail, db *bun.DB) {
-	report.ModulePresets = make([]Entities.ReportModulePreset, 0)
-	for _, preset := range Commands.GetModulePresetsInternal(c, db) {
-		report.ModulePresets = append(report.ModulePresets, preset.ToReport())
+func (gen *ReportGenerator) generateModulePresets() {
+	gen.report.ModulePresets = make([]Entities.ReportModulePreset, 0)
+	for _, preset := range Commands.GetModulePresetsInternal(gen.context, gen.db) {
+		gen.report.ModulePresets = append(gen.report.ModulePresets, preset.ToReport())
 	}
 }
 
-func generateModules(report *Entities.ReportDetail, client Entities.Client) {
-	report.Modules = make([]Entities.ReportModule, len(client.Modules))
-	for ix, m := range client.Modules {
-		report.Modules[ix] = m.ToReport()
+func (gen *ReportGenerator) generateModules() {
+	gen.report.Modules = make([]Entities.ReportModule, len(gen.client.Modules))
+	for ix, m := range gen.client.Modules {
+		gen.report.Modules[ix] = m.ToReport()
 	}
 }
 
-func generateRisk(report *Entities.ReportDetail, client Entities.Client) {
-	report.RiskAssessments = make([]Entities.ReportRiskAssessment, 0)
+func (gen *ReportGenerator) generateRisk() {
+	gen.report.RiskAssessments = make([]Entities.ReportRiskAssessment, 0)
 	var riskProviders = map[int64]*Entities.RiskProvider{}
 	var riskLevels = map[int64]*Entities.RiskLevel{}
-	for _, r := range client.RiskAssessments {
-		report.RiskAssessments = append(report.RiskAssessments, r.ToReport())
+	for _, r := range gen.client.RiskAssessments {
+		gen.report.RiskAssessments = append(gen.report.RiskAssessments, r.ToReport())
 		riskLevels[r.RiskLevelId] = r.RiskLevel
 		riskProviders[r.RiskLevel.RiskProviderId] = r.RiskLevel.RiskProvider
+
+		//if err := auth.CreateFile(&client.Uid, nil, r.ToReport().Questionnaire.Uid); err != nil {
+		//	panic(err)
+		//}
 	}
-	report.RiskProviders = make([]Entities.ReportRiskProvider, 0)
+	gen.report.RiskProviders = make([]Entities.ReportRiskProvider, 0)
 	for _, p := range riskProviders {
-		report.RiskProviders = append(report.RiskProviders, p.ToReport())
+		gen.report.RiskProviders = append(gen.report.RiskProviders, p.ToReport())
 	}
-	report.RiskLevels = make([]Entities.ReportRiskLevel, 0)
+	gen.report.RiskLevels = make([]Entities.ReportRiskLevel, 0)
 	for _, l := range riskLevels {
-		report.RiskLevels = append(report.RiskLevels, l.ToReport())
+		gen.report.RiskLevels = append(gen.report.RiskLevels, l.ToReport())
 	}
 }
 
-func generateFactFinds(report *Entities.ReportDetail, client Entities.Client) {
-	report.FactFinds = make([]Entities.ReportFactFind, 0)
-	for _, f := range client.FactFinds {
-		report.FactFinds = append(report.FactFinds, f.ToReport())
+func (gen *ReportGenerator) generateFactFinds() {
+	gen.report.FactFinds = make([]Entities.ReportFactFind, 0)
+	for _, f := range gen.client.FactFinds {
+		gen.report.FactFinds = append(gen.report.FactFinds, f.ToReport())
 	}
 }
 
-func generateFees(report *Entities.ReportDetail, client Entities.Client) {
-	report.FeesReports = make([]Entities.ReportFeesReport, 0)
-	for _, f := range client.FeesReports {
-		report.FeesReports = append(report.FeesReports, f.ToReport())
+func (gen *ReportGenerator) generateFees() {
+	gen.report.FeesReports = make([]Entities.ReportFeesReport, 0)
+	for _, f := range gen.client.FeesReports {
+		gen.report.FeesReports = append(gen.report.FeesReports, f.ToReport())
 	}
 }
 
-func generateForecasts(report *Entities.ReportDetail, client Entities.Client) {
-	report.Forecasts = make([]Entities.ReportForecast, 0)
-	for _, f := range client.Forecasts {
-		report.Forecasts = append(report.Forecasts, f.ToReport())
+func (gen *ReportGenerator) generateForecasts() {
+	gen.report.Forecasts = make([]Entities.ReportForecast, 0)
+	for _, f := range gen.client.Forecasts {
+		gen.report.Forecasts = append(gen.report.Forecasts, f.ToReport())
 	}
 }
 
-func generatePolicies(report *Entities.ReportDetail, client Entities.Client) {
-	report.Policies = make([]Entities.ReportPolicy, 0)
+func (gen *ReportGenerator) generatePolicies() {
+	gen.report.Policies = make([]Entities.ReportPolicy, 0)
 	var policyProviders = map[int64]*Entities.PolicyProvider{}
 	var policyTypes = map[int64]*Entities.PolicyType{}
-	for _, pol := range client.Policies {
-		report.Policies = append(report.Policies, pol.ToReport())
+	for _, pol := range gen.client.Policies {
+		gen.report.Policies = append(gen.report.Policies, pol.ToReport())
 		policyProviders[pol.PolicyProviderId] = pol.PolicyProvider
 		policyTypes[pol.PolicyTypeId] = pol.PolicyType
 	}
-	report.ProviderCharges = make([]Entities.ReportProviderCharge, 0)
+	gen.report.ProviderCharges = make([]Entities.ReportProviderCharge, 0)
 	for _, p := range policyProviders {
 		for _, pc := range p.Charges {
-			report.ProviderCharges = append(report.ProviderCharges, pc.ToReport())
+			gen.report.ProviderCharges = append(gen.report.ProviderCharges, pc.ToReport())
 		}
-		report.PolicyProviders = append(report.PolicyProviders, p.ToReport())
+		gen.report.PolicyProviders = append(gen.report.PolicyProviders, p.ToReport())
 	}
 	for _, p := range policyTypes {
-		report.PolicyTypes = append(report.PolicyTypes, p.ToReport())
+		gen.report.PolicyTypes = append(gen.report.PolicyTypes, p.ToReport())
 	}
 
-	report.ProviderDiscounts = make([]Entities.ReportProviderDiscount, 0)
-	for _, p := range client.ProviderDiscounts {
+	gen.report.ProviderDiscounts = make([]Entities.ReportProviderDiscount, 0)
+	for _, p := range gen.client.ProviderDiscounts {
 		p.PolicyProvider = policyProviders[p.PolicyProviderId]
-		report.ProviderDiscounts = append(report.ProviderDiscounts, p.ToReport())
+		gen.report.ProviderDiscounts = append(gen.report.ProviderDiscounts, p.ToReport())
 	}
 }
 
-func generateFunds(report *Entities.ReportDetail, client Entities.Client) {
-	report.PolicyFunds = make([]Entities.ReportPolicyFund, 0)
+func (gen *ReportGenerator) generateFunds() {
+	gen.report.PolicyFunds = make([]Entities.ReportPolicyFund, 0)
 	var funds = map[int64]*Entities.Fund{}
-	for _, pf := range client.PolicyFunds {
-		report.PolicyFunds = append(report.PolicyFunds, pf.ToReport())
+	for _, pf := range gen.client.PolicyFunds {
+		gen.report.PolicyFunds = append(gen.report.PolicyFunds, pf.ToReport())
 		funds[pf.FundId] = pf.Fund
 	}
 	for _, f := range funds {
-		report.Funds = append(report.Funds, f.ToReport())
+		gen.report.Funds = append(gen.report.Funds, f.ToReport())
+		if gen.grantClientAccess {
+			if err := gen.authClient.CreateFile(&gen.client.Uid, nil, f.ToReport().File.Uid); err != nil {
+				panic(err)
+			}
+		}
 	}
 }
 
-func generateModels(report *Entities.ReportDetail, client Entities.Client) {
-	report.Portfolios = make([]Entities.ReportPortfolio, 0)
+func (gen *ReportGenerator) generateModels() {
+	gen.report.Portfolios = make([]Entities.ReportPortfolio, 0)
 	var models = map[int64]*Entities.Model{}
 	var operators = map[int64]*Entities.Operator{}
-	for _, p := range client.Portfolios {
-		report.Portfolios = append(report.Portfolios, p.ToReport())
+	for _, p := range gen.client.Portfolios {
+		gen.report.Portfolios = append(gen.report.Portfolios, p.ToReport())
 		models[p.ModelId] = p.Model
 		operators[p.Model.OperatorId] = p.Model.Operator
 	}
 	for _, m := range models {
-		report.Models = append(report.Models, m.ToReport())
+		report := m.ToReport()
+		gen.report.Models = append(gen.report.Models, report)
+		if report.File != nil && gen.grantClientAccess {
+			if err := gen.authClient.CreateFile(&gen.client.Uid, nil, report.File.Uid); err != nil {
+				panic(err)
+			}
+		}
 	}
 	for _, o := range operators {
-		report.Operators = append(report.Operators, o.ToReport())
+		gen.report.Operators = append(gen.report.Operators, o.ToReport())
 	}
 }

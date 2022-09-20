@@ -59,7 +59,7 @@ class PolicyFundConfig : IEntityTypeConfiguration<PolicyFund>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.PolicyFunds)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_client");
 
         builder.HasOne(d => d.Fund)
@@ -71,7 +71,7 @@ class PolicyFundConfig : IEntityTypeConfiguration<PolicyFund>
         builder.HasOne(d => d.Policy)
             .WithMany(p => p.PolicyFunds)
             .HasForeignKey(d => d.PolicyId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("fk_policy");
         
         builder.HasAlternateKey(p => p.Uid);

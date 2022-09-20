@@ -1,16 +1,19 @@
 package Commands
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
-	"strings"
+	"ongoing/Utils/UUID"
 	"time"
 
 	"github.com/uptrace/bun"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type CreateOrUpdateFundRequestBody struct {
@@ -23,6 +26,8 @@ type CreateOrUpdateFundRequestBody struct {
 
 func CreateFund(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var body CreateOrUpdateFundRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -35,25 +40,26 @@ func CreateFund(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		fileId = &file.Id
 	}
-
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
 
 	var modified time.Time
 	var err error
 	if body.Modified != "" {
 		if modified, err = Date.FromCanonical(body.Modified); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
-			return
+			panic(err.Error())
 		}
+	} else {
+		modified = time.Now()
 	}
+
+	uid := UUID.GenerateUID(c)
 
 	var fund = Entities.Fund{
 		Uid:       uid,
@@ -62,13 +68,37 @@ func CreateFund(c *gin.Context) {
 		ExAnteFee: body.ExAnteFee,
 		FileId:    fileId,
 		Modified:  &modified,
+		OrgId:     session.Org.Id,
 	}
-	if _, err := db.NewInsert().Model(&fund).Exec(c); err != nil {
+
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewInsert().Model(&fund).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
+	if body.File != nil {
+		if err := auth.CreateFile(nil, &session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"Fund": fund,
+		"Id": uid,
 	})
 }

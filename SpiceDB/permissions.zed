@@ -1,0 +1,29 @@
+definition user {}
+
+definition organisation {
+  relation owner: user          // Edit org name, edit who is an admin
+  relation administrator: user  // Edit all financial data, manage advisors, edit all reviews
+  relation advisor: user        // Edit tier 2 data (funds + models), edit own client reviews
+  relation client: user         // Read own reviews
+
+  permission admin = owner + administrator
+  permission staff = admin + advisor
+  permission member = staff + client
+}
+
+definition client {
+  relation org: organisation
+
+  relation subject: user
+  relation advisor: user
+
+  permission write = advisor + org->admin 
+  permission read = write + subject
+}
+
+definition file {
+  relation client: client
+  relation org: organisation
+
+  permission read = org->staff + client->read
+}

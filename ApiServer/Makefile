@@ -13,3 +13,6 @@ wire: import
 
 install:
 	cd src && go install .
+
+get:
+	cd src && go get ${PACKAGE}

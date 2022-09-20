@@ -9,28 +9,30 @@ GCP_PROJECT_prod					:= ongoing-prod
 GCP_PROJECT_staging					:= ongoing-staging
 
 DB_INSTANCE_prod					:= ongoing-prod
-DB_INSTANCE_staging					:= ongoing-staging2
+DB_INSTANCE_staging					:= ongoing-staging
 
 POSTGRES_VERSION					:= POSTGRES_14
 POSTGRES_VERSION_NUMERIC			:= 14.2
 SQL_PROXY_VERSION					:= 1.29.0
 LOCAL_POSTGRES_IMAGE				:= postgres:14.2
 
+SPICEDB_VERSION						:= v1.11.0
+
 API_IMAGE							:= ongoing-api
 
-FIREBASE_SA_ID_staging				:= firebase-adminsdk-tqmwj@ongoing-staging.iam.gserviceaccount.com	
+FIREBASE_SA_ID_staging				:= firebase-adminsdk-p02s6@ongoing-staging.iam.gserviceaccount.com
 FIREBASE_SA_ID_prod					:= firebase-adminsdk-uivho@ongoing-prod.iam.gserviceaccount.com
 
 ARTIFACTORY_SA_ID_prod				:= firebase-adminsdk-uivho@ongoing-prod.iam.gserviceaccount.com
 
-DOMAIN_staging						:= ongoing.tp1.org
+DOMAIN_staging						:= staging.amplifa.co.uk
 DOMAIN_prod							:= portal.amplifa.co.uk
 
-SECRET_DATABASE_CONNECTION_staging	:= 4
-SECRET_DATABASE_CONNECTION_prod		:= 12
+SECRET_DATABASE_CONNECTION_staging	:= 6
+SECRET_DATABASE_CONNECTION_prod		:= 16
 
-SECRET_DATABASE_PASSWORD_staging	:= 2
-SECRET_DATABASE_PASSWORD_prod		:= 8
+SECRET_DATABASE_PASSWORD_staging	:= 4
+SECRET_DATABASE_PASSWORD_prod		:= 12
 
 SECRET_DB_PROXY_VERSION_staging		:= 1
 SECRET_DB_PROXY_VERSION_prod		:= 1
@@ -47,3 +49,8 @@ SECRET_FIREBASE_SA_KEY_prod			:= 1
 SECRET_STORAGE_CREDENTIAL_staging	:= 1
 SECRET_STORAGE_CREDENTIAL_prod		:= 1
 
+SECRET_SPICEDB_PSK_staging			:= 4
+SECRET_SPICEDB_PSK_prod				:= 1
+
+SECRET_SUPERUSERS_staging			:= 2
+SECRET_SUPERUSERS_prod				:= 1

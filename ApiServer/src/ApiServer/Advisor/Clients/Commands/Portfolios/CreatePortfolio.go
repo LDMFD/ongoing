@@ -1,13 +1,12 @@
 package Portfolios
 
 import (
-	"github.com/google/uuid"
+	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
-	"strings"
-
-	"github.com/gin-gonic/gin"
+	"ongoing/Utils/UUID"
 )
 
 type CreatePortfolioRequestPath struct {
@@ -29,10 +28,11 @@ func CreatePortfolio(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
-
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
 
 	var policy = Entities.Policy{}
 	if err := db.NewSelect().
@@ -52,6 +52,8 @@ func CreatePortfolio(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	uid := UUID.GenerateUID(c)
+
 	var portfolio = Entities.Portfolio{
 		Uid:        uid,
 		ClientId:   client.Id,
@@ -64,6 +66,6 @@ func CreatePortfolio(c *gin.Context) {
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"Portfolio": portfolio,
+		"Id": uid,
 	})
 }

@@ -35,10 +35,10 @@ func UpdateFund(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		fileId = &file.Id
 	}
@@ -48,7 +48,7 @@ func UpdateFund(c *gin.Context) {
 	if body.Modified != "" {
 		if modified, err = Date.FromCanonical(body.Modified); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
-			return
+			panic(err.Error())
 		}
 	}
 

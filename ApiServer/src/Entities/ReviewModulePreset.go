@@ -9,10 +9,13 @@ import (
 type ModulePreset struct {
 	bun.BaseModel `bun:"table:module_presets"`
 
-	Uid        string    `bun:"uid,notnull"`
-	ModuleType string    `bun:"module_type,notnull"`
-	Text       string    `bun:"text,notnull"`
-	Timestamp  time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	Id         int64         `bun:"id,pk,autoincrement"`
+	Uid        string        `bun:"uid,notnull"`
+	OrgId      int64         `bun:"org_id"`
+	ModuleType string        `bun:"module_type,notnull"`
+	Text       string        `bun:"text,notnull"`
+	Org        *Organisation `bun:"rel:has-one,join:org_id=id"`
+	Timestamp  time.Time     `bun:",nullzero,notnull,default:current_timestamp"`
 }
 
 type ReportModulePreset struct {

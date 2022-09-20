@@ -3,6 +3,7 @@ package FactFinds
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -39,10 +40,11 @@ func UpdateFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
-	if factFind.ClientId != client.Id {
+	if client, err := Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	} else if factFind.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Risk Assessment does not belong to client"})
-		return
+		panic(err.Error())
 	}
 
 	var fileId *int64
@@ -50,10 +52,10 @@ func UpdateFactFind(c *gin.Context) {
 		var file Entities.File
 		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			panic(err.Error())
 		} else if count == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
+			panic(err.Error())
 		}
 		fileId = &file.Id
 	}
@@ -62,7 +64,7 @@ func UpdateFactFind(c *gin.Context) {
 	var err error
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
-		return
+		panic(err.Error())
 	}
 
 	factFind.Submitted = submitted

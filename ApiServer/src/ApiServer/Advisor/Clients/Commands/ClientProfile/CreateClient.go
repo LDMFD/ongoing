@@ -1,68 +1,115 @@
 package ClientProfile
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/AuthService"
 	"ongoing/Entities"
+	"ongoing/Utils/UUID"
 	"strings"
 
-	"github.com/uptrace/bun"
-
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func CreateClient(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var body CreateOrUpdateClientRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+	body.Identity.Email = strings.ToLower(body.Identity.Email)
 
 	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", body.Identity.Email).Exists(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	} else if exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.ClientAlreadyExists})
+		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.UserAlreadyExists})
 		return
 	}
 
-	uid := strings.ReplaceAll(uuid.NewString(), "-", "")
+	userUid := UUID.GenerateUID(c)
+	clientUid := UUID.GenerateUID(c)
 
-	var user = Entities.User{
-		Uid:   uid,
-		Email: body.Identity.Email,
-		Type:  Entities.UserTypeClient,
-	}
-	if _, err := db.NewInsert().
-		Model(&user).
-		Returning("Id").  // not working
-		Exec(c); err != nil {
+	// Begin transaction
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
 
-	if err := db.NewSelect().
+	var user = Entities.User{
+		Uid:   userUid,
+		Email: body.Identity.Email,
+	}
+	if _, err := tx.NewInsert().
+		Model(&user).
+		Returning("Id"). // not working
+		Exec(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		_ = tx.Rollback()
+		return
+	}
+
+	if err := tx.NewSelect().
 		Model(&user).
 		Where("email = ?", body.Identity.Email).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		log.Println(errors.WithStack(err))
+		_ = tx.Rollback()
+		return
+	}
+
+	org := Entities.Organisation{}
+	if err := tx.NewSelect().
+		Model(&org).
+		Where("uid = ?", session.OrgId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		_ = tx.Rollback()
+		return
 	}
 
 	var client = Entities.Client{
+		Uid:       clientUid,
 		UserId:    user.Id,
+		OrgId:     org.Id,
 		Forenames: body.Identity.Forenames,
 		Surname:   body.Identity.Surname,
 		Fee:       body.Fee,
 	}
-	if _, err := db.NewInsert().Model(&client).Exec(c); err != nil {
+	if _, err := tx.NewInsert().Model(&client).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		log.Println(errors.WithStack(err))
+		_ = tx.Rollback()
+		return
 	}
+
+	if err := auth.CreateClient(*session.OrgId, session.UserUid, clientUid, userUid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
 	c.JSON(200, gin.H{
-		"Client": client,
+		"Id": clientUid,
 	})
 }

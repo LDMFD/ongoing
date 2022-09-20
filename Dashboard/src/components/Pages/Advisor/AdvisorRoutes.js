@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import AddClient          from './ClientManagement/AddClient';
-import ClientAccountPage  from './ClientManagement/Account'
+import ClientAccountPage  from './ClientManagement/ClientAccountPage'
 import ClientList         from './ClientManagement/ClientList';
 import ClientWrapper      from './AdvisorSpaceWrapper';
 import EditClient         from './ClientManagement/EditClient';

@@ -6,9 +6,13 @@ require (
 	cloud.google.com/go/firestore v1.6.1 // indirect
 	cloud.google.com/go/storage v1.18.2
 	firebase.google.com/go v3.13.0+incompatible
+	github.com/authzed/authzed-go v0.6.0 // indirect
+	github.com/authzed/grpcutil v0.0.0-20220104222419-f813f77722e5 // indirect
+	github.com/gavv/httpexpect/v2 v2.3.1 // indirect
 	github.com/gin-gonic/gin v1.7.7
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
+	github.com/jzelinskie/stringz v0.0.1 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/rs/cors/wrapper/gin v0.0.0-20211222042454-bf1dbac76afe
 	github.com/uptrace/bun v1.1.1
@@ -16,4 +20,6 @@ require (
 	github.com/uptrace/bun/driver/pgdriver v1.0.20
 	github.com/uptrace/bun/extra/bundebug v1.1.1
 	google.golang.org/api v0.63.0 // indirect
+	google.golang.org/grpc v1.47.0 // indirect
+	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.2.0 // indirect
 )

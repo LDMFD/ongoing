@@ -2,6 +2,7 @@ package Portfolios
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -15,8 +16,8 @@ type UpdatePortfolioRequestPath struct {
 }
 
 type CreateOrUpdatePortfolioRequestBody struct {
-	PolicyId   string   `binding:"required"`
-	ModelId    string   `binding:"required"`
+	PolicyId   string  `binding:"required"`
+	ModelId    string  `binding:"required"`
 	Proportion float64 `binding:"required"`
 }
 
@@ -44,7 +45,12 @@ func UpdatePortfolio(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
+
 	if portfolio.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Portfolio does not belong to client"})
 		return

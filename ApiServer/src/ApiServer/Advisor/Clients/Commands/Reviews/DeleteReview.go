@@ -3,6 +3,7 @@ package Reviews
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,12 @@ func DeleteReview(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client := Entities.ClientFromUserUID(c, db, path.ClientId)
+	var client *Entities.Client
+	var err error
+	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		panic(err.Error())
+	}
+
 	if review.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Review does not belong to client"})
 		return

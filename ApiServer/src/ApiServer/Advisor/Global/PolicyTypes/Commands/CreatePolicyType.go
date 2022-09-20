@@ -1,14 +1,12 @@
 package Commands
 
 import (
+	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/Entities"
-	"strings"
-
-	"github.com/uptrace/bun"
+	"ongoing/Utils/UUID"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 type CreatePolicyTypeRequest struct {
@@ -17,9 +15,9 @@ type CreatePolicyTypeRequest struct {
 
 func CreatePolicyType(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	uid := uuid.NewString()
-	uid = strings.ReplaceAll(uid, "-", "")
+	uid := UUID.GenerateUID(c)
 
 	var req CreatePolicyTypeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -28,14 +26,15 @@ func CreatePolicyType(c *gin.Context) {
 	}
 
 	var policyType = Entities.PolicyType{
-		Uid:       uid,
-		Name:      req.Name,
+		Uid:   uid,
+		Name:  req.Name,
+		OrgId: session.Org.Id,
 	}
 	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 	c.JSON(200, gin.H{
-		"PolicyType": policyType,
+		"Id": uid,
 	})
 }
