@@ -21,7 +21,15 @@ export const UserType = {
 function AuthControl() {
     const [ state, dispatch ] = useContext(Context);
 
+    const sessionViewAsId = localStorage.getItem('ongoing-viewas');
+
     const _logout = useCallback(() => {
+        if (localStorage.getItem('ongoing-viewas')) {
+            localStorage.removeItem('ongoing-viewas');
+            window.location = '/';
+            return;
+        }
+
         // Log out of Firebase
         Logout();
 
@@ -85,7 +93,7 @@ function AuthControl() {
             {state.Session &&
                 <>
                     <Button onClick={_logout} variant="h6">
-                        Log out {state.Session.Email}
+                        {sessionViewAsId ? 'Stop viewing as ' : 'Log out'} {state.Session.Email}
                     </Button>
 
                     <Avatar src     = {state.Session.PhotoURL}

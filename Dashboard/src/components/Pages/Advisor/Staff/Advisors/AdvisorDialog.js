@@ -103,9 +103,11 @@ export const AdvisorDialog = ({ advisor, setAdvisor, submitLabel, submitHandler 
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={SendSignInLink.bind(null, advisor.Email)}>
-                        Send sign-in link
-                    </Button>
+                    {submitLabel === 'edit' &&
+                        <Button onClick={SendSignInLink.bind(null, advisor.Email)}>
+                            Send sign-in link
+                        </Button>
+                    }
                     <Button onClick={goBack}>Cancel</Button>
                     <Button type='submit'>{submitLabel}</Button>
                 </DialogActions>

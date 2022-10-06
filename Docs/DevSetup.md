@@ -73,6 +73,19 @@ The API server has its own Makefile in ApiServer/Makefile; this is used for wire
 
 This tutorial assumes Go is locally installed, but Node is not.
 
+Create the database network by running `docker-compose up postgres` and then hitting ctrl-c.
+
+## Option 1: pull DB from staging/prod.
+
+    Terminal #1: make work-on-staging
+    Terminal #2: make db-proxy
+    Terminal #3: make db-dump-remote
+    Terminal #2: ctrl-c
+    Terminal #1: docker-compose up postgres spicedb dashboard
+    Terminal #3: make db-restore-local
+
+## Option 2: start from scratch
+
     Terminal #1: docker-compose up postgres dashboard # create databases
     Terminal #2: make spicedb-init                    # create spicedb tables 
     Terminal #2: make spicedb-init-local              # create SpiceDB DB
@@ -83,7 +96,7 @@ This tutorial assumes Go is locally installed, but Node is not.
 
 Then open ApiServer in GoLand and run the target "Run API" or "Run Tests".
 
-To clean:
+### To clean.
 
     docker-compose down
     docker volume rm ongoing_postgres
@@ -99,6 +112,4 @@ Environment setup:
 - In `env.goland`, add `OFFLINE_AUTH=true`.
 - In `.env`, add `REACT_APP_ONGOING_AUTH_BYPASS=true`. 
 
-Then, in GoLand, run the target `Run tests`.
-
-To test the tests end-state in the dashboard, run the GoLand target `Run API offline auth`. 
+Then, in GoLand, run the normal targets.

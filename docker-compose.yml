@@ -19,7 +19,7 @@ services:
   
   spicedb:
     container_name: spicedb
-    image: authzed/spicedb:v1.11.0
+    image: authzed/spicedb:v1.12.0
     ports:
       - "50051:50051"
     environment:

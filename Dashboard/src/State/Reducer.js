@@ -9,7 +9,7 @@ export const SET_GLOBAL_ENTITIES          = 'SET_GLOBAL_ENTITIES';
 export const PROVIDER_CHARGE_REORDER      = 'PROVIDER_CHARGE_REORDER';
 export const SET_ORGANISATIONS            = 'SET_ORGANISATIONS';
 
-// TODO figure out how to make this scale
+// TODO figure out how to make this scale - can begin by merging a lot of these.
 
 const Reducer = (state, action) => {
     switch (action.type) {

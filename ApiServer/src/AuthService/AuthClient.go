@@ -31,7 +31,7 @@ func New() *Client {
 		creds = grpc.WithTransportCredentials(credentials.NewClientTLSFromCert(nil, ""))
 		token = grpcutil.WithBearerToken(psk)
 	}
-	
+
 	client, err := authzed.NewClient(addr, creds, token)
 	if err != nil {
 		log.Fatalf("unable to initialize client: %s", err)
@@ -216,6 +216,41 @@ func (c *Client) lookupResource(subjectType, subjectId, resourceType, permission
 			return nil, errors.WithStack(err)
 		}
 		resources = append(resources, resource.ResourceObjectId)
+	}
+	return resources, nil
+}
+
+func (c *Client) lookupSubjects(subjectType, subjectId, resourceType, permission string) (resources []string, err error) {
+	resource := &pb.ObjectReference{
+		ObjectType: subjectType,
+		ObjectId:   subjectId,
+	}
+
+	request := &pb.LookupSubjectsRequest{
+		Consistency: &pb.Consistency{
+			Requirement: &pb.Consistency_FullyConsistent{
+				FullyConsistent: true,
+			},
+		},
+		Resource:          resource,
+		Permission:        permission,
+		SubjectObjectType: resourceType,
+		//OptionalSubjectRelation: "",
+	}
+
+	stream, err := c.client.LookupSubjects(context.Background(), request)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	for {
+		resource, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		resources = append(resources, resource.SubjectObjectId)
 	}
 	return resources, nil
 }

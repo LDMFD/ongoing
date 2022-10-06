@@ -61,6 +61,18 @@ window.ApiClient = axios.create({
     // withCredentials: true,
 });
 
+// <a> -> query param -> localStorage -> http client header
+if (window.location.search) {
+    const vid = (new URLSearchParams(window.location.search)).get('view-as');
+    window.ApiClient.defaults.headers.common['X-ViewAs'] = vid;
+    localStorage.setItem('ongoing-viewas', vid);
+} else {
+    const vid = localStorage.getItem('ongoing-viewas');
+    if (vid) {
+        window.ApiClient.defaults.headers.common['X-ViewAs'] = vid;
+    }
+}
+
 let ConcurrentRequestCount = 0;
 
 // TODO Refactor to Spinner.js and .css (see AppDrawer.js & .css)

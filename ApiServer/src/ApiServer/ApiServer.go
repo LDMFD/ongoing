@@ -55,7 +55,7 @@ func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 			"http://localhost.ongoing.tp1.org:3000",
 		},
 		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
-		AllowedHeaders: []string{"Authentication", "Content-Type"},
+		AllowedHeaders: []string{"Authentication", "Content-Type", "X-ViewAs"},
 
 		AllowCredentials:   true,
 		OptionsPassthrough: false,

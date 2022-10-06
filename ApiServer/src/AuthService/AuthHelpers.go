@@ -90,6 +90,11 @@ func (c *Client) LookupOrganisations(userId string) (organisations []string, err
 	return r, err
 }
 
+func (c *Client) LookupUsers(orgId string) (users []string, err error) {
+	r, err := c.lookupSubjects("organisation", orgId, "user", "member")
+	return r, err
+}
+
 type OrgRelationship struct {
 	UserId string
 	Role   string // TODO enum

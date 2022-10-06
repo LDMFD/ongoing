@@ -40,7 +40,7 @@ STORAGE_SA=storage@ongoing-$ENV.iam.gserviceaccount.com
 ONGOING_SPICEDB_INSECURE=true
 ONGOING_SPICEDB_HOST=localhost:50051
 ONGOING_SPICEDB_PSK=spice
-ONGOING_SUPERUSERS=darren@tp1.org,paul@amplifa.co.uk
+ONGOING_SUPERUSERS=darren@amplifa.co.uk,paul@amplifa.co.uk
 
 OFFLINE_AUTH=false
 OFFLINE_TESTS=false

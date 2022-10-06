@@ -89,6 +89,17 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		var role string
 		var orgId *string
 
+		viewAsId := c.GetHeader("X-ViewAs")
+		if isSuperuser(user.Email) && viewAsId != "" && viewAsId != "null" {
+			var subject Entities.User
+			if err = db.NewSelect().Model(&subject).Where("uid = ?", viewAsId).Scan(c); err != nil {
+				c.AbortWithStatus(http.StatusBadRequest)
+				panic(err.Error())
+			}
+			user = &subject
+			log.Println("Viewing as:", user.Email)
+		}
+
 		// Look up user's role
 		if isSuperuser(user.Email) {
 			role = Entities.UserTypeSuperuser
@@ -158,6 +169,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 func isSuperuser(email string) bool {
 	superusers := os.Getenv("ONGOING_SUPERUSERS")
 	for _, su := range strings.Split(superusers, ",") {
+		su = strings.TrimSpace(su)
 		if email == su {
 			return true
 		}
