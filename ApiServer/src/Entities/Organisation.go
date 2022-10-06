@@ -19,11 +19,17 @@ type Organisation struct {
 	Creator User `bun:"rel:has-one,join:creator_id=id"`
 }
 
+type OrganisationMember struct {
+	UserId string
+	Role   string
+}
+
 type ReportOrganisation struct {
 	Id        string
 	Name      string
 	CreatorId string
 	OwnerId   string
+	Members   []OrganisationMember
 }
 
 func (p *Organisation) ToReport() ReportOrganisation {

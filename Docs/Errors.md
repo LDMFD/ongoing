@@ -33,6 +33,11 @@ Otherwise print :
 
 		log.Println(errors.WithStack(err))
 
+There's a note here:
+
+GetClient.go:31
+		// TODO implement levelled logging, so this stacktrace can be printed as a warning
+
 --
 
 Places where logging is controlled in the server:

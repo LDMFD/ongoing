@@ -16,7 +16,7 @@ POSTGRES_VERSION_NUMERIC			:= 14.2
 SQL_PROXY_VERSION					:= 1.29.0
 LOCAL_POSTGRES_IMAGE				:= postgres:14.2
 
-SPICEDB_VERSION						:= v1.11.0
+SPICEDB_VERSION						:= v1.12.0
 
 API_IMAGE							:= ongoing-api
 

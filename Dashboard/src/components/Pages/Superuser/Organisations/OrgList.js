@@ -23,6 +23,13 @@ const OrgList = () => {
             accessor: 'name',
             Header: 'Name',
             width: 1,
+            Cell: ({ row }) => (
+                <>
+                    <Link to={{ pathname: `/admin/organisations/id/${row.original.id}/users`}}>
+                        {row.original.name}
+                    </Link>
+                </>
+            ),
         },
         {
             accessor: 'owner',

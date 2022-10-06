@@ -24,16 +24,16 @@ var (
 )
 
 const (
-	SUPERUSER = "darren@tp1.org"
+	SUPERUSER = "darren@amplifa.co.uk"
 
-	ORG1_OWNER   = "org1.boss@tp1.org"
-	ORG1_ADMIN   = "org1.admin@tp1.org"
-	ORG1_ADVISOR = "org1.advisor@tp1.org"
+	ORG1_OWNER   = "org1.boss@amplifa.co.uk"
+	ORG1_ADMIN   = "org1.admin@amplifa.co.uk"
+	ORG1_ADVISOR = "org1.advisor@amplifa.co.uk"
 
-	ORG2_OWNER = "org2.boss@tp1.org"
+	ORG2_OWNER = "org2.boss@amplifa.co.uk"
 
-	ORG1_CLIENT = "adam.client@tp1.org"
-	ORG2_CLIENT = "bob.client@tp1.org"
+	ORG1_CLIENT = "adam.client@amplifa.co.uk"
+	ORG2_CLIENT = "bob.client@amplifa.co.uk"
 )
 
 func TestAll(t *testing.T, e *httpexpect.Expect) {
@@ -43,7 +43,7 @@ func TestAll(t *testing.T, e *httpexpect.Expect) {
 	TestCreateHoldings(t, e)
 	TestClientReviews(t, e)
 	TestUpdateStaffRoles(t, e)
-	TestTeardown(t, e)
+	//TestTeardown(t, e)
 }
 
 func TestHealthcheck(e *httpexpect.Expect) {

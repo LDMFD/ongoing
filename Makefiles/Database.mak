@@ -116,24 +116,23 @@ db-migrate-remote:
 
 # Param FROM: the .sql file to import from
 db-restore-local: import-env
-	docker run -it --rm \
-		--name db-restorer \
-		--platform linux/amd64 \
-		--network ongoing_default \
-		-v ${PWD}/Migrations/prod-2022-09-18.sql:/app/dump.sql \
-        ${LOCAL_POSTGRES_IMAGE} \
-            /bin/bash \
-            -c "PGPASSWORD=p psql -U postgres -h ongoing-db < /app/dump.sql"
+	docker run -it --rm --platform linux/amd64 --name db-restorer --network ongoing_default \
+		-v ${HOME}/.ongoing/envs/${ENV}/dumps/ongoing.sql:/app/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=p psql -U postgres -h ongoing-db < /app/ongoing.sql"
+
+	docker run -it --rm --platform linux/amd64 --name db-restorer --network ongoing_default \
+		-v ${HOME}/.ongoing/envs/${ENV}/dumps/spicedb.sql:/app/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=p psql -U postgres -h ongoing-db -d spicedb < /app/spicedb.sql"
 
 db-restore-remote: import-env
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
-	docker run -i \
-	    --network ongoing_default \
-        -v ~/.ongoing/envs/${ENV}/dumps/dump.sql:/dump.sql \
-		--platform linux/amd64 \
-        ${LOCAL_POSTGRES_IMAGE} \
-            /bin/bash \
-            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /dump.sql"
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v ~/.ongoing/envs/${ENV}/dumps/ongoing.sql:/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /ongoing.sql"
+
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v ~/.ongoing/envs/${ENV}/dumps/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /spicedb.sql"
 
 # In these, change --data-only to --schema-only to control output.
 db-dump-local:
@@ -153,19 +152,16 @@ db-dump-local:
 db-dump-remote: import-env
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
 	mkdir -p ~/.ongoing/envs/${ENV}/dumps
-	docker run -i \
-		--platform linux/amd64 \
-		--network ongoing_default \
-		${LOCAL_POSTGRES_IMAGE} \
-		/bin/bash \
-		-c "PGPASSWORD=${PASSWORD} pg_dump -d ongoing-${ENV} \
-		                                   -h db-proxy \
-										   --username postgres \
-										   --data-only \
-										   --no-acl \
-										   --column-inserts \
-										   --no-comments" \
-		> ~/.ongoing/envs/${ENV}/dumps/dump.sql
+
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} \
+		/bin/bash -c "PGPASSWORD=${PASSWORD} pg_dump -d ongoing-${ENV} \
+			-h db-proxy --username postgres --no-acl --column-inserts --no-comments" \
+		> ~/.ongoing/envs/${ENV}/dumps/ongoing.sql
+
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} \
+		/bin/bash -c "PGPASSWORD=${PASSWORD} pg_dump -d spicedb-${ENV} \
+			-h db-proxy --username postgres --no-acl --column-inserts --no-comments" \
+		> ~/.ongoing/envs/${ENV}/dumps/spicedb.sql
 
 # Run this, then `make db-up`
 db-clean:
@@ -208,6 +204,8 @@ db-reset:
 db-update:
 	cd Entities && \
 		dotnet ef database update
+	make db-init-local
+	make db-write-schema-local
 
 # Not necessary - `dotnet ef database update` does this
 db-create-remote: import-env

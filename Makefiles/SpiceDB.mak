@@ -48,9 +48,9 @@ _spicedb-psk-cycle: import-env
 	gcloud secrets versions add spicedb-key --data-file=${HOME}/.ongoing/envs/${ENV}/secrets/spicedb/preshared-key
 
 spicedb-upload-image:
-	docker pull --platform=linux/amd64 authzed/spicedb:v1.11.0
-	docker tag authzed/spicedb:v1.11.0 europe-west2-docker.pkg.dev/ongoing-staging/ongoing/spicedb:v1.11.0
-	docker push europe-west2-docker.pkg.dev/ongoing-staging/ongoing/spicedb:v1.11.0
+	docker pull --platform=linux/amd64 authzed/spicedb:${SPICEDB_VERSION}
+	docker tag authzed/spicedb:${SPICEDB_VERSION} europe-west2-docker.pkg.dev/ongoing-staging/ongoing/spicedb:${SPICEDB_VERSION}
+	docker push europe-west2-docker.pkg.dev/ongoing-staging/ongoing/spicedb:${SPICEDB_VERSION}
 
 superusers-setup:
 	gcloud secrets create superusers --replication-policy="automatic"
