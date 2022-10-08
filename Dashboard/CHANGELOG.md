@@ -1,3 +1,7 @@
+## v1.3.1
+
+- Change tab wording
+
 ## v1.3.0
 
 - 'View as...'
