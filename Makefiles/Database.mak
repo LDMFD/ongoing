@@ -114,14 +114,26 @@ db-migrate-remote:
 				 --password \
 				 --file=/app/migrations/${MIGRATION}.sql
 
-db-restore-local: import-env
+db-create-local:
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+		-c "PGPASSWORD=p psql -U postgres -h ongoing-db -c    'create database \"ongoing-local\";'"
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+		-c "PGPASSWORD=p psql -U postgres -h ongoing-db -c    'create database \"spicedb-local\";'"
+
+
+db-restore-local-from-prod:
+	make _db-restore-local FROM=${HOME}/.ongoing/envs/prod/dumps
+db-restore-local-from-staging:
+	make _db-restore-local FROM=${HOME}/.ongoing/envs/staging/dumps
+
+_db-restore-local:
 	docker run -it --rm --platform linux/amd64 --name db-restorer --network ongoing_default \
-		-v ${HOME}/.ongoing/envs/${ENV}/dumps/ongoing.sql:/app/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
-            -c "PGPASSWORD=p psql -U postgres -h ongoing-db < /app/ongoing.sql"
+		-v ${FROM}/ongoing.sql:/app/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=p psql -U postgres -h ongoing-db -d ongoing-local < /app/ongoing.sql"
 
 	docker run -it --rm --platform linux/amd64 --name db-restorer --network ongoing_default \
-		-v ${HOME}/.ongoing/envs/${ENV}/dumps/spicedb.sql:/app/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
-            -c "PGPASSWORD=p psql -U postgres -h ongoing-db -d spicedb < /app/spicedb.sql"
+		-v ${FROM}/spicedb.sql:/app/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=p psql -U postgres -h ongoing-db -d spicedb-local < /app/spicedb.sql"
 
 db-restore-remote: import-env
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
@@ -133,24 +145,25 @@ db-restore-remote: import-env
 		-v ~/.ongoing/envs/${ENV}/dumps/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
             -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /spicedb.sql"
 
+db-truncate-local:
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+		-c "PGPASSWORD=p psql -U postgres -h ongoing-db -c    'drop database \"ongoing-local\" with (force);'"
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+		-c "PGPASSWORD=p psql -U postgres -h ongoing-db -c    'drop database \"spicedb-local\" with (force);'"
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+		-c "PGPASSWORD=p psql -U postgres -h ongoing-db -c    'create database \"ongoing-local\";'"
+	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+		-c "PGPASSWORD=p psql -U postgres -h ongoing-db -c    'create database \"spicedb-local\";'"
+
 db-truncate-staging:
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/staging/secrets/cloud-sql/password))
-	docker run -i --platform linux/amd64 --network ongoing_default \
-		-v $(abspath Makefiles/Database/truncate-ongoing.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+	docker run -i --platform linux/amd64 --network ongoing_default         ${LOCAL_POSTGRES_IMAGE} /bin/bash \
 			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'drop database \"ongoing-staging\" with (force);'"
-
-
-	docker run -i --platform linux/amd64 --network ongoing_default \
-		-v $(abspath Makefiles/Database/truncate-spicedb.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+	docker run -i --platform linux/amd64 --network ongoing_default         ${LOCAL_POSTGRES_IMAGE} /bin/bash \
 			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'drop database \"spicedb-staging\" with (force);'"
-
-	docker run -i --platform linux/amd64 --network ongoing_default \
-		-v $(abspath Makefiles/Database/truncate-ongoing.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+	docker run -i --platform linux/amd64 --network ongoing_default         ${LOCAL_POSTGRES_IMAGE} /bin/bash \
 			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"ongoing-staging\";'"
-
-
-	docker run -i --platform linux/amd64 --network ongoing_default \
-		-v $(abspath Makefiles/Database/truncate-spicedb.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+	docker run -i --platform linux/amd64 --network ongoing_default         ${LOCAL_POSTGRES_IMAGE} /bin/bash \
 			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"spicedb-staging\";'"
 
 db-restore-staging-from-prod-dump:
@@ -235,8 +248,12 @@ db-reset:
 db-update:
 	cd Entities && \
 		dotnet ef database update
-	make db-init-local
-	make db-write-schema-local
+	make spicedb-init
+
+db-update-cached:
+	cd Entities && \
+		dotnet ef database update --no-build
+	make spicedb-init
 
 # Not necessary - `dotnet ef database update` does this
 db-create-remote: import-env

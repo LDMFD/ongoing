@@ -17,9 +17,9 @@ _deploy-spice: import-env
 		--use-http2 \
 		--command=spicedb \
 		--update-secrets=SPICEDB_GRPC_PRESHARED_KEY=spicedb-key:${SECRET_SPICEDB_PSK_${ENV}} \
-		--update-env-vars=SPICEDB_GRPC_ADDR=0.0.0.0:50051 \
-		--update-env-vars=SPICEDB_DATASTORE_ENGINE=postgres \
 		--update-env-vars=SPICEDB_DATASTORE_CONN_URI="${DB_CONNECTION}" \
+		--update-env-vars=SPICEDB_DATASTORE_ENGINE=postgres \
+		--update-env-vars=SPICEDB_GRPC_ADDR=0.0.0.0:50051 \
 		--args=serve,--log-level=debug
 	make cloudrun-update-traffic SERVICE=${SERVICE}
 
@@ -40,19 +40,19 @@ _deploy-api: import-env
 		--memory=4Gi \
 		--max-instances=8 \
 		--port=8000 \
+		--update-env-vars=FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-env-vars=ONGOING_API_HOST=${DOMAIN_${ENV}} \
 		--update-env-vars=ONGOING_API_PORT=8000 \
-		--update-env-vars=FIREBASE_CONFIG=/app/Config/Firebase/config.json \
-		--update-env-vars=STORAGE_SA=storage@ongoing-${ENV}.iam.gserviceaccount.com \
-		--update-env-vars=STORAGE_BUCKET=ongoing-${ENV}-docs \
-		--update-env-vars=STORAGE_CREDENTIAL=/app/Config/Storage/Storage.pem \
-		--update-env-vars=POSTGRES_DB=ongoing-${ENV} \
 		--update-env-vars=ONGOING_SPICEDB_HOST=${URI}:443 \
-		--update-secrets=ONGOING_SPICEDB_PSK=spicedb-key:${SECRET_SPICEDB_PSK_${ENV}} \
-		--update-secrets=POSTGRES_DSN=database-connection:${SECRET_DATABASE_CONNECTION_${ENV}} \
-		--update-secrets=/app/Config/Storage/Storage.pem=storage-credential:${SECRET_STORAGE_CREDENTIAL_${ENV}} \
+		--update-env-vars=ONGOING_STORAGE_BUCKET=ongoing-${ENV}-docs \
+		--update-env-vars=ONGOING_STORAGE_CREDENTIAL=/app/Config/Storage/Storage.pem \
+		--update-env-vars=ONGOING_STORAGE_SA=storage@ongoing-${ENV}.iam.gserviceaccount.com \
+		--update-env-vars=POSTGRES_DB=ongoing-${ENV} \
 		--update-secrets=/app/Config/Firebase/config.json=firebase-sa-key:${SECRET_FIREBASE_SA_KEY_${ENV}} \
-		--update-secrets=ONGOING_SUPERUSERS=superusers:${SECRET_SUPERUSERS_${ENV}}
+		--update-secrets=/app/Config/Storage/Storage.pem=storage-credential:${SECRET_STORAGE_CREDENTIAL_${ENV}} \
+		--update-secrets=ONGOING_SPICEDB_PSK=spicedb-key:${SECRET_SPICEDB_PSK_${ENV}} \
+		--update-secrets=ONGOING_SUPERUSERS=superusers:${SECRET_SUPERUSERS_${ENV}} \
+		--update-secrets=POSTGRES_DSN=database-connection:${SECRET_DATABASE_CONNECTION_${ENV}}
 	make cloudrun-update-traffic SERVICE=${SERVICE}
 
 _deploy-dashboard: import-env
@@ -68,11 +68,11 @@ _deploy-dashboard: import-env
 		--memory=4Gi \
 		--max-instances=8 \
 		--port=8080 \
-		--update-env-vars=ONGOING_REACT_FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-env-vars=ONGOING_API_HOST=https://${DOMAIN_${ENV}}/api \
 		--update-env-vars=ONGOING_DASHBOARD_HOST=https://${DOMAIN_${ENV}} \
-		--update-secrets=ONGOING_REACT_FIREBASE_CLIENT_ID=firebase-client-id:${SECRET_FIREBASE_CLIENT_ID_${ENV}} \
-		--update-secrets=/app/Config/Firebase/key.json=firebase-client-key:${SECRET_FIREBASE_CLIENT_KEY_${ENV}}
+		--update-env-vars=ONGOING_REACT_FIREBASE_CONFIG=/app/Config/Firebase/config.json \
+		--update-secrets=/app/Config/Firebase/key.json=firebase-client-key:${SECRET_FIREBASE_CLIENT_KEY_${ENV}} \
+		--update-secrets=ONGOING_REACT_FIREBASE_CLIENT_ID=firebase-client-id:${SECRET_FIREBASE_CLIENT_ID_${ENV}}
 	make cloudrun-update-traffic SERVICE=${SERVICE}
 
 cloudrun-update-traffic:

@@ -1,3 +1,7 @@
+spicedb-init:
+	make spicedb-init-local
+	make spicedb-write-schema-local
+
 spicedb-init-local:
 	docker run -ti --rm \
 		--name spicedb-migrator \
@@ -6,7 +10,7 @@ spicedb-init-local:
 		authzed/spicedb:${SPICEDB_VERSION} \
 			migrate head \
 			--datastore-engine=postgres \
-			--datastore-conn-uri="postgres://postgres:p@ongoing-db:5432/spicedb?sslmode=disable"
+			--datastore-conn-uri="postgres://postgres:p@ongoing-db:5432/spicedb-local?sslmode=disable"
 
 spicedb-init-remote: import-env
 	$(eval PASSWORD := $(shell cat ${HOME}/.ongoing/envs/${ENV}/secrets/cloud-sql/password))

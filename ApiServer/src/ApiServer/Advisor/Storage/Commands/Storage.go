@@ -1,10 +1,11 @@
 package Commands
 
 import (
-	"cloud.google.com/go/storage"
 	"io/ioutil"
 	"os"
 	"time"
+
+	"cloud.google.com/go/storage"
 )
 
 func GenerateSignedGetUrl(objectName string) (url string) {
@@ -12,9 +13,9 @@ func GenerateSignedGetUrl(objectName string) (url string) {
 		err error
 		key []byte
 	)
-	pemPath := os.Getenv("STORAGE_CREDENTIAL")
-	serviceAccount := os.Getenv("STORAGE_SA")
-	bucketName := os.Getenv("STORAGE_BUCKET")
+	pemPath := os.Getenv("ONGOING_STORAGE_CREDENTIAL")
+	serviceAccount := os.Getenv("ONGOING_STORAGE_SA")
+	bucketName := os.Getenv("ONGOING_STORAGE_BUCKET")
 
 	if key, err = ioutil.ReadFile(pemPath); err != nil {
 		panic(err)
@@ -38,9 +39,9 @@ func GenerateSignedPostPolicy(objectName, filename string) (url string, fields m
 		err error
 		pv4 *storage.PostPolicyV4
 	)
-	pemPath := os.Getenv("STORAGE_CREDENTIAL")
-	serviceAccount := os.Getenv("STORAGE_SA")
-	bucketName := os.Getenv("STORAGE_BUCKET")
+	pemPath := os.Getenv("ONGOING_STORAGE_CREDENTIAL")
+	serviceAccount := os.Getenv("ONGOING_STORAGE_SA")
+	bucketName := os.Getenv("ONGOING_STORAGE_BUCKET")
 
 	var key []byte
 	if key, err = ioutil.ReadFile(pemPath); err != nil {

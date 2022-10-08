@@ -37,7 +37,7 @@ func New() (*bun.DB, error) {
 }
 
 func connect(dsn, dbname string) *bun.DB {
-	//log.Println("Connecting to", dbname)
+	log.Println("Connecting to DB", dbname)
 
 	connector := pgdriver.NewConnector(pgdriver.WithDSN(dsn), pgdriver.WithDatabase(dbname))
 	sqldb := sql.OpenDB(connector)
@@ -69,9 +69,9 @@ func connect(dsn, dbname string) *bun.DB {
 func wipeDatabases(appdb *bun.DB) {
 	log.Println("DB: truncating")
 
-	appdb.Exec("SELECT truncate_tables('public', 'postgres');")
+	appdb.Exec("SELECT truncate_tables('public', 'ongoing-local');")
 
-	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb") // TODO put spicedb in env var
+	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
 	defer func() {
 		spicedb.Close()
 	}()

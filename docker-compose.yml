@@ -25,9 +25,8 @@ services:
     environment:
       - ONGOING_SPICEDB_HOST=localhost:50051
       - ONGOING_SPICEDB_PSK=spice
-      - ONGOING_SUPERUSERS=darren@tp1.org
       - SPICEDB_DATASTORE_ENGINE=postgres
-      - SPICEDB_DATASTORE_CONN_URI=postgres://postgres:p@ongoing-db:5432/spicedb?sslmode=disable
+      - SPICEDB_DATASTORE_CONN_URI=postgres://postgres:p@ongoing-db:5432/spicedb-local?sslmode=disable
       - SPICEDB_GRPC_PRESHARED_KEY=spice
     command: serve --log-level=debug
 
