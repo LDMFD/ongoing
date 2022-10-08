@@ -132,22 +132,34 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	TestDownload(t, e, ORG2_CLIENT, policyFileId, false)
 	TestDownload(t, e, ORG2_OWNER, policyFileId, false)
 
-	report.Value("Funds").Array().First().Object().ValueEqual("Name", "Jupiter Balanced")
-	report.Value("Funds").Array().First().Object().ValueEqual("ExAnteFee", 0.16)
-	report.Value("Funds").Array().First().Object().ValueEqual("OcfFee", 0.76)
-	report.Value("Funds").Array().First().Object().Value("Modified").String().NotEmpty()
-	report.Value("Funds").Array().First().Object().Value("File").Object().ValueEqual("Filename", "fund.png")
-	report.Value("Funds").Array().Length().Equal(1)
+	report.Value("Funds").Array().Length().Equal(2)
 
-	fundFileId := report.Value("Funds").Array().First().Object().Value("File").Object().Value("Uid").String().Raw()
+	report.Value("Funds").Array().Element(0).Object().ValueEqual("Name", "Jupiter Balanced")
+	report.Value("Funds").Array().Element(0).Object().ValueEqual("ExAnteFee", 0.16)
+	report.Value("Funds").Array().Element(0).Object().ValueEqual("OcfFee", 0.76)
+	report.Value("Funds").Array().Element(0).Object().Value("Modified").String().NotEmpty()
+	report.Value("Funds").Array().Element(0).Object().Value("File").Object().ValueEqual("Filename", "fund.png")
+	fundFileId := report.Value("Funds").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
+
+	report.Value("Funds").Array().Element(1).Object().ValueEqual("Name", "LF Equity Income C Acc")
+	report.Value("Funds").Array().Element(1).Object().ValueEqual("ExAnteFee", 0.38)
+	report.Value("Funds").Array().Element(1).Object().ValueEqual("OcfFee", 0.75)
+	report.Value("Funds").Array().Element(1).Object().Value("Modified").String().NotEmpty()
+	report.Value("Funds").Array().Element(1).Object().Value("File").Null()
+
 	TestDownload(t, e, ORG1_CLIENT, fundFileId, true)
 	TestDownload(t, e, ORG2_CLIENT, fundFileId, false)
 	TestDownload(t, e, ORG2_OWNER, fundFileId, false)
 
-	report.Value("PolicyFunds").Array().First().Object().ValueEqual("FundId", fundId)
-	report.Value("PolicyFunds").Array().First().Object().ValueEqual("PolicyId", policyId)
-	report.Value("PolicyFunds").Array().First().Object().ValueEqual("Proportion", 0.12)
-	report.Value("PolicyFunds").Array().Length().Equal(1)
+	report.Value("PolicyFunds").Array().Length().Equal(2)
+
+	report.Value("PolicyFunds").Array().Element(0).Object().ValueEqual("FundId", fundId1)
+	report.Value("PolicyFunds").Array().Element(0).Object().ValueEqual("PolicyId", policyId)
+	report.Value("PolicyFunds").Array().Element(0).Object().ValueEqual("Proportion", 0.12)
+
+	report.Value("PolicyFunds").Array().Element(1).Object().ValueEqual("FundId", fundId2)
+	report.Value("PolicyFunds").Array().Element(1).Object().ValueEqual("PolicyId", policyId)
+	report.Value("PolicyFunds").Array().Element(1).Object().ValueEqual("Proportion", 0.23)
 
 	report.Value("Operators").Array().First().Object().ValueEqual("Fee", 0.0023)
 	report.Value("Operators").Array().First().Object().ValueEqual("Name", "FE Invest")

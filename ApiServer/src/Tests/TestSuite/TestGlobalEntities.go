@@ -55,7 +55,7 @@ func TestCreatePolicyProvider(e *httpexpect.Expect) {
 func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
 	fileId := TestUpload(t, e, ORG1_ADVISOR, "fund.png")
 
-	// Create Fund as org 1 advisor
+	// Create Fund (no file) as org 1 advisor
 	request := FundCommands.CreateOrUpdateFundRequestBody{
 		Name:      "Jupiter Balanced",
 		OcfFee:    0.76,
@@ -71,7 +71,20 @@ func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	fundId = resp.JSON().Object().Value("Id").String().Raw()
+	fundId1 = resp.JSON().Object().Value("Id").String().Raw()
+
+	// Create Fund (with file) as org 1 advisor
+	request = FundCommands.CreateOrUpdateFundRequestBody{
+		Name:      "LF Equity Income C Acc",
+		OcfFee:    0.75,
+		ExAnteFee: 0.38,
+		Modified:  "2022-05-20T15:04:05Z",
+	}
+	resp = e.POST("/api/advisor/funds").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	fundId2 = resp.JSON().Object().Value("Id").String().Raw()
 
 	// Test file download with different user types
 	TestDownload(t, e, ORG1_OWNER, fileId, true)
@@ -137,7 +150,7 @@ func TestGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
 	resp.Value("Funds").Array().First().Object().Value("OcfFee").Number().Equal(0.76)
 	resp.Value("Funds").Array().First().Object().Value("ExAnteFee").Number().Equal(0.16)
 	resp.Value("Funds").Array().First().Object().Value("Modified").String().NotEmpty()
-	resp.Value("Funds").Array().Length().Equal(1)
+	resp.Value("Funds").Array().Length().Equal(2)
 
 	resp.Value("Models").Array().First().Object().Value("Name").String().Equal("FE Invest Hybrid Risk Level 3 Long")
 	resp.Value("Models").Array().Length().Equal(1)

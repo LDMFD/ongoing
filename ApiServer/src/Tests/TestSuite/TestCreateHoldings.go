@@ -14,7 +14,7 @@ import (
 func TestCreateHoldings(t *testing.T, e *httpexpect.Expect) {
 	CreateProviderDiscount(e)
 	CreatePolicy(t, e)
-	CreatePolicyFund(e)
+	CreatePolicyFunds(e)
 	CreatePortfolio(e)
 }
 
@@ -55,13 +55,24 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 	policyId = resp.JSON().Object().Value("Id").String().Raw()
 }
 
-func CreatePolicyFund(e *httpexpect.Expect) {
+func CreatePolicyFunds(e *httpexpect.Expect) {
 	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
-		FundId:     fundId,
+		FundId:     fundId1,
 		PolicyId:   policyId,
 		Proportion: 0.12,
 	}
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/policy-funds").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK).JSON().Object()
+	resp.Value("Id").String()
+
+	request = PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
+		FundId:     fundId2,
+		PolicyId:   policyId,
+		Proportion: 0.23,
+	}
+	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/policy-funds").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()

@@ -7,6 +7,7 @@ import (
 	"ongoing/ApiServer/Advisor/Global/Reviews/ModulePresets/Commands"
 	"ongoing/AuthService"
 	"ongoing/Entities"
+	"sort"
 )
 
 type ReportGenerator struct {
@@ -75,11 +76,16 @@ func (gen *ReportGenerator) generateReport() {
 	gen.generateModels()   // Models, Operators, Portfolios
 }
 
+// Some fields in this file are sorted - all could be if needed.
+
 func (gen *ReportGenerator) generateModulePresets() {
 	gen.report.ModulePresets = make([]Entities.ReportModulePreset, 0)
 	for _, preset := range Commands.GetModulePresetsInternal(gen.context, gen.db) {
 		gen.report.ModulePresets = append(gen.report.ModulePresets, preset.ToReport())
 	}
+	sort.Slice(gen.report.ModulePresets, func(i, j int) bool {
+		return gen.report.ModulePresets[i].ModuleType < gen.report.ModulePresets[j].ModuleType
+	})
 }
 
 func (gen *ReportGenerator) generateModules() {
@@ -87,6 +93,9 @@ func (gen *ReportGenerator) generateModules() {
 	for ix, m := range gen.client.Modules {
 		gen.report.Modules[ix] = m.ToReport()
 	}
+	sort.Slice(gen.report.Modules, func(i, j int) bool {
+		return gen.report.Modules[i].Type < gen.report.Modules[j].Type
+	})
 }
 
 func (gen *ReportGenerator) generateRisk() {
@@ -168,13 +177,20 @@ func (gen *ReportGenerator) generateFunds() {
 		funds[pf.FundId] = pf.Fund
 	}
 	for _, f := range funds {
-		gen.report.Funds = append(gen.report.Funds, f.ToReport())
-		if gen.grantClientAccess {
-			if err := gen.authClient.CreateFile(&gen.client.Uid, nil, f.ToReport().File.Uid); err != nil {
+		report := f.ToReport()
+		gen.report.Funds = append(gen.report.Funds, report)
+		if report.File != nil && gen.grantClientAccess {
+			if err := gen.authClient.CreateFile(&gen.client.Uid, nil, report.File.Uid); err != nil {
 				panic(err)
 			}
 		}
 	}
+	sort.Slice(gen.report.PolicyFunds, func(i, j int) bool {
+		return gen.report.PolicyFunds[i].Proportion < gen.report.PolicyFunds[j].Proportion
+	})
+	sort.Slice(gen.report.Funds, func(i, j int) bool {
+		return gen.report.Funds[i].Name < gen.report.Funds[j].Name
+	})
 }
 
 func (gen *ReportGenerator) generateModels() {

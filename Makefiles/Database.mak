@@ -114,7 +114,6 @@ db-migrate-remote:
 				 --password \
 				 --file=/app/migrations/${MIGRATION}.sql
 
-# Param FROM: the .sql file to import from
 db-restore-local: import-env
 	docker run -it --rm --platform linux/amd64 --name db-restorer --network ongoing_default \
 		-v ${HOME}/.ongoing/envs/${ENV}/dumps/ongoing.sql:/app/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
@@ -133,6 +132,38 @@ db-restore-remote: import-env
 	docker run -i --platform linux/amd64 --network ongoing_default \
 		-v ~/.ongoing/envs/${ENV}/dumps/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
             -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /spicedb.sql"
+
+db-truncate-staging:
+	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/staging/secrets/cloud-sql/password))
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v $(abspath Makefiles/Database/truncate-ongoing.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'drop database \"ongoing-staging\" with (force);'"
+
+
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v $(abspath Makefiles/Database/truncate-spicedb.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'drop database \"spicedb-staging\" with (force);'"
+
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v $(abspath Makefiles/Database/truncate-ongoing.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"ongoing-staging\";'"
+
+
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v $(abspath Makefiles/Database/truncate-spicedb.sql):/truncate.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"spicedb-staging\";'"
+
+db-restore-staging-from-prod-dump:
+	make db-truncate-staging
+
+	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/staging/secrets/cloud-sql/password))
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v ${HOME}/.ongoing/envs/prod/dumps/ongoing.sql:/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-staging < /ongoing.sql"
+
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v ${HOME}/.ongoing/envs/prod/dumps/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d spicedb-staging < /spicedb.sql"
 
 # In these, change --data-only to --schema-only to control output.
 db-dump-local:
