@@ -86,6 +86,19 @@ cloudrun-deploy-api:
 cloudrun-deploy-dashboard:
 	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
 
+redeploy-api:
+	make _deploy-api SERVICE=ongoing-api TAG=latest
+	make firebase-deploy
+
+redeploy-dashboard:
+	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
+	make firebase-deploy
+
+redeploy-all:
+	make _deploy-api SERVICE=ongoing-api TAG=latest
+	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
+	make firebase-deploy
+
 up-spice:
 	make _deploy-spice SERVICE=ongoing-spice TAG=${SPICEDB_VERSION}
 	make firebase-deploy
