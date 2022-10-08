@@ -15,7 +15,8 @@ var (
 	org2ClientId  string
 	reviewId      string
 
-	fundId           string
+	fundId1          string
+	fundId2          string
 	modelId          string
 	operatorId       string
 	policyId         string

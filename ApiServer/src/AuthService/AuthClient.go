@@ -46,7 +46,7 @@ func (c *Client) createRelationship(objectType, objectId, relation, subjectType,
 	request := &pb.WriteRelationshipsRequest{
 		Updates: []*pb.RelationshipUpdate{
 			{
-				Operation: pb.RelationshipUpdate_OPERATION_CREATE,
+				Operation: pb.RelationshipUpdate_OPERATION_TOUCH,
 				Relationship: &pb.Relationship{
 					Resource: &pb.ObjectReference{
 						ObjectType: objectType,
