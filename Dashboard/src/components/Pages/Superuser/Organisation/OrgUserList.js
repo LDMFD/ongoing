@@ -44,7 +44,7 @@ export const OrgUserList = () => {
     let org = state.Organisations?.find(o => o.Id === orgId);
 
     let users = org.Members.map(m => {
-        let u = state.Users?.find(u => u.Id === m.UserId);
+        let u = state.Users.find(u => u.Id === m.UserId);
         return {
             id: m.UserId,
             email: u.Email,

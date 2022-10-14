@@ -89,7 +89,7 @@ func CreateFeesReport(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if err := auth.CreateFile(nil, &session.Org.Uid, body.File.Uid); err != nil {
+	if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

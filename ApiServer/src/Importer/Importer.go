@@ -15,7 +15,7 @@ const API = "http://localhost:8000/api"
 
 //const API = "https://portal.amplifa.co.uk/api"
 
-const IMPORT_SUPERUSER = "darren@tp1.org"
+const IMPORT_SUPERUSER = "darren@amplifa.co.uk"
 
 func Import(path string) {
 	importPath = path

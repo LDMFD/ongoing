@@ -28,6 +28,7 @@ type CreateOrUpdateFactFindRequestBody struct {
 func CreateFactFind(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path CreateFactFindRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -88,7 +89,7 @@ func CreateFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if err := auth.CreateFile(&client.Uid, nil, body.File.Uid); err != nil {
+	if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

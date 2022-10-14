@@ -28,7 +28,9 @@ func ClientFromUID(c *gin.Context, db *bun.DB, uid string) (*Entities.Client, er
 	// Clients can only be looked up by advisors in the same org
 	if client.Organisation.Uid != *session.OrgId {
 		msg := fmt.Sprintf("Unauthorized access attempt by: %v", session.Email)
-		log.Println(msg)
+		if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println(msg)
+		}
 		c.AbortWithStatus(http.StatusForbidden)
 		err := errors.New(msg)
 		return nil, err

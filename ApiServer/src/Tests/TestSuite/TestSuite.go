@@ -15,13 +15,35 @@ var (
 	org2ClientId  string
 	reviewId      string
 
-	fundId1          string
-	fundId2          string
-	modelId          string
-	operatorId       string
+	fundId1      string
+	fundFileId   string // fund1
+	policyFundId string // fund1
+	fundId2      string
+
+	modelId     string
+	modelFileId string
+
+	operatorId string
+
 	policyId         string
 	policyProviderId string
 	policyTypeId     string
+
+	portfolioId string
+
+	riskProviderId   string
+	riskLevelId      string
+	assessmentId     string
+	assessmentFileId string
+
+	factFindId     string
+	factFindFileId string
+
+	feesReportId     string
+	feesReportFileId string
+
+	forecastId     string
+	forecastFileId string
 )
 
 const (
@@ -42,9 +64,10 @@ func TestAll(t *testing.T, e *httpexpect.Expect) {
 	TestCreationOfOrgsAdvisorsClients(e)
 	TestCreateGlobalEntities(t, e)
 	TestCreateHoldings(t, e)
+	TestCreateDocuments(t, e)
 	TestClientReviews(t, e)
 	TestUpdateStaffRoles(t, e)
-	//TestTeardown(t, e)
+	TestTeardown(t, e)
 }
 
 func TestHealthcheck(e *httpexpect.Expect) {

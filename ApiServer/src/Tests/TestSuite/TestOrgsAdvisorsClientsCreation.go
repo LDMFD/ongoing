@@ -73,6 +73,7 @@ func TestCreateOrgAndAdvisors(e *httpexpect.Expect) {
 	}
 	e.POST("/api/staff").
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(newAdvisorSpec).Expect().
 		Status(http.StatusForbidden)
 
@@ -108,12 +109,14 @@ func TestGetAdvisors(e *httpexpect.Expect) {
 
 	e.GET("/api/staff").
 		WithHeader("Authentication", SUPERUSER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
 	// TODO multi-org allow membership in multiple orgs - test cross-org access doesn't work
 
 	e.GET("/api/staff").
 		WithHeader("Authentication", ORG1_CLIENT).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
 }
@@ -202,6 +205,7 @@ func TestUpdateOrg(e *httpexpect.Expect) {
 	request = Organisation.UpdateOrganisationRequestBody{Name: "org1d"}
 	e.PUT("/api/advisor/organisations/"+org1Id).
 		WithHeader("Authentication", ORG1_CLIENT).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
@@ -209,6 +213,7 @@ func TestUpdateOrg(e *httpexpect.Expect) {
 	request = Organisation.UpdateOrganisationRequestBody{Name: "org1e"}
 	e.PUT("/api/advisor/organisations/"+org1Id).
 		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 }

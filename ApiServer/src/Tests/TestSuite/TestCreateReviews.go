@@ -26,11 +26,13 @@ func TestCreateAndPublishReview(e *httpexpect.Expect) {
 	// Create review as the client - forbidden
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG1_CLIENT).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
 	// Create review as the owner of another org - forbidden
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 }
 
@@ -44,16 +46,19 @@ func TestGetClient(t *testing.T, e *httpexpect.Expect) {
 	// As the client - forbidden
 	e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG1_CLIENT).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
 	// As the superuser - forbidden
 	e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", SUPERUSER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
 	// As the owner of another org - forbidden
 	e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 }
 
@@ -124,7 +129,7 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("Policies").Array().First().Object().ValueEqual("PolicyTypeId", policyTypeId)
 	report.Value("Policies").Array().First().Object().ValueEqual("PolicyProviderId", policyProviderId)
 	report.Value("Policies").Array().First().Object().ValueEqual("Notes", "Policy notes")
-	//report.Value("Policies").Array().First().Object().ValueEqual("File", nil)
+	report.Value("Policies").Array().Element(0).Object().Value("File").Object().ValueEqual("Filename", "policy-b.png")
 	report.Value("Policies").Array().Length().Equal(1)
 
 	policyFileId := report.Value("Policies").Array().First().Object().Value("File").Object().Value("Uid").String().Raw()
@@ -138,7 +143,7 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("Funds").Array().Element(0).Object().ValueEqual("ExAnteFee", 0.16)
 	report.Value("Funds").Array().Element(0).Object().ValueEqual("OcfFee", 0.76)
 	report.Value("Funds").Array().Element(0).Object().Value("Modified").String().NotEmpty()
-	report.Value("Funds").Array().Element(0).Object().Value("File").Object().ValueEqual("Filename", "fund.png")
+	report.Value("Funds").Array().Element(0).Object().Value("File").Object().ValueEqual("Filename", "fund-b.png")
 	fundFileId := report.Value("Funds").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
 
 	report.Value("Funds").Array().Element(1).Object().ValueEqual("Name", "LF Equity Income C Acc")
@@ -183,13 +188,27 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("Portfolios").Array().First().Object().ValueEqual("Proportion", 0.12)
 	report.Value("Portfolios").Array().Length().Equal(1)
 
-	// TODO write tests for these and other missing features
-	report.Value("RiskProviders").Array().Empty()
-	report.Value("RiskLevels").Array().Empty()
-	report.Value("RiskAssessments").Array().Empty()
-	report.Value("FactFinds").Array().Empty()
-	report.Value("FeesReports").Array().Empty()
-	report.Value("Forecasts").Array().Empty()
-}
+	report.Value("RiskProviders").Array().Length().Equal(1)
+	report.Value("RiskProviders").Array().First().Object().ValueEqual("Name", "Dynamic Planner")
 
-// test changing role types (as org admin/owner)
+	report.Value("RiskLevels").Array().Length().Equal(1)
+	report.Value("RiskLevels").Array().First().Object().ValueEqual("Label", "Highest")
+
+	report.Value("RiskAssessments").Array().Length().Equal(1)
+	report.Value("RiskAssessments").Array().First().Object().ValueEqual("RiskLevelId", riskLevelId)
+	report.Value("RiskAssessments").Array().First().Object().ValueEqual("RiskProviderId", riskProviderId)
+	report.Value("RiskAssessments").Array().First().Object().Value("Questionnaire").Object().ValueEqual("Filename", "sample.png")
+	TestDownload(t, e, ORG1_CLIENT, assessmentFileId, true)
+
+	report.Value("FactFinds").Array().Length().Equal(1)
+	report.Value("FactFinds").Array().First().Object().Value("File").Object().ValueEqual("Filename", "sample.png")
+	TestDownload(t, e, ORG1_CLIENT, factFindFileId, true)
+
+	report.Value("FeesReports").Array().Length().Equal(1)
+	report.Value("FeesReports").Array().First().Object().Value("File").Object().ValueEqual("Filename", "sample.png")
+	TestDownload(t, e, ORG1_CLIENT, feesReportFileId, true)
+
+	report.Value("Forecasts").Array().Length().Equal(1)
+	report.Value("Forecasts").Array().First().Object().Value("File").Object().ValueEqual("Filename", "sample.png")
+	TestDownload(t, e, ORG1_CLIENT, forecastFileId, true)
+}

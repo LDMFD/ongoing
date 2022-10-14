@@ -93,7 +93,7 @@ func CreateModel(c *gin.Context) {
 	}
 
 	if body.File != nil {
-		if err := auth.CreateFile(nil, &session.Org.Uid, body.File.Uid); err != nil {
+		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

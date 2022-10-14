@@ -1,9 +1,13 @@
 package RiskAssessments
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -20,6 +24,8 @@ type UpdateRiskAssessmentRequestPath struct {
 
 func UpdateRiskAssessment(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path UpdateRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -36,7 +42,8 @@ func UpdateRiskAssessment(c *gin.Context) {
 	var assessment = Entities.RiskAssessment{}
 	if err := db.NewSelect().
 		Model(&assessment).
-		Where("uid = ?", path.RiskAssessmentId).
+		Relation("Questionnaire").
+		Where("risk_assessment.uid = ?", path.RiskAssessmentId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -95,11 +102,37 @@ func UpdateRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	// File has been removed or changed; remove old relationship
+	if (body.Questionnaire != nil && assessment.Questionnaire != nil && body.Questionnaire.Uid != assessment.Questionnaire.Uid) ||
+		(body.Questionnaire == nil && assessment.Questionnaire != nil) {
+		if err := auth.RemoveFileFromClient(client.Uid, session.Org.Uid, assessment.Questionnaire.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+	if body.Questionnaire != nil {
+		if err := auth.CreateOrgFile(session.Org.Uid, body.Questionnaire.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
 	assessment.RiskLevelId = level.Id
 	assessment.Completed = completed
 	assessment.QuestionnaireFileId = questionnaireFileId
 
-	if _, err := db.NewUpdate().
+	if _, err := tx.NewUpdate().
 		Model(&assessment).
 		WherePK().
 		Column("risk_level_id").
@@ -110,7 +143,11 @@ func UpdateRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	c.JSON(200, gin.H{
-		"RiskAssessment": assessment,
-	})
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
+	c.JSON(200, gin.H{})
 }

@@ -84,9 +84,6 @@ _gcp-sql-teardown: import-env
 
 # ---
 
-db-seed-local:
-	make db-migrate-local MIGRATION=users
-
 # Local:
 db-migrate-local: import-env
 	docker run \
@@ -94,7 +91,7 @@ db-migrate-local: import-env
 		--rm \
 		--network ongoing_default \
 		-v `pwd`/Migrations:/app/migrations \
-		-v `pwd`/pgpass:/root/.pgpass \
+		-v `pwd`/Postgres/pgpass:/root/.pgpass \
 		-e PGPASSFILE=/root/.pgpass \
 		postgres:${POSTGRES_VERSION_NUMERIC} \
 			psql --host=ongoing-db \

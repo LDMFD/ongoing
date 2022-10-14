@@ -8,6 +8,7 @@ import (
 	OperatorCommands "ongoing/ApiServer/Advisor/Global/Operators/Commands"
 	PolicyProviderCommands "ongoing/ApiServer/Advisor/Global/PolicyProviders/Commands"
 	PolicyTypeCommands "ongoing/ApiServer/Advisor/Global/PolicyTypes/Commands"
+	RiskLevelCommands "ongoing/ApiServer/Advisor/Global/RiskLevels/Commands"
 	RiskProviderCommands "ongoing/ApiServer/Advisor/Global/RiskProviders/Commands"
 	"ongoing/Entities"
 	"testing"
@@ -53,16 +54,16 @@ func TestCreatePolicyProvider(e *httpexpect.Expect) {
 }
 
 func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
-	fileId := TestUpload(t, e, ORG1_ADVISOR, "fund.png")
+	fileId1 := TestUpload(t, e, ORG1_ADVISOR, "fund.png")
 
-	// Create Fund (no file) as org 1 advisor
+	// Create Fund 1 (with file) as org 1 advisor
 	request := FundCommands.CreateOrUpdateFundRequestBody{
 		Name:      "Jupiter Balanced",
 		OcfFee:    0.76,
 		ExAnteFee: 0.16,
 		Modified:  "2006-01-02T15:04:05Z",
 		File: &Entities.RequestFile{
-			Uid:      fileId,
+			Uid:      fileId1,
 			Filename: "sample.png",
 			//Size:
 		},
@@ -73,7 +74,7 @@ func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 	fundId1 = resp.JSON().Object().Value("Id").String().Raw()
 
-	// Create Fund (with file) as org 1 advisor
+	// Create Fund 2 (no file) as org 1 advisor
 	request = FundCommands.CreateOrUpdateFundRequestBody{
 		Name:      "LF Equity Income C Acc",
 		OcfFee:    0.75,
@@ -86,11 +87,50 @@ func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 	fundId2 = resp.JSON().Object().Value("Id").String().Raw()
 
-	// Test file download with different user types
-	TestDownload(t, e, ORG1_OWNER, fileId, true)
-	TestDownload(t, e, ORG1_ADVISOR, fileId, true)
-	TestDownload(t, e, ORG2_OWNER, fileId, false)
-	TestDownload(t, e, ORG1_CLIENT, fileId, false)
+	// Test fund 1 file download with different user types
+	TestDownload(t, e, ORG1_OWNER, fileId1, true)
+	TestDownload(t, e, ORG1_ADVISOR, fileId1, true)
+	TestDownload(t, e, ORG2_OWNER, fileId1, false)
+	TestDownload(t, e, ORG1_CLIENT, fileId1, false)
+
+	// Remove the file and re-add it, check it still works
+	request = FundCommands.CreateOrUpdateFundRequestBody{
+		Name:      "Jupiter Balanced",
+		OcfFee:    0.76,
+		ExAnteFee: 0.16,
+		Modified:  "2006-01-02T15:04:05Z",
+	}
+	resp = e.PUT("/api/advisor/funds/"+fundId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	// Shouldn't be available anymore
+	TestDownload(t, e, ORG1_OWNER, fileId1, false)
+
+	fundFileId = TestUpload(t, e, ORG1_ADVISOR, "fund-b.png")
+
+	// Add a new file
+	request = FundCommands.CreateOrUpdateFundRequestBody{
+		Name:      "Jupiter Balanced",
+		OcfFee:    0.76,
+		ExAnteFee: 0.16,
+		Modified:  "2006-01-02T15:04:05Z",
+		File: &Entities.RequestFile{
+			Uid:      fundFileId,
+			Filename: "sample.png",
+			//Size:
+		},
+	}
+	resp = e.PUT("/api/advisor/funds/"+fundId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	// New file should be available
+	TestDownload(t, e, ORG1_OWNER, fundFileId, true)
+	TestDownload(t, e, ORG1_ADMIN, fundFileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, fundFileId, true)
 }
 
 func TestCreateOperator(e *httpexpect.Expect) {
@@ -107,7 +147,7 @@ func TestCreateOperator(e *httpexpect.Expect) {
 }
 
 func TestCreateModel(t *testing.T, e *httpexpect.Expect) {
-	fileId := TestUpload(t, e, ORG1_ADVISOR, "model.png")
+	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model.png")
 
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              "FE Invest Hybrid Risk Level 3 Long",
@@ -116,7 +156,7 @@ func TestCreateModel(t *testing.T, e *httpexpect.Expect) {
 		WeightedExAnteFee: 0.06,
 		//Modified:          "",
 		File: &Entities.RequestFile{
-			Uid:      fileId,
+			Uid:      modelFileId,
 			Filename: "sample.png",
 			//Size:
 		},
@@ -126,16 +166,76 @@ func TestCreateModel(t *testing.T, e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 	modelId = resp.JSON().Object().Value("Id").String().Raw()
+
+	// Test model file download with different user types
+	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
+	TestDownload(t, e, ORG2_OWNER, modelFileId, false)
+	TestDownload(t, e, ORG1_CLIENT, modelFileId, false)
+
+	// Remove the file and re-add it, check it still works
+	request = ModelCommands.CreateOrUpdateModelRequestBody{
+		Name:              "FE Invest Hybrid Risk Level 3 Long",
+		OperatorId:        operatorId,
+		WeightedOcfFee:    0.4,
+		WeightedExAnteFee: 0.06,
+		//Modified:          "2006-01-02T15:04:05Z",
+		File: nil,
+	}
+	resp = e.PUT("/api/advisor/models/"+modelId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	// Shouldn't be available anymore
+	TestDownload(t, e, ORG1_OWNER, modelFileId, false)
+
+	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model-b.png")
+
+	// Add a new file
+	request = ModelCommands.CreateOrUpdateModelRequestBody{
+		Name:              "FE Invest Hybrid Risk Level 3 Long",
+		OperatorId:        operatorId,
+		WeightedOcfFee:    0.4,
+		WeightedExAnteFee: 0.06,
+		File: &Entities.RequestFile{
+			Uid:      modelFileId,
+			Filename: "sample.png",
+			//Size:
+		},
+	}
+	resp = e.PUT("/api/advisor/models/"+modelId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	// New file should be available
+	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
+	TestDownload(t, e, ORG1_ADMIN, modelFileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
 }
 
 func TestCreateRiskProvider(e *httpexpect.Expect) {
 	request := RiskProviderCommands.CreateRiskProviderRequest{
 		Name: "Dynamic Planner",
 	}
-	e.POST("/api/advisor/risk-providers").
+	resp := e.POST("/api/advisor/risk-providers").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
+	riskProviderId = resp.JSON().Object().Value("Id").String().Raw()
+
+	request2 := RiskLevelCommands.CreateRiskLevelRequest{
+		RiskProviderId: riskProviderId,
+		Level:          10,
+		Label:          "Highest",
+		Desc:           "Risky McJones here.",
+	}
+	resp = e.POST("/api/advisor/risk-levels").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request2).
+		Expect().Status(http.StatusOK)
+	riskLevelId = resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func TestGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
@@ -175,7 +275,8 @@ func TestGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
 	resp.Value("RiskProviders").Array().First().Object().Value("Name").String().Equal("Dynamic Planner")
 	resp.Value("RiskProviders").Array().Length().Equal(1)
 
-	resp.Value("RiskLevels").Array().Empty()
+	resp.Value("RiskLevels").Array().First().Object().Value("Label").String().Equal("Highest")
+	resp.Value("RiskLevels").Array().Length().Equal(1)
 }
 
 func TestGetGlobalEntitiesFromOtherOrg(e *httpexpect.Expect) {

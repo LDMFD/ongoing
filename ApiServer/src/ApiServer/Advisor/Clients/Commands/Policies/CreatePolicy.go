@@ -32,6 +32,7 @@ type CreateOrUpdatePolicyRequestBody struct {
 func CreatePolicy(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path CreatePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -111,7 +112,7 @@ func CreatePolicy(c *gin.Context) {
 	}
 
 	if body.File != nil {
-		if err := auth.CreateFile(&client.Uid, nil, body.File.Uid); err != nil {
+		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

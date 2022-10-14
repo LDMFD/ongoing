@@ -30,7 +30,9 @@ func UpdateOrganisation(c *gin.Context) {
 
 	// Superuser can update all orgs, non-superusers can only update their own
 	if session.Role != Entities.UserTypeSuperuser && *session.OrgId != path.OrgId {
-		log.Println("Unauthorized access attempt by:", session.Email)
+		if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
 		c.AbortWithStatus(http.StatusForbidden)
 		return
 	}

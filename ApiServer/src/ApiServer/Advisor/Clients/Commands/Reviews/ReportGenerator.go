@@ -152,20 +152,39 @@ func (gen *ReportGenerator) generatePolicies() {
 		policyTypes[pol.PolicyTypeId] = pol.PolicyType
 	}
 	gen.report.ProviderCharges = make([]Entities.ReportProviderCharge, 0)
-	for _, p := range policyProviders {
-		for _, pc := range p.Charges {
+	for _, pp := range policyProviders {
+		for _, pc := range pp.Charges {
 			gen.report.ProviderCharges = append(gen.report.ProviderCharges, pc.ToReport())
 		}
-		gen.report.PolicyProviders = append(gen.report.PolicyProviders, p.ToReport())
+		gen.report.PolicyProviders = append(gen.report.PolicyProviders, pp.ToReport())
 	}
-	for _, p := range policyTypes {
-		gen.report.PolicyTypes = append(gen.report.PolicyTypes, p.ToReport())
+	for _, pt := range policyTypes {
+		gen.report.PolicyTypes = append(gen.report.PolicyTypes, pt.ToReport())
 	}
 
 	gen.report.ProviderDiscounts = make([]Entities.ReportProviderDiscount, 0)
-	for _, p := range gen.client.ProviderDiscounts {
-		p.PolicyProvider = policyProviders[p.PolicyProviderId]
-		gen.report.ProviderDiscounts = append(gen.report.ProviderDiscounts, p.ToReport())
+	for _, pd := range gen.client.ProviderDiscounts {
+		pd.PolicyProvider = policyProviders[pd.PolicyProviderId]
+
+		// Terrible logic.. needs to be refactored. A policy discount can exist on a client without an associated policy.
+		if pd.PolicyProvider == nil {
+			var allPolicyProviders []Entities.PolicyProvider
+			if err := gen.db.NewSelect().
+				Model(&allPolicyProviders).
+				Scan(gen.context); err != nil {
+				gen.context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+				panic(err.Error())
+			}
+			for _, pp := range allPolicyProviders {
+				if pp.Id == pd.PolicyProviderId {
+					gen.report.PolicyProviders = append(gen.report.PolicyProviders, pp.ToReport())
+					pd.PolicyProvider = &pp
+					break
+				}
+			}
+		}
+
+		gen.report.ProviderDiscounts = append(gen.report.ProviderDiscounts, pd.ToReport())
 	}
 }
 

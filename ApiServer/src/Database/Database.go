@@ -37,7 +37,7 @@ func New() (*bun.DB, error) {
 }
 
 func connect(dsn, dbname string) *bun.DB {
-	log.Println("Connecting to DB", dbname)
+	//log.Println("Connecting to DB", dbname)
 
 	connector := pgdriver.NewConnector(pgdriver.WithDSN(dsn), pgdriver.WithDatabase(dbname))
 	sqldb := sql.OpenDB(connector)
@@ -69,7 +69,22 @@ func connect(dsn, dbname string) *bun.DB {
 func wipeDatabases(appdb *bun.DB) {
 	log.Println("DB: truncating")
 
-	appdb.Exec("SELECT truncate_tables('public', 'ongoing-local');")
+	appdb.Exec(`
+		CREATE OR REPLACE FUNCTION truncate_tables(_schema IN VARCHAR, _username IN VARCHAR) RETURNS void AS $$
+			DECLARE
+				statements CURSOR FOR
+					SELECT tablename FROM pg_tables
+					WHERE tableowner = _username AND schemaname = _schema;
+			BEGIN
+				FOR stmt IN statements LOOP
+					EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+				END LOOP;
+			END;
+			$$ LANGUAGE plpgsql;`)
+
+	if _, err := appdb.Exec("SELECT truncate_tables('public', 'postgres');"); err != nil {
+		log.Fatal(err)
+	}
 
 	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
 	defer func() {
@@ -92,8 +107,6 @@ func insertSuperuser(db *bun.DB, email string) {
 	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", email).Exists(context.TODO()); err != nil {
 		panic(err.Error())
 	} else if !exists {
-		log.Println("DB: seeding superuser")
-
 		var user = Entities.User{
 			Uid:   UUID.GenerateUID(nil),
 			Email: email,

@@ -1,9 +1,13 @@
 package FactFinds
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -18,6 +22,8 @@ type UpdateFactFindRequestPath struct {
 
 func UpdateFactFind(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path UpdateFactFindRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -34,7 +40,8 @@ func UpdateFactFind(c *gin.Context) {
 	var factFind = Entities.FactFind{}
 	if err := db.NewSelect().
 		Model(&factFind).
-		Where("uid = ?", path.FactFindId).
+		Relation("File").
+		Where("fact_find.uid = ?", path.FactFindId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -67,10 +74,35 @@ func UpdateFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	// File has been removed or changed; remove old relationship
+	if (body.File != nil && factFind.File != nil && body.File.Uid != factFind.File.Uid) || (body.File == nil && factFind.File != nil) {
+		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, factFind.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+	if body.File != nil {
+		if err := auth.CreateClientFile(path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
 	factFind.Submitted = submitted
 	factFind.FileId = fileId
 
-	if _, err := db.NewUpdate().
+	if _, err := tx.NewUpdate().
 		Model(&factFind).
 		WherePK().
 		Column("file_id").
@@ -80,7 +112,11 @@ func UpdateFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	c.JSON(200, gin.H{
-		"FactFind": factFind,
-	})
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
+	c.JSON(200, gin.H{})
 }

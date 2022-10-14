@@ -1,8 +1,12 @@
 package FactFinds
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -17,6 +21,8 @@ type DeleteFactFindRequestPath struct {
 
 func DeleteFactFind(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteFactFindRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -27,7 +33,8 @@ func DeleteFactFind(c *gin.Context) {
 	var factFind = Entities.FactFind{}
 	if err := db.NewSelect().
 		Model(&factFind).
-		Where("uid = ?", path.FactFindId).
+		Relation("File").
+		Where("fact_find.uid = ?", path.FactFindId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -41,12 +48,34 @@ func DeleteFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if _, err := db.NewDelete().
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewDelete().
 		Model(&factFind).
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if factFind.File != nil {
+		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, factFind.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{})

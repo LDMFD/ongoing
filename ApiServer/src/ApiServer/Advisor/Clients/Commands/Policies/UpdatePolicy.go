@@ -1,8 +1,12 @@
 package Policies
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -17,6 +21,8 @@ type UpdatePolicyRequestPath struct {
 
 func UpdatePolicy(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path UpdatePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -46,7 +52,8 @@ func UpdatePolicy(c *gin.Context) {
 	var policy = Entities.Policy{}
 	if err := db.NewSelect().
 		Model(&policy).
-		Where("uid = ?", path.PolicyId).
+		Relation("File").
+		Where("policy.uid = ?", path.PolicyId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -72,13 +79,38 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
 	var provider = Entities.PolicyProvider{}
-	if err := db.NewSelect().
+	if err := tx.NewSelect().
 		Model(&provider).
 		Where("uid = ?", body.PolicyProviderId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	// File has been removed or changed; remove old relationship
+	if (body.File != nil && policy.File != nil && body.File.Uid != policy.File.Uid) || (body.File == nil && policy.File != nil) {
+		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, policy.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+	if body.File != nil {
+		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
 	}
 
 	policy.ExternalId = body.ExternalId
@@ -90,7 +122,7 @@ func UpdatePolicy(c *gin.Context) {
 	policy.Notes = body.Notes
 	policy.FileId = fileId
 
-	if _, err := db.NewUpdate().
+	if _, err := tx.NewUpdate().
 		Model(&policy).
 		WherePK().
 		Column("external_id").
@@ -106,7 +138,11 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	c.JSON(200, gin.H{
-		"Policy": policy,
-	})
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
+	c.JSON(200, gin.H{})
 }

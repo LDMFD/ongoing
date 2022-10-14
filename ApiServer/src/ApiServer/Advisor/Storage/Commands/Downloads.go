@@ -28,6 +28,7 @@ func RequestDownload(c *gin.Context) {
 		if err != nil {
 			panic(err.Error())
 		}
+		return
 	}
 
 	var file = Entities.File{}

@@ -1,7 +1,11 @@
 package Commands
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -17,6 +21,8 @@ type UpdateModelRequestPath struct {
 
 func UpdateModel(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path UpdateModelRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -52,6 +58,13 @@ func UpdateModel(c *gin.Context) {
 		fileId = &file.Id
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
 	var operator = Entities.Operator{}
 	if err := db.NewSelect().
 		Model(&operator).
@@ -61,15 +74,43 @@ func UpdateModel(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var model = Entities.Model{
-		Name:              body.Name,
-		OperatorId:        operator.Id,
-		WeightedOcfFee:    body.WeightedOcfFee,
-		WeightedExAnteFee: body.WeightedExAnteFee,
-		Modified:          &modified,
-		FileId:            fileId,
+	var model = Entities.Model{}
+
+	if err := tx.NewSelect().
+		Model(&model).
+		Relation("File").
+		Where("model.uid = ?", path.ModelId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
 	}
-	if _, err := db.NewUpdate().Model(&model).Where("uid = ?", path.ModelId).
+
+	model.Name = body.Name
+	model.OperatorId = operator.Id
+	model.WeightedOcfFee = body.WeightedOcfFee
+	model.WeightedExAnteFee = body.WeightedExAnteFee
+	model.Modified = &modified
+	model.FileId = fileId
+
+	// File has been removed or changed; remove old relationship
+	if (body.File != nil && model.File != nil && body.File.Uid != model.File.Uid) || (body.File == nil && model.File != nil) {
+		if err := auth.RemoveFileFromOrg(&session.Org.Uid, model.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+	if body.File != nil {
+		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+	}
+
+	if _, err := tx.NewUpdate().Model(&model).Where("uid = ?", path.ModelId).
 		Column("name").
 		Column("operator_id").
 		Column("weighted_ocf_fee").
@@ -79,6 +120,12 @@ func UpdateModel(c *gin.Context) {
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{

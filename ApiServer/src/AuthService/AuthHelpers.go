@@ -26,6 +26,23 @@ func (c *Client) CreateClient(orgId, advisorId, clientId, userId string) error {
 	return nil
 }
 
+func (c *Client) CreateClientFile(clientId, orgId string, fileId string) error {
+	if err := c.CreateFile(nil, &orgId, fileId); err != nil {
+		return err
+	}
+	if err := c.CreateFile(&clientId, nil, fileId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) CreateOrgFile(orgId, fileId string) error {
+	if err := c.CreateFile(nil, &orgId, fileId); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) CreateFile(clientId, orgId *string, fileId string) error {
 	if clientId == nil && orgId == nil {
 		panic("clientId and orgId may not both be nil")
@@ -39,6 +56,23 @@ func (c *Client) CreateFile(clientId, orgId *string, fileId string) error {
 		if err := c.createRelationship("file", fileId, "org", "organisation", *orgId); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (c *Client) RemoveFileFromClient(clientId, orgId string, fileId string) error {
+	if err := c.removeRelationship("file", fileId, "client", "client", clientId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("file", fileId, "org", "organisation", orgId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) RemoveFileFromOrg(orgId *string, fileId string) error {
+	if err := c.removeRelationship("file", fileId, "org", "organisation", *orgId); err != nil {
+		return err
 	}
 	return nil
 }

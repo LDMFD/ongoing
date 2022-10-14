@@ -124,7 +124,8 @@ func GetGlobalEntities(c *gin.Context) {
 	var riskLevels []Entities.RiskLevel
 	if err := db.NewSelect().
 		Model(&riskLevels).
-		Relation("RiskProvider").
+		Relation("RiskProvider.Org").
+		Where("risk_provider__org.Uid = ?", session.OrgId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -136,8 +137,6 @@ func GetGlobalEntities(c *gin.Context) {
 	var policyTypes []Entities.PolicyType
 	if err := db.NewSelect().
 		Model(&policyTypes).
-		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
 		Relation("Org").
 		Where("Org.Uid = ?", session.OrgId).
 		OrderExpr("name ASC").

@@ -36,6 +36,7 @@ func TestUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
 	}
 	e.PUT("/api/staff/"+org1AdvisorId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
@@ -45,6 +46,7 @@ func TestUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
 	}
 	e.PUT("/api/staff/"+org1AdminId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
@@ -63,6 +65,7 @@ func TestUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
 	}
 	e.PUT("/api/staff/"+org1ClientId).
 		WithHeader("Authentication", ORG1_CLIENT).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 

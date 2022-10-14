@@ -53,6 +53,60 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 	policyId = resp.JSON().Object().Value("Id").String().Raw()
+
+	// Test file download with different user types
+	TestDownload(t, e, ORG1_OWNER, fileId, true)
+	TestDownload(t, e, ORG1_ADMIN, fileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, fileId, true)
+	TestDownload(t, e, ORG2_OWNER, fileId, false)
+	TestDownload(t, e, ORG1_CLIENT, fileId, true)
+
+	// Remove the file
+	request = Policies.CreateOrUpdatePolicyRequestBody{
+		ExternalId:           "external-pol",
+		MonthlyContributions: 10,
+		StartValue:           100,
+		EndValue:             200,
+		PolicyTypeId:         policyTypeId,
+		PolicyProviderId:     policyProviderId,
+		Notes:                "Policy notes",
+	}
+	resp = e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	TestDownload(t, e, ORG1_OWNER, fileId, false)
+	TestDownload(t, e, ORG1_ADMIN, fileId, false)
+	TestDownload(t, e, ORG1_ADVISOR, fileId, false)
+	TestDownload(t, e, ORG1_CLIENT, fileId, false)
+
+	// Put the file back again
+	fileId = TestUpload(t, e, ORG1_ADVISOR, "policy-b.png")
+
+	request = Policies.CreateOrUpdatePolicyRequestBody{
+		ExternalId:           "external-pol",
+		MonthlyContributions: 10,
+		StartValue:           100,
+		EndValue:             200,
+		PolicyTypeId:         policyTypeId,
+		PolicyProviderId:     policyProviderId,
+		Notes:                "Policy notes",
+		File: &Entities.RequestFile{
+			Uid:      fileId,
+			Filename: "sample.png",
+		},
+	}
+	resp = e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	TestDownload(t, e, ORG1_OWNER, fileId, true)
+	TestDownload(t, e, ORG1_ADMIN, fileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, fileId, true)
+	TestDownload(t, e, ORG2_OWNER, fileId, false)
+	TestDownload(t, e, ORG1_CLIENT, fileId, true)
 }
 
 func CreatePolicyFunds(e *httpexpect.Expect) {
@@ -65,7 +119,7 @@ func CreatePolicyFunds(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	resp.Value("Id").String()
+	policyFundId = resp.Value("Id").String().Raw()
 
 	request = PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
 		FundId:     fundId2,
@@ -89,5 +143,5 @@ func CreatePortfolio(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	resp.Value("Id").String()
+	portfolioId = resp.Value("Id").String().Raw()
 }

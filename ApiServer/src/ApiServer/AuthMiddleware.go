@@ -110,6 +110,10 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 				return
 			} else {
 				// Only 1 organisation allowed for now
+				if orgs == nil || len(orgs) == 0 {
+					c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
+					return
+				}
 				orgId = &orgs[0]
 			}
 
@@ -133,7 +137,9 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			}
 			if !found {
 				if os.Getenv("OFFLINE_TESTS") != "true" {
-					log.Printf("Unauthorized access attempt: user=%s path=%s\n", email, c.Request.URL.Path)
+					if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+						log.Printf("Unauthorized access attempt: user=%s path=%s\n", email, c.Request.URL.Path)
+					}
 				}
 				c.AbortWithStatus(http.StatusForbidden)
 				return
