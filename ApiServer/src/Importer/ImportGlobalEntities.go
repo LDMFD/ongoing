@@ -6,14 +6,12 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Global"
-	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
 	"ongoing/Entities"
-	"os"
 )
 
-type GlobalEntitiesContainer struct {
-	Entities Global.GlobalEntities
-}
+//type GlobalEntitiesContainer struct {
+//	Entities Global.GlobalEntities
+//}
 
 func importGlobalEntities(entities *Global.GlobalEntities) {
 	for _, mp := range entities.ModulePresets {
@@ -42,32 +40,6 @@ func importGlobalEntities(entities *Global.GlobalEntities) {
 	}
 	for _, rl := range entities.RiskLevels {
 		importRiskLevel(rl)
-	}
-}
-
-func createOrg() {
-	advisorRequest, _ := os.ReadFile(importPath + "/advisor.json")
-	var advisor Commands.CreateAdvisorRequestBody
-	if err := json.Unmarshal(advisorRequest, &advisor); err != nil {
-		panic(err)
-	}
-	advisorEmail = advisor.Email
-
-	request, err := http.NewRequest("POST", API+"/admin/organisations", bytes.NewBuffer(advisorRequest))
-	if err != nil {
-		panic(err)
-	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-
-	client := &http.Client{}
-	resp, err := client.Do(request)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		log.Println("Create org:", resp.Status)
 	}
 }
 

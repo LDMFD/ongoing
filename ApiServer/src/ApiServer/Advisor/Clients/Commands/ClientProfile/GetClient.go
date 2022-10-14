@@ -15,6 +15,19 @@ type GetClientRequestPath struct {
 	ClientId string `binding:"required"`
 }
 
+type Draft struct {
+	Id        string
+	StartDate string
+	EndDate   string
+}
+
+type GetClientResponse struct {
+	ClientContext Entities.ClientReport
+	Draft         Draft
+	Report        Entities.ReportDetail
+	Reviews       []Entities.ReportReview
+}
+
 func GetClient(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
@@ -33,7 +46,13 @@ func GetClient(c *gin.Context) {
 		return
 	}
 
-	var draft gin.H
+	c.JSON(200, GetClientInternal(c, client))
+}
+
+func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientResponse {
+	db := c.MustGet("DATABASE").(*bun.DB)
+
+	var draft Draft
 	var draftReviews []Entities.Review
 	if count, err := db.NewSelect().
 		Model(&draftReviews).
@@ -55,10 +74,10 @@ func GetClient(c *gin.Context) {
 				endDate = Date.ToCanonical(draftReviews[0].EndDate)
 			}
 
-			draft = gin.H{
-				"Id":        draftReviews[0].Uid,
-				"StartDate": startDate,
-				"EndDate":   endDate,
+			draft = Draft{
+				Id:        draftReviews[0].Uid,
+				StartDate: startDate,
+				EndDate:   endDate,
 			}
 		} else if count > 0 {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Integrity error - multiple reviews in draft state"})
@@ -67,10 +86,10 @@ func GetClient(c *gin.Context) {
 
 	report := Reviews.GenerateReport(c, client.Id, false)
 
-	c.JSON(200, gin.H{
-		"ClientContext": client.ToReport(),
-		"Draft":         draft,
-		"Report":        report,
-		"Reviews":       Reviews.GetReviews(c, client),
-	})
+	return &GetClientResponse{
+		ClientContext: client.ToReport(),
+		Draft:         draft,
+		Report:        *report,
+		Reviews:       Reviews.GetReviews(c, client),
+	}
 }

@@ -20,8 +20,10 @@ type Organisation struct {
 }
 
 type OrganisationMember struct {
-	UserId string
-	Role   string
+	UserId    string
+	Role      string
+	Forenames string
+	Surname   string
 }
 
 type ReportOrganisation struct {

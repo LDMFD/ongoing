@@ -10,15 +10,22 @@ import (
 )
 
 func GetClients(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+
+	c.JSON(200, gin.H{
+		"Clients": GetClientsInternal(c, *session.OrgId),
+	})
+}
+
+func GetClientsInternal(c *gin.Context, orgId string) []Entities.ClientReport {
+	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var clients []Entities.Client
 	if err := db.NewSelect().
 		Model(&clients).
 		Relation("User").
 		Relation("Organisation").
-		Where("organisation.uid = ?", session.OrgId).
+		Where("organisation.uid = ?", orgId).
 		OrderExpr("id ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -29,7 +36,5 @@ func GetClients(c *gin.Context) {
 		reportClients = append(reportClients, c.ToReport())
 	}
 
-	c.JSON(200, gin.H{
-		"Clients": reportClients,
-	})
+	return reportClients
 }

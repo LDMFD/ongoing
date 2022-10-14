@@ -5,51 +5,58 @@ import (
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"net/http"
-	"ongoing/AuthService"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
+	"ongoing/ApiServer/Advisor/Global"
+	"ongoing/ApiServer/Superuser/Commands"
 	"ongoing/Entities"
 )
 
+type Org struct {
+	Metadata       Entities.ReportOrganisation
+	GlobalEntities Global.GlobalEntitiesResponse
+	Clients        []ClientProfile.GetClientResponse
+}
+
+type Export struct {
+	AdminEntities Commands.AdminEntitiesResponse
+	Orgs          []Org
+}
+
 func GetExport(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
 
-	var organisations []Entities.Organisation
-	if err := db.NewSelect().
-		Model(&organisations).
-		Relation("Owner").
-		Relation("Creator").
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	entities := *Commands.GetAdminEntitiesInternal(c)
+
+	export := Export{
+		AdminEntities: entities,
+		Orgs:          []Org{},
 	}
 
-	var orgs = map[string][]Entities.ReportFile{}
+	for _, org := range entities.Organisations {
+		clients := ClientProfile.GetClientsInternal(c, org.Id)
 
-	for _, org := range organisations {
-		var orgFiles []Entities.ReportFile
-
-		if files, err := auth.GetOrgFiles(org.Uid); err != nil {
-			panic(err)
-		} else {
-			for _, fileUid := range files {
-				var file = Entities.File{}
-				if err := db.NewSelect().
-					Model(&file).
-					Where("uid = ?", fileUid).
-					Scan(c); err != nil {
-					panic(errors.WithStack(err))
-				}
-
-				orgFiles = append(orgFiles, Entities.ReportFile{
-					Uid:      fileUid,
-					Filename: file.Filename,
-					Size:     file.Size,
-				})
-			}
+		o := Org{
+			Metadata:       org,
+			GlobalEntities: *Global.GetGlobalEntitiesInternal(c, &org.Id),
+			Clients:        []ClientProfile.GetClientResponse{},
 		}
 
-		orgs[org.Uid] = orgFiles
+		for _, client := range clients {
+			var c2 = Entities.Client{}
+			if err := db.NewSelect().
+				Model(&c2).
+				Where("client.uid = ?", client.Id).
+				Relation("User").
+				Relation("Organisation").
+				Scan(c); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "User isn't a client"})
+				panic(errors.WithStack(err))
+			}
+
+			o.Clients = append(o.Clients, *ClientProfile.GetClientInternal(c, &c2))
+		}
+		export.Orgs = append(export.Orgs, o)
 	}
 
-	c.JSON(200, orgs)
+	c.JSON(200, export)
 }

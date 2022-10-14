@@ -33,6 +33,7 @@ func New() (*bun.DB, error) {
 
 	log.Println("DB: all startup tests passed - connections established.")
 
+	DB = db
 	return db, nil
 }
 

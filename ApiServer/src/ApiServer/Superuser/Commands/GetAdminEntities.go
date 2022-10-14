@@ -10,7 +10,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type AdminEntitiesResponse struct {
+	Organisations []Entities.ReportOrganisation
+	Users         []Entities.ReportUser
+}
+
 func GetAdminEntities(c *gin.Context) {
+	c.JSON(http.StatusOK, GetAdminEntitiesInternal(c))
+}
+
+func GetAdminEntitiesInternal(c *gin.Context) *AdminEntitiesResponse {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	authClient := c.MustGet("AUTH").(*AuthService.Client)
 
@@ -63,7 +72,17 @@ func GetAdminEntities(c *gin.Context) {
 						c.JSON(http.StatusBadRequest, gin.H{"error": "inconsistency"})
 						panic(err.Error())
 					}
+
+					//var advisor []Entities.User
+					//if err := db.NewSelect().
+					//	Model(&users).
+					//	Scan(c); err != nil {
+					//	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+					//	panic(err.Error())
+					//}
+
 					member.Role = relationships[0].Role
+					member.Forenames =
 				}
 			}
 			org.Members = append(org.Members, member)
@@ -77,8 +96,8 @@ func GetAdminEntities(c *gin.Context) {
 		reportUsers = append(reportUsers, user)
 	}
 
-	c.JSON(200, gin.H{
-		"Organisations": reportOrganisations,
-		"Users":         reportUsers,
-	})
+	return &AdminEntitiesResponse{
+		Organisations: reportOrganisations,
+		Users:         reportUsers,
+	}
 }

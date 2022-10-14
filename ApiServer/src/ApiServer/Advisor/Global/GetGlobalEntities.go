@@ -19,9 +19,18 @@ type GlobalEntities struct {
 	RiskLevels      []Entities.ReportRiskLevel
 }
 
+type GlobalEntitiesResponse struct {
+	GlobalEntities GlobalEntities
+}
+
 func GetGlobalEntities(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+
+	c.JSON(http.StatusOK, GetGlobalEntitiesInternal(c, session.OrgId))
+}
+
+func GetGlobalEntitiesInternal(c *gin.Context, orgId *string) *GlobalEntitiesResponse {
+	db := c.MustGet("DATABASE").(*bun.DB)
 
 	entities := GlobalEntities{
 		Funds:           make([]Entities.ReportFund, 0),
@@ -40,7 +49,7 @@ func GetGlobalEntities(c *gin.Context) {
 		Model(&funds).
 		Relation("File").
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		OrderExpr("name ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -55,7 +64,7 @@ func GetGlobalEntities(c *gin.Context) {
 		Relation("File").
 		Relation("Operator").
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		OrderExpr("name ASC").Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -68,7 +77,7 @@ func GetGlobalEntities(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&operators).
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		OrderExpr("name ASC").
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -82,7 +91,7 @@ func GetGlobalEntities(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&policyProviders).
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		OrderExpr("name ASC").
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -112,7 +121,7 @@ func GetGlobalEntities(c *gin.Context) {
 		Model(&riskProviders).
 		OrderExpr("name ASC").
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -125,7 +134,7 @@ func GetGlobalEntities(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&riskLevels).
 		Relation("RiskProvider.Org").
-		Where("risk_provider__org.Uid = ?", session.OrgId).
+		Where("risk_provider__org.Uid = ?", orgId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -138,7 +147,7 @@ func GetGlobalEntities(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&policyTypes).
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		OrderExpr("name ASC").
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -153,7 +162,7 @@ func GetGlobalEntities(c *gin.Context) {
 		Model(&modulePresets).
 		OrderExpr("module_type ASC").
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -162,7 +171,7 @@ func GetGlobalEntities(c *gin.Context) {
 		entities.ModulePresets = append(entities.ModulePresets, mp.ToReport())
 	}
 
-	c.JSON(200, gin.H{
-		"Entities": entities,
-	})
+	return &GlobalEntitiesResponse{
+		GlobalEntities: entities,
+	}
 }
