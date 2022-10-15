@@ -9,7 +9,7 @@ import (
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Llongfile)
-	log.Println("Ongoing API server starting")
+	log.Println("Amplifa API server: Starting...")
 
 }
 

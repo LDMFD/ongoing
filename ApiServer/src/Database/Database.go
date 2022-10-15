@@ -31,7 +31,7 @@ func New() (*bun.DB, error) {
 
 	seedUserTable(db)
 
-	log.Println("DB: all startup tests passed - connections established.")
+	log.Println("DB: Connected.")
 
 	DB = db
 	return db, nil
@@ -68,7 +68,7 @@ func connect(dsn, dbname string) *bun.DB {
 }
 
 func wipeDatabases(appdb *bun.DB) {
-	log.Println("DB: truncating")
+	log.Println("DB: Truncating...")
 
 	appdb.Exec(`
 		CREATE OR REPLACE FUNCTION truncate_tables(_schema IN VARCHAR, _username IN VARCHAR) RETURNS void AS $$
