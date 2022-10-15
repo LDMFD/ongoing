@@ -72,17 +72,7 @@ func GetAdminEntitiesInternal(c *gin.Context) *AdminEntitiesResponse {
 						c.JSON(http.StatusBadRequest, gin.H{"error": "inconsistency"})
 						panic(err.Error())
 					}
-
-					//var advisor []Entities.User
-					//if err := db.NewSelect().
-					//	Model(&users).
-					//	Scan(c); err != nil {
-					//	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-					//	panic(err.Error())
-					//}
-
 					member.Role = relationships[0].Role
-					member.Forenames =
 				}
 			}
 			org.Members = append(org.Members, member)

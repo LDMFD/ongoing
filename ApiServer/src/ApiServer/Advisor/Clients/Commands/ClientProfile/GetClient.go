@@ -24,8 +24,8 @@ type Draft struct {
 type GetClientResponse struct {
 	Metadata Entities.ClientReport
 	Draft    *Draft
-	Report        Entities.ReportDetail
-	Reviews       []Entities.ReportReview
+	Report   Entities.ReportDetail
+	Reviews  []Entities.ReportReview
 }
 
 func GetClient(c *gin.Context) {
@@ -52,7 +52,7 @@ func GetClient(c *gin.Context) {
 func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientResponse {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var draft Draft
+	var draft *Draft
 	var draftReviews []Entities.Review
 	if count, err := db.NewSelect().
 		Model(&draftReviews).
@@ -74,7 +74,7 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientRespon
 				endDate = Date.ToCanonical(draftReviews[0].EndDate)
 			}
 
-			draft = Draft{
+			draft = &Draft{
 				Id:        draftReviews[0].Uid,
 				StartDate: startDate,
 				EndDate:   endDate,
@@ -88,8 +88,8 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientRespon
 
 	return &GetClientResponse{
 		Metadata: client.ToReport(),
-		Draft:         draft,
-		Report:        *report,
-		Reviews:       Reviews.GetReviews(c, client),
+		Draft:    draft,
+		Report:   *report,
+		Reviews:  Reviews.GetReviews(c, client),
 	}
 }

@@ -3,7 +3,6 @@ package Commands
 import (
 	"log"
 	"net/http"
-	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"sort"
@@ -34,12 +33,6 @@ func GetAdvisors(c *gin.Context) {
 			}
 			if r.Role == Entities.UserTypeClient {
 				continue
-			}
-
-			var advisor *Entities.Advisor
-			if advisor, err = Helpers.AdvisorFromUserUID(c, db, r.UserId); err != nil {
-				c.JSON(http.StatusNotFound, gin.H{"error": "no such advisor exists"})
-				panic(err.Error())
 			}
 
 			reportAdvisors = append(reportAdvisors, Entities.AdvisorReport{

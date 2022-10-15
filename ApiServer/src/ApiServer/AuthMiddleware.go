@@ -71,7 +71,9 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		} else if count == 1 {
 			user = &users[0]
 		} else {
+			if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
 			log.Println("Unauthorized access attempt by:", email)
+			}
 			c.AbortWithStatus(http.StatusForbidden) // no users found with matching email
 			return
 		}
