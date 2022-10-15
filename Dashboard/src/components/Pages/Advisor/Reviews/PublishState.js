@@ -10,7 +10,7 @@ import { Context } from 'State';
 
 const PublishState = () => {
     const [ state, ] = useContext(Context);
-    let { ClientContext: client } = state;
+    let { Metadata: client } = state;
     let report = GetReport();
 
     return (

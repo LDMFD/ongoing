@@ -6,20 +6,20 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
-	"ongoing/ApiServer/Advisor/Global"
+	"ongoing/ApiServer/Advisor/OrgResources"
 	"ongoing/ApiServer/Superuser/Commands"
 	"ongoing/Entities"
 )
 
 type Org struct {
-	Metadata       Entities.ReportOrganisation
-	GlobalEntities Global.GlobalEntitiesResponse
-	Clients        []ClientProfile.GetClientResponse
+	Metadata  Entities.ReportOrganisation
+	Resources OrgResources.OrgResources
+	Clients   []ClientProfile.GetClientResponse
 }
 
 type Export struct {
-	AdminEntities Commands.AdminEntitiesResponse
-	Orgs          []Org
+	Users []Entities.ReportUser
+	Orgs  []Org
 }
 
 func GetExport(c *gin.Context) {
@@ -28,17 +28,17 @@ func GetExport(c *gin.Context) {
 	entities := *Commands.GetAdminEntitiesInternal(c)
 
 	export := Export{
-		AdminEntities: entities,
-		Orgs:          []Org{},
+		Users: entities.Users,
+		Orgs:  []Org{},
 	}
 
 	for _, org := range entities.Organisations {
 		clients := ClientProfile.GetClientsInternal(c, org.Id)
 
 		o := Org{
-			Metadata:       org,
-			GlobalEntities: *Global.GetGlobalEntitiesInternal(c, &org.Id),
-			Clients:        []ClientProfile.GetClientResponse{},
+			Metadata:  org,
+			Resources: OrgResources.GetOrgResourcesInternal(c, &org.Id).Resources,
+			Clients:   []ClientProfile.GetClientResponse{},
 		}
 
 		for _, client := range clients {

@@ -2,7 +2,7 @@ import React, { useContext, useCallback } from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
 import Day from 'dayjs';
 
-import { ModuleTypeAdviceFee } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeAdviceFee } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { Context } from 'State';
@@ -12,7 +12,7 @@ import Table from 'Components/Library/Table/Table';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     let report = GetReport();
     

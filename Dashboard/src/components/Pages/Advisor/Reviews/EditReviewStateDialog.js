@@ -19,7 +19,7 @@ export const EditReviewStateDialog = () => {
 
     const [ state, dispatch ] = useContext(Context);
 
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     let { reviewId } = useParams();
    

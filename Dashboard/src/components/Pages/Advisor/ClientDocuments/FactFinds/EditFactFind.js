@@ -15,7 +15,7 @@ const EditFactFind = () => {
 
     let { factFindId } = useParams();
 
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     if (!factFind) {
         setFactFind(state.Report.FactFinds.find(h => h.Id === factFindId))

@@ -15,7 +15,7 @@ const EditPolicyFund = () => {
 
     let { policyFundId } = useParams();
     
-    let client = state.ClientContext;
+    let client = state.Metadata;
     
     if (!policyFund) {
         setPolicyFund(state.Report.PolicyFunds.find(h => h.Id === policyFundId))

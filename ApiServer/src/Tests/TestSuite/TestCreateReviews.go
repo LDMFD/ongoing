@@ -84,7 +84,7 @@ func TestOrg2ClientSpace(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG2_CLIENT).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	cc := obj.Value("ClientContext").Object()
+	cc := obj.Value("Metadata").Object()
 	cc.ValueEqual("Id", org2ClientId)
 	cc.ValueEqual("Fee", 0.2)
 	cc.Value("Identity").Object().ValueEqual("Email", ORG2_CLIENT)
@@ -95,7 +95,7 @@ func TestOrg2ClientSpace(e *httpexpect.Expect) {
 }
 
 func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object) {
-	cc := obj.Value("ClientContext").Object()
+	cc := obj.Value("Metadata").Object()
 	cc.ValueEqual("Id", org1ClientId)
 	cc.ValueEqual("Fee", 0.1)
 	cc.Value("Identity").Object().ValueEqual("Email", ORG1_CLIENT)

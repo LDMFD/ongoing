@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModuleTypeOngoingSuitability } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeOngoingSuitability } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const OngoingSuitability = () => {

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
-	"ongoing/ApiServer/Advisor/Global/Reviews/ModulePresets/Commands"
+	"ongoing/ApiServer/Advisor/OrgResources/Reviews/ModulePresets/Commands"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"sort"

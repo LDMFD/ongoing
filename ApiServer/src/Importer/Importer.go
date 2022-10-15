@@ -86,7 +86,7 @@ func createOrg(org Entities.ReportOrganisation, allUsers []Entities.User) {
 	}
 	newOrg := Organisation.CreateOrganisationRequestBody{
 		Email:     owner.Email,
-		Name:      owner.,
+		//Name:      owner.,
 		Forenames: "",
 		Surname:   "",
 	}
@@ -114,5 +114,5 @@ func createOrg(org Entities.ReportOrganisation, allUsers []Entities.User) {
 
 	if resp.StatusCode != 200 {
 		log.Println("Create org:", resp.Status)
-	}
-}
+	"}
+"}

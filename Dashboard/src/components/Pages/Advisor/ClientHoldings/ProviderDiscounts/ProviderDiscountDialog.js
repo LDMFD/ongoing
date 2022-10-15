@@ -48,7 +48,7 @@ const ProviderDiscountDialog = ({ providerDiscount, setProviderDiscount, submitL
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select provider</MenuItem>
-                            {state.Entities.PolicyProviders.map(t => (
+                            {state.Resources.PolicyProviders.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>

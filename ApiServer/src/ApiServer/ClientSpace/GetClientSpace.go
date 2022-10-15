@@ -28,7 +28,7 @@ func GetClientSpace(c *gin.Context) {
 	reviews := Reviews.GetReviews(c, &client)
 
 	c.JSON(200, gin.H{
-		"ClientContext": clientContext,
-		"Reviews":       reviews,
+		"Metadata": clientContext,
+		"Reviews":  reviews,
 	})
 }

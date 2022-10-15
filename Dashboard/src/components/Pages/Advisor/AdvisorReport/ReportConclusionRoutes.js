@@ -5,7 +5,7 @@ import { Context } from 'State';
 
 const ReportConclusionRoutes = () => {
     const [ state, ] = useContext(Context);
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     let basePath = '/clients/id/:clientId/modules/:module';
     let baseTarget = `/clients/id/${client.Id}/modules/assessments`;

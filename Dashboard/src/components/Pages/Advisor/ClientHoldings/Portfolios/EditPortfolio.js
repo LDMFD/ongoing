@@ -15,7 +15,7 @@ const EditPortfolio = () => {
 
     let { portfolioId } = useParams();
 
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     if (!portfolio) {
         setPortfolio(state.Report.Portfolios.find(h => h.Id === portfolioId))

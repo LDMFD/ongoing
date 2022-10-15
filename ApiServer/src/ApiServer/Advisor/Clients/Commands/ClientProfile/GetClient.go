@@ -22,8 +22,8 @@ type Draft struct {
 }
 
 type GetClientResponse struct {
-	ClientContext Entities.ClientReport
-	Draft         Draft
+	Metadata Entities.ClientReport
+	Draft    *Draft
 	Report        Entities.ReportDetail
 	Reviews       []Entities.ReportReview
 }
@@ -87,7 +87,7 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientRespon
 	report := Reviews.GenerateReport(c, client.Id, false)
 
 	return &GetClientResponse{
-		ClientContext: client.ToReport(),
+		Metadata: client.ToReport(),
 		Draft:         draft,
 		Report:        *report,
 		Reviews:       Reviews.GetReviews(c, client),

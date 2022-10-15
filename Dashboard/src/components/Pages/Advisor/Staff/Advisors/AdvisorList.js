@@ -1,7 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {
     Button,
     Toolbar,
@@ -9,12 +8,11 @@ import {
 
 import { Context } from 'State/StateProvider'
 import Table from 'Components/Library/Table/Table';
-import { Api } from 'State';
 
 const AdvisorList = () => {
     let history = useHistory();
 
-    const [ state, dispatch ] = useContext(Context);
+    const [ state, ] = useContext(Context);
 
     const editAdvisor = useCallback(id => () => {
         history.push(`/staff/id/${id}/edit`);

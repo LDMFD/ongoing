@@ -3,21 +3,21 @@ package Advisor
 import (
 	"github.com/gin-gonic/gin"
 	"ongoing/ApiServer/Advisor/Clients"
-	"ongoing/ApiServer/Advisor/Global"
-	"ongoing/ApiServer/Advisor/Global/Funds"
-	"ongoing/ApiServer/Advisor/Global/Models"
-	"ongoing/ApiServer/Advisor/Global/Operators"
-	"ongoing/ApiServer/Advisor/Global/PolicyProviders"
-	"ongoing/ApiServer/Advisor/Global/PolicyTypes"
-	"ongoing/ApiServer/Advisor/Global/ProviderCharges"
-	"ongoing/ApiServer/Advisor/Global/Reviews"
-	"ongoing/ApiServer/Advisor/Global/RiskLevels"
-	"ongoing/ApiServer/Advisor/Global/RiskProviders"
+	OrgResources "ongoing/ApiServer/Advisor/OrgResources"
+	"ongoing/ApiServer/Advisor/OrgResources/Funds"
+	"ongoing/ApiServer/Advisor/OrgResources/Models"
+	"ongoing/ApiServer/Advisor/OrgResources/Operators"
+	"ongoing/ApiServer/Advisor/OrgResources/PolicyProviders"
+	"ongoing/ApiServer/Advisor/OrgResources/PolicyTypes"
+	"ongoing/ApiServer/Advisor/OrgResources/ProviderCharges"
+	"ongoing/ApiServer/Advisor/OrgResources/Reviews"
+	"ongoing/ApiServer/Advisor/OrgResources/RiskLevels"
+	"ongoing/ApiServer/Advisor/OrgResources/RiskProviders"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
-	r.GET("/global", Global.GetGlobalEntities)
+	r.GET("/org-resources", OrgResources.GetOrgResources)
 	Clients.AddRoutes(r.Group("/clients"))
 	Funds.AddRoutes(r.Group("/funds"))
 	Operators.AddRoutes(r.Group("/operators"))

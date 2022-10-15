@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { ModuleTypeIntroduction } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeIntroduction } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
 import { FromCanonical } from 'Utils/DateTime';

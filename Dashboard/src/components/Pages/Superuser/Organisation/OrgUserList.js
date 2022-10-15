@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
     Dialog,
     DialogContent,

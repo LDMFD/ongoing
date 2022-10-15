@@ -20,7 +20,7 @@ const ForecastList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();
@@ -85,7 +85,7 @@ const ForecastList = () => {
     return (
         <div className='ongoing-forecastList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/documents/forecasts/add` }}><Button>Add forecast document</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/documents/forecasts/add` }}><Button>Add forecast document</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={forecasts} />

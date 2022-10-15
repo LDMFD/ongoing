@@ -20,7 +20,7 @@ const RiskAssessmentList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();
@@ -116,7 +116,7 @@ const RiskAssessmentList = () => {
     return (
         <div className='ongoing-riskassessmentList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/documents/risk-assessments/add` }}><Button>Add assessment</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/documents/risk-assessments/add` }}><Button>Add assessment</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={assessments} />
