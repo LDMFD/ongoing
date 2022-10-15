@@ -26,6 +26,22 @@ func (c *Client) CreateClient(orgId, advisorId, clientId, userId string) error {
 	return nil
 }
 
+func (c *Client) RemoveClient(orgId, advisorId, clientId, userId string) error {
+	if err := c.removeRelationship("organisation", orgId, "client", "user", userId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("client", clientId, "org", "organisation", orgId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("client", clientId, "advisor", "user", advisorId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("client", clientId, "subject", "user", userId); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) CreateClientFile(clientId, orgId string, fileId string) error {
 	if err := c.CreateFile(nil, &orgId, fileId); err != nil {
 		return err

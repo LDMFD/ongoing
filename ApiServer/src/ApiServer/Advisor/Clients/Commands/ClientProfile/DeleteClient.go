@@ -1,9 +1,13 @@
 package ClientProfile
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +18,9 @@ type DeleteClientRequestPath struct {
 }
 
 func DeleteClient(c *gin.Context) {
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -29,7 +35,21 @@ func DeleteClient(c *gin.Context) {
 		return
 	}
 
-	if _, err := db.NewDelete().
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if err := auth.RemoveClient(*session.OrgId, session.UserUid, path.ClientId, client.User.Uid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+
+	if _, err := tx.NewDelete().
 		Model(client).
 		Where("id = ?", client.Id).
 		Exec(c); err != nil {
@@ -38,12 +58,18 @@ func DeleteClient(c *gin.Context) {
 	}
 
 	var user Entities.User
-	if _, err := db.NewDelete().
+	if _, err := tx.NewDelete().
 		Model(&user).
 		Where("id = ?", client.UserId).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{})
