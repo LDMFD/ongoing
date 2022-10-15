@@ -52,7 +52,7 @@ export const OrgDialog = ({ org, setOrg, submitLabel, submitHandler }) => {
                            onChange = {handlers.SetName}
                            margin   = "dense"
                            id       = "name"
-                           label    = "Name"
+                           label    = "Organisation Name"
                            type     = "text"
                            variant  = "standard"
                            autoFocus fullWidth />
@@ -63,7 +63,7 @@ export const OrgDialog = ({ org, setOrg, submitLabel, submitHandler }) => {
                                 onChange = {handlers.SetEmail}
                                 margin   = "dense"
                                 id       = "email"
-                                label    = "Email"
+                                label    = "Owner email"
                                 type     = "email"
                                 variant  = "standard"
                                 fullWidth />
@@ -72,7 +72,7 @@ export const OrgDialog = ({ org, setOrg, submitLabel, submitHandler }) => {
                                 onChange = {handlers.SetSurname}
                                 margin   = "dense"
                                 id       = "surname"
-                                label    = "Surname"
+                                label    = "Owner surname"
                                 type     = "text"
                                 variant  = "standard"
                                 fullWidth />
@@ -81,7 +81,7 @@ export const OrgDialog = ({ org, setOrg, submitLabel, submitHandler }) => {
                                 onChange = {handlers.SetForenames}
                                 margin   = "dense"
                                 id       = "forenames"
-                                label    = "Forenames"
+                                label    = "Owner forenames"
                                 type     = "text"
                                 variant  = "standard"
                                 fullWidth />

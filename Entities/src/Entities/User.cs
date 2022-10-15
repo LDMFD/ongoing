@@ -32,6 +32,12 @@ namespace Ongoing.Entities
         [Column("email")]
         public string Email { get; set; } = null!;
         
+        [Column("forenames")]
+        public string Forenames { get; set; } = null!;
+        
+        [Column("surname")]
+        public string Surname { get; set; } = null!;
+        
         [Column("verified")]
         public bool Verified { get; set; }
         

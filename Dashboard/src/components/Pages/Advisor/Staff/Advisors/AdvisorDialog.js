@@ -62,26 +62,25 @@ export const AdvisorDialog = ({ advisor, setAdvisor, submitLabel, submitHandler 
                                variant  = "standard"
                                autoFocus fullWidth />
 
-                    <TextField value    = {advisor.Surname}
-                               onChange = {handlers.SetSurname}
-                               margin   = "dense"
-                               id       = "surname"
-                               label    = "Surname"
-                               type     = "text"
-                               variant  = "standard"
-                               fullWidth />
+                    {(advisor.Role !== 'owner') && (
+                        <>
+                            <TextField value    = {advisor.Surname}
+                                    onChange = {handlers.SetSurname}
+                                    margin   = "dense"
+                                    id       = "surname"
+                                    label    = "Surname"
+                                    type     = "text"
+                                    variant  = "standard"
+                                    fullWidth />
 
-                    <TextField value    = {advisor.Forenames}
-                               onChange = {handlers.SetForenames}
-                               margin   = "dense"
-                               id       = "forenames"
-                               label    = "Forenames"
-                               type     = "text"
-                               variant  = "standard"
-                               fullWidth />
-                
-                {(advisor.Role !== 'owner') && (
-                    <>
+                            <TextField value    = {advisor.Forenames}
+                                    onChange = {handlers.SetForenames}
+                                    margin   = "dense"
+                                    id       = "forenames"
+                                    label    = "Forenames"
+                                    type     = "text"
+                                    variant  = "standard"
+                                    fullWidth />
                         <br />
                         <br />
                         <FormControl sx={{ width: `30ch` }}>

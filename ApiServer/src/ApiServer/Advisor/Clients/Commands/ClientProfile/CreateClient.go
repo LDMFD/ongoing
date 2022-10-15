@@ -47,8 +47,10 @@ func CreateClient(c *gin.Context) {
 	}
 
 	var user = Entities.User{
-		Uid:   userUid,
-		Email: body.Identity.Email,
+		Uid:       userUid,
+		Email:     body.Identity.Email,
+		Forenames: body.Identity.Forenames,
+		Surname:   body.Identity.Surname,
 	}
 	if _, err := tx.NewInsert().
 		Model(&user).
@@ -82,12 +84,10 @@ func CreateClient(c *gin.Context) {
 	}
 
 	var client = Entities.Client{
-		Uid:       clientUid,
-		UserId:    user.Id,
-		OrgId:     org.Id,
-		Forenames: body.Identity.Forenames,
-		Surname:   body.Identity.Surname,
-		Fee:       body.Fee,
+		Uid:    clientUid,
+		UserId: user.Id,
+		OrgId:  org.Id,
+		Fee:    body.Fee,
 	}
 	if _, err := tx.NewInsert().Model(&client).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

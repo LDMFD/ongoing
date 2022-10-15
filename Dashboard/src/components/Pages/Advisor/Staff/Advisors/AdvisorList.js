@@ -20,17 +20,17 @@ const AdvisorList = () => {
         history.push(`/staff/id/${id}/edit`);
     }, [ history ]);
 
-    const deleteAdvisor = useCallback(id => async () => {
-        if (window.confirm(`Delete advisor?`)) {
-            await Api.Staff.Delete(id);
-            await Api.Superuser.Organisations.Read(dispatch);
-        }
-    }, [ dispatch ]);
+    // const deleteAdvisor = useCallback(id => async () => {
+    //     if (window.confirm(`Delete advisor?`)) {
+    //         await Api.Staff.Delete(id);
+    //         await Api.Superuser.Organisations.Read(dispatch);
+    //     }
+    // }, [ dispatch ]);
 
     // TODO this is wrong - admins cannot administrate other admins, only other advisors
     const canEditRole = (row) => (
         state.Session.Role === 'owner' ||
-        (state.Session.Role === 'administrator' && (row.original.role === 'advisor'))
+        (state.Session.Role === 'administrator' && row.original.role !== 'owner')
     );
 
     const columns = [
@@ -58,9 +58,9 @@ const AdvisorList = () => {
                     <button onClick={editAdvisor(row.original.id)} className='ong-openFileIcon'>
                         <EditIcon />
                     </button>
-                    <button onClick={deleteAdvisor(row.original.id)} className='ong-openFileIcon'>
+                    {/* <button onClick={deleteAdvisor(row.original.id)} className='ong-openFileIcon'>
                         <DeleteIcon />
-                    </button>
+                    </button> */}
                 </>
             ) : null,
         },

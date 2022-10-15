@@ -35,8 +35,7 @@ func DeleteFund(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&fund).
 		Relation("File").
-		Relation("PolicyFunds").
-		Relation("PolicyFunds.Client").
+		Relation("PolicyFunds.Client.User").
 		Where("fund.uid = ?", path.FundId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -46,7 +45,7 @@ func DeleteFund(c *gin.Context) {
 	if len(fund.PolicyFunds) > 0 {
 		var names []string
 		for _, p := range fund.PolicyFunds {
-			s := fmt.Sprintf("%v (in use by %v, %v)", p.Id, p.Client.Forenames, p.Client.Surname)
+			s := fmt.Sprintf("%v (in use by %v, %v)", p.Id, p.Client.User.Forenames, p.Client.User.Surname)
 			names = append(names, s)
 		}
 		s := fmt.Sprintln(strings.Join(names[:], ", "))

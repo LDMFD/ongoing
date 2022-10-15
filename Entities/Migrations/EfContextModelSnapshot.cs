@@ -36,19 +36,9 @@ namespace Ongoing.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Forenames")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("forenames");
-
                     b.Property<int>("OrgId")
                         .HasColumnType("integer")
                         .HasColumnName("org_id");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("surname");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
@@ -94,19 +84,9 @@ namespace Ongoing.Migrations
                         .HasColumnName("fee")
                         .HasDefaultValueSql("0.75");
 
-                    b.Property<string>("Forenames")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("forenames");
-
                     b.Property<int>("OrgId")
                         .HasColumnType("integer")
                         .HasColumnName("org_id");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("surname");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
@@ -1288,6 +1268,16 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("email");
+
+                    b.Property<string>("Forenames")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("forenames");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("surname");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()

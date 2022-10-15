@@ -54,8 +54,10 @@ func CreateAdvisor(c *gin.Context) {
 	}
 
 	var user = Entities.User{
-		Uid:   userUid,
-		Email: body.Email,
+		Uid:       userUid,
+		Email:     body.Email,
+		Forenames: body.Forenames,
+		Surname:   body.Surname,
 	}
 	if _, err := tx.NewInsert().
 		Model(&user).
@@ -89,11 +91,9 @@ func CreateAdvisor(c *gin.Context) {
 	}
 
 	var advisor = Entities.Advisor{
-		Uid:       advisorUid,
-		UserId:    user.Id,
-		OrgId:     org.Id,
-		Forenames: body.Forenames,
-		Surname:   body.Surname,
+		Uid:    advisorUid,
+		UserId: user.Id,
+		OrgId:  org.Id,
 	}
 	if _, err := tx.NewInsert().Model(&advisor).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

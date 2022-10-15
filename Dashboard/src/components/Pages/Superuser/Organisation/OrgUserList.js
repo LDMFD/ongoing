@@ -22,7 +22,7 @@ export const OrgUserList = () => {
         {
             accessor: 'email',
             Header: 'Email',
-            width: 200,
+            width: 350,
         },
         {
             accessor: 'role',
@@ -32,7 +32,7 @@ export const OrgUserList = () => {
         {
             accessor: 'actions',
             Header: 'View as...',
-            width: 80,
+            width: 100,
             Cell: ({ row }) => (
                 <a href={`/?view-as=${row.original.id}`}>
                     <OpenInNewIcon />
@@ -47,7 +47,7 @@ export const OrgUserList = () => {
         let u = state.Users.find(u => u.Id === m.UserId);
         return {
             id: m.UserId,
-            email: u.Email,
+            email: `${u.Forenames} ${u.Surname} <${u.Email}>`,
             role: m.Role,
         };
     }).sort((p,q) => (p.email < q.email) ? -1 : ((p.email > q.email) ? 1 : 0));

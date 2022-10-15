@@ -23,12 +23,6 @@ namespace Ongoing.Entities
         [Column("org_id")]
         public int OrgId { get; set; }
         
-        [Column("forenames")]
-        public string Forenames { get; set; } = null!;
-        
-        [Column("surname")]
-        public string Surname { get; set; } = null!;
-        
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
 

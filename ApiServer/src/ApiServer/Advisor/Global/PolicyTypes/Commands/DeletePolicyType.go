@@ -27,8 +27,7 @@ func DeletePolicyType(c *gin.Context) {
 	var policyType = Entities.PolicyType{}
 	if err := db.NewSelect().
 		Model(&policyType).
-		Relation("Policies").
-		Relation("Policies.Client").
+		Relation("Policies.Client.User").
 		Where("uid = ?", path.PolicyTypeId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -38,7 +37,7 @@ func DeletePolicyType(c *gin.Context) {
 	if len(policyType.Policies) > 0 {
 		var names []string
 		for _, p := range policyType.Policies {
-			s := fmt.Sprintf("%v (in use by %v, %v)", p.ExternalId, p.Client.Forenames, p.Client.Surname)
+			s := fmt.Sprintf("%v (in use by %v, %v)", p.ExternalId, p.Client.User.Forenames, p.Client.User.Surname)
 			names = append(names, s)
 		}
 		s := fmt.Sprintln(strings.Join(names[:], ", "))

@@ -46,8 +46,6 @@ func UpdateClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	client.Forenames = body.Identity.Forenames
-	client.Surname = body.Identity.Surname
 	client.Fee = body.Fee
 
 	if _, err := db.NewUpdate().Model(&client).WherePK().
@@ -68,10 +66,17 @@ func UpdateClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if body.Identity.Email != client.User.Email {
+	emailChange := body.Identity.Email != client.User.Email
+	nameChange := body.Identity.Surname != client.User.Surname || body.Identity.Forenames != client.User.Forenames
+
+	if emailChange || nameChange {
 		client.User.Email = body.Identity.Email
+		client.User.Forenames = body.Identity.Forenames
+		client.User.Surname = body.Identity.Surname
 		if _, err := db.NewUpdate().Model(&client.User).WherePK().
 			Column("email").
+			Column("forenames").
+			Column("surnames").
 			Exec(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			panic(err.Error())

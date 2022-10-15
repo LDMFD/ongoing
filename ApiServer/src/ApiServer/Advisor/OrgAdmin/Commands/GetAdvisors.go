@@ -45,8 +45,8 @@ func GetAdvisors(c *gin.Context) {
 			reportAdvisors = append(reportAdvisors, Entities.AdvisorReport{
 				Id:        user.Uid,
 				Email:     user.Email,
-				Forenames: advisor.Forenames,
-				Surname:   advisor.Surname,
+				Forenames: user.Forenames,
+				Surname:   user.Surname,
 				Role:      r.Role,
 			})
 		}
