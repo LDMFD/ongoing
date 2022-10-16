@@ -47,7 +47,7 @@ class AdvisorConfig : IEntityTypeConfiguration<Advisor>
         builder.HasOne(d => d.User)
             .WithOne(p => p.Advisor)
             .HasForeignKey<Advisor>(d => d.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_advisor_user");
         
         // Uniqueness constraint

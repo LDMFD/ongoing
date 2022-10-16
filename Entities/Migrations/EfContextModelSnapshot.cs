@@ -1322,7 +1322,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.User", "User")
                         .WithOne("Advisor")
                         .HasForeignKey("Ongoing.Entities.Advisor", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_advisor_user");
 
@@ -1342,7 +1342,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.User", "User")
                         .WithOne("Client")
                         .HasForeignKey("Ongoing.Entities.Client", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client_user");
 
@@ -1356,14 +1356,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("FactFinds")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("FactFinds")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_fact_find");
 
@@ -1377,14 +1377,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("FeesReports")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("FeesReports")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_fees_report");
 
@@ -1398,14 +1398,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Forecasts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Forecasts")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_forecast");
 
@@ -1419,7 +1419,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Funds")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_fund_file");
 
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
@@ -1438,7 +1438,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Models")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_model_file");
 
                     b.HasOne("Ongoing.Entities.Operator", "Operator")
@@ -1466,7 +1466,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Modules")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1519,14 +1519,14 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Policies")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client_policy");
 
                     b.HasOne("Ongoing.Entities.File", "File")
                         .WithMany("Policies")
                         .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_policy_file");
 
                     b.HasOne("Ongoing.Entities.PolicyProvider", "PolicyProvider")
@@ -1557,7 +1557,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("PolicyFunds")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1571,7 +1571,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Policy", "Policy")
                         .WithMany("PolicyFunds")
                         .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_policy");
 
@@ -1609,7 +1609,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Portfolios")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1623,7 +1623,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Policy", "Policy")
                         .WithMany("Portfolios")
                         .HasForeignKey("PolicyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_policy");
 
@@ -1651,7 +1651,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("ProviderDiscounts")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client_provider_discount");
 
@@ -1672,7 +1672,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("Reviews")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
@@ -1684,20 +1684,20 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.Client", "Client")
                         .WithMany("RiskAssessments")
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
                     b.HasOne("Ongoing.Entities.File", "QuestionnaireFile")
                         .WithMany("RiskAssessments")
                         .HasForeignKey("QuestionnaireFileId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_questionnaire");
 
                     b.HasOne("Ongoing.Entities.RiskLevel", "RiskLevel")
                         .WithMany("RiskAssessments")
                         .HasForeignKey("RiskLevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_risk_level");
 
@@ -1724,7 +1724,7 @@ namespace Ongoing.Migrations
                     b.HasOne("Ongoing.Entities.RiskProvider", "RiskProvider")
                         .WithMany("RiskLevels")
                         .HasForeignKey("RiskProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .HasConstraintName("fk_risk_provider");
 
                     b.Navigation("RiskProvider");

@@ -77,7 +77,7 @@ class FundConfig : IEntityTypeConfiguration<Fund>
         builder.HasOne(d => d.File)
             .WithMany(p => p.Funds)
             .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_fund_file");
         
         builder.HasAlternateKey(e => e.Uid);

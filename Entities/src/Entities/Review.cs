@@ -58,7 +58,7 @@ class ReviewConfig : IEntityTypeConfiguration<Review>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.Reviews)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client");
         
         builder.HasAlternateKey(p => p.Uid);

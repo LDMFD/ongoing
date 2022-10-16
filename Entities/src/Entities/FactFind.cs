@@ -51,13 +51,13 @@ class FactFindConfig : IEntityTypeConfiguration<FactFind>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.FactFinds)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client");
 
         builder.HasOne(d => d.File)
             .WithMany(p => p.FactFinds)
             .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_fact_find");
 
         builder.HasAlternateKey(p => p.Uid);

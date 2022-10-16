@@ -56,6 +56,6 @@ class RiskProviderConfig : IEntityTypeConfiguration<RiskProvider>
         
         builder.HasMany(b => b.RiskLevels).WithOne(p => p.RiskProvider)
             .HasForeignKey(p => p.RiskProviderId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

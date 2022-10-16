@@ -96,7 +96,7 @@ class ClientConfig : IEntityTypeConfiguration<Client>
         builder.HasOne(d => d.User)
             .WithOne(p => p.Client)
             .HasForeignKey<Client>(d => d.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client_user");
 
         // Uniqueness constraint

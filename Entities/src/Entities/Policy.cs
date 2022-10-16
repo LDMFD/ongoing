@@ -96,13 +96,13 @@ class PolicyConfig : IEntityTypeConfiguration<Policy>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.Policies)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client_policy");
 
         builder.HasOne(d => d.File)
             .WithMany(p => p.Policies)
             .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_policy_file");
 
         builder.HasOne(d => d.PolicyProvider)
