@@ -94,7 +94,7 @@ func UpdateModel(c *gin.Context) {
 
 	// File has been removed or changed; remove old relationship
 	if (body.File != nil && model.File != nil && body.File.Uid != model.File.Uid) || (body.File == nil && model.File != nil) {
-		if err := auth.RemoveFileFromOrg(&session.Org.Uid, model.File.Uid); err != nil {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -128,7 +128,5 @@ func UpdateModel(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{
-		"Model": model,
-	})
+	c.JSON(200, gin.H{})
 }

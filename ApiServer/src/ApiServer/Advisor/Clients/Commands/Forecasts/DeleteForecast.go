@@ -66,7 +66,7 @@ func DeleteForecast(c *gin.Context) {
 	}
 
 	if forecast.File != nil {
-		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, forecast.File.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

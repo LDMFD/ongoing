@@ -1,4 +1,4 @@
-package Reviews
+package ClientProfile
 
 import (
 	"github.com/gin-gonic/gin"

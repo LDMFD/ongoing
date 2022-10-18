@@ -73,10 +73,11 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 		Uid:      assessmentFileId,
 		Filename: "sample.png",
 	}
-	e.POST("/api/advisor/clients/"+org1ClientId+"/risk-assessments").
+	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/risk-assessments").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
+	assessmentId = resp.JSON().Object().Value("Id").String().Raw()
 
 	TestDownload(t, e, ORG1_OWNER, assessmentFileId, true)
 	TestDownload(t, e, ORG1_ADMIN, assessmentFileId, true)
@@ -127,7 +128,6 @@ func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
 	// Delete it
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/fact-finds/"+factFindId).
 		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
 		Expect().Status(http.StatusOK)
 
 	TestDownload(t, e, ORG1_OWNER, fileId2, false)
@@ -140,10 +140,11 @@ func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
 		Uid:      factFindFileId,
 		Filename: "sample.png",
 	}
-	e.POST("/api/advisor/clients/"+org1ClientId+"/fact-finds").
+	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/fact-finds").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
+	factFindId = resp.JSON().Object().Value("Id").String().Raw()
 
 	TestDownload(t, e, ORG1_OWNER, factFindFileId, true)
 	TestDownload(t, e, ORG1_ADMIN, factFindFileId, true)
@@ -207,10 +208,11 @@ func CreateFeesReport(t *testing.T, e *httpexpect.Expect) {
 		Uid:      feesReportFileId,
 		Filename: "sample.png",
 	}
-	e.POST("/api/advisor/clients/"+org1ClientId+"/fees-reports").
+	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/fees-reports").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
+	feesReportId = resp.JSON().Object().Value("Id").String().Raw()
 
 	TestDownload(t, e, ORG1_OWNER, feesReportFileId, true)
 	TestDownload(t, e, ORG1_ADMIN, feesReportFileId, true)
@@ -274,10 +276,11 @@ func CreateForecast(t *testing.T, e *httpexpect.Expect) {
 		Uid:      forecastFileId,
 		Filename: "sample.png",
 	}
-	e.POST("/api/advisor/clients/"+org1ClientId+"/forecasts").
+	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/forecasts").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
+	forecastId = resp.JSON().Object().Value("Id").String().Raw()
 
 	TestDownload(t, e, ORG1_OWNER, forecastFileId, true)
 	TestDownload(t, e, ORG1_ADMIN, forecastFileId, true)

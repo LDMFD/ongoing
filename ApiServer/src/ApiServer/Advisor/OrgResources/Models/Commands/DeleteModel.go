@@ -69,7 +69,7 @@ func DeleteModel(c *gin.Context) {
 	}
 
 	if model.File != nil {
-		if err := auth.RemoveFileFromOrg(&session.Org.Uid, model.File.Uid); err != nil {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

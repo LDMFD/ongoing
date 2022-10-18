@@ -23,13 +23,12 @@ func CreateProviderDiscount(e *httpexpect.Expect) {
 		PolicyProviderId: policyProviderId,
 		Discount:         0.12,
 	}
-	//resp :=
-	e.POST("/api/advisor/clients/"+org1ClientId+"/provider-discounts").
+	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/provider-discounts").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	//.JSON().Object()
-	//providerDiscountId = resp.Value("Id").String().Raw()
+		Expect().Status(http.StatusOK).
+		JSON().Object()
+	providerDiscountId = resp.Value("Id").String().Raw()
 }
 
 func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
@@ -119,7 +118,7 @@ func CreatePolicyFunds(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	policyFundId = resp.Value("Id").String().Raw()
+	policyFundId1 = resp.Value("Id").String().Raw()
 
 	request = PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
 		FundId:     fundId2,
@@ -130,7 +129,7 @@ func CreatePolicyFunds(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	resp.Value("Id").String()
+	policyFundId2 = resp.Value("Id").String().Raw()
 }
 
 func CreatePortfolio(e *httpexpect.Expect) {

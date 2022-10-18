@@ -2,7 +2,7 @@ package ClientSpace
 
 import (
 	"net/http"
-	"ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -25,7 +25,7 @@ func GetClientSpace(c *gin.Context) {
 	}
 
 	clientContext := client.ToReport()
-	reviews := Reviews.GetReviews(c, &client)
+	reviews := ClientProfile.GetReviews(c, &client)
 
 	c.JSON(200, gin.H{
 		"Metadata": clientContext,

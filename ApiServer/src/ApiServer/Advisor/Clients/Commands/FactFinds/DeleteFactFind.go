@@ -64,7 +64,7 @@ func DeleteFactFind(c *gin.Context) {
 	}
 
 	if factFind.File != nil {
-		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, factFind.File.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, factFind.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

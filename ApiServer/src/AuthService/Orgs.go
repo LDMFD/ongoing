@@ -76,7 +76,14 @@ func (c *Client) CreateFile(clientId, orgId *string, fileId string) error {
 	return nil
 }
 
-func (c *Client) RemoveFileFromClient(clientId, orgId string, fileId string) error {
+func (c *Client) RemoveFileFromClientOnly(clientId, fileId string) error {
+	if err := c.removeRelationship("file", fileId, "client", "client", clientId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) RemoveFileFromClientAndOrg(clientId, orgId string, fileId string) error {
 	if err := c.removeRelationship("file", fileId, "client", "client", clientId); err != nil {
 		return err
 	}
@@ -86,8 +93,8 @@ func (c *Client) RemoveFileFromClient(clientId, orgId string, fileId string) err
 	return nil
 }
 
-func (c *Client) RemoveFileFromOrg(orgId *string, fileId string) error {
-	if err := c.removeRelationship("file", fileId, "org", "organisation", *orgId); err != nil {
+func (c *Client) RemoveFileFromOrg(orgId string, fileId string) error {
+	if err := c.removeRelationship("file", fileId, "org", "organisation", orgId); err != nil {
 		return err
 	}
 	return nil
@@ -126,6 +133,22 @@ func (c *Client) UpdateAdvisorRole(orgId, userId, newRole string) error {
 	oldRole := rels[0].Role
 
 	if err := c.mutateRelationship("organisation", orgId, oldRole, "user", userId, newRole); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) RemoveAdvisor(orgId, advisorId, clientId, userId string) error {
+	if err := c.removeRelationship("organisation", orgId, "advisor", "user", userId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("client", clientId, "org", "organisation", orgId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("client", clientId, "advisor", "user", advisorId); err != nil {
+		return err
+	}
+	if err := c.removeRelationship("client", clientId, "subject", "user", userId); err != nil {
 		return err
 	}
 	return nil

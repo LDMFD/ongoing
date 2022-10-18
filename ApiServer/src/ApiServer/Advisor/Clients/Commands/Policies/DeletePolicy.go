@@ -35,7 +35,8 @@ func DeletePolicy(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&policy).
 		Relation("Portfolios").
-		Where("uid = ?", path.PolicyId).
+		Relation("File").
+		Where("policy.uid = ?", path.PolicyId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -73,7 +74,7 @@ func DeletePolicy(c *gin.Context) {
 	}
 
 	if policy.File != nil {
-		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, policy.File.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

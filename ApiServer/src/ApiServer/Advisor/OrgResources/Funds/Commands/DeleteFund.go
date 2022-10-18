@@ -69,7 +69,7 @@ func DeleteFund(c *gin.Context) {
 	}
 
 	if fund.File != nil {
-		if err := auth.RemoveFileFromOrg(&session.Org.Uid, fund.File.Uid); err != nil {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

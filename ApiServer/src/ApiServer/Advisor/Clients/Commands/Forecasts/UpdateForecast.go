@@ -85,7 +85,7 @@ func UpdateForecast(c *gin.Context) {
 
 	// File has been removed or changed; remove old relationship
 	if (body.File != nil && forecast.File != nil && body.File.Uid != forecast.File.Uid) || (body.File == nil && forecast.File != nil) {
-		if err := auth.RemoveFileFromClient(path.ClientId, session.Org.Uid, forecast.File.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

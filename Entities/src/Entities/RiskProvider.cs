@@ -54,7 +54,8 @@ class RiskProviderConfig : IEntityTypeConfiguration<RiskProvider>
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
         
-        builder.HasMany(b => b.RiskLevels).WithOne(p => p.RiskProvider)
+        builder.HasMany(b => b.RiskLevels)
+            .WithOne(p => p.RiskProvider)
             .HasForeignKey(p => p.RiskProviderId)
             .OnDelete(DeleteBehavior.Restrict);
     }

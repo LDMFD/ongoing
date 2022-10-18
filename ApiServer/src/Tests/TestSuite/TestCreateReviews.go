@@ -144,7 +144,7 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("Funds").Array().Element(0).Object().ValueEqual("OcfFee", 0.76)
 	report.Value("Funds").Array().Element(0).Object().Value("Modified").String().NotEmpty()
 	report.Value("Funds").Array().Element(0).Object().Value("File").Object().ValueEqual("Filename", "fund-b.png")
-	fundFileId := report.Value("Funds").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
+	report.Value("Funds").Array().Element(0).Object().Value("File").Object().ValueEqual("Uid", fundFileId)
 
 	report.Value("Funds").Array().Element(1).Object().ValueEqual("Name", "LF Equity Income C Acc")
 	report.Value("Funds").Array().Element(1).Object().ValueEqual("ExAnteFee", 0.38)

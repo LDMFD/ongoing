@@ -16,10 +16,11 @@ var (
 	org2ClientId  string
 	reviewId      string
 
-	fundId1      string
-	fundFileId   string // fund1
-	policyFundId string // fund1
-	fundId2      string
+	fundId1       string
+	fundId2       string
+	fundFileId    string // fund1
+	policyFundId1 string // fund1
+	policyFundId2 string // fund1
 
 	modelId     string
 	modelFileId string
@@ -45,6 +46,8 @@ var (
 
 	forecastId     string
 	forecastFileId string
+
+	providerDiscountId string
 )
 
 const (

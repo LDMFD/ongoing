@@ -112,7 +112,7 @@ func UpdateRiskAssessment(c *gin.Context) {
 	// File has been removed or changed; remove old relationship
 	if (body.Questionnaire != nil && assessment.Questionnaire != nil && body.Questionnaire.Uid != assessment.Questionnaire.Uid) ||
 		(body.Questionnaire == nil && assessment.Questionnaire != nil) {
-		if err := auth.RemoveFileFromClient(client.Uid, session.Org.Uid, assessment.Questionnaire.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.Questionnaire.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

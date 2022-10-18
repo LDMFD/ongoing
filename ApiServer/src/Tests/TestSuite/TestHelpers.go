@@ -105,8 +105,14 @@ func TestDownload(t *testing.T, e *httpexpect.Expect, userId string, fileId stri
 		Expect()
 	if expectedPass {
 		resp.Status(http.StatusOK)
+		if t.Failed() {
+			log.Println("unexpected")
+		}
 	} else {
 		resp.Status(http.StatusForbidden)
+		if t.Failed() {
+			log.Println("unexpected")
+		}
 		return
 	}
 	url := resp.JSON().Object().Value("Url").String()

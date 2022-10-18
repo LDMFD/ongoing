@@ -80,10 +80,11 @@ func UpdateFund(c *gin.Context) {
 	fund.OcfFee = body.OcfFee
 	fund.ExAnteFee = body.ExAnteFee
 	fund.Modified = &modified
+	fund.FileId = fileId
 
 	// File has been removed or changed; remove old relationship
 	if (body.File != nil && fund.File != nil && body.File.Uid != fund.File.Uid) || (body.File == nil && fund.File != nil) {
-		if err := auth.RemoveFileFromOrg(&session.Org.Uid, fund.File.Uid); err != nil {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -91,15 +92,13 @@ func UpdateFund(c *gin.Context) {
 		}
 	}
 	if body.File != nil {
-		if err := auth.CreateFile(nil, &session.Org.Uid, body.File.Uid); err != nil {
+		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
 	}
-
-	fund.FileId = fileId
 
 	if _, err := tx.NewUpdate().Model(&fund).Where("uid = ?", path.FundId).
 		Column("name").

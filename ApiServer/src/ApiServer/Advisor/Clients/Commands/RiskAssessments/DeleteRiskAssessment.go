@@ -67,7 +67,7 @@ func DeleteRiskAssessment(c *gin.Context) {
 	}
 
 	if assessment.Questionnaire != nil {
-		if err := auth.RemoveFileFromClient(client.Uid, session.Org.Uid, assessment.Questionnaire.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.Questionnaire.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
