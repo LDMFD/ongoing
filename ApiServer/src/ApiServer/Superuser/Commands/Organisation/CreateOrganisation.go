@@ -138,6 +138,7 @@ func CreateOrganisation(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"Id": orgUid,
+		"Id":      orgUid,
+		"OwnerId": advisorUid,
 	})
 }

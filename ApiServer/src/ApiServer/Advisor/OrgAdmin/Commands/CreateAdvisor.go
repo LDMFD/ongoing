@@ -19,7 +19,7 @@ type CreateAdvisorRequestBody struct {
 	Email     string `binding:"required"`
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
-	Role      string `binding:"required"`
+	Role      string `binding:"required"` // TODO validate 'administrator' / 'advisor'
 }
 
 func CreateAdvisor(c *gin.Context) {

@@ -19,6 +19,7 @@ func AddRoutes(r *gin.RouterGroup) {
 func AddOrganisationRoutes(r *gin.RouterGroup) {
 	r.POST("", Organisation.CreateOrganisation)
 	r.PUT("/:OrgId", Organisation.UpdateOrganisation)
+	r.DELETE("/:OrgId", Organisation.DeleteOrganisation)
 }
 
 func GetStats(c *gin.Context) {

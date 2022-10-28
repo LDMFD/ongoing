@@ -4,7 +4,6 @@ export const LOGOUT                       = 'LOGOUT';
 export const POPULATE_CLIENT              = 'POPULATE_CLIENT';
 export const POPULATE_CLIENT_SPACE        = 'POPULATE_CLIENT_SPACE';
 export const SET_CLIENTS                  = 'SET_CLIENTS';
-export const SET_RISKASSESSMENT_TEMPLATES = 'SET_RISKASSESSMENT_TEMPLATES';
 export const SET_ORG_RESOURCES            = 'SET_ORG_RESOURCES';
 export const PROVIDER_CHARGE_REORDER      = 'PROVIDER_CHARGE_REORDER';
 export const SET_ORGANISATIONS            = 'SET_ORGANISATIONS';

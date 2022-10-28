@@ -48,7 +48,6 @@ namespace Ongoing
         public virtual DbSet<RiskAssessment> RiskAssessments { get; set; } = null!;
         public virtual DbSet<RiskLevel> RiskLevels { get; set; } = null!;
         public virtual DbSet<RiskProvider> RiskProviders { get; set; } = null!;
-        public virtual DbSet<RiskAssessmentTemplate> RiskassessmentTemplates { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -94,7 +93,6 @@ namespace Ongoing
             builder.ApplyConfiguration(new RiskAssessmentConfig());
             builder.ApplyConfiguration(new RiskLevelConfig());
             builder.ApplyConfiguration(new RiskProviderConfig());
-            builder.ApplyConfiguration(new RiskAssessmentTemplateConfig());
             builder.ApplyConfiguration(new UserConfig());
         }
     }

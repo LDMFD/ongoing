@@ -9,10 +9,10 @@ import (
 	"google.golang.org/api/option"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"os"
-	"strings"
 )
 
 func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
@@ -72,7 +72,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			user = &users[0]
 		} else {
 			if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
-			log.Println("Unauthorized access attempt by:", email)
+				log.Println("Unauthorized access attempt by:", email)
 			}
 			c.AbortWithStatus(http.StatusForbidden) // no users found with matching email
 			return
@@ -92,18 +92,19 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		var orgId *string
 
 		viewAsId := c.GetHeader("X-ViewAs")
-		if IsSuperuser(user.Email) && viewAsId != "" && viewAsId != "null" {
+		if Helpers.IsSuperuser(user.Email) && viewAsId != "" && viewAsId != "null" {
 			var subject Entities.User
 			if err = db.NewSelect().Model(&subject).Where("uid = ?", viewAsId).Scan(c); err != nil {
-				c.AbortWithStatus(http.StatusBadRequest)
-				panic(err.Error())
+				//c.AbortWithStatus(http.StatusBadRequest)
+				log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
+			} else {
+				user = &subject
+				log.Println("Viewing as:", user.Email)
 			}
-			user = &subject
-			log.Println("Viewing as:", user.Email)
 		}
 
 		// Look up user's role
-		if IsSuperuser(user.Email) {
+		if Helpers.IsSuperuser(user.Email) {
 			role = Entities.UserTypeSuperuser
 		} else {
 			if orgs, err := authClient.LookupOrganisations(user.Uid); err != nil {
@@ -172,15 +173,4 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		c.Set("SESSION", sessionContext)
 		c.Next()
 	}
-}
-
-func IsSuperuser(email string) bool {
-	superusers := os.Getenv("ONGOING_SUPERUSERS")
-	for _, su := range strings.Split(superusers, ",") {
-		su = strings.TrimSpace(su)
-		if email == su {
-			return true
-		}
-	}
-	return false
 }

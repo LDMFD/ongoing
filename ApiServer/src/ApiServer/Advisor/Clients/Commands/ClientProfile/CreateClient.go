@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
@@ -96,7 +97,15 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	if err := auth.CreateClient(*session.OrgId, session.UserUid, clientUid, userUid); err != nil {
+	var advisor *Entities.Advisor
+	if advisor, err = Helpers.AdvisorFromUserUID(c, db, session.UserUid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+
+	if err := auth.CreateClient(*session.OrgId, advisor.User.Uid, clientUid, userUid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()
@@ -108,6 +117,8 @@ func CreateClient(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		return
 	}
+
+	//log.Printf("\ncreate client: %v:\n", body.Identity.Email)
 
 	c.JSON(200, gin.H{
 		"Id": clientUid,

@@ -55,6 +55,7 @@ namespace Ongoing.Entities
 
         
         [ForeignKey("OrgId")]
+        [InverseProperty("Funds")]
         public virtual Organisation Org { get; set; } = null!;
 
         [ForeignKey("FileId")]
@@ -80,6 +81,12 @@ class FundConfig : IEntityTypeConfiguration<Fund>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_fund_file");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Funds)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_fund_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
     }

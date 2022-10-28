@@ -49,6 +49,7 @@ namespace Ongoing.Entities
 
 
         [ForeignKey("OrgId")]
+        [InverseProperty("Models")]
         public virtual Organisation Org { get; set; } = null!;
         
         [ForeignKey("FileId")]
@@ -84,6 +85,12 @@ class ModelConfig : IEntityTypeConfiguration<Model>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_operator");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Models)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_model_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
     }

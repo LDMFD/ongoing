@@ -49,6 +49,7 @@ namespace Ongoing.Entities
         public User User { get; set; } = null!;
         
         [ForeignKey("OrgId")]
+        [InverseProperty("Clients")]
         public Organisation Org { get; set; } = null!;
         
         [InverseProperty("Client")]
@@ -98,6 +99,12 @@ class ClientConfig : IEntityTypeConfiguration<Client>
             .HasForeignKey<Client>(d => d.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client_user");
+
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Clients)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client_org");
 
         // Uniqueness constraint
         builder.HasAlternateKey(e => e.Uid);

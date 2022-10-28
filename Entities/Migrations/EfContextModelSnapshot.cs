@@ -1127,40 +1127,6 @@ namespace Ongoing.Migrations
                     b.ToTable("risk_assessments");
                 });
 
-            modelBuilder.Entity("Ongoing.Entities.RiskAssessmentTemplate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Label")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("label");
-
-                    b.Property<int>("OrgId")
-                        .HasColumnType("integer")
-                        .HasColumnName("org_id");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("text");
-
-                    b.Property<DateTime?>("Timestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("timestamp");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrgId");
-
-                    b.ToTable("riskassessment_templates");
-                });
-
             modelBuilder.Entity("Ongoing.Entities.RiskLevel", b =>
                 {
                     b.Property<int>("Id")
@@ -1314,10 +1280,11 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.Advisor", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("Advisors")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_advisor_org");
 
                     b.HasOne("Ongoing.Entities.User", "User")
                         .WithOne("Advisor")
@@ -1334,10 +1301,11 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.Client", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("Clients")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_client_org");
 
                     b.HasOne("Ongoing.Entities.User", "User")
                         .WithOne("Client")
@@ -1423,10 +1391,11 @@ namespace Ongoing.Migrations
                         .HasConstraintName("fk_fund_file");
 
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("Funds")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_fund_org");
 
                     b.Navigation("File");
 
@@ -1449,10 +1418,11 @@ namespace Ongoing.Migrations
                         .HasConstraintName("fk_operator");
 
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("Models")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_model_org");
 
                     b.Navigation("File");
 
@@ -1476,10 +1446,11 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.ModulePreset", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("ModulePresets")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_modulepreset_org");
 
                     b.Navigation("Org");
                 });
@@ -1487,10 +1458,11 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.Operator", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("Operators")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_operator_org");
 
                     b.Navigation("Org");
                 });
@@ -1498,16 +1470,18 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.Organisation", b =>
                 {
                     b.HasOne("Ongoing.Entities.User", "Creator")
-                        .WithMany()
+                        .WithMany("CreatedOrgs")
                         .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired()
+                        .HasConstraintName("fk_org_creator");
 
                     b.HasOne("Ongoing.Entities.User", "Owner")
-                        .WithMany()
+                        .WithMany("OwnedOrgs")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired()
+                        .HasConstraintName("fk_org_owner");
 
                     b.Navigation("Creator");
 
@@ -1585,10 +1559,11 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.PolicyProvider", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("PolicyProviders")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_policyprovider_org");
 
                     b.Navigation("Org");
                 });
@@ -1596,10 +1571,11 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.PolicyType", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("PolicyTypes")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_policytype_org");
 
                     b.Navigation("Org");
                 });
@@ -1708,17 +1684,6 @@ namespace Ongoing.Migrations
                     b.Navigation("RiskLevel");
                 });
 
-            modelBuilder.Entity("Ongoing.Entities.RiskAssessmentTemplate", b =>
-                {
-                    b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
-                        .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Org");
-                });
-
             modelBuilder.Entity("Ongoing.Entities.RiskLevel", b =>
                 {
                     b.HasOne("Ongoing.Entities.RiskProvider", "RiskProvider")
@@ -1733,9 +1698,9 @@ namespace Ongoing.Migrations
             modelBuilder.Entity("Ongoing.Entities.RiskProvider", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
-                        .WithMany()
+                        .WithMany("RiskProviders")
                         .HasForeignKey("OrgId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Org");
@@ -1796,6 +1761,27 @@ namespace Ongoing.Migrations
                     b.Navigation("Models");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.Organisation", b =>
+                {
+                    b.Navigation("Advisors");
+
+                    b.Navigation("Clients");
+
+                    b.Navigation("Funds");
+
+                    b.Navigation("Models");
+
+                    b.Navigation("ModulePresets");
+
+                    b.Navigation("Operators");
+
+                    b.Navigation("PolicyProviders");
+
+                    b.Navigation("PolicyTypes");
+
+                    b.Navigation("RiskProviders");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Policy", b =>
                 {
                     b.Navigation("PolicyFunds");
@@ -1834,6 +1820,10 @@ namespace Ongoing.Migrations
 
                     b.Navigation("Client")
                         .IsRequired();
+
+                    b.Navigation("CreatedOrgs");
+
+                    b.Navigation("OwnedOrgs");
                 });
 #pragma warning restore 612, 618
         }

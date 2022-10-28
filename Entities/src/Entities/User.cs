@@ -49,6 +49,12 @@ namespace Ongoing.Entities
         
         [InverseProperty("User")]
         public virtual Advisor Advisor { get; set; } = null!;
+
+        [InverseProperty("Creator")]
+        public ICollection<Organisation> CreatedOrgs { get; set; } = null!;
+
+        [InverseProperty("Owner")]
+        public ICollection<Organisation> OwnedOrgs { get; set; } = null!;
     }
 }
 

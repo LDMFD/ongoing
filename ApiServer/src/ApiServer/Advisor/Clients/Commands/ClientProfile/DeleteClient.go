@@ -42,7 +42,15 @@ func DeleteClient(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if err := auth.RemoveClient(*session.OrgId, session.UserUid, path.ClientId, client.User.Uid); err != nil {
+	var advisor *Entities.Advisor
+	if advisor, err = Helpers.AdvisorFromUserUID(c, db, session.UserUid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+
+	if err := auth.RemoveClient(*session.OrgId, advisor.User.Uid, path.ClientId, client.User.Uid, advisor.User.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

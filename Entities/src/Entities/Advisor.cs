@@ -32,7 +32,8 @@ namespace Ongoing.Entities
         public virtual User User { get; set; } = null!;
         
         [ForeignKey("OrgId")]
-        public virtual Organisation Org { get; set; } = null!;
+        [InverseProperty("Advisors")]
+        public virtual Organisation? Org { get; set; } = null!;
     }
 }
 
@@ -49,6 +50,12 @@ class AdvisorConfig : IEntityTypeConfiguration<Advisor>
             .HasForeignKey<Advisor>(d => d.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_advisor_user");
+        
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Advisors)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_advisor_org");
         
         // Uniqueness constraint
         builder.HasAlternateKey(e => e.Uid);

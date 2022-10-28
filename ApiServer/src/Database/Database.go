@@ -123,6 +123,26 @@ func insertSuperuser(db *bun.DB, email string) {
 }
 
 func RowCount(db *bun.DB) int {
+	app := AppDbRows(db)
+	auth := AuthDbRows()
+	return app + auth
+}
+
+func AuthDbRows() int {
+	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
+	var relations int
+	defer func() {
+		spicedb.Close()
+	}()
+	var row *sql.Row
+	row = spicedb.QueryRow("SELECT COUNT(*) FROM relation_tuple WHERE deleted_transaction = 9223372036854775807;")
+	if err := row.Scan(&relations); err != nil {
+		panic(err.Error())
+	}
+	return relations
+}
+
+func AppDbRows(db *bun.DB) int {
 	var rowCounts []Entities.RowCount
 	if err := db.NewSelect().
 		Model(&rowCounts).
@@ -134,6 +154,9 @@ func RowCount(db *bun.DB) int {
 		if rc.Table == "__EFMigrationsHistory" {
 			continue
 		}
+		if rc.Count != 0 {
+			log.Println("Non-empty table:", rc.Table)
+		}
 		total += rc.Count
 	}
 	return total
@@ -141,5 +164,5 @@ func RowCount(db *bun.DB) int {
 
 func GetSuperusers() []string {
 	superusers := os.Getenv("ONGOING_SUPERUSERS")
-	return strings.Split(superusers, ",")
+	return strings.Split(superusers, ",") // duplicate logic with Superuser.IsSuperuser()
 }

@@ -31,6 +31,7 @@ namespace Ongoing.Entities
         
 
         [ForeignKey("OrgId")]
+        [InverseProperty("ModulePresets")]
         public virtual Organisation Org { get; set; } = null!;
     }
 }
@@ -43,6 +44,12 @@ class ModulePresetConfig : IEntityTypeConfiguration<ModulePreset>
         
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.ModulePresets)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_modulepreset_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(p => p.ModuleType);
     }

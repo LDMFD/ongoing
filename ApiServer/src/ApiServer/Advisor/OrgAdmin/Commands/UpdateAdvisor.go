@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-type UpdateAdvisorRequestPath struct {
+type UpdateOrDeleteAdvisorRequestPath struct {
 	AdvisorId string `binding:"required"`
 }
 
@@ -29,7 +29,7 @@ func UpdateAdvisor(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	var path UpdateAdvisorRequestPath
+	var path UpdateOrDeleteAdvisorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

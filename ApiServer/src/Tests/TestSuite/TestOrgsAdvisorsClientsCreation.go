@@ -32,6 +32,7 @@ func TestCreateOrgAndAdvisors(e *httpexpect.Expect) {
 		Status(http.StatusOK).JSON().Object()
 
 	org1Id = org1.Value("Id").String().Raw()
+	org1OwnerId = org1.Value("OwnerId").String().Raw()
 
 	// Names must be unique
 	e.POST("/api/admin/organisations").
@@ -122,7 +123,7 @@ func TestGetAdvisors(e *httpexpect.Expect) {
 }
 
 func TestCreateClients(e *httpexpect.Expect) {
-	org1ClientId = createClient(e, ORG1_OWNER, ORG1_CLIENT, "Adam", 0.1)
+	org1ClientId = createClient(e, ORG1_ADMIN, ORG1_CLIENT, "Adam", 0.1)
 	org2ClientId = createClient(e, ORG2_OWNER, ORG2_CLIENT, "Bob", 0.2)
 }
 
