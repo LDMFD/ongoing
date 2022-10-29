@@ -7,8 +7,7 @@ import (
 	"github.com/uptrace/bun"
 	"log"
 	"net/http"
-	"ongoing/ApiServer"
-	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/ApiServer/Superuser/Commands/Export"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
 	"ongoing/Database"
@@ -17,8 +16,8 @@ import (
 )
 
 var (
-	importPath   string
-	advisorEmail string
+	importPath string
+	advisorId  string
 )
 
 const API = "http://localhost:8000/api"
@@ -32,11 +31,6 @@ var DB *bun.DB
 func Import(path string) {
 	DB = Database.DB
 	importPath = path
-	globalEntities()
-	//importClients()
-}
-
-func globalEntities() {
 	log.Println("Importing from", importPath)
 
 	export := &Export.Export{}
@@ -45,17 +39,16 @@ func globalEntities() {
 		panic(err)
 	}
 
-	//for _, user := range export.AdminEntities.Users {
+	//for _, user := range export.Users {
 	//	createUser(user)
 	//}
-	for _, org := range export.AdminEntities.Organisations {
-		createOrg(org, export.AdminEntities.Users)
+	for _, org := range export.Orgs {
+		createOrg(org, export.Users)
 	}
-	//importGlobalEntities(&ent.Entities)
 }
 
 func createUser(user Entities.ReportUser) {
-	if ApiServer.IsSuperuser(user.Email) {
+	if Helpers.IsSuperuser(user.Email) {
 		return
 	}
 	var newUser = Entities.User{
@@ -69,37 +62,38 @@ func createUser(user Entities.ReportUser) {
 	}
 }
 
-func createOrg(org Entities.ReportOrganisation, allUsers []Entities.User) {
-	var ownerId string
-	for _, user := range org.Members {
+func createOrg(org Export.Org, allUsers []Entities.ReportUser) {
+	for _, user := range org.Metadata.Members {
 		if user.Role == "owner" {
-			ownerId = user.UserId
+			advisorId = user.UserId // everything is done under the owner
 			break
 		}
 	}
-	var owner Entities.User
+	var owner Entities.ReportUser
 	for _, user := range allUsers {
-		if user.Uid == ownerId {
+		if user.Id == advisorId {
 			owner = user
 			break
 		}
 	}
 	newOrg := Organisation.CreateOrganisationRequestBody{
 		Email:     owner.Email,
-		//Name:      owner.,
-		Forenames: "",
-		Surname:   "",
+		Name:      org.Metadata.Name,
+		Forenames: owner.Forenames,
+		Surname:   owner.Surname, // TODO creator ID
 	}
 
+	importOrganisation(newOrg)
 
+	importOrgResources(&org.Resources)
 
-	var advisor Commands.CreateAdvisorRequestBody
-	if err := json.Unmarshal(advisorRequest, &advisor); err != nil {
-		panic(err)
-	}
-	advisorEmail = advisor.Email
+	importClients(&org.Clients)
 
-	request, err := http.NewRequest("POST", API+"/admin/organisations", bytes.NewBuffer(advisorRequest))
+}
+
+func importOrganisation(mp Organisation.CreateOrganisationRequestBody) {
+	jsonData, _ := json.Marshal(mp)
+	request, err := http.NewRequest("POST", API+"/admin/organisations", bytes.NewBuffer(jsonData))
 	if err != nil {
 		panic(err)
 	}
@@ -113,6 +107,6 @@ func createOrg(org Entities.ReportOrganisation, allUsers []Entities.User) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Println("Create org:", resp.Status)
-	"}
-"}
+		log.Println("Create org:", mp.Name, resp.Status)
+	}
+}

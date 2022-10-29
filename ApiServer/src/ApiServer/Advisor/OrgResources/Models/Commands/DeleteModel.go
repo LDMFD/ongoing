@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"strings"
@@ -34,7 +35,7 @@ func DeleteModel(c *gin.Context) {
 	var model = Entities.Model{}
 	if err := db.NewSelect().
 		Model(&model).
-		Relation("File").
+		Relation("FilePtr.File").
 		Relation("Portfolios.Client.User").
 		Where("model.uid = ?", path.ModelId).
 		Scan(c); err != nil {
@@ -68,13 +69,14 @@ func DeleteModel(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if model.File != nil {
-		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.File.Uid); err != nil {
+	if model.FilePtr != nil {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *model.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {

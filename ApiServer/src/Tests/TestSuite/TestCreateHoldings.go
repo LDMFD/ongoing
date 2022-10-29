@@ -81,7 +81,7 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, fileId, false)
 
 	// Put the file back again
-	fileId = TestUpload(t, e, ORG1_ADVISOR, "policy-b.png")
+	policyFileId = TestUpload(t, e, ORG1_ADVISOR, "policy-b.png")
 
 	request = Policies.CreateOrUpdatePolicyRequestBody{
 		ExternalId:           "external-pol",
@@ -92,7 +92,7 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 		PolicyProviderId:     policyProviderId,
 		Notes:                "Policy notes",
 		File: &Entities.RequestFile{
-			Uid:      fileId,
+			Uid:      policyFileId,
 			Filename: "sample.png",
 		},
 	}
@@ -101,11 +101,11 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 
-	TestDownload(t, e, ORG1_OWNER, fileId, true)
-	TestDownload(t, e, ORG1_ADMIN, fileId, true)
-	TestDownload(t, e, ORG1_ADVISOR, fileId, true)
-	TestDownload(t, e, ORG2_OWNER, fileId, false)
-	TestDownload(t, e, ORG1_CLIENT, fileId, true)
+	TestDownload(t, e, ORG1_OWNER, policyFileId, true)
+	TestDownload(t, e, ORG1_ADMIN, policyFileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, policyFileId, true)
+	TestDownload(t, e, ORG2_OWNER, policyFileId, false)
+	TestDownload(t, e, ORG1_CLIENT, policyFileId, true)
 }
 
 func CreatePolicyFunds(e *httpexpect.Expect) {

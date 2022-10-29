@@ -33,7 +33,7 @@ func DeleteForecast(c *gin.Context) {
 	var forecast = Entities.Forecast{}
 	if err := db.NewSelect().
 		Model(&forecast).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("forecast.uid = ?", path.ForecastId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -65,13 +65,14 @@ func DeleteForecast(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if forecast.File != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.File.Uid); err != nil {
+	if forecast.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *forecast.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {

@@ -22,6 +22,7 @@ var (
 	operatorId string
 
 	policyId         string
+	policyFileId     string
 	policyProviderId string
 	policyTypeId     string
 

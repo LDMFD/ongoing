@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
@@ -36,19 +37,6 @@ func CreateModel(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
-		}
-		fileId = &file.Id
-	}
-
 	var operator = Entities.Operator{}
 	if err := db.NewSelect().
 		Model(&operator).
@@ -76,7 +64,6 @@ func CreateModel(c *gin.Context) {
 		WeightedOcfFee:    body.WeightedOcfFee,
 		WeightedExAnteFee: body.WeightedExAnteFee,
 		Modified:          &modified,
-		FileId:            fileId,
 		OrgId:             session.Org.Id,
 	}
 
@@ -86,6 +73,8 @@ func CreateModel(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+
+	model.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 
 	if _, err := tx.NewInsert().Model(&model).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

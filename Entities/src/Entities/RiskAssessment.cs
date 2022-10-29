@@ -25,8 +25,8 @@ namespace Ongoing.Entities
         [Column("risk_level_id")]
         public int RiskLevelId { get; set; }
         
-        [Column("questionnaire_file_id")]
-        public int? QuestionnaireFileId { get; set; }
+        [Column("file_ptr_id")]
+        public int? FilePtrId { get; set; }
         
         [Column("completed", TypeName = "timestamp without time zone")]
         public DateTime? Completed { get; set; }
@@ -39,9 +39,9 @@ namespace Ongoing.Entities
         [InverseProperty("RiskAssessments")]
         public virtual Client Client { get; set; } = null!;
 
-        [ForeignKey("QuestionnaireFileId")]
+        [ForeignKey("FilePtrId")]
         [InverseProperty("RiskAssessments")]
-        public virtual File? QuestionnaireFile { get; set; }
+        public virtual FilePtr? FilePtr { get; set; }
         
         [ForeignKey("RiskLevelId")]
         [InverseProperty("RiskAssessments")]
@@ -63,11 +63,11 @@ class RiskAssessmentConfig : IEntityTypeConfiguration<RiskAssessment>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client");
 
-        builder.HasOne(d => d.QuestionnaireFile)
+        builder.HasOne(d => d.FilePtr)
             .WithMany(p => p.RiskAssessments)
-            .HasForeignKey(d => d.QuestionnaireFileId)
-            .OnDelete(DeleteBehavior.Restrict)
-            .HasConstraintName("fk_questionnaire");
+            .HasForeignKey(d => d.FilePtrId)
+            .OnDelete(DeleteBehavior.SetNull)
+            .HasConstraintName("fk_file");
 
         builder.HasOne(d => d.RiskLevel)
             .WithMany(p => p.RiskAssessments)

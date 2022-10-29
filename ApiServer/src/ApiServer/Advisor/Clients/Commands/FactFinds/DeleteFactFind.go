@@ -33,7 +33,7 @@ func DeleteFactFind(c *gin.Context) {
 	var factFind = Entities.FactFind{}
 	if err := db.NewSelect().
 		Model(&factFind).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("fact_find.uid = ?", path.FactFindId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -63,13 +63,14 @@ func DeleteFactFind(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if factFind.File != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, factFind.File.Uid); err != nil {
+	if factFind.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, factFind.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *factFind.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {

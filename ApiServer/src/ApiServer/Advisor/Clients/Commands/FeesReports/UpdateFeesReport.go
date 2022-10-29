@@ -40,7 +40,7 @@ func UpdateFeesReport(c *gin.Context) {
 	var feesReport = Entities.FeesReport{}
 	if err := db.NewSelect().
 		Model(&feesReport).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("fees_report.uid = ?", path.FeesReportId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -58,19 +58,6 @@ func UpdateFeesReport(c *gin.Context) {
 		return
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
-		}
-		fileId = &file.Id
-	}
-
 	var submitted time.Time
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
@@ -84,14 +71,16 @@ func UpdateFeesReport(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	// File has been removed or changed; remove old relationship
-	if (body.File != nil && feesReport.File != nil && body.File.Uid != feesReport.File.Uid) || (body.File == nil && feesReport.File != nil) {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.File.Uid); err != nil {
+	// FilePtr has been removed or changed; remove old relationship
+	var toDelete *Entities.FilePtr
+	if (body.File != nil && feesReport.FilePtr != nil && body.File.Uid != feesReport.FilePtr.File.Uid) || (body.File == nil && feesReport.FilePtr != nil) {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		toDelete = feesReport.FilePtr
 	}
 	if body.File != nil {
 		if err := auth.CreateClientFile(path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
@@ -100,19 +89,23 @@ func UpdateFeesReport(c *gin.Context) {
 			_ = tx.Rollback()
 			return
 		}
+		feesReport.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
 
 	feesReport.Submitted = submitted
-	feesReport.FileId = fileId
 
 	if _, err := tx.NewUpdate().
 		Model(&feesReport).
 		WherePK().
-		Column("file_id").
+		Column("file_ptr_id").
 		Column("submitted").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if toDelete != nil {
+		Helpers.DeleteFile(c, tx, *toDelete)
 	}
 
 	if err := tx.Commit(); err != nil {

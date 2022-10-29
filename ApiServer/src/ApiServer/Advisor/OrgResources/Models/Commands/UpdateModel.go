@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
@@ -45,19 +46,6 @@ func UpdateModel(c *gin.Context) {
 		}
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
-		}
-		fileId = &file.Id
-	}
-
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -78,7 +66,7 @@ func UpdateModel(c *gin.Context) {
 
 	if err := tx.NewSelect().
 		Model(&model).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("model.uid = ?", path.ModelId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -90,16 +78,17 @@ func UpdateModel(c *gin.Context) {
 	model.WeightedOcfFee = body.WeightedOcfFee
 	model.WeightedExAnteFee = body.WeightedExAnteFee
 	model.Modified = &modified
-	model.FileId = fileId
+	model.FilePtrId = nil
 
-	// File has been removed or changed; remove old relationship
-	if (body.File != nil && model.File != nil && body.File.Uid != model.File.Uid) || (body.File == nil && model.File != nil) {
-		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.File.Uid); err != nil {
+	// FilePtr has been removed or changed; remove old relationship
+	if (body.File != nil && model.FilePtr != nil && body.File.Uid != model.FilePtr.File.Uid) || (body.File == nil && model.FilePtr != nil) {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *model.FilePtr)
 	}
 	if body.File != nil {
 		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
@@ -108,6 +97,7 @@ func UpdateModel(c *gin.Context) {
 			_ = tx.Rollback()
 			return
 		}
+		model.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
 
 	if _, err := tx.NewUpdate().Model(&model).Where("uid = ?", path.ModelId).
@@ -116,7 +106,7 @@ func UpdateModel(c *gin.Context) {
 		Column("weighted_ocf_fee").
 		Column("weighted_ex_ante_fee").
 		Column("modified").
-		Column("file_id").
+		Column("file_ptr_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

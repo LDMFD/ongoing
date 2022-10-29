@@ -33,7 +33,7 @@ func DeleteRiskAssessment(c *gin.Context) {
 	var assessment = Entities.RiskAssessment{}
 	if err := db.NewSelect().
 		Model(&assessment).
-		Relation("Questionnaire").
+		Relation("FilePtr.File").
 		Where("risk_assessment.uid = ?", path.RiskAssessmentId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -66,13 +66,14 @@ func DeleteRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if assessment.Questionnaire != nil {
-		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.Questionnaire.Uid); err != nil {
+	if assessment.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *assessment.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {

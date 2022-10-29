@@ -49,19 +49,6 @@ func CreateForecast(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			panic(err.Error())
-		}
-		fileId = &file.Id
-	}
-
 	var submitted time.Time
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
@@ -73,7 +60,6 @@ func CreateForecast(c *gin.Context) {
 	var forecast = Entities.Forecast{
 		Uid:       uid,
 		ClientId:  client.Id,
-		FileId:    fileId,
 		Submitted: submitted,
 	}
 
@@ -83,6 +69,8 @@ func CreateForecast(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+
+	forecast.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 
 	if _, err := tx.NewInsert().Model(&forecast).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

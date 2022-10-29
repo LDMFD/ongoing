@@ -42,17 +42,17 @@ func (gen *ReportGenerator) generateReport() {
 	if err := gen.db.NewSelect().
 		Model(gen.client).
 		Relation("RiskAssessments.RiskLevel.RiskProvider").
-		Relation("RiskAssessments.Questionnaire").
-		Relation("FactFinds.File").
-		Relation("FeesReports.File").
-		Relation("Forecasts.File").
+		Relation("RiskAssessments.FilePtr.File").
+		Relation("FactFinds.FilePtr.File").
+		Relation("FeesReports.FilePtr.File").
+		Relation("Forecasts.FilePtr.File").
 		Relation("Policies.PolicyProvider.Charges.PolicyProvider").
 		Relation("ProviderDiscounts.PolicyProvider").
 		Relation("Policies.PolicyType").
-		Relation("Policies.File").
+		Relation("Policies.FilePtr.File").
 		Relation("PolicyFunds.Policy").
-		Relation("PolicyFunds.Fund.File").
-		Relation("Portfolios.Model.File").
+		Relation("PolicyFunds.Fund.FilePtr.File").
+		Relation("Portfolios.Model.FilePtr.File").
 		Relation("Portfolios.Model.Operator").
 		Relation("Portfolios.Policy").
 		Relation("Modules").
@@ -107,7 +107,7 @@ func (gen *ReportGenerator) generateRisk() {
 		riskLevels[r.RiskLevelId] = r.RiskLevel
 		riskProviders[r.RiskLevel.RiskProviderId] = r.RiskLevel.RiskProvider
 
-		//if err := auth.CreateFile(&client.Uid, nil, r.ToReport().Questionnaire.Uid); err != nil {
+		//if err := auth.CreateFile(&client.Uid, nil, r.ToReport().FilePtr.Uid); err != nil {
 		//	panic(err)
 		//}
 	}

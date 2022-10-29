@@ -8,36 +8,32 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/Entities"
-	"os"
 )
 
-type ClientEntitiesContainer struct {
-	ClientContext Entities.ClientReport
-	Draft         Entities.ReportReviewMeta
-	Report        Entities.ReportDetail
-	Reviews       []Entities.ReportReview
-}
-
-func importClients() {
-	for i := 1; i <= 5; i++ {
-		filepath := importPath + fmt.Sprintf("/clients/client-%d.json", i)
-		//log.Println("Importing from", filepath)
-
-		importClient(filepath)
-	}
-}
+//type ClientEntitiesContainer struct {
+//	Metadata Entities.GetClien
+//	Draft    Entities.ReportReviewMeta
+//	Report   Entities.ReportDetail
+//	Reviews  []Entities.ReportReview
+//}
 
 func importClient(filepath string) {
-	clientJson, _ := os.ReadFile(filepath)
-	var cac ClientEntitiesContainer
-	if err := json.Unmarshal(clientJson, &cac); err != nil {
-		panic(err)
-	}
+	//var cac ClientEntitiesContainer
+	//if err := json.Unmarshal(clientJson, &cac); err != nil {
+	//	panic(err)
+	//}
+	//
+	//createClient(cac.Metadata)
+	//createHoldings(cac.Metadata.Id, cac.Report)
+	//createDocuments(cac.Metadata.Id, cac.Report)
+	//createReviews(cac.Metadata.Id, cac.Reviews)
+}
 
-	createClient(cac.ClientContext)
-	createHoldings(cac.ClientContext.Id, cac.Report)
-	createDocuments(cac.ClientContext.Id, cac.Report)
-	createReviews(cac.ClientContext.Id, cac.Reviews)
+func importClients(clients *[]ClientProfile.GetClientResponse) {
+	for _, c := range *clients {
+		createClient(c.Metadata)
+		break
+	}
 }
 
 func createClient(clientRep Entities.ClientReport) {
@@ -53,14 +49,18 @@ func createClient(clientRep Entities.ClientReport) {
 		},
 		Fee: clientRep.Fee,
 	}
+	log.Println(requestBody)
 
 	requestJson, _ := json.Marshal(requestBody)
 	request, err := http.NewRequest("POST", API+"/advisor/clients", bytes.NewBuffer(requestJson))
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("X-Amplifa-EntityId", clientRep.Id)
-	request.Header.Set("Authentication", advisorEmail)
+	request.Header.Set("X-Ongoing-EntityId", clientRep.Id)
+	request.Header.Set("Authentication", IMPORT_SUPERUSER)
+	if clientRep.Id != advisorId {
+		request.Header.Set("X-ViewAs", advisorId)
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -70,7 +70,7 @@ func createClient(clientRep Entities.ClientReport) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Println("Create client:", resp.Status)
+		log.Println("Create client:", resp.Status, requestBody.Identity.Email, advisorId, clientRep.Id)
 	}
 }
 
@@ -89,8 +89,9 @@ func createPolicies(clientId string, clientRep Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", pd.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", pd.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -113,8 +114,9 @@ func createProviderDiscounts(clientId string, clientRep Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", pd.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", pd.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -137,8 +139,9 @@ func createPolicyFunds(clientId string, clientRep Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", pd.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", pd.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -161,8 +164,9 @@ func createPortfolios(clientId string, clientRep Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", pd.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", pd.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -186,8 +190,8 @@ func createDocuments(clientId string, report Entities.ReportDetail) {
 
 func createRiskAssessments(clientId string, report Entities.ReportDetail) {
 	for _, ra := range report.RiskAssessments {
-		if ra.Questionnaire != nil {
-			createFile(ra.Questionnaire)
+		if ra.File != nil {
+			createFile(ra.File)
 		}
 
 		requestJson, _ := json.Marshal(ra)
@@ -196,8 +200,9 @@ func createRiskAssessments(clientId string, report Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", ra.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", ra.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -224,8 +229,9 @@ func createFactFinds(clientId string, report Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", ff.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", ff.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -252,8 +258,9 @@ func createFeesReports(clientId string, report Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", fr.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", fr.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -280,8 +287,9 @@ func createForecasts(clientId string, report Entities.ReportDetail) {
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Amplifa-EntityId", forecast.Id)
-		request.Header.Set("Authentication", advisorEmail)
+		request.Header.Set("X-Ongoing-EntityId", forecast.Id)
+		request.Header.Set("Authentication", IMPORT_SUPERUSER)
+		request.Header.Set("X-ViewAs", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -309,7 +317,8 @@ func importReview(clientId string, review Entities.ReportReview) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", advisorEmail)
+	request.Header.Set("Authentication", IMPORT_SUPERUSER)
+	request.Header.Set("X-ViewAs", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)

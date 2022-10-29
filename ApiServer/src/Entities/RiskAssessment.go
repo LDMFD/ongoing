@@ -10,17 +10,17 @@ import (
 type RiskAssessment struct {
 	bun.BaseModel `bun:"table:risk_assessments"`
 
-	Id                  int64     `bun:"id,pk,autoincrement"`
-	Uid                 string    `bun:"uid,notnull"`
-	ClientId            int64     `bun:"client_id,notnull"`
-	RiskLevelId         int64     `bun:"risk_level_id,notnull"`
-	QuestionnaireFileId *int64    `bun:"questionnaire_file_id"`
-	Completed           time.Time `bun:",nullzero,notnull"`
-	Timestamp           time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+	Id          int64     `bun:"id,pk,autoincrement"`
+	Uid         string    `bun:"uid,notnull"`
+	ClientId    int64     `bun:"client_id,notnull"`
+	RiskLevelId int64     `bun:"risk_level_id,notnull"`
+	FilePtrId   *int64    `bun:"file_ptr_id"`
+	Completed   time.Time `bun:",nullzero,notnull"`
+	Timestamp   time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Client        *Client    `bun:"rel:has-one,join:client_id=id"`
-	RiskLevel     *RiskLevel `bun:"rel:has-one,join:risk_level_id=id"`
-	Questionnaire *File      `bun:"rel:has-one,join:questionnaire_file_id=id"`
+	Client    *Client    `bun:"rel:has-one,join:client_id=id"`
+	RiskLevel *RiskLevel `bun:"rel:has-one,join:risk_level_id=id"`
+	FilePtr   *FilePtr   `bun:"rel:has-one,join:file_ptr_id=id"`
 }
 
 type ReportRiskAssessment struct {
@@ -28,7 +28,7 @@ type ReportRiskAssessment struct {
 	RiskProviderId string
 	RiskLevelId    string
 	Completed      string
-	Questionnaire  *ReportFile
+	File           *ReportFile
 }
 
 func (a *RiskAssessment) ToReport() ReportRiskAssessment {
@@ -38,8 +38,8 @@ func (a *RiskAssessment) ToReport() ReportRiskAssessment {
 		RiskLevelId:    a.RiskLevel.Uid,
 		Completed:      Date.ToCanonical(&a.Completed),
 	}
-	if a.Questionnaire != nil {
-		report.Questionnaire = a.Questionnaire.ToReport()
+	if a.FilePtr != nil {
+		report.File = a.FilePtr.ToReport()
 	}
 	return report
 }

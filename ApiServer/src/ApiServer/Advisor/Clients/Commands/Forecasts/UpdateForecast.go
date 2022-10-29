@@ -40,7 +40,7 @@ func UpdateForecast(c *gin.Context) {
 	var forecast = Entities.Forecast{}
 	if err := db.NewSelect().
 		Model(&forecast).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("forecast.uid = ?", path.ForecastId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -57,19 +57,6 @@ func UpdateForecast(c *gin.Context) {
 		return
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			panic(err.Error())
-		}
-		fileId = &file.Id
-	}
-
 	var submitted time.Time
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
@@ -83,14 +70,16 @@ func UpdateForecast(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	// File has been removed or changed; remove old relationship
-	if (body.File != nil && forecast.File != nil && body.File.Uid != forecast.File.Uid) || (body.File == nil && forecast.File != nil) {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.File.Uid); err != nil {
+	// FilePtr has been removed or changed; remove old relationship
+	var toDelete *Entities.FilePtr
+	if (body.File != nil && forecast.FilePtr != nil && body.File.Uid != forecast.FilePtr.File.Uid) || (body.File == nil && forecast.FilePtr != nil) {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		toDelete = forecast.FilePtr
 	}
 	if body.File != nil {
 		if err := auth.CreateClientFile(path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
@@ -99,19 +88,23 @@ func UpdateForecast(c *gin.Context) {
 			_ = tx.Rollback()
 			return
 		}
+		forecast.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
 
 	forecast.Submitted = submitted
-	forecast.FileId = fileId
 
 	if _, err := tx.NewUpdate().
 		Model(&forecast).
 		WherePK().
-		Column("file_id").
+		Column("file_ptr_id").
 		Column("submitted").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if toDelete != nil {
+		Helpers.DeleteFile(c, tx, *toDelete)
 	}
 
 	if err := tx.Commit(); err != nil {

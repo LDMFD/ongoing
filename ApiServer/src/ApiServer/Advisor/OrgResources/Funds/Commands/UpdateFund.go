@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
@@ -36,19 +37,6 @@ func UpdateFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			panic(err.Error())
-		}
-		fileId = &file.Id
-	}
-
 	var modified time.Time
 	var err error
 	if body.Modified != "" {
@@ -69,7 +57,7 @@ func UpdateFund(c *gin.Context) {
 
 	if err := tx.NewSelect().
 		Model(&fund).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("fund.uid = ?", path.FundId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -80,16 +68,17 @@ func UpdateFund(c *gin.Context) {
 	fund.OcfFee = body.OcfFee
 	fund.ExAnteFee = body.ExAnteFee
 	fund.Modified = &modified
-	fund.FileId = fileId
+	fund.FilePtrId = nil
 
-	// File has been removed or changed; remove old relationship
-	if (body.File != nil && fund.File != nil && body.File.Uid != fund.File.Uid) || (body.File == nil && fund.File != nil) {
-		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.File.Uid); err != nil {
+	// FilePtr has been removed or changed; remove old relationship
+	if (body.File != nil && fund.FilePtr != nil && body.File.Uid != fund.FilePtr.File.Uid) || (body.File == nil && fund.FilePtr != nil) {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *fund.FilePtr)
 	}
 	if body.File != nil {
 		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
@@ -98,13 +87,14 @@ func UpdateFund(c *gin.Context) {
 			_ = tx.Rollback()
 			return
 		}
+		fund.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
 
 	if _, err := tx.NewUpdate().Model(&fund).Where("uid = ?", path.FundId).
 		Column("name").
 		Column("ocf_fee").
 		Column("ex_ante_fee").
-		Column("file_id").
+		Column("file_ptr_id").
 		Column("modified").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -17,12 +17,12 @@ type Model struct {
 	OperatorId        int64      `bun:"operator_id,notnull"`
 	WeightedOcfFee    float64    `bun:"weighted_ocf_fee,notnull"`
 	WeightedExAnteFee float64    `bun:"weighted_ex_ante_fee,notnull"`
-	FileId            *int64     `bun:"file_id"`
+	FilePtrId         *int64     `bun:"file_ptr_id"`
 	Modified          *time.Time `bun:",nullzero"`
 	Timestamp         time.Time  `bun:",nullzero,notnull,default:current_timestamp"`
 
 	Org        *Organisation `bun:"rel:has-one,join:org_id=id"`
-	File       *File         `bun:"rel:has-one,join:file_id=id"`
+	FilePtr    *FilePtr      `bun:"rel:has-one,join:file_ptr_id=id"`
 	Operator   *Operator     `bun:"rel:has-one,join:operator_id=id"`
 	Portfolios []*Portfolio  `bun:"rel:has-many,join:id=model_id"`
 }
@@ -46,8 +46,8 @@ func (p *Model) ToReport() ReportModel {
 		WeightedExAnteFee: p.WeightedExAnteFee,
 		Modified:          Date.ToCanonical(p.Modified),
 	}
-	if p.File != nil {
-		rm.File = p.File.ToReport()
+	if p.FilePtr != nil {
+		rm.File = p.FilePtr.ToReport()
 	}
 	return rm
 }

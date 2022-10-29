@@ -4,11 +4,10 @@ import (
 	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"testing"
-	"time"
 )
 
 func TestTeardown(t *testing.T, e *httpexpect.Expect) {
-	//TestDeleteClientHoldings(t, e)
+	TestDeleteClientHoldings(t, e)
 	TestDeleteOrgResources(t, e)
 	TestDeleteAccounts(t, e)
 }
@@ -53,9 +52,7 @@ func TestDeleteAccounts(t *testing.T, e *httpexpect.Expect) {
 		WithHeader("Authentication", SUPERUSER).
 		Expect().Status(http.StatusOK)
 
-	time.Sleep(time.Second)
-
 	e.GET("/api/admin/stats").
 		WithHeader("Authentication", SUPERUSER).
-		Expect().Status(http.StatusOK).JSON().Object().ValueEqual("Rows", 0)
+		Expect().Status(http.StatusOK).JSON().Object().ValueEqual("Rows", 2) // 2 superusers
 }

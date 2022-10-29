@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
@@ -35,19 +36,6 @@ func CreateFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			panic(err.Error())
-		}
-		fileId = &file.Id
-	}
-
 	var modified time.Time
 	var err error
 	if body.Modified != "" {
@@ -66,7 +54,6 @@ func CreateFund(c *gin.Context) {
 		Name:      body.Name,
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,
-		FileId:    fileId,
 		Modified:  &modified,
 		OrgId:     session.Org.Id,
 	}
@@ -76,6 +63,10 @@ func CreateFund(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
+	}
+
+	if body.File != nil {
+		fund.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
 
 	if _, err := tx.NewInsert().Model(&fund).Exec(c); err != nil {

@@ -36,23 +36,18 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
-		}
-		fileId = &file.Id
+	var err error
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
 	}
 
 	var policy = Entities.Policy{}
 	if err := db.NewSelect().
 		Model(&policy).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("policy.uid = ?", path.PolicyId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -60,7 +55,6 @@ func UpdatePolicy(c *gin.Context) {
 	}
 
 	var client *Entities.Client
-	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		panic(err.Error())
 	}
@@ -79,13 +73,6 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	tx, err := db.BeginTx(c, &sql.TxOptions{})
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
-	}
-
 	var provider = Entities.PolicyProvider{}
 	if err := tx.NewSelect().
 		Model(&provider).
@@ -95,14 +82,15 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	// File has been removed or changed; remove old relationship
-	if (body.File != nil && policy.File != nil && body.File.Uid != policy.File.Uid) || (body.File == nil && policy.File != nil) {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.File.Uid); err != nil {
+	// FilePtr has been removed or changed; remove old relationship
+	if (body.File != nil && policy.FilePtr != nil && body.File.Uid != policy.FilePtr.File.Uid) || (body.File == nil && policy.FilePtr != nil) {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *policy.FilePtr)
 	}
 	if body.File != nil {
 		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
@@ -111,6 +99,10 @@ func UpdatePolicy(c *gin.Context) {
 			_ = tx.Rollback()
 			return
 		}
+		policy.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	} else {
+		policy.FilePtrId = nil
+		policy.FilePtr = nil
 	}
 
 	policy.ExternalId = body.ExternalId
@@ -120,7 +112,6 @@ func UpdatePolicy(c *gin.Context) {
 	policy.PolicyTypeId = policyType.Id
 	policy.PolicyProviderId = provider.Id
 	policy.Notes = body.Notes
-	policy.FileId = fileId
 
 	if _, err := tx.NewUpdate().
 		Model(&policy).
@@ -132,7 +123,7 @@ func UpdatePolicy(c *gin.Context) {
 		Column("policy_type_id").
 		Column("policy_provider_id").
 		Column("notes").
-		Column("file_id").
+		Column("file_ptr_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

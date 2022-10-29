@@ -28,9 +28,9 @@ func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
 	//
 	//// Admin can also read it
 	//TestDownload(t, e, ORG1_ADMIN, modelFileId, true)
-	//
-	//// Advisors (not of that client) cannot read the file anymore
-	//TestDownload(t, e, ORG1_ADVISOR, modelFileId, false)
+
+	// Advisors (not of that client) cannot read the file anymore
+	TestDownload(t, e, ORG1_ADVISOR, modelFileId, false)
 }
 
 func TestDeleteOperators(t *testing.T, e *httpexpect.Expect) {
@@ -55,9 +55,9 @@ func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 	//
 	//// Admin can also read it
 	//TestDownload(t, e, ORG1_ADMIN, fundFileId, true)
-	//
-	//// Advisors (not of that client) cannot read the file anymore
-	//TestDownload(t, e, ORG1_ADVISOR, fundFileId, false)
+
+	// Advisors (not of that client) cannot read the file anymore
+	TestDownload(t, e, ORG1_ADVISOR, fundFileId, false)
 }
 
 func TestDeletePolicyProviders(t *testing.T, e *httpexpect.Expect) {

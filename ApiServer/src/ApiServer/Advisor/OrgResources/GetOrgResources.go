@@ -47,7 +47,7 @@ func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesRespons
 	var funds []Entities.Fund
 	if err := db.NewSelect().
 		Model(&funds).
-		Relation("File").
+		Relation("FilePtr.File").
 		Relation("Org").
 		Where("Org.Uid = ?", orgId).
 		OrderExpr("name ASC").Scan(c); err != nil {
@@ -61,7 +61,7 @@ func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesRespons
 	var models []Entities.Model
 	if err := db.NewSelect().
 		Model(&models).
-		Relation("File").
+		Relation("FilePtr.File").
 		Relation("Operator").
 		Relation("Org").
 		Where("Org.Uid = ?", orgId).

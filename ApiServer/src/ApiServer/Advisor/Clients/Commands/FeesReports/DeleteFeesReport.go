@@ -33,7 +33,7 @@ func DeleteFeesReport(c *gin.Context) {
 	var feesReport = Entities.FeesReport{}
 	if err := db.NewSelect().
 		Model(&feesReport).
-		Relation("File").
+		Relation("FilePtr.File").
 		Where("fees_report.uid = ?", path.FeesReportId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -66,13 +66,14 @@ func DeleteFeesReport(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if feesReport.File != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.File.Uid); err != nil {
+	if feesReport.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *feesReport.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {

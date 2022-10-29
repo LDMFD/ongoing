@@ -54,8 +54,8 @@ namespace Ongoing.Entities
         [Column("notes")]
         public string Notes { get; set; } = null!;
         
-        [Column("file_id")]
-        public int? FileId { get; set; }
+        [Column("file_ptr_id")]
+        public int? FilePtrId { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime? Timestamp { get; set; }
@@ -65,9 +65,9 @@ namespace Ongoing.Entities
         [InverseProperty("Policies")]
         public virtual Client Client { get; set; } = null!;
         
-        [ForeignKey("FileId")]
+        [ForeignKey("FilePtrId")]
         [InverseProperty("Policies")]
-        public virtual File? File { get; set; }
+        public virtual FilePtr? FilePtr { get; set; }
         
         [ForeignKey("PolicyProviderId")]
         [InverseProperty("Policies")]
@@ -99,10 +99,10 @@ class PolicyConfig : IEntityTypeConfiguration<Policy>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client_policy");
 
-        builder.HasOne(d => d.File)
+        builder.HasOne(d => d.FilePtr)
             .WithMany(p => p.Policies)
-            .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Restrict)
+            .HasForeignKey(d => d.FilePtrId)
+            .OnDelete(DeleteBehavior.SetNull)
             .HasConstraintName("fk_policy_file");
 
         builder.HasOne(d => d.PolicyProvider)

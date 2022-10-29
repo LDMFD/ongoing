@@ -74,6 +74,7 @@ namespace Ongoing
             builder.ApplyConfiguration(new FactFindConfig());
             builder.ApplyConfiguration(new FeesReportConfig());
             builder.ApplyConfiguration(new FileConfig());
+            builder.ApplyConfiguration(new FilePtrConfig());
             builder.ApplyConfiguration(new ForecastConfig());
             builder.ApplyConfiguration(new FundConfig());
             builder.ApplyConfiguration(new ModelConfig());

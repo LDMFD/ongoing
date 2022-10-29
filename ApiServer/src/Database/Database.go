@@ -3,6 +3,7 @@ package Database
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -154,10 +155,17 @@ func AppDbRows(db *bun.DB) int {
 		if rc.Table == "__EFMigrationsHistory" {
 			continue
 		}
-		if rc.Count != 0 {
+
+		var count int
+		sql := fmt.Sprintf("SELECT COUNT(*) AS count FROM %s", rc.Table)
+		db.QueryRow(sql).Scan(&count)
+
+		// If any table is not empty (except for users which should have at minimum 1 row for each superuser)
+		suppressWarning := rc.Table == "users" && count == len(GetSuperusers())
+		if count != 0 && !suppressWarning {
 			log.Println("Non-empty table:", rc.Table)
 		}
-		total += rc.Count
+		total += count
 	}
 	return total
 }

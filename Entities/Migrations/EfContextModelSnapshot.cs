@@ -130,9 +130,9 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<int>("FileId")
+                    b.Property<int>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<DateTime?>("Submitted")
                         .HasColumnType("timestamp without time zone")
@@ -155,7 +155,7 @@ namespace Ongoing.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex(new[] { "Uid" }, "fact_finds_uid_key")
                         .IsUnique();
@@ -176,9 +176,9 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<int>("FileId")
+                    b.Property<int>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<DateTime>("Submitted")
                         .HasColumnType("timestamp without time zone")
@@ -201,7 +201,7 @@ namespace Ongoing.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex(new[] { "Uid" }, "fees_reports_uid_key")
                         .IsUnique();
@@ -248,6 +248,45 @@ namespace Ongoing.Migrations
                     b.ToTable("files");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.FilePtr", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FileId")
+                        .HasColumnType("integer")
+                        .HasColumnName("file_id");
+
+                    b.Property<int?>("FilePtrId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uid");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Uid");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex(new[] { "Uid" }, "file_ptrs_uid_key")
+                        .IsUnique();
+
+                    b.ToTable("file_ptrs");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Forecast", b =>
                 {
                     b.Property<int>("Id")
@@ -261,9 +300,9 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<int>("FileId")
+                    b.Property<int>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<DateTime?>("Submitted")
                         .HasColumnType("timestamp without time zone")
@@ -286,7 +325,7 @@ namespace Ongoing.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex(new[] { "Uid" }, "forecasts_uid_key")
                         .IsUnique();
@@ -311,9 +350,9 @@ namespace Ongoing.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("ex_ante_fee");
 
-                    b.Property<int?>("FileId")
+                    b.Property<int?>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<string>("IsinNumber")
                         .HasColumnType("text")
@@ -357,7 +396,7 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex("OrgId");
 
@@ -379,9 +418,9 @@ namespace Ongoing.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("FileId")
+                    b.Property<int?>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<DateTime?>("Modified")
                         .HasColumnType("timestamp without time zone")
@@ -425,7 +464,7 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex("OperatorId");
 
@@ -652,9 +691,9 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("external_id");
 
-                    b.Property<int?>("FileId")
+                    b.Property<int?>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<int?>("MonthlyContributions")
                         .HasColumnType("integer")
@@ -700,7 +739,7 @@ namespace Ongoing.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex("PolicyProviderId");
 
@@ -1092,9 +1131,9 @@ namespace Ongoing.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("completed");
 
-                    b.Property<int?>("QuestionnaireFileId")
+                    b.Property<int?>("FilePtrId")
                         .HasColumnType("integer")
-                        .HasColumnName("questionnaire_file_id");
+                        .HasColumnName("file_ptr_id");
 
                     b.Property<int>("RiskLevelId")
                         .HasColumnType("integer")
@@ -1117,7 +1156,7 @@ namespace Ongoing.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.HasIndex("QuestionnaireFileId");
+                    b.HasIndex("FilePtrId");
 
                     b.HasIndex("RiskLevelId");
 
@@ -1328,16 +1367,16 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
-                    b.HasOne("Ongoing.Entities.File", "File")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("FactFinds")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired()
                         .HasConstraintName("fk_fact_find");
 
                     b.Navigation("Client");
 
-                    b.Navigation("File");
+                    b.Navigation("FilePtr");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.FeesReport", b =>
@@ -1349,14 +1388,25 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
-                    b.HasOne("Ongoing.Entities.File", "File")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("FeesReports")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired()
                         .HasConstraintName("fk_fees_report");
 
                     b.Navigation("Client");
+
+                    b.Navigation("FilePtr");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.FilePtr", b =>
+                {
+                    b.HasOne("Ongoing.Entities.File", "File")
+                        .WithMany("FilePtrs")
+                        .HasForeignKey("FileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("File");
                 });
@@ -1370,24 +1420,24 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
-                    b.HasOne("Ongoing.Entities.File", "File")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("Forecasts")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired()
                         .HasConstraintName("fk_forecast");
 
                     b.Navigation("Client");
 
-                    b.Navigation("File");
+                    b.Navigation("FilePtr");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Fund", b =>
                 {
-                    b.HasOne("Ongoing.Entities.File", "File")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("Funds")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_fund_file");
 
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
@@ -1397,17 +1447,17 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_fund_org");
 
-                    b.Navigation("File");
+                    b.Navigation("FilePtr");
 
                     b.Navigation("Org");
                 });
 
             modelBuilder.Entity("Ongoing.Entities.Model", b =>
                 {
-                    b.HasOne("Ongoing.Entities.File", "File")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("Models")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_model_file");
 
                     b.HasOne("Ongoing.Entities.Operator", "Operator")
@@ -1424,7 +1474,7 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_model_org");
 
-                    b.Navigation("File");
+                    b.Navigation("FilePtr");
 
                     b.Navigation("Operator");
 
@@ -1497,10 +1547,10 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_client_policy");
 
-                    b.HasOne("Ongoing.Entities.File", "File")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("Policies")
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .HasConstraintName("fk_policy_file");
 
                     b.HasOne("Ongoing.Entities.PolicyProvider", "PolicyProvider")
@@ -1519,7 +1569,7 @@ namespace Ongoing.Migrations
 
                     b.Navigation("Client");
 
-                    b.Navigation("File");
+                    b.Navigation("FilePtr");
 
                     b.Navigation("PolicyProvider");
 
@@ -1664,11 +1714,11 @@ namespace Ongoing.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_client");
 
-                    b.HasOne("Ongoing.Entities.File", "QuestionnaireFile")
+                    b.HasOne("Ongoing.Entities.FilePtr", "FilePtr")
                         .WithMany("RiskAssessments")
-                        .HasForeignKey("QuestionnaireFileId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_questionnaire");
+                        .HasForeignKey("FilePtrId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_file");
 
                     b.HasOne("Ongoing.Entities.RiskLevel", "RiskLevel")
                         .WithMany("RiskAssessments")
@@ -1679,7 +1729,7 @@ namespace Ongoing.Migrations
 
                     b.Navigation("Client");
 
-                    b.Navigation("QuestionnaireFile");
+                    b.Navigation("FilePtr");
 
                     b.Navigation("RiskLevel");
                 });
@@ -1730,6 +1780,11 @@ namespace Ongoing.Migrations
                 });
 
             modelBuilder.Entity("Ongoing.Entities.File", b =>
+                {
+                    b.Navigation("FilePtrs");
+                });
+
+            modelBuilder.Entity("Ongoing.Entities.FilePtr", b =>
                 {
                     b.Navigation("FactFinds");
 

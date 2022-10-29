@@ -16,12 +16,12 @@ type Fund struct {
 	Name      string     `bun:"name,notnull"`
 	OcfFee    float64    `bun:"ocf_fee,notnull"`
 	ExAnteFee float64    `bun:"ex_ante_fee,notnull"`
-	FileId    *int64     `bun:"file_id"`
+	FilePtrId *int64     `bun:"file_ptr_id"`
 	Modified  *time.Time `bun:",nullzero"`
 	Timestamp time.Time  `bun:",nullzero,notnull,default:current_timestamp"`
 
 	Org         *Organisation `bun:"rel:has-one,join:org_id=id"`
-	File        *File         `bun:"rel:has-one,join:file_id=id"`
+	FilePtr     *FilePtr      `bun:"rel:has-one,join:file_ptr_id=id"`
 	PolicyFunds []*PolicyFund `bun:"rel:has-many,join:id=fund_id"`
 }
 
@@ -42,8 +42,8 @@ func (f *Fund) ToReport() ReportFund {
 		ExAnteFee: f.ExAnteFee,
 		Modified:  Date.ToCanonical(f.Modified),
 	}
-	if f.File != nil {
-		rf.File = f.File.ToReport()
+	if f.FilePtr != nil {
+		rf.File = f.FilePtr.ToReport()
 	}
 	return rf
 }

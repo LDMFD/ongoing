@@ -17,7 +17,7 @@ func TestCreateDocuments(t *testing.T, e *httpexpect.Expect) {
 }
 
 func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
-	assessmentFileId = TestUpload(t, e, ORG1_ADVISOR, "sample.png")
+	assessmentFileId = TestUpload(t, e, ORG1_ADVISOR, "assessment-c.png")
 
 	request := RiskAssessments.CreateOrUpdateRiskAssessmentRequestBody{
 		RiskProviderId: riskProviderId,
@@ -25,7 +25,7 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 		Completed:      "2006-01-02T15:04:05Z",
 		Questionnaire: &Entities.RequestFile{
 			Uid:      assessmentFileId,
-			Filename: "sample.png",
+			Filename: "assessment-b.png",
 		},
 	}
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/risk-assessments").
@@ -69,9 +69,10 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, fileId2, false)
 
 	// Recreate it again
+	assessmentFileId = TestUpload(t, e, ORG1_ADVISOR, "assessment-c.png")
 	request.Questionnaire = &Entities.RequestFile{
 		Uid:      assessmentFileId,
-		Filename: "sample.png",
+		Filename: "assessment-c.png",
 	}
 	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/risk-assessments").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -87,12 +88,12 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 }
 
 func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
-	factFindFileId = TestUpload(t, e, ORG1_ADVISOR, "sample.png")
+	factFindFileId = TestUpload(t, e, ORG1_ADVISOR, "fact-find.png")
 
 	request := FactFinds.CreateOrUpdateFactFindRequestBody{
 		File: &Entities.RequestFile{
 			Uid:      factFindFileId,
-			Filename: "sample.png",
+			Filename: "fact-find.png",
 		},
 		Submitted: "2006-01-02T15:04:05Z",
 	}
@@ -109,10 +110,10 @@ func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, factFindFileId, true)
 
 	// Update the file
-	fileId2 := TestUpload(t, e, ORG1_ADVISOR, "sample.png")
+	fileId2 := TestUpload(t, e, ORG1_ADVISOR, "fact-find-b.png")
 	request.File = &Entities.RequestFile{
 		Uid:      fileId2,
-		Filename: "sample.png",
+		Filename: "fact-bind-b.png",
 	}
 	e.PUT("/api/advisor/clients/"+org1ClientId+"/fact-finds/"+factFindId).
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -136,9 +137,10 @@ func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, fileId2, false)
 
 	// Recreate it again
+	factFindFileId = TestUpload(t, e, ORG1_ADVISOR, "fact-find-c.png")
 	request.File = &Entities.RequestFile{
 		Uid:      factFindFileId,
-		Filename: "sample.png",
+		Filename: "fact-find-c.png",
 	}
 	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/fact-finds").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -204,6 +206,7 @@ func CreateFeesReport(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, fileId2, false)
 
 	// Recreate it again
+	feesReportFileId = TestUpload(t, e, ORG1_ADVISOR, "sample.png")
 	request.File = &Entities.RequestFile{
 		Uid:      feesReportFileId,
 		Filename: "sample.png",
@@ -272,6 +275,7 @@ func CreateForecast(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, fileId2, false)
 
 	// Recreate it again
+	forecastFileId = TestUpload(t, e, ORG1_ADVISOR, "sample.png")
 	request.File = &Entities.RequestFile{
 		Uid:      forecastFileId,
 		Filename: "sample.png",

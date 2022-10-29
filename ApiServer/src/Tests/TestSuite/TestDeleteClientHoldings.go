@@ -8,10 +8,18 @@ import (
 
 func TestDeleteClientHoldings(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteReviews(t, e)
+	TestDeleteDocuments(t, e)
+	TestDeleteHoldings(t, e)
+}
+
+func TestDeleteDocuments(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteForecasts(t, e)
 	TestDeleteFeesReports(t, e)
 	TestDeleteFactFinds(t, e)
 	TestDeleteRiskAssessments(t, e)
+}
+
+func TestDeleteHoldings(t *testing.T, e *httpexpect.Expect) {
 	TestDeletePortfolios(t, e)
 	TestDeletePolicyFunds(t, e)
 	TestDeletePolicies(t, e)
@@ -88,6 +96,12 @@ func TestDeletePolicies(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
+
+	TestDownload(t, e, ORG1_OWNER, policyFileId, false)
+	TestDownload(t, e, ORG1_ADMIN, policyFileId, false)
+	TestDownload(t, e, ORG1_ADVISOR, policyFileId, false)
+	TestDownload(t, e, ORG2_OWNER, policyFileId, false)
+	TestDownload(t, e, ORG1_CLIENT, policyFileId, false)
 }
 
 func TestDeleteProviderDiscounts(t *testing.T, e *httpexpect.Expect) {

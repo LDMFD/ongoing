@@ -197,11 +197,11 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("RiskAssessments").Array().Length().Equal(1)
 	report.Value("RiskAssessments").Array().First().Object().ValueEqual("RiskLevelId", riskLevelId)
 	report.Value("RiskAssessments").Array().First().Object().ValueEqual("RiskProviderId", riskProviderId)
-	report.Value("RiskAssessments").Array().First().Object().Value("Questionnaire").Object().ValueEqual("Filename", "sample.png")
+	report.Value("RiskAssessments").Array().First().Object().Value("File").Object().ValueEqual("Filename", "assessment-c.png")
 	TestDownload(t, e, ORG1_CLIENT, assessmentFileId, true)
 
 	report.Value("FactFinds").Array().Length().Equal(1)
-	report.Value("FactFinds").Array().First().Object().Value("File").Object().ValueEqual("Filename", "sample.png")
+	report.Value("FactFinds").Array().First().Object().Value("File").Object().ValueEqual("Filename", "fact-find-c.png")
 	TestDownload(t, e, ORG1_CLIENT, factFindFileId, true)
 
 	report.Value("FeesReports").Array().Length().Equal(1)

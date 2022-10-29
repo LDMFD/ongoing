@@ -32,7 +32,10 @@ func RequestDownload(c *gin.Context) {
 	}
 
 	var file = Entities.File{}
-	if err := db.NewSelect().Model(&file).Where("uid = ?", req.Uid).Scan(c); err != nil {
+	if err := db.NewSelect().
+		Model(&file).
+		Where("uid = ?", req.Uid).
+		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}

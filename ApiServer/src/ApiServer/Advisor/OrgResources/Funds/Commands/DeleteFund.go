@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"strings"
@@ -34,7 +35,7 @@ func DeleteFund(c *gin.Context) {
 	var fund = Entities.Fund{}
 	if err := db.NewSelect().
 		Model(&fund).
-		Relation("File").
+		Relation("FilePtr.File").
 		Relation("PolicyFunds.Client.User").
 		Where("fund.uid = ?", path.FundId).
 		Scan(c); err != nil {
@@ -68,13 +69,14 @@ func DeleteFund(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if fund.File != nil {
-		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.File.Uid); err != nil {
+	if fund.FilePtr != nil {
+		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
+		Helpers.DeleteFile(c, tx, *fund.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {

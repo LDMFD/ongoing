@@ -100,7 +100,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                                   selected = {assessment.Completed}
                                   onChange = {handlers.SetCompleted} />
 
-                    <FileUploader file         = {assessment.Questionnaire}
+                    <FileUploader file         = {assessment.File}
                                   stateUpdater = {setAssessment}
                                   state        = {assessment}
                                   property     = 'Questionnaire' />
