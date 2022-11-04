@@ -1,10 +1,24 @@
 package TestSuite
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"testing"
 )
+
+func TestExport(t *testing.T, e *httpexpect.Expect) string {
+	obj := e.GET("/api/admin/export").
+		WithHeader("Authentication", SUPERUSER).
+		Expect().Status(http.StatusOK).JSON().Object().Raw()
+	b, err := json.MarshalIndent(obj, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+	return string(b)
+}
 
 func TestTeardown(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteClientHoldings(t, e)

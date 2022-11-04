@@ -36,8 +36,8 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	userUid := UUID.GenerateUID(c)
-	clientUid := UUID.GenerateUID(c)
+	userUid := UUID.GenerateUIDWithKey(c, "user")
+	clientUid := UUID.GenerateUIDWithKey(c, "client")
 
 	// Begin transaction
 	tx, err := db.BeginTx(c, &sql.TxOptions{})

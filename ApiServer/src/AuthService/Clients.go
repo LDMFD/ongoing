@@ -36,3 +36,16 @@ func (c *Client) RemoveClient(orgId, advisorId, clientId, clientUserId, advisorU
 	}
 	return nil
 }
+
+func (c *Client) GetAdvisor(clientId string, userId *string) (advisorId string, err error) {
+	if rels, err := c.readRelationships("client", clientId, nil); err != nil {
+		return "", err
+	} else {
+		for _, rel := range rels {
+			if rel.Role == "advisor" {
+				return rel.UserId, nil
+			}
+		}
+	}
+	return "", nil
+}

@@ -9,20 +9,20 @@ import (
 	"ongoing/Entities"
 )
 
-func importOrgResources(entities *OrgResources.OrgResources) {
+func importOrgResources(entities *OrgResources.OrgResources, advisorId string) error {
 	for _, mp := range entities.ModulePresets {
-		importModelPreset(mp)
+		importModelPreset(mp, advisorId)
 		break
 	}
-	//for _, fund := range entities.Funds {
-	//	importFund(fund)
-	//}
-	//for _, op := range entities.Operators {
-	//	importOperator(op)
-	//}
-	//for _, model := range entities.Models {
-	//	importModel(model)
-	//}
+	for _, fund := range entities.Funds {
+		importFund(fund, advisorId)
+	}
+	for _, op := range entities.Operators {
+		importOperator(op, advisorId)
+	}
+	for _, model := range entities.Models {
+		importModel(model, advisorId)
+	}
 	//for _, pt := range entities.PolicyTypes {
 	//	importPolicyType(pt)
 	//}
@@ -38,9 +38,10 @@ func importOrgResources(entities *OrgResources.OrgResources) {
 	//for _, rl := range entities.RiskLevels {
 	//	importRiskLevel(rl)
 	//}
+	return nil
 }
 
-func importModelPreset(mp Entities.ReportModulePreset) {
+func importModelPreset(mp Entities.ReportModulePreset, advisorId string) {
 	jsonData, _ := json.Marshal(mp)
 	request, err := http.NewRequest("POST", API+"/advisor/reviews/module-presets", bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -61,9 +62,9 @@ func importModelPreset(mp Entities.ReportModulePreset) {
 	}
 }
 
-func importFund(fund Entities.ReportFund) {
+func importFund(fund Entities.ReportFund, advisorId string) {
 	if fund.File != nil {
-		createFile(fund.File)
+		createFile(fund.File, advisorId)
 	}
 
 	jsonData, _ := json.Marshal(fund)
@@ -87,7 +88,7 @@ func importFund(fund Entities.ReportFund) {
 	}
 }
 
-func importOperator(operator Entities.ReportOperator) {
+func importOperator(operator Entities.ReportOperator, advisorId string) {
 	jsonData, _ := json.Marshal(operator)
 	request, err := http.NewRequest("POST", API+"/advisor/operators", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", operator.Id)
@@ -109,9 +110,9 @@ func importOperator(operator Entities.ReportOperator) {
 	}
 }
 
-func importModel(model Entities.ReportModel) {
+func importModel(model Entities.ReportModel, advisorId string) {
 	if model.File != nil {
-		createFile(model.File)
+		createFile(model.File, advisorId)
 	}
 
 	jsonData, _ := json.Marshal(model)
@@ -135,7 +136,7 @@ func importModel(model Entities.ReportModel) {
 	}
 }
 
-func importPolicyType(policyType Entities.ReportPolicyType) {
+func importPolicyType(policyType Entities.ReportPolicyType, advisorId string) {
 	jsonData, _ := json.Marshal(policyType)
 	request, err := http.NewRequest("POST", API+"/advisor/policy-types", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", policyType.Id)
@@ -157,7 +158,7 @@ func importPolicyType(policyType Entities.ReportPolicyType) {
 	}
 }
 
-func importPolicyProvider(policyProvider Entities.ReportPolicyProvider) {
+func importPolicyProvider(policyProvider Entities.ReportPolicyProvider, advisorId string) {
 	jsonData, _ := json.Marshal(policyProvider)
 	request, err := http.NewRequest("POST", API+"/advisor/policy-providers", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", policyProvider.Id)
@@ -179,7 +180,7 @@ func importPolicyProvider(policyProvider Entities.ReportPolicyProvider) {
 	}
 }
 
-func importPolicyProviderCharge(charge Entities.ReportProviderCharge) {
+func importPolicyProviderCharge(charge Entities.ReportProviderCharge, advisorId string) {
 	jsonData, _ := json.Marshal(charge)
 	request, err := http.NewRequest("POST", API+"/advisor/provider-charges", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", charge.Id)
@@ -201,7 +202,7 @@ func importPolicyProviderCharge(charge Entities.ReportProviderCharge) {
 	}
 }
 
-func importRiskProvider(rp Entities.ReportRiskProvider) {
+func importRiskProvider(rp Entities.ReportRiskProvider, advisorId string) {
 	jsonData, _ := json.Marshal(rp)
 	request, err := http.NewRequest("POST", API+"/advisor/risk-providers", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", rp.Id)
@@ -223,7 +224,7 @@ func importRiskProvider(rp Entities.ReportRiskProvider) {
 	}
 }
 
-func importRiskLevel(rl Entities.ReportRiskLevel) {
+func importRiskLevel(rl Entities.ReportRiskLevel, advisorId string) {
 	jsonData, _ := json.Marshal(rl)
 	request, err := http.NewRequest("POST", API+"/advisor/risk-levels", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", rl.Id)

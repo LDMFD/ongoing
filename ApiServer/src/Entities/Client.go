@@ -36,9 +36,10 @@ type ReportClientIdentity struct {
 }
 
 type ClientReport struct {
-	Id       string
-	Identity ReportClientIdentity
-	Fee      float64 // TODO refactor floats to ints?
+	Id        string
+	Identity  ReportClientIdentity
+	Fee       float64 // TODO refactor floats to ints?
+	AdvisorId string
 }
 
 func (c *Client) ToReport() ClientReport {

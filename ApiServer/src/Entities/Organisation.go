@@ -20,6 +20,7 @@ type Organisation struct {
 }
 
 type OrganisationMember struct {
+	Id     string
 	UserId string
 	Role   string
 }

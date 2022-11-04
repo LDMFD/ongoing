@@ -42,8 +42,8 @@ func CreateAdvisor(c *gin.Context) {
 		return
 	}
 
-	userUid := UUID.GenerateUID(c)
-	advisorUid := UUID.GenerateUID(c)
+	userUid := UUID.GenerateUIDWithKey(c, "user")
+	advisorUid := UUID.GenerateUIDWithKey(c, "advisor")
 
 	// Begin transaction
 	tx, err := db.BeginTx(c, &sql.TxOptions{})

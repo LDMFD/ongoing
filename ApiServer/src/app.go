@@ -41,5 +41,6 @@ func (app *App) GetRouter() (*gin.Engine, error) {
 }
 
 func (app *App) Import(path string) {
-	Importer.Import(path)
+	go Importer.Import(path)
+	app.Run()
 }

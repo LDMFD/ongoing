@@ -19,19 +19,19 @@ type Advisor struct {
 }
 
 type AdvisorReport struct {
-	Id        string
+	Id        string // User.Id
 	Email     string
 	Forenames string
 	Surname   string
 	Role      string
 }
 
-func (c *Advisor) ToReport(role string) AdvisorReport {
-	return AdvisorReport{
-		Id:        c.Uid,
-		Email:     c.User.Email,
-		Forenames: c.User.Forenames,
-		Surname:   c.User.Surname,
-		Role:      role,
-	}
-}
+//func (c *Advisor) ToReport(role string) AdvisorReport {
+//	return AdvisorReport{
+//		Id:        c.Uid,
+//		Email:     c.User.Email,
+//		Forenames: c.User.Forenames,
+//		Surname:   c.User.Surname,
+//		Role:      role,
+//	}
+//}

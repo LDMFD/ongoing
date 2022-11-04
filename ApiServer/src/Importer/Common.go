@@ -8,7 +8,7 @@ import (
 	"ongoing/Entities"
 )
 
-func createFile(file *Entities.ReportFile) {
+func createFile(file *Entities.ReportFile, advisorId string) {
 	jsonData, _ := json.Marshal(file)
 	request, err := http.NewRequest("POST", API+"/storage/signal", bytes.NewBuffer(jsonData))
 	if err != nil {

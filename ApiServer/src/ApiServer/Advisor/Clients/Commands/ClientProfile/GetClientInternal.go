@@ -4,12 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 )
 
 func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientResponse {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var draft *Draft
 	var draftReviews []Entities.Review
@@ -45,10 +47,17 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientRespon
 
 	report := GenerateReport(c, client.Id, false)
 
-	return &GetClientResponse{
+	resp := &GetClientResponse{
 		Metadata: client.ToReport(),
 		Draft:    draft,
 		Report:   *report,
 		Reviews:  GetReviews(c, client),
 	}
+	if advisorId, err := auth.GetAdvisor(client.Uid, &client.User.Uid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	} else {
+		resp.Metadata.AdvisorId = advisorId
+	}
+	return resp
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/uptrace/bun/extra/bundebug"
 	"log"
 	"ongoing/Entities"
-	"ongoing/Utils/UUID"
 	"os"
 	"strings"
 	"time"
@@ -106,11 +105,14 @@ func seedUserTable(db *bun.DB) {
 
 func insertSuperuser(db *bun.DB, email string) {
 	email = strings.TrimSpace(email)
-	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", email).Exists(context.TODO()); err != nil {
+
+	if exists, err := db.NewSelect().
+		Model((*Entities.User)(nil)).
+		Where("email = ?", email).Exists(context.TODO()); err != nil {
 		panic(err.Error())
 	} else if !exists {
 		var user = Entities.User{
-			Uid:   UUID.GenerateUID(nil),
+			Uid:   email[:strings.Index(email, "@")],
 			Email: email,
 		}
 		if _, err := db.NewInsert().
