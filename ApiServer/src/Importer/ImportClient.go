@@ -17,35 +17,31 @@ type ClientEntitiesContainer struct {
 	Reviews  []Entities.ReportReview
 }
 
-//func importClient(filepath string) {
-//	var cac ClientEntitiesContainer
-//	//if err := json.Unmarshal(, &cac); err != nil {
-//	//	panic(err)
-//	//}
-//
-//	createClient(cac.Metadata)
-//	createHoldings(cac.Metadata.Id, cac.Report)
-//	createDocuments(cac.Metadata.Id, cac.Report)
-//	createReviews(cac.Metadata.Id, cac.Reviews)
-//}
-
 func importClients(clients *[]ClientProfile.GetClientResponse, owner Entities.ReportUser, allUsers []Entities.ReportUser) error {
 	for _, c := range *clients {
-		var advisorEmail string
+		var userId string
 		for _, user := range allUsers {
-			if user.Id == c.Metadata.AdvisorId {
-				advisorEmail = user.Email
+			if user.Id == c.Metadata.UserId {
+				userId = user.Id
+				break
 			}
 		}
-		if err := createClient(c.Metadata, c.Metadata.AdvisorId, advisorEmail); err != nil {
+
+		if err := importClient(c.Metadata, userId); err != nil {
 			return err
 		}
+
+		importReviews(c.Metadata.Id, c.Reviews, c.Metadata.AdvisorId)
+
+		importHoldings(c.Metadata.Id, c.Report, c.Metadata.AdvisorId)
+		importDocuments(c.Metadata.Id, c.Report, c.Metadata.AdvisorId)
+
 		break
 	}
 	return nil
 }
 
-func createClient(clientRep Entities.ClientReport, advisorId string, advisorEmail string) error {
+func importClient(clientRep Entities.ClientReport, userId string) error {
 	requestBody := ClientProfile.CreateOrUpdateClientRequestBody{
 		Identity: struct {
 			Forenames string `binding:"required"`
@@ -58,19 +54,15 @@ func createClient(clientRep Entities.ClientReport, advisorId string, advisorEmai
 		},
 		Fee: clientRep.Fee,
 	}
-	log.Println(requestBody)
 
 	requestJson, _ := json.Marshal(requestBody)
 	request, err := http.NewRequest("POST", API+"/advisor/clients", bytes.NewBuffer(requestJson))
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("X-Ongoing-EntityId-user", clientRep.Id)
-	//request.Header.Set("X-Ongoing-EntityId-client", clientRep.Id)
-	request.Header.Set("Authentication", advisorEmail)
-	//if clientRep.Id != advisorId {
-	//request.Header.Set("X-ViewAs", advisorId)
-	//}
+	request.Header.Set("X-Ongoing-EntityId-user", userId)
+	request.Header.Set("X-Ongoing-EntityId-client", clientRep.Id)
+	request.Header.Set("Authentication", clientRep.AdvisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -80,7 +72,7 @@ func createClient(clientRep Entities.ClientReport, advisorId string, advisorEmai
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Println("Create client:", resp.Status, requestBody.Identity.Email, advisorId, clientRep.Id)
+		log.Println("Create client:", resp.Status, requestBody.Identity.Email, clientRep.AdvisorId, clientRep.Id)
 		return errors.New(resp.Status)
 	}
 	return nil

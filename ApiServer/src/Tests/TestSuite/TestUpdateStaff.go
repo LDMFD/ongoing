@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
+func testUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
 	// As owner, deactivate admin 1
 
 	// As admin 1, promote org 1 advisor to org 1 admin

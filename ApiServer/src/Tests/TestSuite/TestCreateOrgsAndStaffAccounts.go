@@ -9,7 +9,7 @@ import (
 	"ongoing/Entities"
 )
 
-func TestCreationOfOrgsAdvisorsClients(e *httpexpect.Expect) {
+func testCreationOfOrgsAdvisorsClients(e *httpexpect.Expect) {
 	TestCreateOrgAndAdvisors(e)
 	TestCreateClients(e)
 	TestGetAdvisors(e)

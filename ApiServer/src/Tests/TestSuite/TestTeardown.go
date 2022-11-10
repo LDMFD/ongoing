@@ -20,7 +20,7 @@ func TestExport(t *testing.T, e *httpexpect.Expect) string {
 	return string(b)
 }
 
-func TestTeardown(t *testing.T, e *httpexpect.Expect) {
+func testTeardown(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteClientHoldings(t, e)
 	TestDeleteOrgResources(t, e)
 	TestDeleteAccounts(t, e)

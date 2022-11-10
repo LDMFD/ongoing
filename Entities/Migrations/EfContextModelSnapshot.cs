@@ -261,9 +261,6 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("file_id");
 
-                    b.Property<int?>("FilePtrId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")

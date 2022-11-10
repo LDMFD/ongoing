@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestCreateDocuments(t *testing.T, e *httpexpect.Expect) {
+func testCreateDocuments(t *testing.T, e *httpexpect.Expect) {
 	CreateRiskAssessment(t, e)
 	CreateFactFind(t, e)
 	CreateFeesReport(t, e)
@@ -23,7 +23,7 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 		RiskProviderId: riskProviderId,
 		RiskLevelId:    riskLevelId,
 		Completed:      "2006-01-02T15:04:05Z",
-		Questionnaire: &Entities.RequestFile{
+		File: &Entities.RequestFile{
 			Uid:      assessmentFileId,
 			Filename: "assessment-b.png",
 		},
@@ -42,7 +42,7 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 
 	// Update the file
 	fileId2 := TestUpload(t, e, ORG1_ADVISOR, "sample.png")
-	request.Questionnaire = &Entities.RequestFile{
+	request.File = &Entities.RequestFile{
 		Uid:      fileId2,
 		Filename: "sample.png",
 	}
@@ -70,7 +70,7 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 
 	// Recreate it again
 	assessmentFileId = TestUpload(t, e, ORG1_ADVISOR, "assessment-c.png")
-	request.Questionnaire = &Entities.RequestFile{
+	request.File = &Entities.RequestFile{
 		Uid:      assessmentFileId,
 		Filename: "assessment-c.png",
 	}

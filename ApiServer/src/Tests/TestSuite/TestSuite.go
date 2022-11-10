@@ -10,27 +10,37 @@ import (
 
 func TestAll(t *testing.T, e *httpexpect.Expect) {
 	TestHealthcheck(t, e)
-	TestCreationOfOrgsAdvisorsClients(e)
-	TestCreateOrgResources(t, e)
-	TestCreateHoldings(t, e)
-	TestCreateDocuments(t, e)
-	TestClientReviews(t, e)
-	TestUpdateStaffRoles(t, e)
+
+	if os.Getenv("VALIDATION_ONLY") == "true" {
+		setupGlobals(t, e)
+		runValidationTests(t, e)
+		// TODO check row counts manifest
+		return
+	}
+
+	runFullTestSuite(t, e)
+
+	export(t, e)
 
 	if os.Getenv("NO_TEARDOWN") != "true" {
-		export(t, e)
-		//export := export(t, e)
-
-		TestTeardown(t, e)
-
-		//if err := Importer.ImportFromString(export); err != nil {
-		//	t.Error(err)
-		//}
-		//
-		//TestGetGlobalEntitiesFromThisOrg(e)
-		//TestGetClient(t, e)
-		//TestGetClientSpace(t, e)
+		testTeardown(t, e)
 	}
+}
+
+func runFullTestSuite(t *testing.T, e *httpexpect.Expect) {
+	testCreationOfOrgsAdvisorsClients(e)
+	testCreateOrgResources(t, e)
+	testCreateHoldings(t, e)
+	testCreateDocuments(t, e)
+	testClientReviews(t, e)
+	testUpdateStaffRoles(t, e)
+	// TODO write row counts manifest
+}
+
+func runValidationTests(t *testing.T, e *httpexpect.Expect) {
+	testGetGlobalEntitiesFromThisOrg(e)
+	testGetClient(t, e)
+	testGetClientSpace(t, e)
 }
 
 func export(t *testing.T, e *httpexpect.Expect) string {
@@ -43,7 +53,7 @@ func export(t *testing.T, e *httpexpect.Expect) string {
 	return export
 }
 
-const API = "http://localhost:8000/api"
+//const API = "http://localhost:8000/api"
 
 func TestHealthcheck(t *testing.T, e *httpexpect.Expect) {
 	e.GET("/api/healthcheck").

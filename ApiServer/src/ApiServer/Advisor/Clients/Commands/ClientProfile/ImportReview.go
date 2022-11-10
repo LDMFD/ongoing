@@ -1,17 +1,24 @@
 package ClientProfile
 
 import (
+	"bytes"
+	"database/sql"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"time"
 )
 
 func ImportReview(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path CreateReviewRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -59,9 +66,53 @@ func ImportReview(c *gin.Context) {
 		Report:    &reportJson,
 	}
 
-	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered: ", r)
+			tx.Rollback()
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	}()
+
+	if _, err := tx.NewInsert().Model(review).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	var report Entities.ReportDetail
+	s := bytes.NewBufferString(reportJson)
+	if err := json.Unmarshal(s.Bytes(), &report); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	for _, f := range report.Funds {
+		if f.File != nil {
+			if err := auth.CreateFile(&client.Uid, nil, f.File.Uid); err != nil {
+				panic(err)
+			}
+		}
+	}
+	for _, m := range report.Models {
+		if m.File != nil {
+			if err := auth.CreateFile(&client.Uid, nil, m.File.Uid); err != nil {
+				panic(err)
+			}
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
 	c.JSON(200, gin.H{})
 }

@@ -51,8 +51,9 @@ type ServerSessionContext struct {
 }
 
 type ClientSessionContext struct {
-	UserId string
-	Email  string
-	OrgId  *string
-	Role   string
+	ClientId string
+	UserId   string
+	Email    string
+	OrgId    *string
+	Role     string
 }

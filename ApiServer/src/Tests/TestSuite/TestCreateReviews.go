@@ -6,14 +6,14 @@ import (
 	"testing"
 )
 
-func TestClientReviews(t *testing.T, e *httpexpect.Expect) {
-	TestCreateAndPublishReview(e)
-	TestGetClient(t, e)
-	TestGetClients(e)
-	TestGetClientSpace(t, e)
+func testClientReviews(t *testing.T, e *httpexpect.Expect) {
+	testCreateAndPublishReview(e)
+	testGetClient(t, e)
+	testGetClients(e)
+	testGetClientSpace(t, e)
 }
 
-func TestCreateAndPublishReview(e *httpexpect.Expect) {
+func testCreateAndPublishReview(e *httpexpect.Expect) {
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -36,7 +36,7 @@ func TestCreateAndPublishReview(e *httpexpect.Expect) {
 		Expect().Status(http.StatusForbidden)
 }
 
-func TestGetClient(t *testing.T, e *httpexpect.Expect) {
+func testGetClient(t *testing.T, e *httpexpect.Expect) {
 	obj := e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -62,16 +62,16 @@ func TestGetClient(t *testing.T, e *httpexpect.Expect) {
 		Expect().Status(http.StatusForbidden)
 }
 
-func TestGetClients(e *httpexpect.Expect) {
+func testGetClients(e *httpexpect.Expect) {
 	// TODO
 }
 
-func TestGetClientSpace(t *testing.T, e *httpexpect.Expect) {
-	TestOrg1ClientSpace(t, e)
-	TestOrg2ClientSpace(e)
+func testGetClientSpace(t *testing.T, e *httpexpect.Expect) {
+	testOrg1ClientSpace(t, e)
+	testOrg2ClientSpace(e)
 }
 
-func TestOrg1ClientSpace(t *testing.T, e *httpexpect.Expect) {
+func testOrg1ClientSpace(t *testing.T, e *httpexpect.Expect) {
 	obj := e.GET("/api/client-space").
 		WithHeader("Authentication", ORG1_CLIENT).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -79,7 +79,7 @@ func TestOrg1ClientSpace(t *testing.T, e *httpexpect.Expect) {
 	validateClientResponse(t, e, obj)
 }
 
-func TestOrg2ClientSpace(e *httpexpect.Expect) {
+func testOrg2ClientSpace(e *httpexpect.Expect) {
 	obj := e.GET("/api/client-space").
 		WithHeader("Authentication", ORG2_CLIENT).
 		Expect().Status(http.StatusOK).JSON().Object()
@@ -132,7 +132,7 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("Policies").Array().Element(0).Object().Value("File").Object().ValueEqual("Filename", "policy-b.png")
 	report.Value("Policies").Array().Length().Equal(1)
 
-	policyFileId := report.Value("Policies").Array().First().Object().Value("File").Object().Value("Uid").String().Raw()
+	//policyFileId := report.Value("Policies").Array().First().Object().Value("File").Object().Value("Uid").String().Raw()
 	TestDownload(t, e, ORG1_CLIENT, policyFileId, true)
 	TestDownload(t, e, ORG2_CLIENT, policyFileId, false)
 	TestDownload(t, e, ORG2_OWNER, policyFileId, false)

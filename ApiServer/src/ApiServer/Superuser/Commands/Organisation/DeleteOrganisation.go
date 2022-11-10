@@ -18,7 +18,6 @@ type DeleteOrganisationRequestPath struct {
 
 func DeleteOrganisation(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-	//session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteOrganisationRequestPath

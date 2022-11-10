@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestCreateHoldings(t *testing.T, e *httpexpect.Expect) {
+func testCreateHoldings(t *testing.T, e *httpexpect.Expect) {
 	CreateProviderDiscount(e)
 	CreatePolicy(t, e)
 	CreatePolicyFunds(e)

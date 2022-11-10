@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func TestCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
+func testCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
 	TestCreatePolicyType(e)
 	TestCreatePolicyProvider(e)
 	TestCreateFund(t, e)
@@ -23,7 +23,7 @@ func TestCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
 	TestCreateRiskProvider(e)
 	// TODO Module Presets
 
-	TestGetGlobalEntitiesFromThisOrg(e)
+	testGetGlobalEntitiesFromThisOrg(e)
 	TestGetGlobalEntitiesFromOtherOrg(e)
 }
 
@@ -238,7 +238,7 @@ func TestCreateRiskProvider(e *httpexpect.Expect) {
 	riskLevelId = resp.JSON().Object().Value("Id").String().Raw()
 }
 
-func TestGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
+func testGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
 	// Test GetGlobalEntities
 	resp := e.GET("/api/advisor/org-resources").
 		WithHeader("Authentication", ORG1_ADVISOR).

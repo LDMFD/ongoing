@@ -8,6 +8,7 @@ import (
 	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/ApiServer/Advisor/OrgResources"
 	"ongoing/ApiServer/Superuser/Commands"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 )
 
@@ -15,6 +16,7 @@ type Org struct {
 	Metadata  Entities.ReportOrganisation
 	Resources OrgResources.OrgResources
 	Clients   []ClientProfile.GetClientResponse
+	Files     []Entities.ReportFile
 }
 
 type Export struct {
@@ -24,6 +26,7 @@ type Export struct {
 
 func GetExport(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	entities := *Commands.GetAdminEntitiesInternal(c)
 
@@ -35,10 +38,11 @@ func GetExport(c *gin.Context) {
 	for _, org := range entities.Organisations {
 		clients := ClientProfile.GetClientsInternal(c, org.Id)
 
-		o := Org{
+		org := Org{
 			Metadata:  org,
 			Resources: OrgResources.GetOrgResourcesInternal(c, &org.Id).Resources,
 			Clients:   []ClientProfile.GetClientResponse{},
+			Files:     []Entities.ReportFile{},
 		}
 
 		for _, client := range clients {
@@ -53,9 +57,30 @@ func GetExport(c *gin.Context) {
 				panic(errors.WithStack(err))
 			}
 
-			o.Clients = append(o.Clients, *ClientProfile.GetClientInternal(c, &c2))
+			org.Clients = append(org.Clients, *ClientProfile.GetClientInternal(c, &c2))
 		}
-		export.Orgs = append(export.Orgs, o)
+
+		if files, err := auth.GetOrgFiles(org.Metadata.Id); err != nil {
+			panic(err)
+		} else {
+			for _, fileUid := range files {
+				var file = Entities.File{}
+				if err := db.NewSelect().
+					Model(&file).
+					Where("uid = ?", fileUid).
+					Scan(c); err != nil {
+					panic(errors.WithStack(err))
+				}
+
+				org.Files = append(org.Files, Entities.ReportFile{
+					Uid:      fileUid,
+					Filename: file.Filename,
+					Size:     file.Size,
+				})
+			}
+		}
+
+		export.Orgs = append(export.Orgs, org)
 	}
 
 	c.JSON(200, export)

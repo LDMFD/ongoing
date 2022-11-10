@@ -97,8 +97,8 @@ func UpdateRiskAssessment(c *gin.Context) {
 	}
 
 	// FilePtr has been removed or changed; remove old relationship
-	if (body.Questionnaire != nil && assessment.FilePtr != nil && body.Questionnaire.Uid != assessment.FilePtr.File.Uid) ||
-		(body.Questionnaire == nil && assessment.FilePtr != nil) {
+	if (body.File != nil && assessment.FilePtr != nil && body.File.Uid != assessment.FilePtr.File.Uid) ||
+		(body.File == nil && assessment.FilePtr != nil) {
 		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
@@ -107,14 +107,14 @@ func UpdateRiskAssessment(c *gin.Context) {
 		}
 		Helpers.DeleteFile(c, tx, *assessment.FilePtr)
 	}
-	if body.Questionnaire != nil {
-		if err := auth.CreateOrgFile(session.Org.Uid, body.Questionnaire.Uid); err != nil {
+	if body.File != nil {
+		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
 			return
 		}
-		assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.Questionnaire)
+		assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
 
 	assessment.RiskLevelId = level.Id

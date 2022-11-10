@@ -23,21 +23,21 @@ func importOrgResources(entities *OrgResources.OrgResources, advisorId string) e
 	for _, model := range entities.Models {
 		importModel(model, advisorId)
 	}
-	//for _, pt := range entities.PolicyTypes {
-	//	importPolicyType(pt)
-	//}
-	//for _, pp := range entities.PolicyProviders {
-	//	importPolicyProvider(pp)
-	//}
-	//for _, pc := range entities.ProviderCharges {
-	//	importPolicyProviderCharge(pc)
-	//}
-	//for _, rp := range entities.RiskProviders {
-	//	importRiskProvider(rp)
-	//}
-	//for _, rl := range entities.RiskLevels {
-	//	importRiskLevel(rl)
-	//}
+	for _, pt := range entities.PolicyTypes {
+		importPolicyType(pt, advisorId)
+	}
+	for _, pp := range entities.PolicyProviders {
+		importPolicyProvider(pp, advisorId)
+	}
+	for _, pc := range entities.ProviderCharges {
+		importPolicyProviderCharge(pc, advisorId)
+	}
+	for _, rp := range entities.RiskProviders {
+		importRiskProvider(rp, advisorId)
+	}
+	for _, rl := range entities.RiskLevels {
+		importRiskLevel(rl, advisorId)
+	}
 	return nil
 }
 
@@ -47,8 +47,7 @@ func importModelPreset(mp Entities.ReportModulePreset, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -63,18 +62,13 @@ func importModelPreset(mp Entities.ReportModulePreset, advisorId string) {
 }
 
 func importFund(fund Entities.ReportFund, advisorId string) {
-	if fund.File != nil {
-		createFile(fund.File, advisorId)
-	}
-
 	jsonData, _ := json.Marshal(fund)
 	request, err := http.NewRequest("POST", API+"/advisor/funds", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", fund.Id)
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -95,8 +89,7 @@ func importOperator(operator Entities.ReportOperator, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -111,18 +104,13 @@ func importOperator(operator Entities.ReportOperator, advisorId string) {
 }
 
 func importModel(model Entities.ReportModel, advisorId string) {
-	if model.File != nil {
-		createFile(model.File, advisorId)
-	}
-
 	jsonData, _ := json.Marshal(model)
 	request, err := http.NewRequest("POST", API+"/advisor/models", bytes.NewBuffer(jsonData))
 	request.Header.Set("X-Ongoing-EntityId", model.Id)
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -143,8 +131,7 @@ func importPolicyType(policyType Entities.ReportPolicyType, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -165,8 +152,7 @@ func importPolicyProvider(policyProvider Entities.ReportPolicyProvider, advisorI
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -187,8 +173,7 @@ func importPolicyProviderCharge(charge Entities.ReportProviderCharge, advisorId 
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -209,8 +194,7 @@ func importRiskProvider(rp Entities.ReportRiskProvider, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)
@@ -231,8 +215,7 @@ func importRiskLevel(rl Entities.ReportRiskLevel, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)

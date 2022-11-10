@@ -45,17 +45,19 @@ func createOrg(org Export.Org, allUsers []Entities.ReportUser) error {
 		return err
 	}
 
+	importFiles(owner, org)
+
 	if err := importAdvisors(owner, org, allUsers); err != nil {
+		return err
+	}
+
+	if err := importOrgResources(&org.Resources, owner.Id); err != nil {
 		return err
 	}
 
 	if err := importClients(&org.Clients, owner, allUsers); err != nil {
 		return err
 	}
-
-	//if err := importOrgResources(&org.Resources); err != nil {
-	//	return err
-	//}
 
 	return nil
 }
@@ -81,4 +83,10 @@ func importOrganisation(mp Organisation.CreateOrganisationRequestBody, ownerId s
 		return errors.New(resp.Status)
 	}
 	return nil
+}
+
+func importFiles(owner Entities.ReportUser, org Export.Org) {
+	for _, file := range org.Files {
+		createFile(&file, owner.Id)
+	}
 }

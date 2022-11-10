@@ -9,24 +9,23 @@ import (
 	"ongoing/Entities"
 )
 
-func createHoldings(clientId string, clientRep Entities.ReportDetail, advisorId string) {
-	createPolicies(clientId, clientRep, advisorId)
-	createProviderDiscounts(clientId, clientRep, advisorId)
-	createPolicyFunds(clientId, clientRep, advisorId)
-	createPortfolios(clientId, clientRep, advisorId)
+func importHoldings(clientId string, report Entities.ReportDetail, advisorId string) {
+	importPolicies(clientId, report, advisorId)
+	importProviderDiscounts(clientId, report, advisorId)
+	importPolicyFunds(clientId, report, advisorId)
+	importPortfolios(clientId, report, advisorId)
 }
 
-func createPolicies(clientId string, clientRep Entities.ReportDetail, advisorId string) {
-	for _, pd := range clientRep.Policies {
-		requestJson, _ := json.Marshal(pd)
+func importPolicies(clientId string, report Entities.ReportDetail, advisorId string) {
+	for _, pol := range report.Policies {
+		requestJson, _ := json.Marshal(pol)
 		url := fmt.Sprintf(API+"/advisor/clients/%v/policies", clientId)
 		request, err := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Ongoing-EntityId", pd.Id)
-		request.Header.Set("Authentication", IMPORT_SUPERUSER)
-		request.Header.Set("X-ViewAs", advisorId)
+		request.Header.Set("X-Ongoing-EntityId", pol.Id)
+		request.Header.Set("Authentication", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -41,8 +40,8 @@ func createPolicies(clientId string, clientRep Entities.ReportDetail, advisorId 
 	}
 }
 
-func createProviderDiscounts(clientId string, clientRep Entities.ReportDetail, advisorId string) {
-	for _, pd := range clientRep.ProviderDiscounts {
+func importProviderDiscounts(clientId string, report Entities.ReportDetail, advisorId string) {
+	for _, pd := range report.ProviderDiscounts {
 		requestJson, _ := json.Marshal(pd)
 		url := fmt.Sprintf(API+"/advisor/clients/%v/provider-discounts", clientId)
 		request, err := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
@@ -50,8 +49,7 @@ func createProviderDiscounts(clientId string, clientRep Entities.ReportDetail, a
 			panic(err)
 		}
 		request.Header.Set("X-Ongoing-EntityId", pd.Id)
-		request.Header.Set("Authentication", IMPORT_SUPERUSER)
-		request.Header.Set("X-ViewAs", advisorId)
+		request.Header.Set("Authentication", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -66,8 +64,8 @@ func createProviderDiscounts(clientId string, clientRep Entities.ReportDetail, a
 	}
 }
 
-func createPolicyFunds(clientId string, clientRep Entities.ReportDetail, advisorId string) {
-	for _, pd := range clientRep.PolicyFunds {
+func importPolicyFunds(clientId string, report Entities.ReportDetail, advisorId string) {
+	for _, pd := range report.PolicyFunds {
 		requestJson, _ := json.Marshal(pd)
 		url := fmt.Sprintf(API+"/advisor/clients/%v/policy-funds", clientId)
 		request, err := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
@@ -75,8 +73,7 @@ func createPolicyFunds(clientId string, clientRep Entities.ReportDetail, advisor
 			panic(err)
 		}
 		request.Header.Set("X-Ongoing-EntityId", pd.Id)
-		request.Header.Set("Authentication", IMPORT_SUPERUSER)
-		request.Header.Set("X-ViewAs", advisorId)
+		request.Header.Set("Authentication", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -91,8 +88,8 @@ func createPolicyFunds(clientId string, clientRep Entities.ReportDetail, advisor
 	}
 }
 
-func createPortfolios(clientId string, clientRep Entities.ReportDetail, advisorId string) {
-	for _, pd := range clientRep.Portfolios {
+func importPortfolios(clientId string, report Entities.ReportDetail, advisorId string) {
+	for _, pd := range report.Portfolios {
 		requestJson, _ := json.Marshal(pd)
 		url := fmt.Sprintf(API+"/advisor/clients/%v/portfolios", clientId)
 		request, err := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
@@ -100,8 +97,7 @@ func createPortfolios(clientId string, clientRep Entities.ReportDetail, advisorI
 			panic(err)
 		}
 		request.Header.Set("X-Ongoing-EntityId", pd.Id)
-		request.Header.Set("Authentication", IMPORT_SUPERUSER)
-		request.Header.Set("X-ViewAs", advisorId)
+		request.Header.Set("Authentication", advisorId)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)

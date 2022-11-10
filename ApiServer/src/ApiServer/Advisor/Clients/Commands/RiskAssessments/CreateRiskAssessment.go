@@ -25,7 +25,7 @@ type CreateRiskAssessmentRequestPath struct {
 type CreateOrUpdateRiskAssessmentRequestBody struct {
 	RiskProviderId string `binding:"required"`
 	RiskLevelId    string `binding:"required"`
-	Questionnaire  *Entities.RequestFile
+	File           *Entities.RequestFile
 	Completed      string
 }
 
@@ -97,14 +97,14 @@ func CreateRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.Questionnaire)
+	assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 
 	if _, err := tx.NewInsert().Model(&assessment).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.Questionnaire.Uid); err != nil {
+	if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

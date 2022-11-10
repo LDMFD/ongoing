@@ -22,7 +22,7 @@ func CreateFileRef(c *gin.Context, tx bun.Tx, file *Entities.RequestFile) *int64
 		fileId = &existing.Id
 	}
 
-	filePtrUid := UUID.GenerateUID(c)
+	filePtrUid := UUID.GenerateUIDWithKey(c, "file-ref")
 
 	var filePtr = Entities.FilePtr{
 		Uid:    filePtrUid,

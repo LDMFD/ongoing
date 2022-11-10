@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"strings"
-	"testing"
 	"time"
 )
 
@@ -48,23 +47,4 @@ func healthcheck() bool {
 		return false
 	}
 	return true
-}
-
-func TestHealthcheck2(t *testing.T) {
-	request, err := http.NewRequest("GET", API+"/healthcheck", bytes.NewBufferString(""))
-	if err != nil {
-		panic(err)
-	}
-
-	client := &http.Client{}
-	resp, err := client.Do(request)
-	if err != nil {
-		t.Error(err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		t.Error("expected 200")
-	}
-
 }

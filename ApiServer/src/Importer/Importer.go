@@ -36,12 +36,6 @@ func Import(path string) {
 	os.Exit(0)
 }
 
-func ImportFromString(obj string) error {
-	var export Export.Export
-	json.Unmarshal([]byte(obj), &export)
-	return runImport(&export)
-}
-
 func runImport(export *Export.Export) error {
 	for _, org := range export.Orgs {
 		if err := createOrg(org, export.Users); err != nil {

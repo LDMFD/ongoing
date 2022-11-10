@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run Importer" type="GoApplicationRunConfiguration" factoryName="Go Application">
+  <configuration default="false" name="Run Import" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="ApiServer" />
     <working_directory value="$PROJECT_DIR$" />
     <parameters value="-import $USER_HOME$/.ongoing/dumps/tests-export.json" />

@@ -14,7 +14,7 @@ type ReportGenerator struct {
 	context           *gin.Context
 	db                *bun.DB
 	authClient        *AuthService.Client
-	glientId          int64
+	clientId          int64
 	grantClientAccess bool
 	client            *Entities.Client
 	report            *Entities.ReportDetail
@@ -31,13 +31,13 @@ func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool
 		context:           c,
 		db:                c.MustGet("DATABASE").(*bun.DB),
 		authClient:        c.MustGet("AUTH").(*AuthService.Client),
-		glientId:          clientId,
+		clientId:          clientId,
 		grantClientAccess: createRelationships,
 	}
 }
 
 func (gen *ReportGenerator) generateReport() {
-	gen.client = &Entities.Client{Id: gen.glientId}
+	gen.client = &Entities.Client{Id: gen.clientId}
 
 	if err := gen.db.NewSelect().
 		Model(gen.client).
@@ -106,10 +106,6 @@ func (gen *ReportGenerator) generateRisk() {
 		gen.report.RiskAssessments = append(gen.report.RiskAssessments, r.ToReport())
 		riskLevels[r.RiskLevelId] = r.RiskLevel
 		riskProviders[r.RiskLevel.RiskProviderId] = r.RiskLevel.RiskProvider
-
-		//if err := auth.CreateFile(&client.Uid, nil, r.ToReport().FilePtr.Uid); err != nil {
-		//	panic(err)
-		//}
 	}
 	gen.report.RiskProviders = make([]Entities.ReportRiskProvider, 0)
 	for _, p := range riskProviders {

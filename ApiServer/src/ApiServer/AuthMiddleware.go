@@ -13,6 +13,7 @@ import (
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"os"
+	"strings"
 )
 
 func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
@@ -36,7 +37,16 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		// Validate it's a real identity (has gone through Firebase login)
 		var email string
 		if os.Getenv("OFFLINE_AUTH") == "true" {
-			email = jwt
+			if strings.Contains(jwt, "@") {
+				email = jwt
+			} else {
+				var user Entities.User
+				if err := db.NewSelect().Model(&user).Where("uid = ?", jwt).Scan(c); err != nil {
+					c.AbortWithStatus(http.StatusForbidden)
+					panic(err)
+				}
+				email = user.Email
+			}
 		} else {
 			opt := option.WithCredentialsFile(os.Getenv("FIREBASE_CONFIG"))
 			if app, err = firebase.NewApp(context.Background(), nil, opt); err != nil {

@@ -14,8 +14,8 @@ func createFile(file *Entities.ReportFile, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
-	request.Header.Set("Authentication", IMPORT_SUPERUSER)
-	request.Header.Set("X-ViewAs", advisorId)
+	request.Header.Set("Authentication", advisorId)
+	request.Header.Set("X-Ongoing-EntityId-file", file.Uid)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)

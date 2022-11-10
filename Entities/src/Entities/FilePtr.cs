@@ -34,7 +34,7 @@ namespace Ongoing.Entities
         public DateTime Timestamp { get; set; }
 
         
-        [ForeignKey("FilePtrId")]
+        [ForeignKey("FileId")]
         [InverseProperty("FilePtrs")]
         public virtual File? File { get; set; }
         

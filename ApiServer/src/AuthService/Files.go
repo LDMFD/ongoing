@@ -61,3 +61,7 @@ func (c *Client) RemoveFileFromOrg(orgId string, fileId string) error {
 func (c *Client) CheckFilePermission(fileId, permission, userId string) (bool, error) {
 	return c.checkPermission("file", fileId, permission, "user", userId)
 }
+
+func (c *Client) GetOrgFiles(orgId string) (fileIds []string, err error) {
+	return c.lookupResource("organisation", orgId, "file", "org")
+}
