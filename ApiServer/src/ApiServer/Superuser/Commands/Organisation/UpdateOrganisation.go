@@ -3,6 +3,7 @@ package Organisation
 import (
 	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -30,7 +31,7 @@ func UpdateOrganisation(c *gin.Context) {
 
 	// Superuser can update all orgs, non-superusers can only update their own
 	if session.Role != Entities.UserTypeSuperuser && *session.OrgId != path.OrgId {
-		if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
 			log.Println("Unauthorized access attempt by:", session.Email)
 		}
 		c.AbortWithStatus(http.StatusForbidden)

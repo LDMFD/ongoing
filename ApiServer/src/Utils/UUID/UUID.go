@@ -1,6 +1,7 @@
 package UUID
 
 import (
+	"ongoing/Config"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -9,8 +10,8 @@ import (
 
 func GenerateUID(c *gin.Context) string {
 	var entityId string
-	if c != nil {
-		entityId = c.GetHeader("X-Ongoing-EntityId") // TODO gate this to OFFLINE_AUTH?
+	if Config.OFFLINE_AUTH && c != nil {
+		entityId = c.GetHeader("X-Ongoing-EntityId")
 	}
 	if entityId == "" {
 		uid := uuid.NewString()
@@ -21,7 +22,7 @@ func GenerateUID(c *gin.Context) string {
 
 func GenerateUIDWithKey(c *gin.Context, key string) string {
 	var entityId string
-	if c != nil {
+	if Config.OFFLINE_AUTH && c != nil {
 		entityId = c.GetHeader("X-Ongoing-EntityId-" + key)
 	}
 	if entityId == "" {

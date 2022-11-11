@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"os"
 	"strings"
@@ -36,7 +37,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 
 		// Validate it's a real identity (has gone through Firebase login)
 		var email string
-		if os.Getenv("OFFLINE_AUTH") == "true" {
+		if Config.OFFLINE_AUTH {
 			if strings.Contains(jwt, "@") {
 				email = jwt
 			} else {
@@ -81,7 +82,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		} else if count == 1 {
 			user = &users[0]
 		} else {
-			if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
 				log.Println("Unauthorized access attempt by:", email)
 			}
 			c.AbortWithStatus(http.StatusForbidden) // no users found with matching email
@@ -149,10 +150,8 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 				}
 			}
 			if !found {
-				if os.Getenv("OFFLINE_TESTS") != "true" {
-					if c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
-						log.Printf("Unauthorized access attempt: user=%s path=%s\n", email, c.Request.URL.Path)
-					}
+				if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+					log.Printf("Unauthorized access attempt: user=%s path=%s\n", email, c.Request.URL.Path)
 				}
 				c.AbortWithStatus(http.StatusForbidden)
 				return
