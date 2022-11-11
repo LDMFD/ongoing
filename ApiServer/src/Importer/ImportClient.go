@@ -35,8 +35,6 @@ func importClients(clients *[]ClientProfile.GetClientResponse, owner Entities.Re
 
 		importHoldings(c.Metadata.Id, c.Report, c.Metadata.AdvisorId)
 		importDocuments(c.Metadata.Id, c.Report, c.Metadata.AdvisorId)
-
-		break
 	}
 	return nil
 }
