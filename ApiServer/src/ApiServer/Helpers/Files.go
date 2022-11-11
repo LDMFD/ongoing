@@ -30,20 +30,13 @@ func CreateFileRef(c *gin.Context, tx bun.Tx, file *Entities.RequestFile) *int64
 	}
 
 	if _, err := tx.NewInsert().
-		Model(&filePtr). //Returning("Id"). // not working
+		Model(&filePtr).
+		Returning("Id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
-	} //if filePtrId, err := res.LastInsertId(); err != nil {
-
-	if err := tx.NewSelect().
-		Model(&filePtr).
-		Where("uid = ?", filePtrUid).
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		_ = tx.Rollback()
-		panic(err.Error())
 	}
+
 	return &filePtr.Id
 }
 

@@ -117,7 +117,6 @@ func insertSuperuser(db *bun.DB, email string) {
 		}
 		if _, err := db.NewInsert().
 			Model(&user).
-			Returning("Id"). // not working
 			Exec(context.TODO()); err != nil {
 			log.Println(errors.WithStack(err))
 			panic(err.Error())

@@ -61,18 +61,7 @@ func CreateAdvisor(c *gin.Context) {
 	}
 	if _, err := tx.NewInsert().
 		Model(&user).
-		Returning("Id"). // not working
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		_ = tx.Rollback()
-		return
-	}
-
-	if err := tx.NewSelect().
-		Model(&user).
-		Where("email = ?", body.Email).
-		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
 		_ = tx.Rollback()
