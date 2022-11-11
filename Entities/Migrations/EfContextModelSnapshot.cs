@@ -130,7 +130,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<int>("FilePtrId")
+                    b.Property<int?>("FilePtrId")
                         .HasColumnType("integer")
                         .HasColumnName("file_ptr_id");
 
@@ -1368,7 +1368,6 @@ namespace Ongoing.Migrations
                         .WithMany("FactFinds")
                         .HasForeignKey("FilePtrId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired()
                         .HasConstraintName("fk_fact_find");
 
                     b.Navigation("Client");

@@ -21,7 +21,7 @@ namespace Ongoing.Entities
         public int ClientId { get; set; }
         
         [Column("file_ptr_id")]
-        public int FilePtrId { get; set; }
+        public int? FilePtrId { get; set; }
 
         [Column("submitted", TypeName = "timestamp without time zone")]
         public DateTime? Submitted { get; set; }
@@ -36,7 +36,7 @@ namespace Ongoing.Entities
         
         [ForeignKey("FilePtrId")]
         [InverseProperty("FactFinds")]
-        public virtual FilePtr FilePtr { get; set; } = null!;
+        public virtual FilePtr? FilePtr { get; set; }
     }
 }
 

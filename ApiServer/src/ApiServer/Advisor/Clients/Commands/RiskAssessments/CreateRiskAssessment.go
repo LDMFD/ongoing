@@ -97,18 +97,22 @@ func CreateRiskAssessment(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	if body.File != nil {
+		assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	}
 
 	if _, err := tx.NewInsert().Model(&assessment).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Printf("%+v", err)
-		_ = tx.Rollback()
-		return
+	if body.File != nil {
+		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
 	}
 
 	if err := tx.Commit(); err != nil {

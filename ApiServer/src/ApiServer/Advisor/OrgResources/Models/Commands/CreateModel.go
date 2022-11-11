@@ -74,7 +74,9 @@ func CreateModel(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	model.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	if body.File != nil {
+		model.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	}
 
 	if _, err := tx.NewInsert().Model(&model).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -41,31 +41,31 @@ namespace Ongoing.Entities
         
         
         [InverseProperty("Org")]
-        public virtual ICollection<Client> Clients { get; set; }
+        public virtual ICollection<Client> Clients { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<Advisor> Advisors { get; set; }
+        public virtual ICollection<Advisor> Advisors { get; set; } = null!;
         
         [InverseProperty("Org")]
-        public virtual ICollection<Fund> Funds { get; set; }
+        public virtual ICollection<Fund> Funds { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<Model> Models { get; set; }
+        public virtual ICollection<Model> Models { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<ModulePreset> ModulePresets { get; set; }
+        public virtual ICollection<ModulePreset> ModulePresets { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<Operator> Operators { get; set; }
+        public virtual ICollection<Operator> Operators { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<RiskProvider> RiskProviders { get; set; }
+        public virtual ICollection<RiskProvider> RiskProviders { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<PolicyType> PolicyTypes { get; set; }
+        public virtual ICollection<PolicyType> PolicyTypes { get; set; } = null!;
 
         [InverseProperty("Org")]
-        public virtual ICollection<PolicyProvider> PolicyProviders { get; set; }
+        public virtual ICollection<PolicyProvider> PolicyProviders { get; set; } = null!;
     }
 }
 

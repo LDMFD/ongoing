@@ -27,7 +27,7 @@ namespace Ongoing.Entities
 
         
         [InverseProperty("File")]
-        public virtual ICollection<FilePtr> FilePtrs { get; set; }
+        public virtual ICollection<FilePtr> FilePtrs { get; set; } = null!;
     }
 }
 

@@ -56,7 +56,7 @@ const RiskQuestionnaire = () => {
             Header: 'Completed',
             width: 1,
         },
-        (assessments.length && assessments[0].questionnaire.Uid) ?
+        (assessments.length && assessments[0].questionnaire?.Uid) ?
             {
                 accessor: 'questionnaire',
                 Header: 'Questionnaire',

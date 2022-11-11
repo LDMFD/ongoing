@@ -92,7 +92,9 @@ func CreatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	policy.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	if body.File != nil {
+		policy.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	}
 
 	if _, err := tx.NewInsert().Model(&policy).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

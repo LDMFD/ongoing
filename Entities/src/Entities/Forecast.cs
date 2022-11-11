@@ -36,7 +36,7 @@ namespace Ongoing.Entities
         
         [ForeignKey("FilePtrId")]
         [InverseProperty("Forecasts")]
-        public virtual FilePtr FilePtr { get; set; } = null!;
+        public virtual FilePtr? FilePtr { get; set; }
     }
 }
 

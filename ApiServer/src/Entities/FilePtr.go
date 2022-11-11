@@ -17,6 +17,9 @@ type FilePtr struct {
 }
 
 func (f FilePtr) ToReport() *ReportFile {
+	if f.File.Uid == "" {
+		return nil
+	}
 	return &ReportFile{
 		Uid:      f.File.Uid,
 		Filename: f.File.Filename,
