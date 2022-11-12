@@ -28,10 +28,10 @@ ARTIFACTORY_SA_ID_prod				:= firebase-adminsdk-uivho@ongoing-prod.iam.gserviceac
 DOMAIN_staging						:= staging.amplifa.co.uk
 DOMAIN_prod							:= portal.amplifa.co.uk
 
-SECRET_DATABASE_CONNECTION_staging	:= 6
+SECRET_DATABASE_CONNECTION_staging	:= 9
 SECRET_DATABASE_CONNECTION_prod		:= 16
 
-SECRET_DATABASE_PASSWORD_staging	:= 4
+SECRET_DATABASE_PASSWORD_staging	:= 7
 SECRET_DATABASE_PASSWORD_prod		:= 12
 
 SECRET_DB_PROXY_VERSION_staging		:= 1

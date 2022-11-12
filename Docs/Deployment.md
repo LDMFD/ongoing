@@ -2,6 +2,10 @@
 
     make work-on-{staging|prod}
 
+# Sync local secrets
+
+    make pull-secrets
+
 # Dev build deployment to Staging
 
     make up-<service> to build, push and deploy image

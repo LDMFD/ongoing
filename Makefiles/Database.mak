@@ -55,7 +55,7 @@ gcp-sql-cycle-password: import-env
 		--instance=${DB_INSTANCE_${ENV}} \
 		--password=${PASSWORD}
 
-	gcloud secrets versions add spicedb-connection --data-file=${HOME}/.ongoing/envs/${ENV}/secrets/spicedb/connection
+	#gcloud secrets versions add spicedb-connection --data-file=${HOME}/.ongoing/envs/${ENV}/secrets/spicedb/connection
 
 # Allow Cloud Run to read secrets and connect to DB
 _gcp-allow-cloud-run-to-access-database: import-env
@@ -140,7 +140,7 @@ db-restore-remote: import-env
 
 	docker run -i --platform linux/amd64 --network ongoing_default \
 		-v ~/.ongoing/envs/${ENV}/dumps/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
-            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-${ENV} < /spicedb.sql"
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d spicedb-${ENV} < /spicedb.sql"
 
 db-truncate-local:
 	docker run -i --platform linux/amd64 --network ongoing_default ${LOCAL_POSTGRES_IMAGE} /bin/bash \
@@ -176,7 +176,7 @@ db-restore-staging-from-prod-dump:
             -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d spicedb-staging < /spicedb.sql"
 
 # In these, change --data-only to --schema-only to control output.
-db-dump-local:
+db-dump-local-ongoing:
 	docker run -it --rm \
 		--platform linux/amd64 \
 		--name db-dump \
@@ -184,11 +184,25 @@ db-dump-local:
 		-v ${HOME}/.ongoing/dumps/dump.sql:/app/dump.sql \
 		postgres:${POSTGRES_VERSION_NUMERIC} \
 			pg_dump --host=ongoing-db \
-					--dbname=postgres \
+					--dbname=ongoing-local \
 					--username=postgres \
 					--password \
-					--no-comments \
-					--schema-only --no-acl --column-inserts --no-comments
+					--no-comments
+#					--schema-only --no-acl --column-inserts --no-comments
+
+db-dump-local-spicedb:
+	docker run -it --rm \
+		--platform linux/amd64 \
+		--name db-dump \
+		--network ongoing_default \
+		-v ${HOME}/.ongoing/dumps/dump.sql:/app/dump.sql \
+		postgres:${POSTGRES_VERSION_NUMERIC} \
+			pg_dump --host=ongoing-db \
+					--dbname=spicedb-local \
+					--username=postgres \
+					--password \
+					--no-comments
+#					--schema-only --no-acl --column-inserts --no-comments
 
 db-dump-remote: import-env
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
