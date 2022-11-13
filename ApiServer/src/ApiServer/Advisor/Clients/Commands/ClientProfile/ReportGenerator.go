@@ -107,14 +107,25 @@ func (gen *ReportGenerator) generateRisk() {
 		riskLevels[r.RiskLevelId] = r.RiskLevel
 		riskProviders[r.RiskLevel.RiskProviderId] = r.RiskLevel.RiskProvider
 	}
+	sort.Slice(gen.report.RiskAssessments, func(i, j int) bool {
+		return gen.report.RiskAssessments[i].Id < gen.report.RiskAssessments[j].Id
+	})
+
 	gen.report.RiskProviders = make([]Entities.ReportRiskProvider, 0)
 	for _, p := range riskProviders {
 		gen.report.RiskProviders = append(gen.report.RiskProviders, p.ToReport())
 	}
+	sort.Slice(gen.report.RiskProviders, func(i, j int) bool {
+		return gen.report.RiskProviders[i].Name < gen.report.RiskProviders[j].Name
+	})
+
 	gen.report.RiskLevels = make([]Entities.ReportRiskLevel, 0)
 	for _, l := range riskLevels {
 		gen.report.RiskLevels = append(gen.report.RiskLevels, l.ToReport())
 	}
+	sort.Slice(gen.report.RiskLevels, func(i, j int) bool {
+		return gen.report.RiskLevels[i].Label < gen.report.RiskLevels[j].Label
+	})
 }
 
 func (gen *ReportGenerator) generateFactFinds() {
@@ -122,6 +133,9 @@ func (gen *ReportGenerator) generateFactFinds() {
 	for _, f := range gen.client.FactFinds {
 		gen.report.FactFinds = append(gen.report.FactFinds, f.ToReport())
 	}
+	sort.Slice(gen.report.FactFinds, func(i, j int) bool {
+		return gen.report.FactFinds[i].Id < gen.report.FactFinds[j].Id
+	})
 }
 
 func (gen *ReportGenerator) generateFees() {
@@ -129,6 +143,9 @@ func (gen *ReportGenerator) generateFees() {
 	for _, f := range gen.client.FeesReports {
 		gen.report.FeesReports = append(gen.report.FeesReports, f.ToReport())
 	}
+	sort.Slice(gen.report.FeesReports, func(i, j int) bool {
+		return gen.report.FeesReports[i].Id < gen.report.FeesReports[j].Id
+	})
 }
 
 func (gen *ReportGenerator) generateForecasts() {
@@ -136,17 +153,25 @@ func (gen *ReportGenerator) generateForecasts() {
 	for _, f := range gen.client.Forecasts {
 		gen.report.Forecasts = append(gen.report.Forecasts, f.ToReport())
 	}
+	sort.Slice(gen.report.Forecasts, func(i, j int) bool {
+		return gen.report.Forecasts[i].Id < gen.report.Forecasts[j].Id
+	})
 }
 
 func (gen *ReportGenerator) generatePolicies() {
 	gen.report.Policies = make([]Entities.ReportPolicy, 0)
 	var policyProviders = map[int64]*Entities.PolicyProvider{}
 	var policyTypes = map[int64]*Entities.PolicyType{}
+
 	for _, pol := range gen.client.Policies {
 		gen.report.Policies = append(gen.report.Policies, pol.ToReport())
 		policyProviders[pol.PolicyProviderId] = pol.PolicyProvider
 		policyTypes[pol.PolicyTypeId] = pol.PolicyType
 	}
+	sort.Slice(gen.report.Policies, func(i, j int) bool {
+		return gen.report.Policies[i].ExternalId < gen.report.Policies[j].ExternalId
+	})
+
 	gen.report.ProviderCharges = make([]Entities.ReportProviderCharge, 0)
 	for _, pp := range policyProviders {
 		for _, pc := range pp.Charges {
@@ -154,9 +179,19 @@ func (gen *ReportGenerator) generatePolicies() {
 		}
 		gen.report.PolicyProviders = append(gen.report.PolicyProviders, pp.ToReport())
 	}
+	sort.Slice(gen.report.ProviderCharges, func(i, j int) bool {
+		return gen.report.ProviderCharges[i].Desc < gen.report.ProviderCharges[j].Desc
+	})
+	sort.Slice(gen.report.PolicyProviders, func(i, j int) bool {
+		return gen.report.PolicyProviders[i].Name < gen.report.PolicyProviders[j].Name
+	})
+
 	for _, pt := range policyTypes {
 		gen.report.PolicyTypes = append(gen.report.PolicyTypes, pt.ToReport())
 	}
+	sort.Slice(gen.report.PolicyTypes, func(i, j int) bool {
+		return gen.report.PolicyTypes[i].Name < gen.report.PolicyTypes[j].Name
+	})
 
 	gen.report.ProviderDiscounts = make([]Entities.ReportProviderDiscount, 0)
 	for _, pd := range gen.client.ProviderDiscounts {
@@ -182,6 +217,9 @@ func (gen *ReportGenerator) generatePolicies() {
 
 		gen.report.ProviderDiscounts = append(gen.report.ProviderDiscounts, pd.ToReport())
 	}
+	sort.Slice(gen.report.ProviderDiscounts, func(i, j int) bool {
+		return gen.report.ProviderDiscounts[i].Id < gen.report.ProviderDiscounts[j].Id
+	})
 }
 
 func (gen *ReportGenerator) generateFunds() {
@@ -201,7 +239,7 @@ func (gen *ReportGenerator) generateFunds() {
 		}
 	}
 	sort.Slice(gen.report.PolicyFunds, func(i, j int) bool {
-		return gen.report.PolicyFunds[i].Proportion < gen.report.PolicyFunds[j].Proportion
+		return gen.report.PolicyFunds[i].Id < gen.report.PolicyFunds[j].Id
 	})
 	sort.Slice(gen.report.Funds, func(i, j int) bool {
 		return gen.report.Funds[i].Name < gen.report.Funds[j].Name
@@ -229,4 +267,13 @@ func (gen *ReportGenerator) generateModels() {
 	for _, o := range operators {
 		gen.report.Operators = append(gen.report.Operators, o.ToReport())
 	}
+	sort.Slice(gen.report.Portfolios, func(i, j int) bool {
+		return gen.report.Portfolios[i].Id < gen.report.Portfolios[j].Id
+	})
+	sort.Slice(gen.report.Models, func(i, j int) bool {
+		return gen.report.Models[i].Name < gen.report.Models[j].Name
+	})
+	sort.Slice(gen.report.Operators, func(i, j int) bool {
+		return gen.report.Operators[i].Name < gen.report.Operators[j].Name
+	})
 }

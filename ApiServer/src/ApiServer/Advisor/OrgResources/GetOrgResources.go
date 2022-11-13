@@ -99,21 +99,19 @@ func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesRespons
 	}
 	for _, pp := range policyProviders {
 		entities.PolicyProviders = append(entities.PolicyProviders, pp.ToReport())
-	}
 
-	var providerCharges []Entities.ProviderCharge
-	if err := db.NewSelect().
-		Model(&providerCharges).
-		//OrderExpr("sequence ASC").  // TODO ordering (advisor to control)
-		Relation("PolicyProvider").
-		//Relation("PolicyProvider.Org").
-		//Where("Org.Uid = ?", session.OrgId).
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-	for _, pc := range providerCharges {
-		entities.ProviderCharges = append(entities.ProviderCharges, pc.ToReport())
+		var providerCharges []Entities.ProviderCharge
+		if err := db.NewSelect().
+			Model(&providerCharges).
+			Relation("PolicyProvider").
+			Where("policy_provider.uid = ?", pp.Uid).
+			Scan(c); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			panic(err.Error())
+		}
+		for _, pc := range providerCharges {
+			entities.ProviderCharges = append(entities.ProviderCharges, pc.ToReport())
+		}
 	}
 
 	var riskProviders []Entities.RiskProvider

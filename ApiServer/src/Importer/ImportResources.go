@@ -11,8 +11,7 @@ import (
 
 func importOrgResources(entities *OrgResources.OrgResources, advisorId string) error {
 	for _, mp := range entities.ModulePresets {
-		importModelPreset(mp, advisorId)
-		break
+		importModulePreset(mp, advisorId)
 	}
 	for _, fund := range entities.Funds {
 		importFund(fund, advisorId)
@@ -41,13 +40,14 @@ func importOrgResources(entities *OrgResources.OrgResources, advisorId string) e
 	return nil
 }
 
-func importModelPreset(mp Entities.ReportModulePreset, advisorId string) {
+func importModulePreset(mp Entities.ReportModulePreset, advisorId string) {
 	jsonData, _ := json.Marshal(mp)
 	request, err := http.NewRequest("POST", API+"/advisor/reviews/module-presets", bytes.NewBuffer(jsonData))
 	if err != nil {
 		panic(err)
 	}
 	request.Header.Set("Authentication", advisorId)
+	request.Header.Set("X-Ongoing-EntityId", mp.Id)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)

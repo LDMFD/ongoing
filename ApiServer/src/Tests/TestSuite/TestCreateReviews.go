@@ -113,7 +113,8 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("PolicyTypes").Array().First().Object().ValueEqual("Name", "ISA")
 
 	report.Value("PolicyProviders").Array().First().Object().ValueEqual("Name", "Aegon")
-	report.Value("PolicyProviders").Array().First().Object().Value("Pricing").String().NotEmpty()
+	report.Value("PolicyProviders").Array().First().Object().Value("Pricing").String().Contains("tiered charging structure")
+	report.Value("PolicyProviders").Array().First().Object().Value("CustomPricing").String().Equal("12.5")
 	report.Value("PolicyProviders").Array().Length().Equal(1)
 
 	report.Value("ProviderCharges").Array().Empty()

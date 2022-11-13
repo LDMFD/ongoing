@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func checkReady() {
+func CheckReady() {
 	for {
 		if healthcheck() {
 			log.Println("Healthcheck passed")

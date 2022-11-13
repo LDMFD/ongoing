@@ -53,8 +53,6 @@ func export(t *testing.T, e *httpexpect.Expect) string {
 	return export
 }
 
-//const API = "http://localhost:8000/api"
-
 func TestHealthcheck(t *testing.T, e *httpexpect.Expect) {
 	e.GET("/api/healthcheck").
 		Expect().

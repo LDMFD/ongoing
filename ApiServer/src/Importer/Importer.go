@@ -13,15 +13,13 @@ var (
 
 const API = "http://localhost:8000/api"
 
-//const API = "https://portal.amplifa.co.uk/api"
-
 const IMPORT_SUPERUSER = "darren@amplifa.co.uk"
 
 func Import(path string) {
 	importPath = path
 	log.Println("Importing from", importPath)
 
-	checkReady()
+	CheckReady()
 
 	export := &Export.Export{}
 	fileBytes, _ := os.ReadFile(importPath)

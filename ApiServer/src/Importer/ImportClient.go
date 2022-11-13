@@ -32,7 +32,6 @@ func importClients(clients *[]ClientProfile.GetClientResponse, owner Entities.Re
 		}
 
 		importReviews(c.Metadata.Id, c.Reviews, c.Metadata.AdvisorId)
-
 		importHoldings(c.Metadata.Id, c.Report, c.Metadata.AdvisorId)
 		importDocuments(c.Metadata.Id, c.Report, c.Metadata.AdvisorId)
 	}

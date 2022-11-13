@@ -21,6 +21,7 @@ func testCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
 	TestCreateOperator(e)
 	TestCreateModel(t, e)
 	TestCreateRiskProvider(e)
+	TestCreateRiskLevel(e)
 	// TODO Module Presets
 
 	testGetGlobalEntitiesFromThisOrg(e)
@@ -42,8 +43,8 @@ func TestCreatePolicyType(e *httpexpect.Expect) {
 func TestCreatePolicyProvider(e *httpexpect.Expect) {
 	// Create Policy Provider as org 1 advisor
 	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
-		Name:          "Aegon",
-		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{{ table }}</p>",
+		Name:          "Aegon oops",
+		Pricing:       "Aegon does nothing",
 		CustomPricing: "",
 	}
 	resp := e.POST("/api/advisor/policy-providers").
@@ -51,6 +52,16 @@ func TestCreatePolicyProvider(e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 	policyProviderId = resp.JSON().Object().Value("Id").String().Raw()
+
+	request2 := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
+		Name:          "Aegon",
+		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{{ table }}</p>",
+		CustomPricing: "12.5",
+	}
+	e.PUT("/api/advisor/policy-providers/"+policyProviderId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request2).
+		Expect().Status(http.StatusOK)
 }
 
 func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
@@ -216,8 +227,9 @@ func TestCreateModel(t *testing.T, e *httpexpect.Expect) {
 }
 
 func TestCreateRiskProvider(e *httpexpect.Expect) {
+	// Create risk provider
 	request := RiskProviderCommands.CreateRiskProviderRequest{
-		Name: "Dynamic Planner",
+		Name: "Dynamic Planner oops",
 	}
 	resp := e.POST("/api/advisor/risk-providers").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -225,17 +237,38 @@ func TestCreateRiskProvider(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 	riskProviderId = resp.JSON().Object().Value("Id").String().Raw()
 
-	request2 := RiskLevelCommands.CreateRiskLevelRequest{
-		RiskProviderId: riskProviderId,
-		Level:          10,
-		Label:          "Highest",
-		Desc:           "Risky McJones here.",
+	// Update provider
+	request3 := RiskProviderCommands.UpdateRiskProviderRequest{
+		Name: "Dynamic Planner",
 	}
-	resp = e.POST("/api/advisor/risk-levels").
+	resp = e.PUT("/api/advisor/risk-providers/"+riskProviderId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request3).
+		Expect().Status(http.StatusOK)
+}
+
+func TestCreateRiskLevel(e *httpexpect.Expect) {
+	request := RiskLevelCommands.CreateRiskLevelRequest{
+		RiskProviderId: riskProviderId,
+		Level:          5,
+		Label:          "Middling",
+		Desc:           "Middletown.",
+	}
+	resp := e.POST("/api/advisor/risk-levels").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	riskLevelId = resp.JSON().Object().Value("Id").String().Raw()
+
+	request2 := RiskLevelCommands.UpdateRiskLevelBody{
+		Level: 10,
+		Label: "Highest",
+		Desc:  "Risky McJones here.",
+	}
+	resp = e.PUT("/api/advisor/risk-levels/"+riskLevelId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request2).
 		Expect().Status(http.StatusOK)
-	riskLevelId = resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func testGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
@@ -263,8 +296,8 @@ func testGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
 	resp.Value("Operators").Array().Length().Equal(1)
 
 	resp.Value("PolicyProviders").Array().First().Object().Value("Name").String().Equal("Aegon")
-	resp.Value("PolicyProviders").Array().First().Object().Value("CustomPricing").String().Equal("")
-	//resp.Value("PolicyProviders").Array().First().Object().Value("Pricing")
+	resp.Value("PolicyProviders").Array().First().Object().Value("Pricing").String().Contains("tiered charging structure")
+	resp.Value("PolicyProviders").Array().First().Object().Value("CustomPricing").String().Equal("12.5")
 	resp.Value("PolicyProviders").Array().Length().Equal(1)
 
 	resp.Value("PolicyTypes").Array().First().Object().Value("Name").String().Equal("ISA")

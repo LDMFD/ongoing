@@ -20,9 +20,12 @@ func main() {
 	}
 
 	var importFlag = flag.String("import", "", "import path")
+	var exportFlag = flag.String("export", "", "export path")
 	flag.Parse()
 	if *importFlag != "" {
 		app.Import(*importFlag)
+	} else if *exportFlag != "" {
+		app.Export(*exportFlag)
 	} else {
 		app.Run()
 	}

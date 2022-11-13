@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"ongoing/ApiServer"
+	"ongoing/Exporter"
 	"ongoing/Importer"
 	"os"
 )
@@ -43,4 +44,9 @@ func (app *App) GetRouter() (*gin.Engine, error) {
 func (app *App) Import(path string) {
 	go Importer.Import(path)
 	app.Run()
+}
+
+func (app *App) Export(path string) {
+	go app.Run()
+	Exporter.Export(path)
 }

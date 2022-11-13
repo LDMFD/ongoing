@@ -10,6 +10,7 @@ import (
 	"ongoing/ApiServer/Superuser/Commands"
 	"ongoing/AuthService"
 	"ongoing/Entities"
+	"sort"
 )
 
 type Org struct {
@@ -78,10 +79,13 @@ func GetExport(c *gin.Context) {
 					Size:     file.Size,
 				})
 			}
+			sort.Slice(org.Files, func(i, j int) bool {
+				return org.Files[i].Uid < org.Files[j].Uid
+			})
 		}
 
 		export.Orgs = append(export.Orgs, org)
 	}
 
-	c.JSON(200, export)
+	c.IndentedJSON(200, export)
 }

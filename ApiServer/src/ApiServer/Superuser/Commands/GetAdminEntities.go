@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"ongoing/AuthService"
 	"ongoing/Entities"
+	"sort"
 
 	"github.com/uptrace/bun"
 
@@ -77,6 +78,9 @@ func GetAdminEntitiesInternal(c *gin.Context) *AdminEntitiesResponse {
 			}
 			org.Members = append(org.Members, member)
 		}
+		sort.Slice(org.Members, func(i, j int) bool {
+			return org.Members[i].UserId < org.Members[j].UserId
+		})
 
 		reportOrganisations = append(reportOrganisations, org)
 	}
@@ -85,6 +89,10 @@ func GetAdminEntitiesInternal(c *gin.Context) *AdminEntitiesResponse {
 	for _, user := range userMap {
 		reportUsers = append(reportUsers, user)
 	}
+
+	sort.Slice(reportUsers, func(i, j int) bool {
+		return reportUsers[i].Email < reportUsers[j].Email
+	})
 
 	return &AdminEntitiesResponse{
 		Organisations: reportOrganisations,
