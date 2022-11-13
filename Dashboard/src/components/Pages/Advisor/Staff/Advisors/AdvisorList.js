@@ -5,25 +5,27 @@ import {
     Button,
     Toolbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Context } from 'State/StateProvider'
 import Table from 'Components/Library/Table/Table';
+import { Api } from 'State';
 
 const AdvisorList = () => {
     let history = useHistory();
 
-    const [ state, ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     const editAdvisor = useCallback(id => () => {
         history.push(`/staff/id/${id}/edit`);
     }, [ history ]);
 
-    // const deleteAdvisor = useCallback(id => async () => {
-    //     if (window.confirm(`Delete advisor?`)) {
-    //         await Api.Staff.Delete(id);
-    //         await Api.Superuser.Organisations.Read(dispatch);
-    //     }
-    // }, [ dispatch ]);
+    const deleteAdvisor = useCallback(id => async () => {
+        if (window.confirm(`Delete advisor?`)) {
+            await Api.Staff.Advisors.Delete(id);
+            await Api.Staff.Advisors.Read(dispatch);
+        }
+    }, [ dispatch ]);
 
     // TODO this is wrong - admins cannot administrate other admins, only other advisors
     const canEditRole = (row) => (
@@ -56,9 +58,9 @@ const AdvisorList = () => {
                     <button onClick={editAdvisor(row.original.id)} className='ong-openFileIcon'>
                         <EditIcon />
                     </button>
-                    {/* <button onClick={deleteAdvisor(row.original.id)} className='ong-openFileIcon'>
+                    <button onClick={deleteAdvisor(row.original.id)} className='ong-openFileIcon'>
                         <DeleteIcon />
-                    </button> */}
+                    </button>
                 </>
             ) : null,
         },

@@ -107,8 +107,6 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	//log.Printf("\ncreate client: %v:\n", body.Identity.Email)
-
 	c.JSON(200, gin.H{
 		"Id": clientUid,
 	})
