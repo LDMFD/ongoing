@@ -264,3 +264,7 @@ func (c *Client) ReadSchema() (*string, error) {
 	}
 	return &response.SchemaText, nil
 }
+
+func (c *Client) GetOrgFiles(orgId string) (fileIds []string, err error) {
+	return c.lookupResource("organisation", orgId, "file", "org")
+}
