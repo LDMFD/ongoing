@@ -1,3 +1,7 @@
+## v1.3.0 2022-11-13
+
+- Permission fixes, deletion, export & import, teardown tests
+
 ## v1.2.1 2022-10-07
 
 - Bug fixes

@@ -1,3 +1,7 @@
+## v1.4.0 2022-11-13
+
+- Permissions fixes, supports ApiServer v1.3.0
+
 ## v1.3.1
 
 - Change tab wording
