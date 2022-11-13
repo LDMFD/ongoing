@@ -95,14 +95,14 @@ func ImportReview(c *gin.Context) {
 
 	for _, f := range report.Funds {
 		if f.File != nil {
-			if err := auth.CreateFile(&client.Uid, nil, f.File.Uid); err != nil {
+			if err := auth.CreateFile(&client.Uid, &client.Organisation.Uid, f.File.Uid); err != nil {
 				panic(err)
 			}
 		}
 	}
 	for _, m := range report.Models {
 		if m.File != nil {
-			if err := auth.CreateFile(&client.Uid, nil, m.File.Uid); err != nil {
+			if err := auth.CreateFile(&client.Uid, &client.Organisation.Uid, m.File.Uid); err != nil {
 				panic(err)
 			}
 		}

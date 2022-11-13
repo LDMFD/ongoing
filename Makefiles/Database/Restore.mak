@@ -23,9 +23,17 @@ db-restore-remote: import-env
 		-v ~/.ongoing/envs/${ENV}/dumps/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
             -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d spicedb-${ENV} < /spicedb.sql"
 
-db-restore-staging-from-prod-dump:
-	make db-truncate-staging
+db-restore-staging-from-local-dump: import-env
+	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/${ENV}/secrets/cloud-sql/password))
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v ~/.ongoing/dumps/local/ongoing.sql:/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d ongoing-staging < /ongoing.sql"
 
+	docker run -i --platform linux/amd64 --network ongoing_default \
+		-v ~/.ongoing/dumps/local/spicedb.sql:/spicedb.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
+            -c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -d spicedb-staging < /spicedb.sql"
+
+db-restore-staging-from-prod-dump:
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/staging/secrets/cloud-sql/password))
 	docker run -i --platform linux/amd64 --network ongoing_default \
 		-v ${HOME}/.ongoing/envs/prod/dumps/ongoing.sql:/ongoing.sql ${LOCAL_POSTGRES_IMAGE} /bin/bash \
