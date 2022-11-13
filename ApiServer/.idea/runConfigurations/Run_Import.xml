@@ -2,12 +2,13 @@
   <configuration default="false" name="Run Import" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="ApiServer" />
     <working_directory value="$PROJECT_DIR$" />
-    <parameters value="-import $USER_HOME$/.ongoing/dumps/export-after-import.json" />
+    <parameters value="-import $USER_HOME$/.ongoing/dumps/export-prod-hacked.json" />
     <envs>
       <env name="GOOS" value="darwin" />
       <env name="GOARCH" value="arm64" />
       <env name="TRUNCATE_DB" value="true" />
       <env name="OFFLINE_AUTH" value="true" />
+      <env name="OFFLINE_TESTS" value="true" />
     </envs>
     <EXTENSION ID="net.ashald.envfile">
       <option name="IS_ENABLED" value="true" />

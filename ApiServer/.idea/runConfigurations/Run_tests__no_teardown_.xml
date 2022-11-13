@@ -8,6 +8,7 @@
       <env name="GOOS" value="darwin" />
       <env name="OFFLINE_AUTH" value="true" />
       <env name="TRUNCATE_DB" value="true" />
+      <env name="OFFLINE_TESTS" value="true" />
       <env name="NO_TEARDOWN" value="true" />
     </envs>
     <EXTENSION ID="net.ashald.envfile">
