@@ -14,7 +14,6 @@ POSTGRES_PASSWORD=p
 POSTGRES_USER=postgres
 
 REACT_APP_ONGOING_API_HOST=http://ongoing-api:8000/api
-REACT_APP_ONGOING_AUTH_BYPASS=false
 REACT_APP_ONGOING_DASHBOARD_HOST=http://localhost.ongoing.tp1.org:3000
 REACT_APP_ONGOING_REACT_FIREBASE_CLIENT_ID=$CLIENT_KEY
 REACT_APP_ONGOING_REACT_FIREBASE_CONFIG=$CLIENT_ID
@@ -22,6 +21,8 @@ REACT_APP_ONGOING_REACT_FIREBASE_CONFIG=$CLIENT_ID
 ONGOING_STORAGE_BUCKET=ongoing-$ENV-docs
 ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/credential.pem
 ONGOING_STORAGE_SA=storage@ongoing-$ENV.iam.gserviceaccount.com
+
+REACT_APP_ONGOING_AUTH_BYPASS=true
 EOF
 
 
@@ -44,4 +45,6 @@ POSTGRES_DSN=postgres://postgres:p@localhost:5432/ongoing-local?sslmode=disable
 ONGOING_STORAGE_BUCKET=ongoing-$ENV-docs
 ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/credential.pem
 ONGOING_STORAGE_SA=storage@ongoing-$ENV.iam.gserviceaccount.com
+
+OFFLINE_AUTH=true
 EOF

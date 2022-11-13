@@ -20,8 +20,8 @@ namespace Ongoing.Entities
         [Column("client_id")]
         public int ClientId { get; set; }
         
-        [Column("file_id")]
-        public int FileId { get; set; }
+        [Column("file_ptr_id")]
+        public int FilePtrId { get; set; }
 
         [Column("submitted", TypeName = "timestamp without time zone")]
         public DateTime? Submitted { get; set; }
@@ -34,9 +34,9 @@ namespace Ongoing.Entities
         [InverseProperty("Forecasts")]
         public virtual Client Client { get; set; } = null!;
         
-        [ForeignKey("FileId")]
+        [ForeignKey("FilePtrId")]
         [InverseProperty("Forecasts")]
-        public virtual File File { get; set; } = null!;
+        public virtual FilePtr? FilePtr { get; set; }
     }
 }
 
@@ -51,13 +51,13 @@ class ForecastConfig : IEntityTypeConfiguration<Forecast>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.Forecasts)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client");
 
-        builder.HasOne(d => d.File)
+        builder.HasOne(d => d.FilePtr)
             .WithMany(p => p.Forecasts)
-            .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .HasForeignKey(d => d.FilePtrId)
+            .OnDelete(DeleteBehavior.SetNull)
             .HasConstraintName("fk_forecast");
 
         builder.HasAlternateKey(p => p.Uid);

@@ -13,6 +13,8 @@ type File struct {
 	Filename  string    `bun:"filename,notnull"`
 	Size      int64     `bun:"size,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
+
+	Pointers []*FilePtr `bun:"rel:has-many,join:id=file_id"`
 }
 
 type RequestFile struct {
@@ -25,12 +27,4 @@ type ReportFile struct {
 	Uid      string
 	Filename string
 	Size     int64
-}
-
-func (f File) ToReport() *ReportFile {
-	return &ReportFile{
-		Uid:      f.Uid,
-		Filename: f.Filename,
-		Size:     f.Size,
-	}
 }

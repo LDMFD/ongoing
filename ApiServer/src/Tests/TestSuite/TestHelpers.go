@@ -99,14 +99,25 @@ func TestUpload(t *testing.T, e *httpexpect.Expect, userType string, filename st
 }
 
 func TestDownload(t *testing.T, e *httpexpect.Expect, userId string, fileId string, expectedPass bool) {
+	var expectForbidden string
+	if !expectedPass {
+		expectForbidden = "true"
+	}
 	resp := e.GET("/api/storage/files").
 		WithQuery("Uid", fileId).
 		WithHeader("Authentication", userId).
+		WithHeader("X-Ongoing-ExpectForbidden", expectForbidden).
 		Expect()
 	if expectedPass {
 		resp.Status(http.StatusOK)
+		if t.Failed() {
+			log.Println("unexpected")
+		}
 	} else {
 		resp.Status(http.StatusForbidden)
+		if t.Failed() {
+			log.Println("unexpected")
+		}
 		return
 	}
 	url := resp.JSON().Object().Value("Url").String()

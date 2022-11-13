@@ -42,6 +42,7 @@ namespace Ongoing.Entities
 
         
         [ForeignKey("OrgId")]
+        [InverseProperty("PolicyProviders")]
         public virtual Organisation Org { get; set; } = null!;
 
         [InverseProperty("PolicyProvider")]
@@ -63,6 +64,12 @@ class PolicyProviderConfig : IEntityTypeConfiguration<PolicyProvider>
         
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.PolicyProviders)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_policyprovider_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
     }

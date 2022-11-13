@@ -20,13 +20,13 @@ type Policy struct {
 	EndValue             int64     `bun:"end_value,notnull"`
 	Timestamp            time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 	Notes                string    `bun:"notes,notnull"`
-	FileId               *int64    `bun:"file_id"`
+	FilePtrId            *int64    `bun:"file_ptr_id"`
 
 	Client         *Client         `bun:"rel:has-one,join:client_id=id"`
 	Portfolios     []*Portfolio    `bun:"rel:has-many,join:id=client_id"`
 	PolicyType     *PolicyType     `bun:"rel:has-one,join:policy_type_id=id"`
 	PolicyProvider *PolicyProvider `bun:"rel:has-one,join:policy_provider_id=id"`
-	File           *File           `bun:"rel:has-one,join:file_id=id"`
+	FilePtr        *FilePtr        `bun:"rel:has-one,join:file_ptr_id=id"`
 }
 
 type ReportPolicy struct {
@@ -52,8 +52,8 @@ func (p *Policy) ToReport() ReportPolicy {
 		EndValue:             p.EndValue,
 		Notes:                p.Notes,
 	}
-	if p.File != nil {
-		rp.File = p.File.ToReport()
+	if p.FilePtr != nil {
+		rp.File = p.FilePtr.ToReport()
 	}
 	return rp
 }

@@ -4,7 +4,7 @@ import Day from 'dayjs';
 
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import { ModuleTypeFactFind } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeFactFind } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const FactFind = () => {

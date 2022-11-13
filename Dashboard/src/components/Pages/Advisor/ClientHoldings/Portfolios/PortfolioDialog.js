@@ -51,8 +51,8 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             Select policy
                         </MenuItem>
                         {state.Report.Policies.map(policy => {
-                            let provider = state.Entities.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId);
-                            let type = state.Entities.PolicyTypes.find(pt => pt.Id === policy.PolicyTypeId);
+                            let provider = state.Resources.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId);
+                            let type = state.Resources.PolicyTypes.find(pt => pt.Id === policy.PolicyTypeId);
                             return (
                                 <MenuItem value={policy.Id} key={policy.Id}>
                                     {policy.ExternalId} - {provider.Name} {type.Name}
@@ -69,7 +69,7 @@ export const PortfolioDialog = ({ portfolio, setPortfolio, submitLabel, submitHa
                             type     = "text"
                             fullWidth>
                         <MenuItem value='select'>Select model</MenuItem>
-                        {state.Entities.Models.map(t => (
+                        {state.Resources.Models.map(t => (
                             <MenuItem value={t.Id} key={t.Id}>
                                 {t.Name}
                             </MenuItem>

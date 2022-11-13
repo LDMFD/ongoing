@@ -4,13 +4,23 @@ import (
 	"net/http"
 	"ongoing/AuthService"
 	"ongoing/Entities"
+	"sort"
 
 	"github.com/uptrace/bun"
 
 	"github.com/gin-gonic/gin"
 )
 
+type AdminEntitiesResponse struct {
+	Organisations []Entities.ReportOrganisation
+	Users         []Entities.ReportUser
+}
+
 func GetAdminEntities(c *gin.Context) {
+	c.JSON(http.StatusOK, GetAdminEntitiesInternal(c))
+}
+
+func GetAdminEntitiesInternal(c *gin.Context) *AdminEntitiesResponse {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	authClient := c.MustGet("AUTH").(*AuthService.Client)
 
@@ -68,6 +78,9 @@ func GetAdminEntities(c *gin.Context) {
 			}
 			org.Members = append(org.Members, member)
 		}
+		sort.Slice(org.Members, func(i, j int) bool {
+			return org.Members[i].UserId < org.Members[j].UserId
+		})
 
 		reportOrganisations = append(reportOrganisations, org)
 	}
@@ -77,8 +90,12 @@ func GetAdminEntities(c *gin.Context) {
 		reportUsers = append(reportUsers, user)
 	}
 
-	c.JSON(200, gin.H{
-		"Organisations": reportOrganisations,
-		"Users":         reportUsers,
+	sort.Slice(reportUsers, func(i, j int) bool {
+		return reportUsers[i].Email < reportUsers[j].Email
 	})
+
+	return &AdminEntitiesResponse{
+		Organisations: reportOrganisations,
+		Users:         reportUsers,
+	}
 }

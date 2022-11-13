@@ -48,6 +48,7 @@ namespace Ongoing.Entities
 
         
         [ForeignKey("OrgId")]
+        [InverseProperty("Operators")]
         public virtual Organisation Org { get; set; } = null!;
 
         [InverseProperty("Operator")]
@@ -63,6 +64,12 @@ class OperatorConfig : IEntityTypeConfiguration<Operator>
 
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Operators)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_operator_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
     }

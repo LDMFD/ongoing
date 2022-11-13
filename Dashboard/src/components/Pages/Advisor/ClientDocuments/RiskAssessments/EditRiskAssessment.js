@@ -15,7 +15,7 @@ const EditRiskAssessment = () => {
 
     let { riskAssessmentId } = useParams();
 
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     if (!assessment) {
         setAssessment(state.Report.RiskAssessments.find(h => h.Id === riskAssessmentId))

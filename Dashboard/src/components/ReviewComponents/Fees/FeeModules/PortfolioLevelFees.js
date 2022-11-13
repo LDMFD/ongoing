@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { CurrencyFormatter } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';

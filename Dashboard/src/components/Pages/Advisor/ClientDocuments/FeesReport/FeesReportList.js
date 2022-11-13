@@ -20,7 +20,7 @@ const FeesReportList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();
@@ -85,7 +85,7 @@ const FeesReportList = () => {
     return (
         <div>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/documents/fees-reports/add` }}><Button>Add fees report</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/documents/fees-reports/add` }}><Button>Add fees report</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={feesReports} />

@@ -23,12 +23,6 @@ namespace Ongoing.Entities
         [Column("org_id")]
         public int OrgId { get; set; }
         
-        [Column("forenames")]
-        public string Forenames { get; set; } = null!;
-        
-        [Column("surname")]
-        public string Surname { get; set; } = null!;
-        
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
 
@@ -38,7 +32,8 @@ namespace Ongoing.Entities
         public virtual User User { get; set; } = null!;
         
         [ForeignKey("OrgId")]
-        public virtual Organisation Org { get; set; } = null!;
+        [InverseProperty("Advisors")]
+        public virtual Organisation? Org { get; set; } = null!;
     }
 }
 
@@ -53,8 +48,14 @@ class AdvisorConfig : IEntityTypeConfiguration<Advisor>
         builder.HasOne(d => d.User)
             .WithOne(p => p.Advisor)
             .HasForeignKey<Advisor>(d => d.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_advisor_user");
+        
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Advisors)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_advisor_org");
         
         // Uniqueness constraint
         builder.HasAlternateKey(e => e.Uid);

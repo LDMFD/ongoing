@@ -17,7 +17,7 @@ const ProviderDiscountList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();
@@ -73,7 +73,7 @@ const ProviderDiscountList = () => {
     return (
         <div className='ongoing-providerDiscountList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/holdings/provider-discounts/add` }}><Button>Add Provider Discount</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/holdings/provider-discounts/add` }}><Button>Add Provider Discount</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={discounts} />

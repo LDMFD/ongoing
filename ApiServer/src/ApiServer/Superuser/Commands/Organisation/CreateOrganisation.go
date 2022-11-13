@@ -54,8 +54,10 @@ func CreateOrganisation(c *gin.Context) {
 		userUid := UUID.GenerateUID(c)
 
 		owner = Entities.User{
-			Uid:   userUid,
-			Email: body.Email,
+			Uid:       userUid,
+			Email:     body.Email,
+			Forenames: body.Forenames,
+			Surname:   body.Surname,
 		}
 		if _, err := tx.NewInsert().
 			Model(&owner).
@@ -118,11 +120,9 @@ func CreateOrganisation(c *gin.Context) {
 	advisorUid := UUID.GenerateUID(c)
 
 	var advisor = Entities.Advisor{
-		Uid:       advisorUid,
-		UserId:    owner.Id,
-		OrgId:     org.Id,
-		Forenames: body.Forenames,
-		Surname:   body.Surname,
+		Uid:    advisorUid,
+		UserId: owner.Id,
+		OrgId:  org.Id,
 	}
 	if _, err := tx.NewInsert().Model(&advisor).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -138,6 +138,7 @@ func CreateOrganisation(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"Id": orgUid,
+		"Id":      orgUid,
+		"OwnerId": advisorUid,
 	})
 }

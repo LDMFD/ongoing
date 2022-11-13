@@ -12,7 +12,7 @@ const ReviewList = () => {
     let history = useHistory();
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     const onEdit = useCallback(params => () => {

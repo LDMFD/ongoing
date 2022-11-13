@@ -7,6 +7,7 @@ import (
 	"github.com/uptrace/bun"
 	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -25,9 +26,11 @@ func AdvisorFromUserUID(c *gin.Context, db *bun.DB, uid string) (*Entities.Advis
 		return nil, err
 	}
 
-	if advisor.Organisation.Uid != *session.OrgId {
+	if !IsSuperuser(session.Email) && advisor.Organisation.Uid != *session.OrgId {
 		msg := fmt.Sprintf("Unauthorized access attempt by: %v", session.Email)
-		log.Println(msg)
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			log.Println(msg)
+		}
 		c.AbortWithStatus(http.StatusForbidden)
 		err := errors.New(msg)
 		return nil, err

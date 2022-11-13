@@ -15,7 +15,7 @@ const EditForecast = () => {
 
     let { forecastId } = useParams();
 
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     if (!forecast) {
         setForecast(state.Report.Forecasts.find(h => h.Id === forecastId))

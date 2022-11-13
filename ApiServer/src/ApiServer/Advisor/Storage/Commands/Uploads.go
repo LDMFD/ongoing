@@ -31,7 +31,7 @@ func RequestUpload(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	uid := UUID.GenerateUID(c)
+	uid := UUID.GenerateUIDWithKey(c, "file")
 
 	url, fields := GenerateSignedPostPolicy(uid, req.Filename)
 

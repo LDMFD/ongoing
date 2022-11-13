@@ -38,8 +38,8 @@ namespace Ongoing.Entities
         [Column("weighted_ex_ante_fee")]
         public decimal WeightedExAnteFee { get; set; }
         
-        [Column("file_id")]
-        public int? FileId { get; set; }
+        [Column("file_ptr_id")]
+        public int? FilePtrId { get; set; }
         
         [Column("modified", TypeName = "timestamp without time zone")]
         public DateTime? Modified { get; set; }
@@ -49,11 +49,12 @@ namespace Ongoing.Entities
 
 
         [ForeignKey("OrgId")]
+        [InverseProperty("Models")]
         public virtual Organisation Org { get; set; } = null!;
         
-        [ForeignKey("FileId")]
+        [ForeignKey("FilePtrId")]
         [InverseProperty("Models")]
-        public virtual File? File { get; set; }
+        public virtual FilePtr? FilePtr { get; set; }
         
         [ForeignKey("OperatorId")]
         [InverseProperty("Models")]
@@ -72,10 +73,10 @@ class ModelConfig : IEntityTypeConfiguration<Model>
 
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.HasOne(d => d.File)
+        builder.HasOne(d => d.FilePtr)
             .WithMany(p => p.Models)
-            .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .HasForeignKey(d => d.FilePtrId)
+            .OnDelete(DeleteBehavior.SetNull)
             .HasConstraintName("fk_model_file");
 
         builder.HasOne(d => d.Operator)
@@ -84,6 +85,12 @@ class ModelConfig : IEntityTypeConfiguration<Model>
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_operator");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Models)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_model_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
     }

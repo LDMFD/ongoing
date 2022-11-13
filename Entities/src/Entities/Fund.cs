@@ -44,8 +44,8 @@ namespace Ongoing.Entities
         [Column("citicode")]
         public string? Citicode { get; set; }
         
-        [Column("file_id")]
-        public int? FileId { get; set; }
+        [Column("file_ptr_id")]
+        public int? FilePtrId { get; set; }
         
         [Column("modified", TypeName = "timestamp without time zone")]
         public DateTime? Modified { get; set; }
@@ -55,11 +55,12 @@ namespace Ongoing.Entities
 
         
         [ForeignKey("OrgId")]
+        [InverseProperty("Funds")]
         public virtual Organisation Org { get; set; } = null!;
 
-        [ForeignKey("FileId")]
+        [ForeignKey("FilePtrId")]
         [InverseProperty("Funds")]
-        public virtual File? File { get; set; }
+        public virtual FilePtr? FilePtr { get; set; }
         
         [InverseProperty("Fund")]
         public virtual ICollection<PolicyFund> PolicyFunds { get; set; }
@@ -74,12 +75,18 @@ class FundConfig : IEntityTypeConfiguration<Fund>
 
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        builder.HasOne(d => d.File)
+        builder.HasOne(d => d.FilePtr)
             .WithMany(p => p.Funds)
-            .HasForeignKey(d => d.FileId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .HasForeignKey(d => d.FilePtrId)
+            .OnDelete(DeleteBehavior.SetNull)
             .HasConstraintName("fk_fund_file");
         
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Funds)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_fund_org");
+
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => e.Name);
     }

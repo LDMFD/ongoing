@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-type UpdateAdvisorRequestPath struct {
+type UpdateOrDeleteAdvisorRequestPath struct {
 	AdvisorId string `binding:"required"`
 }
 
@@ -29,7 +29,7 @@ func UpdateAdvisor(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	var path UpdateAdvisorRequestPath
+	var path UpdateOrDeleteAdvisorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -90,21 +90,6 @@ func UpdateAdvisor(c *gin.Context) {
 		}
 	}
 
-	if body.Forenames != "" {
-		advisor.Forenames = body.Forenames
-	}
-	if body.Surname != "" {
-		advisor.Surname = body.Surname
-	}
-
-	if _, err := tx.NewUpdate().Model(advisor).WherePK().
-		Column("forenames").
-		Column("surname").
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
 	if err := tx.NewSelect().
 		Model(advisor).
 		Relation("User").
@@ -114,10 +99,17 @@ func UpdateAdvisor(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if body.Email != "" && body.Email != advisor.User.Email {
+	emailChange := body.Email != advisor.User.Email
+	nameChange := body.Surname != advisor.User.Surname || body.Forenames != advisor.User.Forenames
+
+	if emailChange || nameChange {
 		advisor.User.Email = body.Email
+		advisor.User.Forenames = body.Forenames
+		advisor.User.Surname = body.Surname
 		if _, err := tx.NewUpdate().Model(&advisor.User).WherePK().
 			Column("email").
+			Column("forenames").
+			Column("surname").
 			Exec(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			panic(err.Error())

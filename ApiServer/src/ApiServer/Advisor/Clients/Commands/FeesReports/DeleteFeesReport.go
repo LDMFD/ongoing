@@ -1,8 +1,12 @@
 package FeesReports
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -17,6 +21,8 @@ type DeleteFeesReportRequestPath struct {
 
 func DeleteFeesReport(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteFeesReportRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -27,7 +33,8 @@ func DeleteFeesReport(c *gin.Context) {
 	var feesReport = Entities.FeesReport{}
 	if err := db.NewSelect().
 		Model(&feesReport).
-		Where("uid = ?", path.FeesReportId).
+		Relation("FilePtr.File").
+		Where("fees_report.uid = ?", path.FeesReportId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -44,12 +51,35 @@ func DeleteFeesReport(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if _, err := db.NewDelete().
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewDelete().
 		Model(&feesReport).
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if feesReport.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		Helpers.DeleteFile(c, tx, *feesReport.FilePtr)
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{})

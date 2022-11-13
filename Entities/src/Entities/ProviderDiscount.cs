@@ -54,7 +54,7 @@ class ProviderDiscountConfig : IEntityTypeConfiguration<ProviderDiscount>
         builder.HasOne(d => d.Client)
             .WithMany(p => p.ProviderDiscounts)
             .HasForeignKey(d => d.ClientId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client_provider_discount");
 
         builder.HasOne(d => d.PolicyProvider)

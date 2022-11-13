@@ -18,7 +18,7 @@ const PolicyFundList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();

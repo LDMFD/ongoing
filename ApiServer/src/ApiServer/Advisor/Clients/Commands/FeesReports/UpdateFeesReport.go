@@ -1,9 +1,13 @@
 package FeesReports
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -18,6 +22,8 @@ type UpdateFeesReportRequestPath struct {
 
 func UpdateFeesReport(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path UpdateFeesReportRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -34,7 +40,8 @@ func UpdateFeesReport(c *gin.Context) {
 	var feesReport = Entities.FeesReport{}
 	if err := db.NewSelect().
 		Model(&feesReport).
-		Where("uid = ?", path.FeesReportId).
+		Relation("FilePtr.File").
+		Where("fees_report.uid = ?", path.FeesReportId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -51,39 +58,61 @@ func UpdateFeesReport(c *gin.Context) {
 		return
 	}
 
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			return
-		}
-		fileId = &file.Id
-	}
-
 	var submitted time.Time
 	if submitted, err = Date.FromCanonical(body.Submitted); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'submitted' timestamp"})
 		return
 	}
 
-	feesReport.Submitted = submitted
-	feesReport.FileId = fileId
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
 
-	if _, err := db.NewUpdate().
+	// FilePtr has been removed or changed; remove old relationship
+	var toDelete *Entities.FilePtr
+	if (body.File != nil && feesReport.FilePtr != nil && body.File.Uid != feesReport.FilePtr.File.Uid) || (body.File == nil && feesReport.FilePtr != nil) {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		toDelete = feesReport.FilePtr
+	}
+	if body.File != nil {
+		if err := auth.CreateClientFile(path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		feesReport.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	}
+
+	feesReport.Submitted = submitted
+
+	if _, err := tx.NewUpdate().
 		Model(&feesReport).
 		WherePK().
-		Column("file_id").
+		Column("file_ptr_id").
 		Column("submitted").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	c.JSON(200, gin.H{
-		"FeesReport": feesReport,
-	})
+	if toDelete != nil {
+		Helpers.DeleteFile(c, tx, *toDelete)
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
+	c.JSON(200, gin.H{})
 }

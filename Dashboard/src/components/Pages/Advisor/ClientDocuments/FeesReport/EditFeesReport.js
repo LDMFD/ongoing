@@ -15,7 +15,7 @@ const EditFeesReport = () => {
 
     let { feesReportId } = useParams();
 
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     if (!feesReport) {
         setFeesReport(state.Report.FeesReports.find(h => h.Id === feesReportId))

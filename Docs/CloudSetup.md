@@ -78,3 +78,4 @@ Then:
 - In APIs & Services -> Credentials https://console.cloud.google.com/apis/credentials?project=ongoing-prod
     - Edit `OAuth 2.0 Client IDs` -> `Web client (auto created by Google Service)`
     - Add `Authorized redirect URIs` -> `https://example.com/__/auth/handler`
+- Set up Prod -> Staging daily copying using Data Transfer service on Prod.

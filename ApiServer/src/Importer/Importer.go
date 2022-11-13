@@ -3,37 +3,42 @@ package Importer
 import (
 	"encoding/json"
 	"log"
+	"ongoing/ApiServer/Superuser/Commands/Export"
 	"os"
 )
 
 var (
-	importPath   string
-	advisorEmail string
+	importPath string
 )
 
 const API = "http://localhost:8000/api"
 
-//const API = "https://portal.amplifa.co.uk/api"
-
-const IMPORT_SUPERUSER = "darren@tp1.org"
+const IMPORT_SUPERUSER = "darren@amplifa.co.uk"
 
 func Import(path string) {
 	importPath = path
-	globalEntities()
-	importClients()
-}
+	log.Println("Importing from", importPath)
 
-func globalEntities() {
-	filepath := importPath + "/global-entities.json"
-	log.Println("Importing from", filepath)
+	CheckReady()
 
-	ent := &GlobalEntitiesContainer{}
-	fileBytes, _ := os.ReadFile(filepath)
-	if err := json.Unmarshal(fileBytes, ent); err != nil {
+	export := &Export.Export{}
+	fileBytes, _ := os.ReadFile(importPath)
+	if err := json.Unmarshal(fileBytes, export); err != nil {
 		panic(err)
 	}
 
-	createOrg()
+	if err := runImport(export); err != nil {
+		log.Fatal(err)
+	}
 
-	importGlobalEntities(&ent.Entities)
+	os.Exit(0)
+}
+
+func runImport(export *Export.Export) error {
+	for _, org := range export.Orgs {
+		if err := createOrg(org, export.Users); err != nil {
+			return err
+		}
+	}
+	return nil
 }

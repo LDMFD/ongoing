@@ -6,7 +6,7 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 
 const AdvisorReviewProfileRoutes = () => {
     const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     let report = GetReport();
 

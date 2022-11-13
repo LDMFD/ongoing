@@ -32,7 +32,7 @@ const RiskQuestionnaire = () => {
             label:                level.Label,
             desc:                 level.Desc,
             completed:            Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
-            questionnaire:        ra.Questionnaire,
+            questionnaire:        ra.File,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0)), [
         report.RiskAssessments,
@@ -56,7 +56,7 @@ const RiskQuestionnaire = () => {
             Header: 'Completed',
             width: 1,
         },
-        (assessments.length && assessments[0].questionnaire.Uid) ?
+        (assessments.length && assessments[0].questionnaire?.Uid) ?
             {
                 accessor: 'questionnaire',
                 Header: 'Questionnaire',

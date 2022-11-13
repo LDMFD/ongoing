@@ -12,8 +12,6 @@ type Client struct {
 	Uid       string    `bun:"uid,notnull"`
 	UserId    int64     `bun:"user_id,notnull"`
 	OrgId     int64     `bun:"org_id,notnull"`
-	Forenames string    `bun:"forenames,notnull"`
-	Surname   string    `bun:"surname,notnull"`
 	Fee       float64   `bun:"fee,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
@@ -38,18 +36,21 @@ type ReportClientIdentity struct {
 }
 
 type ClientReport struct {
-	Id       string
-	Identity ReportClientIdentity
-	Fee      float64 // TODO refactor floats to ints?
+	Id        string
+	UserId    string
+	Identity  ReportClientIdentity
+	Fee       float64 // TODO refactor floats to ints?
+	AdvisorId string
 }
 
 func (c *Client) ToReport() ClientReport {
 	return ClientReport{
-		Id: c.Uid,
+		Id:     c.Uid,
+		UserId: c.User.Uid,
 		Identity: ReportClientIdentity{
 			Email:     c.User.Email,
-			Forenames: c.Forenames,
-			Surname:   c.Surname,
+			Forenames: c.User.Forenames,
+			Surname:   c.User.Surname,
 		},
 		Fee: c.Fee,
 	}

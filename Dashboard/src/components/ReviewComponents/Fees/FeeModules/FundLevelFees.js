@@ -7,7 +7,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { CurrencyFormatter } from 'Utils/Strings';
-import { ModuleTypeFundLevelFees } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeFundLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';

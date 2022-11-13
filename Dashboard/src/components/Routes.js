@@ -3,13 +3,13 @@ import { Switch, Route } from "react-router-dom";
 import SuperuserRoutes      from './Pages/Superuser/SuperuserRoutes';
 import StaffRoutes          from "./Pages/Advisor/Staff/StaffRoutes";
 import ClientRoutes         from './Pages/Advisor/AdvisorRoutes';
-import OperatorRoutes       from './Pages/Global/Operators/OperatorRoutes';
-import FundRoutes           from './Pages/Global/Funds/FundRoutes';
-import ModelRoutes          from './Pages/Global/Models/ModelRoutes';
-import PolicyTypeRoutes     from './Pages/Global/PolicyTypes/PolicyTypeRoutes';
-import PolicyProviderRoutes from './Pages/Global/PolicyProviders/PolicyProviderRoutes';
-import RiskProviderRoutes   from './Pages/Global/RiskProviders/RiskProviderRoutes';
-import ModulePresetRoutes   from './Pages/Global/Reviews/ModulePresets/ModulePresetRoutes';
+import OperatorRoutes       from './Pages/OrgResources/Operators/OperatorRoutes';
+import FundRoutes           from './Pages/OrgResources/Funds/FundRoutes';
+import ModelRoutes          from './Pages/OrgResources/Models/ModelRoutes';
+import PolicyTypeRoutes     from './Pages/OrgResources/PolicyTypes/PolicyTypeRoutes';
+import PolicyProviderRoutes from './Pages/OrgResources/PolicyProviders/PolicyProviderRoutes';
+import RiskProviderRoutes   from './Pages/OrgResources/RiskProviders/RiskProviderRoutes';
+import ModulePresetRoutes   from './Pages/OrgResources/Reviews/ModulePresets/ModulePresetRoutes';
 
 import ClientSpaceRoutes from "./Pages/ClientSpace/ClientSpaceRoutes";
   

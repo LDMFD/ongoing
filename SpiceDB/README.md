@@ -1,3 +1,7 @@
+# Set context (writes to OS keychain):
+
+zed context set local localhost:50051 spice --insecure
+
 # Write schema:
 
 zed schema write permissions.zed
@@ -44,3 +48,6 @@ f64320553ecb430aa5c65b695e01ba0e
 # Lookup the organisations a client can access
 zed permission lookup organisation client user:f64320553ecb430aa5c65b695e01ba0e
 c7d206039b9a4dc981b7c0f73c81dc8b
+
+# Why can this user read this file?
+zed permission check file:d84acb84bc564063a40b13ca51a5ff3c read user:81350a4b633f457e9f6e1af89e189fa8 --explain

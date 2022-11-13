@@ -71,6 +71,35 @@ func (c *Client) createRelationship(objectType, objectId, relation, subjectType,
 	return nil
 }
 
+func (c *Client) removeRelationship(objectType, objectId, relation, subjectType, subjectId string) error {
+	request := &pb.WriteRelationshipsRequest{
+		Updates: []*pb.RelationshipUpdate{
+			{
+				Operation: pb.RelationshipUpdate_OPERATION_DELETE,
+				Relationship: &pb.Relationship{
+					Resource: &pb.ObjectReference{
+						ObjectType: objectType,
+						ObjectId:   objectId,
+					},
+					Relation: relation,
+					Subject: &pb.SubjectReference{
+						Object: &pb.ObjectReference{
+							ObjectType: subjectType,
+							ObjectId:   subjectId,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	_, err := c.client.WriteRelationships(context.Background(), request)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}
+
 func (c *Client) mutateRelationship(objectType, objectId, oldRelation, subjectType, subjectId, newRelation string) error {
 	request := &pb.WriteRelationshipsRequest{
 		Updates: []*pb.RelationshipUpdate{
@@ -263,8 +292,4 @@ func (c *Client) ReadSchema() (*string, error) {
 		return nil, errors.WithStack(err)
 	}
 	return &response.SchemaText, nil
-}
-
-func (c *Client) GetOrgFiles(orgId string) (fileIds []string, err error) {
-	return c.lookupResource("organisation", orgId, "file", "org")
 }

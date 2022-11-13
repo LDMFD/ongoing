@@ -64,8 +64,10 @@ window.ApiClient = axios.create({
 // <a> -> query param -> localStorage -> http client header
 if (window.location.search) {
     const vid = (new URLSearchParams(window.location.search)).get('view-as');
-    window.ApiClient.defaults.headers.common['X-ViewAs'] = vid;
-    localStorage.setItem('ongoing-viewas', vid);
+    if (vid) {
+        window.ApiClient.defaults.headers.common['X-ViewAs'] = vid;
+        localStorage.setItem('ongoing-viewas', vid);
+    }
 } else {
     const vid = localStorage.getItem('ongoing-viewas');
     if (vid) {

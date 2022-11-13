@@ -20,7 +20,7 @@ const RiskAssessmentList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();
@@ -75,7 +75,7 @@ const RiskAssessmentList = () => {
             accessor: 'questionnaire',
             Header: 'Questionnaire',
             width: 2,
-            Cell: ({ row }) => row.original.questionnaire.Uid ? (
+            Cell: ({ row }) => row.original.questionnaire?.Uid ? (
                 <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
                     {row.original.questionnaire.Filename}
                     <DownloadIcon />
@@ -109,14 +109,14 @@ const RiskAssessmentList = () => {
             label:                level.Label,
             desc:                 level.Desc,
             completed:            Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
-            questionnaire:        ra.Questionnaire,
+            questionnaire:        ra.File,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
 
     return (
         <div className='ongoing-riskassessmentList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/documents/risk-assessments/add` }}><Button>Add assessment</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/documents/risk-assessments/add` }}><Button>Add assessment</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={assessments} />

@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestCreateHoldings(t *testing.T, e *httpexpect.Expect) {
+func testCreateHoldings(t *testing.T, e *httpexpect.Expect) {
 	CreateProviderDiscount(e)
 	CreatePolicy(t, e)
 	CreatePolicyFunds(e)
@@ -23,13 +23,12 @@ func CreateProviderDiscount(e *httpexpect.Expect) {
 		PolicyProviderId: policyProviderId,
 		Discount:         0.12,
 	}
-	//resp :=
-	e.POST("/api/advisor/clients/"+org1ClientId+"/provider-discounts").
+	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/provider-discounts").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	//.JSON().Object()
-	//providerDiscountId = resp.Value("Id").String().Raw()
+		Expect().Status(http.StatusOK).
+		JSON().Object()
+	providerDiscountId = resp.Value("Id").String().Raw()
 }
 
 func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
@@ -53,6 +52,60 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 	policyId = resp.JSON().Object().Value("Id").String().Raw()
+
+	// Test file download with different user types
+	TestDownload(t, e, ORG1_OWNER, fileId, true)
+	TestDownload(t, e, ORG1_ADMIN, fileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, fileId, true)
+	TestDownload(t, e, ORG2_OWNER, fileId, false)
+	TestDownload(t, e, ORG1_CLIENT, fileId, true)
+
+	// Remove the file
+	request = Policies.CreateOrUpdatePolicyRequestBody{
+		ExternalId:           "external-pol",
+		MonthlyContributions: 10,
+		StartValue:           100,
+		EndValue:             200,
+		PolicyTypeId:         policyTypeId,
+		PolicyProviderId:     policyProviderId,
+		Notes:                "Policy notes",
+	}
+	resp = e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	TestDownload(t, e, ORG1_OWNER, fileId, false)
+	TestDownload(t, e, ORG1_ADMIN, fileId, false)
+	TestDownload(t, e, ORG1_ADVISOR, fileId, false)
+	TestDownload(t, e, ORG1_CLIENT, fileId, false)
+
+	// Put the file back again
+	policyFileId = TestUpload(t, e, ORG1_ADVISOR, "policy-b.png")
+
+	request = Policies.CreateOrUpdatePolicyRequestBody{
+		ExternalId:           "external-pol",
+		MonthlyContributions: 10,
+		StartValue:           100,
+		EndValue:             200,
+		PolicyTypeId:         policyTypeId,
+		PolicyProviderId:     policyProviderId,
+		Notes:                "Policy notes",
+		File: &Entities.RequestFile{
+			Uid:      policyFileId,
+			Filename: "sample.png",
+		},
+	}
+	resp = e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	TestDownload(t, e, ORG1_OWNER, policyFileId, true)
+	TestDownload(t, e, ORG1_ADMIN, policyFileId, true)
+	TestDownload(t, e, ORG1_ADVISOR, policyFileId, true)
+	TestDownload(t, e, ORG2_OWNER, policyFileId, false)
+	TestDownload(t, e, ORG1_CLIENT, policyFileId, true)
 }
 
 func CreatePolicyFunds(e *httpexpect.Expect) {
@@ -65,7 +118,7 @@ func CreatePolicyFunds(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	resp.Value("Id").String()
+	policyFundId1 = resp.Value("Id").String().Raw()
 
 	request = PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
 		FundId:     fundId2,
@@ -76,7 +129,7 @@ func CreatePolicyFunds(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	resp.Value("Id").String()
+	policyFundId2 = resp.Value("Id").String().Raw()
 }
 
 func CreatePortfolio(e *httpexpect.Expect) {
@@ -89,5 +142,5 @@ func CreatePortfolio(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	resp.Value("Id").String()
+	portfolioId = resp.Value("Id").String().Raw()
 }

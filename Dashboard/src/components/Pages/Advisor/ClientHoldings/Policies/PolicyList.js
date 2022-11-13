@@ -22,7 +22,7 @@ const PolicyList = () => {
 
     const [state, dispatch ] = useContext(Context);
     let {
-        ClientContext: client,
+        Metadata: client,
     } = state;
 
     let report = GetReport();
@@ -148,7 +148,7 @@ const PolicyList = () => {
     return (
         <div className='ongoing-policyList'>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.ClientContext.Id}/holdings/policies/add` }}><Button>Add policy</Button></Link>
+                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/holdings/policies/add` }}><Button>Add policy</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={policies} />

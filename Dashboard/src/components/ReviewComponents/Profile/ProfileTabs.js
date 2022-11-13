@@ -7,12 +7,12 @@ import {
 
 import { RouteMatch } from 'Utils/Routing';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { ModuleTypeProfile } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeProfile } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { Context } from 'State';
 
 const ProfileTabs = ({ basePath, baseTarget, children }) => {
     const [state,  ] = useContext(Context);
-    let client = state.ClientContext;
+    let client = state.Metadata;
 
     const { pathname } = useLocation();
 

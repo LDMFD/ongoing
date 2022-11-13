@@ -90,7 +90,7 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select policy type</MenuItem>
-                            {state.Entities.PolicyTypes.map(t => (
+                            {state.Resources.PolicyTypes.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>
@@ -110,7 +110,7 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                 type     = "text"
                                 fullWidth>
                             <MenuItem value='select'>Select provider</MenuItem>
-                            {state.Entities.PolicyProviders.map(t => (
+                            {state.Resources.PolicyProviders.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>

@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
@@ -35,8 +36,8 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	userUid := UUID.GenerateUID(c)
-	clientUid := UUID.GenerateUID(c)
+	userUid := UUID.GenerateUIDWithKey(c, "user")
+	clientUid := UUID.GenerateUIDWithKey(c, "client")
 
 	// Begin transaction
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
@@ -47,23 +48,14 @@ func CreateClient(c *gin.Context) {
 	}
 
 	var user = Entities.User{
-		Uid:   userUid,
-		Email: body.Identity.Email,
+		Uid:       userUid,
+		Email:     body.Identity.Email,
+		Forenames: body.Identity.Forenames,
+		Surname:   body.Identity.Surname,
 	}
 	if _, err := tx.NewInsert().
 		Model(&user).
-		Returning("Id"). // not working
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		_ = tx.Rollback()
-		return
-	}
-
-	if err := tx.NewSelect().
-		Model(&user).
-		Where("email = ?", body.Identity.Email).
-		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
 		_ = tx.Rollback()
@@ -82,12 +74,10 @@ func CreateClient(c *gin.Context) {
 	}
 
 	var client = Entities.Client{
-		Uid:       clientUid,
-		UserId:    user.Id,
-		OrgId:     org.Id,
-		Forenames: body.Identity.Forenames,
-		Surname:   body.Identity.Surname,
-		Fee:       body.Fee,
+		Uid:    clientUid,
+		UserId: user.Id,
+		OrgId:  org.Id,
+		Fee:    body.Fee,
 	}
 	if _, err := tx.NewInsert().Model(&client).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -96,7 +86,15 @@ func CreateClient(c *gin.Context) {
 		return
 	}
 
-	if err := auth.CreateClient(*session.OrgId, session.UserUid, clientUid, userUid); err != nil {
+	var advisor *Entities.Advisor
+	if advisor, err = Helpers.AdvisorFromUserUID(c, db, session.UserUid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
+		return
+	}
+
+	if err := auth.CreateClient(*session.OrgId, advisor.User.Uid, clientUid, userUid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

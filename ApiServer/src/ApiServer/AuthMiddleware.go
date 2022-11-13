@@ -9,7 +9,9 @@ import (
 	"google.golang.org/api/option"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"os"
 	"strings"
@@ -35,8 +37,17 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 
 		// Validate it's a real identity (has gone through Firebase login)
 		var email string
-		if os.Getenv("OFFLINE_AUTH") == "true" {
-			email = jwt
+		if Config.OFFLINE_AUTH {
+			if strings.Contains(jwt, "@") {
+				email = jwt
+			} else {
+				var user Entities.User
+				if err := db.NewSelect().Model(&user).Where("uid = ?", jwt).Scan(c); err != nil {
+					c.AbortWithStatus(http.StatusForbidden)
+					panic(err)
+				}
+				email = user.Email
+			}
 		} else {
 			opt := option.WithCredentialsFile(os.Getenv("FIREBASE_CONFIG"))
 			if app, err = firebase.NewApp(context.Background(), nil, opt); err != nil {
@@ -71,7 +82,9 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		} else if count == 1 {
 			user = &users[0]
 		} else {
-			log.Println("Unauthorized access attempt by:", email)
+			if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+				log.Println("Unauthorized access attempt by:", email)
+			}
 			c.AbortWithStatus(http.StatusForbidden) // no users found with matching email
 			return
 		}
@@ -90,18 +103,19 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		var orgId *string
 
 		viewAsId := c.GetHeader("X-ViewAs")
-		if isSuperuser(user.Email) && viewAsId != "" && viewAsId != "null" {
+		if Helpers.IsSuperuser(user.Email) && viewAsId != "" && viewAsId != "null" {
 			var subject Entities.User
 			if err = db.NewSelect().Model(&subject).Where("uid = ?", viewAsId).Scan(c); err != nil {
-				c.AbortWithStatus(http.StatusBadRequest)
-				panic(err.Error())
+				//c.AbortWithStatus(http.StatusBadRequest)
+				log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
+			} else {
+				user = &subject
+				log.Println("Viewing as:", user.Email)
 			}
-			user = &subject
-			log.Println("Viewing as:", user.Email)
 		}
 
 		// Look up user's role
-		if isSuperuser(user.Email) {
+		if Helpers.IsSuperuser(user.Email) {
 			role = Entities.UserTypeSuperuser
 		} else {
 			if orgs, err := authClient.LookupOrganisations(user.Uid); err != nil {
@@ -110,6 +124,10 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 				return
 			} else {
 				// Only 1 organisation allowed for now
+				if orgs == nil || len(orgs) == 0 {
+					c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
+					return
+				}
 				orgId = &orgs[0]
 			}
 
@@ -132,7 +150,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 				}
 			}
 			if !found {
-				if os.Getenv("OFFLINE_TESTS") != "true" {
+				if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
 					log.Printf("Unauthorized access attempt: user=%s path=%s\n", email, c.Request.URL.Path)
 				}
 				c.AbortWithStatus(http.StatusForbidden)
@@ -164,15 +182,4 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		c.Set("SESSION", sessionContext)
 		c.Next()
 	}
-}
-
-func isSuperuser(email string) bool {
-	superusers := os.Getenv("ONGOING_SUPERUSERS")
-	for _, su := range strings.Split(superusers, ",") {
-		su = strings.TrimSpace(su)
-		if email == su {
-			return true
-		}
-	}
-	return false
 }

@@ -95,8 +95,8 @@ func healthcheck(c *gin.Context) {
 	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	// Test DB connection
-	user := Entities.User{}
-	if err := db.NewSelect().Model(&user).Limit(1).Scan(c); err != nil {
+	_, err := db.Exec("SELECT 1")
+	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "database connection"})
 		return
 	}

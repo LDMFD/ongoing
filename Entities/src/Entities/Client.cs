@@ -37,12 +37,6 @@ namespace Ongoing.Entities
         [Column("org_id")]
         public int OrgId { get; set; }
         
-        [Column("forenames")]
-        public string Forenames { get; set; } = null!;
-        
-        [Column("surname")]
-        public string Surname { get; set; } = null!;
-        
         [Column("fee")]
         public decimal Fee { get; set; }
         
@@ -55,6 +49,7 @@ namespace Ongoing.Entities
         public User User { get; set; } = null!;
         
         [ForeignKey("OrgId")]
+        [InverseProperty("Clients")]
         public Organisation Org { get; set; } = null!;
         
         [InverseProperty("Client")]
@@ -102,8 +97,14 @@ class ClientConfig : IEntityTypeConfiguration<Client>
         builder.HasOne(d => d.User)
             .WithOne(p => p.Client)
             .HasForeignKey<Client>(d => d.UserId)
-            .OnDelete(DeleteBehavior.Cascade)
+            .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_client_user");
+
+        builder.HasOne(d => d.Org)
+            .WithMany(p => p.Clients)
+            .HasForeignKey(d => d.OrgId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_client_org");
 
         // Uniqueness constraint
         builder.HasAlternateKey(e => e.Uid);

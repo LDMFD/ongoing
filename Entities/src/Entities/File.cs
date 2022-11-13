@@ -9,17 +9,6 @@ namespace Ongoing.Entities
     [Index("Uid", Name = "files_uid_key", IsUnique = true)]
     public class File
     {
-        public File()
-        {
-            FactFinds = new HashSet<FactFind>();
-            FeesReports = new HashSet<FeesReport>();
-            Forecasts = new HashSet<Forecast>();
-            Funds = new HashSet<Fund>();
-            Models = new HashSet<Model>();
-            Policies = new HashSet<Policy>();
-            RiskAssessments = new HashSet<RiskAssessment>();
-        }
-
         [Key]
         [Column("id")]
         public int Id { get; set; }
@@ -38,25 +27,7 @@ namespace Ongoing.Entities
 
         
         [InverseProperty("File")]
-        public virtual ICollection<FactFind> FactFinds { get; set; }
-        
-        [InverseProperty("File")]
-        public virtual ICollection<Forecast> Forecasts { get; set; }
-        
-        [InverseProperty("File")]
-        public virtual ICollection<FeesReport> FeesReports { get; set; }
-        
-        [InverseProperty("File")]
-        public virtual ICollection<Fund> Funds { get; set; }
-        
-        [InverseProperty("File")]
-        public virtual ICollection<Model> Models { get; set; }
-        
-        [InverseProperty("File")]
-        public virtual ICollection<Policy> Policies { get; set; }
-        
-        [InverseProperty("QuestionnaireFile")]
-        public virtual ICollection<RiskAssessment> RiskAssessments { get; set; }
+        public virtual ICollection<FilePtr> FilePtrs { get; set; } = null!;
     }
 }
 
@@ -69,5 +40,7 @@ class FileConfig : IEntityTypeConfiguration<Ongoing.Entities.File>
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
         
         builder.HasAlternateKey(e => e.Uid);
+
+        builder.HasMany(b => b.FilePtrs).WithOne(p => p.File).HasForeignKey(p => p.FileId).OnDelete(DeleteBehavior.Cascade);
     }
 }

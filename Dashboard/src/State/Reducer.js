@@ -4,8 +4,7 @@ export const LOGOUT                       = 'LOGOUT';
 export const POPULATE_CLIENT              = 'POPULATE_CLIENT';
 export const POPULATE_CLIENT_SPACE        = 'POPULATE_CLIENT_SPACE';
 export const SET_CLIENTS                  = 'SET_CLIENTS';
-export const SET_RISKASSESSMENT_TEMPLATES = 'SET_RISKASSESSMENT_TEMPLATES';
-export const SET_GLOBAL_ENTITIES          = 'SET_GLOBAL_ENTITIES';
+export const SET_ORG_RESOURCES            = 'SET_ORG_RESOURCES';
 export const PROVIDER_CHARGE_REORDER      = 'PROVIDER_CHARGE_REORDER';
 export const SET_ORGANISATIONS            = 'SET_ORGANISATIONS';
 
@@ -27,7 +26,7 @@ const Reducer = (state, action) => {
                 Auth: null,
             }
 
-        case SET_GLOBAL_ENTITIES:
+        case SET_ORG_RESOURCES:
             return {
                 ...state,
                 ...action.payload,
@@ -36,7 +35,7 @@ const Reducer = (state, action) => {
         case PROVIDER_CHARGE_REORDER:
             let { providerId, from, to } = { ...action.payload };
             
-            let charges = state.Entities.ProviderCharges
+            let charges = state.Resources.ProviderCharges
                 .filter(pc => pc.ProviderId === providerId)
                 .sort((a, b) => (
                     a.Sequence > b.Sequence ? 1 : ((a.Sequence < b.Sequence) ? -1 : 0)
@@ -56,7 +55,7 @@ const Reducer = (state, action) => {
             return {
                 ...state,
                 Entities: {
-                    ...state.Entities,
+                    ...state.Resources,
                     ProviderCharges: charges,
                 },
             };
@@ -70,13 +69,13 @@ const Reducer = (state, action) => {
 
         case POPULATE_CLIENT: {
             let {
-                ClientContext,
+                Metadata,
                 Reviews,
                 Report,
                 Draft } = action.payload;
             return {
                 ...state,
-                ClientContext,
+                Metadata,
                 Reviews,
                 Report,
                 Draft,
@@ -84,11 +83,11 @@ const Reducer = (state, action) => {
         }
 
         case POPULATE_CLIENT_SPACE: {
-            let { ClientContext, Reviews } = action.payload;
+            let { Metadata, Reviews } = action.payload;
 
             return {
                 ...state,
-                ClientContext,
+                Metadata,
                 Reviews,
             };
         }

@@ -1,9 +1,13 @@
 package RiskAssessments
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -20,6 +24,8 @@ type UpdateRiskAssessmentRequestPath struct {
 
 func UpdateRiskAssessment(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path UpdateRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -36,7 +42,8 @@ func UpdateRiskAssessment(c *gin.Context) {
 	var assessment = Entities.RiskAssessment{}
 	if err := db.NewSelect().
 		Model(&assessment).
-		Where("uid = ?", path.RiskAssessmentId).
+		Relation("FilePtr.File").
+		Where("risk_assessment.uid = ?", path.RiskAssessmentId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -76,41 +83,59 @@ func UpdateRiskAssessment(c *gin.Context) {
 		panic(Errors.LevelDoesNotBelongToProvider)
 	}
 
-	var questionnaireFileId *int64
-	if body.Questionnaire != nil && body.Questionnaire.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.Questionnaire.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			panic(err.Error())
-		}
-		questionnaireFileId = &file.Id
-	}
-
 	var completed time.Time
 	if completed, err = Date.FromCanonical(body.Completed); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'completed' timestamp"})
 		panic(err.Error())
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	// FilePtr has been removed or changed; remove old relationship
+	if (body.File != nil && assessment.FilePtr != nil && body.File.Uid != assessment.FilePtr.File.Uid) ||
+		(body.File == nil && assessment.FilePtr != nil) {
+		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.FilePtr.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		Helpers.DeleteFile(c, tx, *assessment.FilePtr)
+	}
+	if body.File != nil {
+		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	}
+
 	assessment.RiskLevelId = level.Id
 	assessment.Completed = completed
-	assessment.QuestionnaireFileId = questionnaireFileId
 
-	if _, err := db.NewUpdate().
+	if _, err := tx.NewUpdate().
 		Model(&assessment).
 		WherePK().
 		Column("risk_level_id").
 		Column("completed").
-		Column("questionnaire_file_id").
+		Column("file_ptr_id").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	c.JSON(200, gin.H{
-		"RiskAssessment": assessment,
-	})
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
+	}
+
+	c.JSON(200, gin.H{})
 }

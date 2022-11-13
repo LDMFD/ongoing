@@ -3,6 +3,7 @@ package Database
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
@@ -10,7 +11,6 @@ import (
 	"github.com/uptrace/bun/extra/bundebug"
 	"log"
 	"ongoing/Entities"
-	"ongoing/Utils/UUID"
 	"os"
 	"strings"
 	"time"
@@ -31,13 +31,14 @@ func New() (*bun.DB, error) {
 
 	seedUserTable(db)
 
-	log.Println("DB: all startup tests passed - connections established.")
+	log.Println("DB: Connected.")
 
+	DB = db
 	return db, nil
 }
 
 func connect(dsn, dbname string) *bun.DB {
-	log.Println("Connecting to DB", dbname)
+	//log.Println("Connecting to DB", dbname)
 
 	connector := pgdriver.NewConnector(pgdriver.WithDSN(dsn), pgdriver.WithDatabase(dbname))
 	sqldb := sql.OpenDB(connector)
@@ -67,9 +68,24 @@ func connect(dsn, dbname string) *bun.DB {
 }
 
 func wipeDatabases(appdb *bun.DB) {
-	log.Println("DB: truncating")
+	log.Println("DB: Truncating...")
 
-	appdb.Exec("SELECT truncate_tables('public', 'ongoing-local');")
+	appdb.Exec(`
+		CREATE OR REPLACE FUNCTION truncate_tables(_schema IN VARCHAR, _username IN VARCHAR) RETURNS void AS $$
+			DECLARE
+				statements CURSOR FOR
+					SELECT tablename FROM pg_tables
+					WHERE tableowner = _username AND schemaname = _schema;
+			BEGIN
+				FOR stmt IN statements LOOP
+					EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+				END LOOP;
+			END;
+			$$ LANGUAGE plpgsql;`)
+
+	if _, err := appdb.Exec("SELECT truncate_tables('public', 'postgres');"); err != nil {
+		log.Fatal(err)
+	}
 
 	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
 	defer func() {
@@ -89,18 +105,18 @@ func seedUserTable(db *bun.DB) {
 
 func insertSuperuser(db *bun.DB, email string) {
 	email = strings.TrimSpace(email)
-	if exists, err := db.NewSelect().Model((*Entities.User)(nil)).Where("email = ?", email).Exists(context.TODO()); err != nil {
+
+	if exists, err := db.NewSelect().
+		Model((*Entities.User)(nil)).
+		Where("email = ?", email).Exists(context.TODO()); err != nil {
 		panic(err.Error())
 	} else if !exists {
-		log.Println("DB: seeding superuser")
-
 		var user = Entities.User{
-			Uid:   UUID.GenerateUID(nil),
+			Uid:   email[:strings.Index(email, "@")],
 			Email: email,
 		}
 		if _, err := db.NewInsert().
 			Model(&user).
-			Returning("Id"). // not working
 			Exec(context.TODO()); err != nil {
 			log.Println(errors.WithStack(err))
 			panic(err.Error())
@@ -109,6 +125,26 @@ func insertSuperuser(db *bun.DB, email string) {
 }
 
 func RowCount(db *bun.DB) int {
+	app := AppDbRows(db)
+	auth := AuthDbRows()
+	return app + auth
+}
+
+func AuthDbRows() int {
+	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
+	var relations int
+	defer func() {
+		spicedb.Close()
+	}()
+	var row *sql.Row
+	row = spicedb.QueryRow("SELECT COUNT(*) FROM relation_tuple WHERE deleted_transaction = 9223372036854775807;")
+	if err := row.Scan(&relations); err != nil {
+		panic(err.Error())
+	}
+	return relations
+}
+
+func AppDbRows(db *bun.DB) int {
 	var rowCounts []Entities.RowCount
 	if err := db.NewSelect().
 		Model(&rowCounts).
@@ -120,12 +156,22 @@ func RowCount(db *bun.DB) int {
 		if rc.Table == "__EFMigrationsHistory" {
 			continue
 		}
-		total += rc.Count
+
+		var count int
+		sql := fmt.Sprintf("SELECT COUNT(*) AS count FROM %s", rc.Table)
+		db.QueryRow(sql).Scan(&count)
+
+		// If any table is not empty (except for users which should have at minimum 1 row for each superuser)
+		suppressWarning := rc.Table == "users" && count == len(GetSuperusers())
+		if count != 0 && !suppressWarning {
+			log.Println("Non-empty table:", rc.Table)
+		}
+		total += count
 	}
 	return total
 }
 
 func GetSuperusers() []string {
 	superusers := os.Getenv("ONGOING_SUPERUSERS")
-	return strings.Split(superusers, ",")
+	return strings.Split(superusers, ",") // duplicate logic with Superuser.IsSuperuser()
 }

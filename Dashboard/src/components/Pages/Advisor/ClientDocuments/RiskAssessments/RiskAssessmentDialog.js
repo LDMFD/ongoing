@@ -67,7 +67,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                                 type     = "text"
                                 fullWidth autoFocus>
                             <MenuItem value='select'>Select assessment provider</MenuItem>
-                            {state.Entities.RiskProviders.map(t => (
+                            {state.Resources.RiskProviders.map(t => (
                                 <MenuItem value={t.Id} key={t.Id}>
                                     {t.Name}
                                 </MenuItem>
@@ -85,7 +85,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                             disabled = {!assessment.RiskProviderId?.length}
                             fullWidth>
                         <MenuItem value='select'>Select level</MenuItem>
-                        {state.Entities.RiskLevels
+                        {state.Resources.RiskLevels
                             .filter(l => l.RiskProviderId === assessment.RiskProviderId)
                             .map(l => (
                             <MenuItem value={l.Id} key={l.Id}>
@@ -100,7 +100,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                                   selected = {assessment.Completed}
                                   onChange = {handlers.SetCompleted} />
 
-                    <FileUploader file         = {assessment.Questionnaire}
+                    <FileUploader file         = {assessment.File}
                                   stateUpdater = {setAssessment}
                                   state        = {assessment}
                                   property     = 'Questionnaire' />

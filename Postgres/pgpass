@@ -1,0 +1,2 @@
+ongoing-db:5432:ongoing-local:postgres:p
+ongoing-db:5432:spicedb-local:postgres:p

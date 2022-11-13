@@ -1,11 +1,11 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {
     Button,
     Toolbar,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Context } from 'State/StateProvider'
 import Table from 'Components/Library/Table/Table';
@@ -22,15 +22,15 @@ const AdvisorList = () => {
 
     const deleteAdvisor = useCallback(id => async () => {
         if (window.confirm(`Delete advisor?`)) {
-            await Api.Staff.Delete(id);
-            await Api.Superuser.Organisations.Read(dispatch);
+            await Api.Staff.Advisors.Delete(id);
+            await Api.Staff.Advisors.Read(dispatch);
         }
     }, [ dispatch ]);
 
     // TODO this is wrong - admins cannot administrate other admins, only other advisors
     const canEditRole = (row) => (
         state.Session.Role === 'owner' ||
-        (state.Session.Role === 'administrator' && (row.original.role === 'advisor'))
+        (state.Session.Role === 'administrator' && row.original.role !== 'owner')
     );
 
     const columns = [

@@ -32,6 +32,7 @@ type CreateOrUpdatePolicyRequestBody struct {
 func CreatePolicy(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path CreatePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -43,19 +44,6 @@ func CreatePolicy(c *gin.Context) {
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
-	}
-
-	var fileId *int64
-	if body.File != nil && body.File.Uid != "" {
-		var file Entities.File
-		if count, err := db.NewSelect().Model(&file).Where("uid = ?", body.File.Uid).ScanAndCount(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		} else if count == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "File not found"})
-			panic(err.Error())
-		}
-		fileId = &file.Id
 	}
 
 	var client *Entities.Client
@@ -95,7 +83,6 @@ func CreatePolicy(c *gin.Context) {
 		PolicyTypeId:         policyType.Id,
 		PolicyProviderId:     provider.Id,
 		Notes:                body.Notes,
-		FileId:               fileId,
 	}
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
@@ -105,13 +92,17 @@ func CreatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	if body.File != nil {
+		policy.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
+	}
+
 	if _, err := tx.NewInsert().Model(&policy).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
 	if body.File != nil {
-		if err := auth.CreateFile(&client.Uid, nil, body.File.Uid); err != nil {
+		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

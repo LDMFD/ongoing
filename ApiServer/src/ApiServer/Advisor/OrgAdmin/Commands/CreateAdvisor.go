@@ -19,7 +19,7 @@ type CreateAdvisorRequestBody struct {
 	Email     string `binding:"required"`
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
-	Role      string `binding:"required"`
+	Role      string `binding:"required"` // TODO validate 'administrator' / 'advisor'
 }
 
 func CreateAdvisor(c *gin.Context) {
@@ -42,8 +42,8 @@ func CreateAdvisor(c *gin.Context) {
 		return
 	}
 
-	userUid := UUID.GenerateUID(c)
-	advisorUid := UUID.GenerateUID(c)
+	userUid := UUID.GenerateUIDWithKey(c, "user")
+	advisorUid := UUID.GenerateUIDWithKey(c, "advisor")
 
 	// Begin transaction
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
@@ -54,23 +54,14 @@ func CreateAdvisor(c *gin.Context) {
 	}
 
 	var user = Entities.User{
-		Uid:   userUid,
-		Email: body.Email,
+		Uid:       userUid,
+		Email:     body.Email,
+		Forenames: body.Forenames,
+		Surname:   body.Surname,
 	}
 	if _, err := tx.NewInsert().
 		Model(&user).
-		Returning("Id"). // not working
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		_ = tx.Rollback()
-		return
-	}
-
-	if err := tx.NewSelect().
-		Model(&user).
-		Where("email = ?", body.Email).
-		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
 		_ = tx.Rollback()
@@ -89,11 +80,9 @@ func CreateAdvisor(c *gin.Context) {
 	}
 
 	var advisor = Entities.Advisor{
-		Uid:       advisorUid,
-		UserId:    user.Id,
-		OrgId:     org.Id,
-		Forenames: body.Forenames,
-		Surname:   body.Surname,
+		Uid:    advisorUid,
+		UserId: user.Id,
+		OrgId:  org.Id,
 	}
 	if _, err := tx.NewInsert().Model(&advisor).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

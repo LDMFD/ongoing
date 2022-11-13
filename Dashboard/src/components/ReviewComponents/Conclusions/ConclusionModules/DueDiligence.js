@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModuleTypeDueDiligence } from 'State/ApiCommands/Global/Reviews/ModuleTypes';
+import { ModuleTypeDueDiligence } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const DueDiligence = () => {

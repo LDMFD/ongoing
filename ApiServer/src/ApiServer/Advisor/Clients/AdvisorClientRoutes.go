@@ -10,7 +10,6 @@ import (
 	Portfolios "ongoing/ApiServer/Advisor/Clients/Commands/Portfolios"
 	"ongoing/ApiServer/Advisor/Clients/Commands/ProviderDiscount"
 	"ongoing/ApiServer/Advisor/Clients/Commands/ReviewModules"
-	Reviews "ongoing/ApiServer/Advisor/Clients/Commands/Reviews"
 	"ongoing/ApiServer/Advisor/Clients/Commands/RiskAssessments"
 
 	"github.com/gin-gonic/gin"
@@ -48,11 +47,11 @@ func AddRoutes(r *gin.RouterGroup) {
 	moduleGroup.DELETE("/:Module/field/:Field", ReviewModules.DeleteReviewModule)
 
 	reviewGroup := r.Group("/:ClientId/reviews")
-	reviewGroup.POST("", Reviews.CreateReview)
-	reviewGroup.POST("/import", Reviews.ImportReview)
-	reviewGroup.PUT("/:ReviewId", Reviews.UpdateReview)
-	reviewGroup.POST("/:ReviewId/publish", Reviews.PublishReview)
-	reviewGroup.DELETE("/:ReviewId", Reviews.DeleteReview)
+	reviewGroup.POST("", ClientProfile.CreateReview)
+	reviewGroup.POST("/import", ClientProfile.ImportReview)
+	reviewGroup.PUT("/:ReviewId", ClientProfile.UpdateReview)
+	reviewGroup.POST("/:ReviewId/publish", ClientProfile.PublishReview)
+	reviewGroup.DELETE("/:ReviewId", ClientProfile.DeleteReview)
 
 	factFindGroup := r.Group("/:ClientId/fact-finds")
 	factFindGroup.POST("", FactFinds.CreateFactFind)

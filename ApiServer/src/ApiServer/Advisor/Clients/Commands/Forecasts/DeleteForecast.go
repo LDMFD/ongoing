@@ -1,8 +1,12 @@
 package Forecasts
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -17,6 +21,8 @@ type DeleteForecastRequestPath struct {
 
 func DeleteForecast(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteForecastRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -27,7 +33,8 @@ func DeleteForecast(c *gin.Context) {
 	var forecast = Entities.Forecast{}
 	if err := db.NewSelect().
 		Model(&forecast).
-		Where("uid = ?", path.ForecastId).
+		Relation("FilePtr.File").
+		Where("forecast.uid = ?", path.ForecastId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -43,12 +50,35 @@ func DeleteForecast(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if _, err := db.NewDelete().
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewDelete().
 		Model(&forecast).
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if forecast.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.FilePtr.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		Helpers.DeleteFile(c, tx, *forecast.FilePtr)
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{})

@@ -1,9 +1,13 @@
 package Policies
 
 import (
+	"database/sql"
+	"github.com/pkg/errors"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/AuthService"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -18,6 +22,8 @@ type DeletePolicyRequestPath struct {
 
 func DeletePolicy(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeletePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -29,7 +35,8 @@ func DeletePolicy(c *gin.Context) {
 	if err := db.NewSelect().
 		Model(&policy).
 		Relation("Portfolios").
-		Where("uid = ?", path.PolicyId).
+		Relation("FilePtr.File").
+		Where("policy.uid = ?", path.PolicyId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -51,12 +58,35 @@ func DeletePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if _, err := db.NewDelete().
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		panic(err.Error())
+	}
+
+	if _, err := tx.NewDelete().
 		Model(&policy).
 		WherePK().
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if policy.FilePtr != nil {
+		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			log.Printf("%+v", err)
+			_ = tx.Rollback()
+			return
+		}
+		Helpers.DeleteFile(c, tx, *policy.FilePtr)
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
+		return
 	}
 
 	c.JSON(200, gin.H{})

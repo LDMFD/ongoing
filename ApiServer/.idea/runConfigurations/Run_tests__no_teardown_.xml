@@ -1,0 +1,32 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run tests (no teardown)" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="ApiServer" />
+    <working_directory value="$PROJECT_DIR$/src" />
+    <go_parameters value="-failfast" />
+    <envs>
+      <env name="GOARCH" value="arm64" />
+      <env name="GOOS" value="darwin" />
+      <env name="OFFLINE_AUTH" value="true" />
+      <env name="TRUNCATE_DB" value="true" />
+      <env name="OFFLINE_TESTS" value="true" />
+      <env name="NO_TEARDOWN" value="true" />
+    </envs>
+    <EXTENSION ID="net.ashald.envfile">
+      <option name="IS_ENABLED" value="true" />
+      <option name="IS_SUBST" value="false" />
+      <option name="IS_PATH_MACRO_SUPPORTED" value="true" />
+      <option name="IS_IGNORE_MISSING_FILES" value="false" />
+      <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+      <ENTRIES>
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" IS_EXECUTABLE="false" />
+        <ENTRY IS_ENABLED="true" PARSER="env" IS_EXECUTABLE="false" PATH="$PROJECT_DIR$/../env.goland" />
+      </ENTRIES>
+    </EXTENSION>
+    <kind value="PACKAGE" />
+    <package value="ongoing" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$" />
+    <framework value="gotest" />
+    <method v="2" />
+  </configuration>
+</component>

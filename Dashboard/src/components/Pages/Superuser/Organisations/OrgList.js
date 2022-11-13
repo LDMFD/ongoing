@@ -61,7 +61,7 @@ const OrgList = () => {
         return {
             id: o.Id,
             name: o.Name,
-            owner: owner.Email,
+            owner: `${owner.Forenames} ${owner.Surname} <${owner.Email}>`,
             creator: creator.Email,
         };
     }).sort((p,q) => (p.name < q.name) ? -1 : ((p.name > q.name) ? 1 : 0));
