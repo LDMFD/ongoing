@@ -23,6 +23,23 @@ import { Context } from 'State/StateProvider';
 import InitialState from "State/InitialState";
 import { FromCanonical } from 'Utils/DateTime';
 
+const EnvironmentWarning = () => {
+    return (
+        <>
+            {window.location.href.includes('staging') && (
+                <span style={{ color: 'red' }}>
+                    <b> [ STAGING ]</b>
+                </span>
+            )}
+            {window.location.href.includes('localhost') && (
+                <span style={{ color: 'red' }}>
+                    <b> [ LOCAL ]</b>
+                </span>
+            )}
+        </>
+    )
+}
+
 const tier1Items = [
     {
         label: 'Module Presets',
@@ -148,6 +165,7 @@ export default function PermanentDrawerLeft() {
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                         Amplifa {titleRole} Portal
+                        <EnvironmentWarning />
                     </Typography>
                     
                     <AuthControl />
