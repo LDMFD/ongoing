@@ -33,10 +33,25 @@ func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool
 		authClient:        c.MustGet("AUTH").(*AuthService.Client),
 		clientId:          clientId,
 		grantClientAccess: createRelationships,
+		report:            &Entities.ReportDetail{},
 	}
 }
 
 func (gen *ReportGenerator) generateReport() {
+	gen.runQuery()
+
+	gen.generateModulePresets()
+	gen.generateModules()
+	gen.generateRisk() // Risk Assessments, Risk Providers, Risk Levels
+	gen.generateFactFinds()
+	gen.generateFees()
+	gen.generateForecasts()
+	gen.generatePolicies() // Policies, Policy Types & Providers, Provider Charges & Discounts
+	gen.generateFunds()    // Funds, Policy Funds
+	gen.generateModels()   // Models, Operators, Portfolios
+}
+
+func (gen *ReportGenerator) runQuery() {
 	gen.client = &Entities.Client{Id: gen.clientId}
 
 	if err := gen.db.NewSelect().
@@ -62,18 +77,6 @@ func (gen *ReportGenerator) generateReport() {
 		gen.context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-
-	gen.report = &Entities.ReportDetail{}
-
-	gen.generateModulePresets()
-	gen.generateModules()
-	gen.generateRisk() // Risk Assessments, Risk Providers, Risk Levels
-	gen.generateFactFinds()
-	gen.generateFees()
-	gen.generateForecasts()
-	gen.generatePolicies() // Policies, Policy Types & Providers, Provider Charges & Discounts
-	gen.generateFunds()    // Funds, Policy Funds
-	gen.generateModels()   // Models, Operators, Portfolios
 }
 
 // Some fields in this file are sorted - all could be if needed.
@@ -108,7 +111,10 @@ func (gen *ReportGenerator) generateRisk() {
 		riskProviders[r.RiskLevel.RiskProviderId] = r.RiskLevel.RiskProvider
 	}
 	sort.Slice(gen.report.RiskAssessments, func(i, j int) bool {
-		return gen.report.RiskAssessments[i].Id < gen.report.RiskAssessments[j].Id
+		if gen.report.RiskAssessments[i].RiskLevelId == gen.report.RiskAssessments[j].RiskLevelId {
+			return gen.report.RiskAssessments[i].RiskProviderId < gen.report.RiskAssessments[j].RiskProviderId
+		}
+		return gen.report.RiskAssessments[i].RiskLevelId < gen.report.RiskAssessments[j].RiskLevelId
 	})
 
 	gen.report.RiskProviders = make([]Entities.ReportRiskProvider, 0)
@@ -134,7 +140,7 @@ func (gen *ReportGenerator) generateFactFinds() {
 		gen.report.FactFinds = append(gen.report.FactFinds, f.ToReport())
 	}
 	sort.Slice(gen.report.FactFinds, func(i, j int) bool {
-		return gen.report.FactFinds[i].Id < gen.report.FactFinds[j].Id
+		return gen.report.FactFinds[i].Submitted < gen.report.FactFinds[j].Submitted
 	})
 }
 
@@ -144,7 +150,7 @@ func (gen *ReportGenerator) generateFees() {
 		gen.report.FeesReports = append(gen.report.FeesReports, f.ToReport())
 	}
 	sort.Slice(gen.report.FeesReports, func(i, j int) bool {
-		return gen.report.FeesReports[i].Id < gen.report.FeesReports[j].Id
+		return gen.report.FeesReports[i].Submitted < gen.report.FeesReports[j].Submitted
 	})
 }
 
@@ -154,7 +160,7 @@ func (gen *ReportGenerator) generateForecasts() {
 		gen.report.Forecasts = append(gen.report.Forecasts, f.ToReport())
 	}
 	sort.Slice(gen.report.Forecasts, func(i, j int) bool {
-		return gen.report.Forecasts[i].Id < gen.report.Forecasts[j].Id
+		return gen.report.Forecasts[i].Submitted < gen.report.Forecasts[j].Submitted
 	})
 }
 
@@ -218,7 +224,7 @@ func (gen *ReportGenerator) generatePolicies() {
 		gen.report.ProviderDiscounts = append(gen.report.ProviderDiscounts, pd.ToReport())
 	}
 	sort.Slice(gen.report.ProviderDiscounts, func(i, j int) bool {
-		return gen.report.ProviderDiscounts[i].Id < gen.report.ProviderDiscounts[j].Id
+		return gen.report.ProviderDiscounts[i].Discount < gen.report.ProviderDiscounts[j].Discount
 	})
 }
 
@@ -239,7 +245,10 @@ func (gen *ReportGenerator) generateFunds() {
 		}
 	}
 	sort.Slice(gen.report.PolicyFunds, func(i, j int) bool {
-		return gen.report.PolicyFunds[i].Id < gen.report.PolicyFunds[j].Id
+		if gen.report.PolicyFunds[i].Proportion == gen.report.PolicyFunds[j].Proportion {
+			return gen.report.PolicyFunds[i].PolicyId < gen.report.PolicyFunds[j].PolicyId
+		}
+		return gen.report.PolicyFunds[i].Proportion < gen.report.PolicyFunds[j].Proportion
 	})
 	sort.Slice(gen.report.Funds, func(i, j int) bool {
 		return gen.report.Funds[i].Name < gen.report.Funds[j].Name
@@ -268,7 +277,7 @@ func (gen *ReportGenerator) generateModels() {
 		gen.report.Operators = append(gen.report.Operators, o.ToReport())
 	}
 	sort.Slice(gen.report.Portfolios, func(i, j int) bool {
-		return gen.report.Portfolios[i].Id < gen.report.Portfolios[j].Id
+		return gen.report.Portfolios[i].Proportion < gen.report.Portfolios[j].Proportion
 	})
 	sort.Slice(gen.report.Models, func(i, j int) bool {
 		return gen.report.Models[i].Name < gen.report.Models[j].Name

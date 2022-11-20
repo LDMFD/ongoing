@@ -9,6 +9,6 @@ import (
 func AddRoutes(r *gin.RouterGroup) {
 	r.GET("", Commands.GetModulePresets)
 	r.POST("", Commands.CreateModulePreset)
-	r.PUT("/:ModulePresetId", Commands.UpdateModulePreset)
-	r.DELETE("/:ModulePresetId", Commands.DeleteModulePreset)
+	r.PUT("/:Type", Commands.UpdateModulePreset)
+	r.DELETE("/:Type", Commands.DeleteModulePreset)
 }

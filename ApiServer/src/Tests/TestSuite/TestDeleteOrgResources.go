@@ -3,6 +3,7 @@ package TestSuite
 import (
 	"github.com/gavv/httpexpect/v2"
 	"net/http"
+	"ongoing/Entities"
 	"testing"
 )
 
@@ -14,6 +15,7 @@ func TestDeleteOrgResources(t *testing.T, e *httpexpect.Expect) {
 	TestDeletePolicyTypes(t, e)
 	TestDeleteRiskLevels(t, e)
 	TestDeleteRiskProviders(t, e)
+	TestDeleteModulePresets(t, e)
 }
 
 func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
@@ -80,6 +82,12 @@ func TestDeleteRiskLevels(t *testing.T, e *httpexpect.Expect) {
 
 func TestDeleteRiskProviders(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/risk-providers/"+riskProviderId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+}
+
+func TestDeleteModulePresets(t *testing.T, e *httpexpect.Expect) {
+	e.DELETE("/api/advisor/reviews/module-presets/"+Entities.ModuleTypeIntroduction).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }

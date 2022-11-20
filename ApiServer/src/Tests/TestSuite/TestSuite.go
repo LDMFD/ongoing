@@ -38,7 +38,7 @@ func runFullTestSuite(t *testing.T, e *httpexpect.Expect) {
 }
 
 func runValidationTests(t *testing.T, e *httpexpect.Expect) {
-	testGetGlobalEntitiesFromThisOrg(e)
+	testGetOrgResourcesFromThisOrg(e)
 	testGetClient(t, e)
 	testGetClientSpace(t, e)
 }
