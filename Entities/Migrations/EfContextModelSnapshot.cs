@@ -544,8 +544,6 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ModuleType");
-
                     b.HasAlternateKey("Uid");
 
                     b.HasIndex("OrgId");
