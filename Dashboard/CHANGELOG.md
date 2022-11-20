@@ -1,3 +1,7 @@
+## v1.4.1 2022-11-17
+
+- Add environment warning
+
 ## v1.4.0 2022-11-13
 
 - Permissions fixes, supports ApiServer v1.3.0
