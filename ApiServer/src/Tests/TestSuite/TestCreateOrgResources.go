@@ -8,6 +8,7 @@ import (
 	OperatorCommands "ongoing/ApiServer/Advisor/OrgResources/Operators/Commands"
 	PolicyProviderCommands "ongoing/ApiServer/Advisor/OrgResources/PolicyProviders/Commands"
 	PolicyTypeCommands "ongoing/ApiServer/Advisor/OrgResources/PolicyTypes/Commands"
+	"ongoing/ApiServer/Advisor/OrgResources/Reviews/ModulePresets/Commands"
 	RiskLevelCommands "ongoing/ApiServer/Advisor/OrgResources/RiskLevels/Commands"
 	RiskProviderCommands "ongoing/ApiServer/Advisor/OrgResources/RiskProviders/Commands"
 	"ongoing/Entities"
@@ -15,20 +16,20 @@ import (
 )
 
 func testCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
-	TestCreatePolicyType(e)
-	TestCreatePolicyProvider(e)
-	TestCreateFund(t, e)
-	TestCreateOperator(e)
-	TestCreateModel(t, e)
-	TestCreateRiskProvider(e)
-	TestCreateRiskLevel(e)
-	// TODO Module Presets
+	testCreatePolicyType(e)
+	testCreatePolicyProvider(e)
+	testCreateFund(t, e)
+	testCreateOperator(e)
+	testCreateModel(t, e)
+	testCreateRiskProvider(e)
+	testCreateRiskLevel(e)
+	testCreateModulePreset(e)
 
-	testGetGlobalEntitiesFromThisOrg(e)
-	TestGetGlobalEntitiesFromOtherOrg(e)
+	testGetOrgResourcesFromThisOrg(e)
+	testGetGlobalEntitiesFromOtherOrg(e)
 }
 
-func TestCreatePolicyType(e *httpexpect.Expect) {
+func testCreatePolicyType(e *httpexpect.Expect) {
 	// Create Policy Type as org 1 advisor
 	request := PolicyTypeCommands.CreatePolicyTypeRequest{
 		Name: "ISA",
@@ -40,7 +41,7 @@ func TestCreatePolicyType(e *httpexpect.Expect) {
 	policyTypeId = resp.JSON().Object().Value("Id").String().Raw()
 }
 
-func TestCreatePolicyProvider(e *httpexpect.Expect) {
+func testCreatePolicyProvider(e *httpexpect.Expect) {
 	// Create Policy Provider as org 1 advisor
 	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          "Aegon oops",
@@ -64,7 +65,7 @@ func TestCreatePolicyProvider(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 }
 
-func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
+func testCreateFund(t *testing.T, e *httpexpect.Expect) {
 	fileId1 := TestUpload(t, e, ORG1_ADVISOR, "fund.png")
 
 	// Create Fund 1 (with file) as org 1 advisor
@@ -144,7 +145,7 @@ func TestCreateFund(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADVISOR, fundFileId, true)
 }
 
-func TestCreateOperator(e *httpexpect.Expect) {
+func testCreateOperator(e *httpexpect.Expect) {
 	request := OperatorCommands.CreateOperatorRequestBody{
 		Name: "FE Invest",
 		Type: "dim",
@@ -157,7 +158,7 @@ func TestCreateOperator(e *httpexpect.Expect) {
 	operatorId = resp.Value("Id").String().Raw()
 }
 
-func TestCreateModel(t *testing.T, e *httpexpect.Expect) {
+func testCreateModel(t *testing.T, e *httpexpect.Expect) {
 	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model.png")
 
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
@@ -226,7 +227,7 @@ func TestCreateModel(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
 }
 
-func TestCreateRiskProvider(e *httpexpect.Expect) {
+func testCreateRiskProvider(e *httpexpect.Expect) {
 	// Create risk provider
 	request := RiskProviderCommands.CreateRiskProviderRequest{
 		Name: "Dynamic Planner oops",
@@ -247,7 +248,7 @@ func TestCreateRiskProvider(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 }
 
-func TestCreateRiskLevel(e *httpexpect.Expect) {
+func testCreateRiskLevel(e *httpexpect.Expect) {
 	request := RiskLevelCommands.CreateRiskLevelRequest{
 		RiskProviderId: riskProviderId,
 		Level:          5,
@@ -271,33 +272,65 @@ func TestCreateRiskLevel(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 }
 
-func testGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
+var modulePresetText = "preset intro"
+
+func testCreateModulePreset(e *httpexpect.Expect) {
+	createModulePreset(e)
+	updateModulePreset(e)
+}
+
+func createModulePreset(e *httpexpect.Expect) {
+	request := Commands.CreateOrUpdateModulePresetRequestBody{
+		ModuleType: Entities.ModuleTypeIntroduction,
+		Text:       "a poor introduction",
+	}
+	e.POST("/api/advisor/reviews/module-presets").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+}
+
+func updateModulePreset(e *httpexpect.Expect) {
+	request := Commands.CreateOrUpdateModulePresetRequestBody{
+		ModuleType: Entities.ModuleTypeIntroduction,
+		Text:       modulePresetText,
+	}
+	e.PUT("/api/advisor/reviews/module-presets/"+Entities.ModuleTypeIntroduction).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+}
+
+func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 	// Test GetGlobalEntities
 	resp := e.GET("/api/advisor/org-resources").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK).JSON().Object().
 		Value("Resources").Object()
 
-	resp.Value("Funds").Array().First().Object().Value("Name").String().Equal("Jupiter Balanced")
-	resp.Value("Funds").Array().First().Object().Value("Modified").String().NotEmpty()
-	resp.Value("Funds").Array().First().Object().Value("OcfFee").Number().Equal(0.76)
-	resp.Value("Funds").Array().First().Object().Value("ExAnteFee").Number().Equal(0.16)
-	resp.Value("Funds").Array().First().Object().Value("Modified").String().NotEmpty()
+	fund := resp.Value("Funds").Array().First().Object()
+	fund.Value("Name").String().Equal("Jupiter Balanced")
+	fund.Value("Modified").String().NotEmpty()
+	fund.Value("OcfFee").Number().Equal(0.76)
+	fund.Value("ExAnteFee").Number().Equal(0.16)
+	fund.Value("Modified").String().NotEmpty()
 	resp.Value("Funds").Array().Length().Equal(2)
 
 	resp.Value("Models").Array().First().Object().Value("Name").String().Equal("FE Invest Hybrid Risk Level 3 Long")
 	resp.Value("Models").Array().Length().Equal(1)
 
-	resp.Value("ModulePresets").Array().Length().Equal(0)
+	resp.Value("ModulePresets").Array().Length().Equal(1)
 
-	resp.Value("Operators").Array().First().Object().Value("Name").String().Equal("FE Invest")
-	resp.Value("Operators").Array().First().Object().Value("Type").String().Equal("dim")
-	resp.Value("Operators").Array().First().Object().Value("Fee").Number().Equal(0.0023)
+	operator := resp.Value("Operators").Array().First().Object()
+	operator.Value("Name").String().Equal("FE Invest")
+	operator.Value("Type").String().Equal("dim")
+	operator.Value("Fee").Number().Equal(0.0023)
 	resp.Value("Operators").Array().Length().Equal(1)
 
-	resp.Value("PolicyProviders").Array().First().Object().Value("Name").String().Equal("Aegon")
-	resp.Value("PolicyProviders").Array().First().Object().Value("Pricing").String().Contains("tiered charging structure")
-	resp.Value("PolicyProviders").Array().First().Object().Value("CustomPricing").String().Equal("12.5")
+	policyProvider := resp.Value("PolicyProviders").Array().First().Object()
+	policyProvider.Value("Name").String().Equal("Aegon")
+	policyProvider.Value("Pricing").String().Contains("tiered charging structure")
+	policyProvider.Value("CustomPricing").String().Equal("12.5")
 	resp.Value("PolicyProviders").Array().Length().Equal(1)
 
 	resp.Value("PolicyTypes").Array().First().Object().Value("Name").String().Equal("ISA")
@@ -310,9 +343,14 @@ func testGetGlobalEntitiesFromThisOrg(e *httpexpect.Expect) {
 
 	resp.Value("RiskLevels").Array().First().Object().Value("Label").String().Equal("Highest")
 	resp.Value("RiskLevels").Array().Length().Equal(1)
+
+	mp := resp.Value("ModulePresets").Array().First().Object()
+	mp.Value("ModuleType").String().Equal(Entities.ModuleTypeIntroduction)
+	mp.Value("Text").String().Equal(modulePresetText)
+	resp.Value("ModulePresets").Array().Length().Equal(1)
 }
 
-func TestGetGlobalEntitiesFromOtherOrg(e *httpexpect.Expect) {
+func testGetGlobalEntitiesFromOtherOrg(e *httpexpect.Expect) {
 	// Test GetGlobalEntities of advisor in other org
 	resp := e.GET("/api/advisor/org-resources").
 		WithHeader("Authentication", ORG2_OWNER).

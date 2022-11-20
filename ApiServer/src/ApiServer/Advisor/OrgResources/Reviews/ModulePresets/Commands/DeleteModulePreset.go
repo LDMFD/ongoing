@@ -8,14 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type DeleteModulePresetRequestPath struct {
-	ModulePresetId int64 `binding:"required"`
-}
-
 func DeleteModulePreset(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	var path DeleteModulePresetRequestPath
+	var path UpdateOrDeleteModulePresetRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -25,7 +21,7 @@ func DeleteModulePreset(c *gin.Context) {
 
 	if _, err := db.NewDelete().
 		Model(&modulePreset).
-		Where("id = ?", path.ModulePresetId).
+		Where("module_type = ?", path.Type).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
