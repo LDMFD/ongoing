@@ -26,7 +26,7 @@ function AuthControl() {
     const _logout = useCallback(() => {
         if (localStorage.getItem('ongoing-viewas')) {
             localStorage.removeItem('ongoing-viewas');
-            window.location = '/';
+            window.location = '/admin/organisations/id/' + state.Session.OrgId + '/users';
             return;
         }
 
@@ -43,7 +43,7 @@ function AuthControl() {
 
         // Reload page
         window.location = '/';
-    }, [ dispatch ]);
+    }, [ dispatch, state.Session ]);
 
     const loginFn = useCallback((token, user) => { //email, name, photoURL) => {
         window.ApiClient.defaults.headers.common['Authentication'] = token;

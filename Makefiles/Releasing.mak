@@ -4,9 +4,11 @@ _release:
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${VERSION}
 	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${VERSION}
 
+# Usage: make release-api VERSION=1.2.3
 release-api:
 	make _release SERVICE=api IMAGE=ongoing-api
 
+# Usage: make release-dashboard VERSION=1.2.3
 release-dashboard:
 	make _release SERVICE=dashboard IMAGE=ongoing_dashboard-server
 

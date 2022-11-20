@@ -14,10 +14,9 @@ const EditModulePreset = () => {
     let [ modulePreset, setModulePreset ] = useState(null);
 
     let { modulePresetId } = useParams();
-    modulePresetId = parseInt(modulePresetId);
 
     if (!modulePreset) {
-        let p = state.Resources.ModulePresets.find(p => p.Id === modulePresetId);
+        let p = state.Resources.ModulePresets.find(p => p.ModuleType === modulePresetId);
         setModulePreset(p)
         return;
     }

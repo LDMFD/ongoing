@@ -1,3 +1,7 @@
+## v1.3.1 2022-11-20
+
+- Fix Module Presets
+
 ## v1.3.0 2022-11-13
 
 - Permission fixes, deletion, export & import, teardown tests

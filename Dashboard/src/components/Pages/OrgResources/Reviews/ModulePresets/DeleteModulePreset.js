@@ -14,7 +14,6 @@ const DeleteModulePreset = () => {
     let [ modulePreset, setModulePreset ] = useState(null);
 
     let { modulePresetId } = useParams();
-    modulePresetId = parseInt(modulePresetId);
 
     const onDelete = async (e) => {
         e.preventDefault();
@@ -27,7 +26,7 @@ const DeleteModulePreset = () => {
     };
 
     if (!modulePreset) {
-        let p = state.Resources.ModulePresets.find(p => p.Id === modulePresetId);
+        let p = state.Resources.ModulePresets.find(p => p.ModuleType === modulePresetId);
         setModulePreset(p)
         return;
     }

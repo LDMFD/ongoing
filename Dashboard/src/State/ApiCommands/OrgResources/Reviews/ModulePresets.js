@@ -5,7 +5,7 @@ const Create = (modulePreset) => {
 }
 
 const Update = (modulePreset) => {
-    return window.ApiClient.put(`advisor/reviews/module-presets/${modulePreset.Id}`, {
+    return window.ApiClient.put(`advisor/reviews/module-presets/${modulePreset.ModuleType}`, {
         ...modulePreset
     })
 }

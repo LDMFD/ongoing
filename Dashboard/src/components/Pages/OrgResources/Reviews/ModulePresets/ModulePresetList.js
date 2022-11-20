@@ -25,7 +25,7 @@ const ModulePresetList = () => {
     
     const columns = [
         {
-            accessor: 'moduleType',
+            accessor: 'label',
             Header: 'Module Type',
             width: 2,
         },
@@ -42,10 +42,10 @@ const ModulePresetList = () => {
             width: 1,
             Cell: ({ row }) => (
                 <IconGroup>
-                    <Link to={`/review-config/module-presets/id/${row.original.id}/delete`}>
+                    <Link to={`/review-config/module-presets/id/${row.original.type}/delete`}>
                         <DeleteIcon />
                     </Link>
-                    <Link to={`/review-config/module-presets/id/${row.original.id}/edit`}>
+                    <Link to={`/review-config/module-presets/id/${row.original.type}/edit`}>
                         <EditIcon />
                     </Link>
                 </IconGroup>
@@ -55,11 +55,13 @@ const ModulePresetList = () => {
 
     let modulePresets = state.Resources.ModulePresets.map(p => {
         return {
-            id:          p.Id,  // TODO multiple module presets?
-            moduleType:  ModuleTypeSelectSpec.find(t => t.id === p.ModuleType).label,
-            text:        p.Text,
+            // TODO multiple entries per module presets?
+            type:  ModuleTypeSelectSpec.find(t => t.id === p.ModuleType).id,
+            label:  ModuleTypeSelectSpec.find(t => t.id === p.ModuleType).label,
+            text:  p.Text,
         };
     });
+    console.log(modulePresets)
 
     return (
         <>

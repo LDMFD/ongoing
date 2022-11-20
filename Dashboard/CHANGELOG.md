@@ -1,3 +1,7 @@
+## 1.4.2 2022-11-20
+
+- Fix Module Presets
+
 ## v1.4.1 2022-11-17
 
 - Add environment warning
