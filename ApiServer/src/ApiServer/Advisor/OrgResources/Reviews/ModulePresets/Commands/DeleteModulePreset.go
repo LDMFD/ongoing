@@ -10,6 +10,7 @@ import (
 
 func DeleteModulePreset(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path UpdateOrDeleteModulePresetRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -22,6 +23,7 @@ func DeleteModulePreset(c *gin.Context) {
 	if _, err := db.NewDelete().
 		Model(&modulePreset).
 		Where("module_type = ?", path.Type).
+		Where("org_id = ?", session.Org.Id).
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

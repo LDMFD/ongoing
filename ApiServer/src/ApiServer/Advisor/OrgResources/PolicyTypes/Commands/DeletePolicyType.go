@@ -3,8 +3,10 @@ package Commands
 import (
 	"fmt"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"strings"
 
@@ -17,6 +19,7 @@ type DeletePolicyTypeRequestPath struct {
 
 func DeletePolicyType(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path DeletePolicyTypeRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -32,6 +35,14 @@ func DeletePolicyType(c *gin.Context) {
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if policyType.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		return
 	}
 
 	if len(policyType.Policies) > 0 {
