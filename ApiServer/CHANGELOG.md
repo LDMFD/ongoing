@@ -1,3 +1,7 @@
+## v1.3.2 2022-11-20
+
+- Fix Module Presets some more
+
 ## v1.3.1 2022-11-20
 
 - Fix Module Presets
