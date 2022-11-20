@@ -39,6 +39,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./Dashboard:/app
+      - ./Makefiles/Helpers/npm-check-updates.sh:/app/npm-check-updates.sh
       - "node_modules:/app/node_modules"
     ports:
       - "3000:3000"

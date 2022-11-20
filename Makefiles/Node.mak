@@ -27,9 +27,8 @@ _node-generate-package-lock:
 	docker exec -ti ${IMAGE} npm i --package-lock-only
 	docker cp ${IMAGE}:/app/package-lock.json ${DEST}
 
+# TODO dashboard server including package-lock.json
 node-update-packages:
-	docker exec -ti ongoing-dash \
-		npm i -g npm-check-updates && \
-		ncu -u
-	docker cp ${CONTAINER}:/app/package.json ${FOLDER}/
-	docker cp ${CONTAINER}:/app/package-lock.json ${FOLDER}/
+	docker exec -ti ongoing-dash /app/npm-check-updates.sh
+	docker cp ongoing-dash:/app/package.json ${shell pwd}/Dashboard/package.json
+	docker cp ongoing-dash:/app/package-lock.json ${shell pwd}/Dashboard/package-lock.json
