@@ -546,7 +546,7 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("OrgId");
+                    b.HasAlternateKey("OrgId", "ModuleType");
 
                     b.HasIndex(new[] { "Uid" }, "module_presets_uid_key")
                         .IsUnique();

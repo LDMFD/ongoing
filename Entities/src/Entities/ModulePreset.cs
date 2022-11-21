@@ -51,5 +51,6 @@ class ModulePresetConfig : IEntityTypeConfiguration<ModulePreset>
             .HasConstraintName("fk_modulepreset_org");
 
         builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(p => new { p.OrgId, p.ModuleType });
     }
 }
