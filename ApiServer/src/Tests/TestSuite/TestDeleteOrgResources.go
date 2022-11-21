@@ -25,6 +25,7 @@ func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 
+	// TODO
 	//// Owner can still read the file due to the client review
 	//TestDownload(t, e, ORG1_OWNER, modelFileId, true)
 	//

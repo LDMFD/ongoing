@@ -5,7 +5,7 @@ Handle invalid input as follows:
 		c.JSON(http.StatusBadRequest, gin.H{"error": "x not found"})
 
 		// Print stacktrace to console
-		panic(err.Error())
+		panic(err)
 	}
 
 Handle unauthenticated as follows:
