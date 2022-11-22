@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
 )
@@ -20,7 +21,7 @@ func CreateModulePreset(c *gin.Context) {
 	var body CreateOrUpdateModulePresetRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		panic(err)
 	}
 
 	var modulePreset = Entities.ModulePreset{
@@ -31,7 +32,10 @@ func CreateModulePreset(c *gin.Context) {
 	}
 	if _, err := db.NewInsert().Model(&modulePreset).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true" {
+			return
+		}
+		panic(err)
 	}
 
 	c.JSON(200, gin.H{})

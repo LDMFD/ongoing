@@ -8,7 +8,6 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
-	"github.com/uptrace/bun/extra/bundebug"
 	"log"
 	"ongoing/Entities"
 	"os"
@@ -17,6 +16,7 @@ import (
 )
 
 var DB *bun.DB
+var hook *QueryHook
 
 func New() (*bun.DB, error) {
 	dbname := os.Getenv("POSTGRES_DB")
@@ -44,16 +44,8 @@ func connect(dsn, dbname string) *bun.DB {
 	sqldb := sql.OpenDB(connector)
 	db := bun.NewDB(sqldb, pgdialect.New())
 
-	// Normal logging:
-	db.AddQueryHook(bundebug.NewQueryHook())
-
-	// Logs all queries - TODO control via env var
-	//db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
-
-	db.AddQueryHook(bundebug.NewQueryHook(
-		bundebug.WithVerbose(true),
-		bundebug.FromEnv("BUNDEBUG"),
-	))
+	// Custom query hook to disable logs when X-Ongoing-ExpectForbidden is set
+	db.AddQueryHook(NewQueryHook())
 
 	for {
 		_, err := db.Exec("SELECT 1")

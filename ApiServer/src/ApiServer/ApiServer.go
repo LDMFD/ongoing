@@ -60,12 +60,11 @@ func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 		AllowCredentials:   true,
 		OptionsPassthrough: false,
 
-		// Enable Debugging for testing, TODO consider disabling in production to reduce log noise?
-		Debug: false, // keep as false - enable via new env var - !Tests.TEST_BUILD,
+		Debug: false, // Debug CORS issues
 	})
 	r.Use(c)
 
-	r.Use(gin.ErrorLogger()) // TODO when to use `r.Use(gin.Logger())` ?
+	r.Use(gin.ErrorLogger())
 
 	r.Use(gin.Recovery())
 

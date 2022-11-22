@@ -30,6 +30,7 @@ func addUnauthenticatedRoutes(r *gin.Engine) {
 
 	routes.Use(AuthMiddleware(nil))
 	routes.GET("/healthcheck", healthcheck)
+	routes.GET("/errorcheck", errorcheck)
 }
 
 func addUserInfoRoute(r *gin.Engine) {
@@ -118,4 +119,13 @@ func healthcheck(c *gin.Context) {
 	}
 
 	c.JSON(200, "pass")
+}
+
+func errorcheck(c *gin.Context) {
+	db := c.MustGet("DATABASE").(*bun.DB)
+
+	_, err := db.Exec("MISTAKE")
+	if err != nil {
+		panic(err)
+	}
 }

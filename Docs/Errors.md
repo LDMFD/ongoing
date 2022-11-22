@@ -12,7 +12,7 @@ Handle unauthenticated as follows:
 
 	if ok, err := auth.CheckFilePermission(req.Uid, "read", session.UserUid); err != nil {
 		c.AbortWithStatus(http.StatusForbidden)
-		panic(err.Error())
+		panic(err)
 	}
 
 Consider using "AbortWith()" in other places?
