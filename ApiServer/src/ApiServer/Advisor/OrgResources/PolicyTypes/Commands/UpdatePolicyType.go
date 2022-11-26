@@ -1,7 +1,9 @@
 package Commands
 
 import (
+	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -13,12 +15,9 @@ type UpdatePolicyTypePath struct {
 	PolicyTypeId string `binding:"required"`
 }
 
-type UpdatePolicyTypeRequest struct {
-	Name string `binding:"required"`
-}
-
 func UpdatePolicyType(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path UpdatePolicyTypePath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -26,15 +25,31 @@ func UpdatePolicyType(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var req UpdatePolicyTypeRequest
+	var policyType = Entities.PolicyType{}
+	if err := db.NewSelect().
+		Model(&policyType).
+		Where("uid = ?", path.PolicyTypeId).
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+
+	if policyType.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		return
+	}
+
+	var req CreateOrUpdatePolicyTypeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
-	var policyType = Entities.PolicyType{
-		Name: req.Name,
-	}
+	policyType.Name = req.Name
+
 	if _, err := db.NewUpdate().
 		Model(&policyType).
 		Where("uid = ?", path.PolicyTypeId).

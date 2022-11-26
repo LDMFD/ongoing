@@ -5,13 +5,14 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
 type DeleteReviewModulePath struct {
 	ClientId string `binding:"required"`
 	Module   string `binding:"required"`
-	Field    string `binding:"required,oneof=intro text"`
+	Field    string `binding:"required,oneof=intro text all"`
 }
 
 func DeleteReviewModule(c *gin.Context) {
@@ -26,7 +27,10 @@ func DeleteReviewModule(c *gin.Context) {
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	}
 
 	module := &Entities.Module{}
@@ -37,10 +41,10 @@ func DeleteReviewModule(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-	if path.Field == "intro" {
+	if path.Field == "intro" || path.Field == "all" {
 		module.Intro = ""
 	}
-	if path.Field == "text" {
+	if path.Field == "text" || path.Field == "all" {
 		module.Text = ""
 	}
 

@@ -7,10 +7,11 @@ import (
 	"testing"
 )
 
-func TestDeleteOrgResources(t *testing.T, e *httpexpect.Expect) {
+func testDeleteOrgResources(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteModels(t, e)
 	TestDeleteOperators(t, e)
 	TestDeleteFunds(t, e)
+	TestDeleteProviderCharges(t, e)
 	TestDeletePolicyProviders(t, e)
 	TestDeletePolicyTypes(t, e)
 	TestDeleteRiskLevels(t, e)
@@ -61,6 +62,16 @@ func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 
 	// Advisors (not of that client) cannot read the file anymore
 	TestDownload(t, e, ORG1_ADVISOR, fundFileId, false)
+}
+
+func TestDeleteProviderCharges(t *testing.T, e *httpexpect.Expect) {
+	e.DELETE("/api/advisor/provider-charges/"+providerChargeId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/provider-charges/"+providerChargeId2).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
 }
 
 func TestDeletePolicyProviders(t *testing.T, e *httpexpect.Expect) {

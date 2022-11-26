@@ -4,19 +4,26 @@ import (
 	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/FactFinds"
+	"ongoing/ApiServer/Advisor/Clients/Commands/FeesReports"
+	"ongoing/ApiServer/Advisor/Clients/Commands/Forecasts"
 	"ongoing/ApiServer/Advisor/Clients/Commands/RiskAssessments"
 	"ongoing/Entities"
 	"testing"
 )
 
 func testCreateDocuments(t *testing.T, e *httpexpect.Expect) {
-	CreateRiskAssessment(t, e)
-	CreateFactFind(t, e)
-	CreateFeesReport(t, e)
-	CreateForecast(t, e)
+	testCreateRiskAssessment(t, e)
+	testCreateFactFind(t, e)
+	testCreateFeesReport(t, e)
+	testCreateForecast(t, e)
 }
 
-func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
+func testCreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
+	testCreateRiskAssessmentBasic(t, e)
+	testCreateRiskAssessmentSecurity(t, e)
+}
+
+func testCreateRiskAssessmentBasic(t *testing.T, e *httpexpect.Expect) {
 	assessmentFileId = TestUpload(t, e, ORG1_ADVISOR, "assessment-c.png")
 
 	request := RiskAssessments.CreateOrUpdateRiskAssessmentRequestBody{
@@ -87,7 +94,32 @@ func CreateRiskAssessment(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, assessmentFileId, true)
 }
 
-func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
+func testCreateRiskAssessmentSecurity(t *testing.T, e *httpexpect.Expect) {
+	request := RiskAssessments.CreateOrUpdateRiskAssessmentRequestBody{
+		RiskProviderId: riskProviderId,
+		RiskLevelId:    riskLevelId,
+		Completed:      "2006-01-02T15:04:05Z",
+		File:           nil,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/risk-assessments/"+assessmentId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/risk-assessments/"+assessmentId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+}
+
+func testCreateFactFind(t *testing.T, e *httpexpect.Expect) {
+	testCreateFactFindBasic(t, e)
+	testCreateFactFindSecurity(t, e)
+}
+
+func testCreateFactFindBasic(t *testing.T, e *httpexpect.Expect) {
 	factFindFileId = TestUpload(t, e, ORG1_ADVISOR, "fact-find.png")
 
 	request := FactFinds.CreateOrUpdateFactFindRequestBody{
@@ -155,10 +187,33 @@ func CreateFactFind(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, factFindFileId, true)
 }
 
-func CreateFeesReport(t *testing.T, e *httpexpect.Expect) {
+func testCreateFactFindSecurity(t *testing.T, e *httpexpect.Expect) {
+	request := FactFinds.CreateOrUpdateFactFindRequestBody{
+		Submitted: "2006-01-02T15:04:05Z",
+		File:      nil,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/fact-finds/"+factFindId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/fact-finds/"+factFindId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+}
+
+func testCreateFeesReport(t *testing.T, e *httpexpect.Expect) {
+	testCreateFeesReportBasic(t, e)
+	testCreateFeesReportSecurity(t, e)
+}
+
+func testCreateFeesReportBasic(t *testing.T, e *httpexpect.Expect) {
 	feesReportFileId = TestUpload(t, e, ORG1_ADVISOR, "sample.png")
 
-	request := FactFinds.CreateOrUpdateFactFindRequestBody{
+	request := FeesReports.CreateOrUpdateFeesReportRequestBody{
 		File: &Entities.RequestFile{
 			Uid:      feesReportFileId,
 			Filename: "sample.png",
@@ -224,7 +279,29 @@ func CreateFeesReport(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, feesReportFileId, true)
 }
 
-func CreateForecast(t *testing.T, e *httpexpect.Expect) {
+func testCreateFeesReportSecurity(t *testing.T, e *httpexpect.Expect) {
+	request := FeesReports.CreateOrUpdateFeesReportRequestBody{
+		Submitted: "2006-01-02T15:04:05Z",
+		File:      nil,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/fees-reports/"+feesReportId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/fees-reports/"+feesReportId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
+func testCreateForecast(t *testing.T, e *httpexpect.Expect) {
+	testCreateForecastBasic(t, e)
+	testCreateForecastSecurity(t, e)
+}
+
+func testCreateForecastBasic(t *testing.T, e *httpexpect.Expect) {
 	forecastFileId = TestUpload(t, e, ORG1_ADVISOR, "sample.png")
 
 	request := FactFinds.CreateOrUpdateFactFindRequestBody{
@@ -266,7 +343,6 @@ func CreateForecast(t *testing.T, e *httpexpect.Expect) {
 	// Delete it
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/forecasts/"+forecastId).
 		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
 		Expect().Status(http.StatusOK)
 
 	TestDownload(t, e, ORG1_OWNER, fileId2, false)
@@ -291,4 +367,21 @@ func CreateForecast(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADVISOR, forecastFileId, true)
 	TestDownload(t, e, ORG2_OWNER, forecastFileId, false)
 	TestDownload(t, e, ORG1_CLIENT, forecastFileId, true)
+}
+
+func testCreateForecastSecurity(t *testing.T, e *httpexpect.Expect) {
+	request := Forecasts.CreateOrUpdateForecastRequestBody{
+		Submitted: "2006-01-02T15:04:05Z",
+		File:      nil,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/forecasts/"+forecastId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/forecasts/"+forecastId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
 }

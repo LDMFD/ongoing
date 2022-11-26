@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -41,8 +42,10 @@ func DeleteFactFind(c *gin.Context) {
 	}
 
 	if client, err := Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	} else if factFind.ClientId != client.Id {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "FactFind does not belong to client"})
 		panic(err.Error())

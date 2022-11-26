@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/gin-gonic/gin"
@@ -46,7 +47,10 @@ func DeleteReview(c *gin.Context) {
 
 	var client *Entities.Client
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err.Error())
+		}
+		return
 	}
 
 	if review.ClientId != client.Id {

@@ -6,8 +6,7 @@ import (
 	"testing"
 )
 
-func TestDeleteClientHoldings(t *testing.T, e *httpexpect.Expect) {
-	TestDeleteReviews(t, e)
+func testDeleteClientHoldings(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteDocuments(t, e)
 	TestDeleteHoldings(t, e)
 }
@@ -26,7 +25,11 @@ func TestDeleteHoldings(t *testing.T, e *httpexpect.Expect) {
 	TestDeleteProviderDiscounts(t, e)
 }
 
-func TestDeleteReviews(t *testing.T, e *httpexpect.Expect) {
+func testDeleteReviews(t *testing.T, e *httpexpect.Expect) {
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/modules/introduction/field/all").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)

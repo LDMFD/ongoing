@@ -9,6 +9,7 @@ import (
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"strings"
 
@@ -40,7 +41,15 @@ func DeleteFund(c *gin.Context) {
 		Where("fund.uid = ?", path.FundId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		panic(err)
+	}
+
+	if fund.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		return
 	}
 
 	if len(fund.PolicyFunds) > 0 {

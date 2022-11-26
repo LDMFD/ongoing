@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func TestExport(t *testing.T, e *httpexpect.Expect) string {
+func testExport(t *testing.T, e *httpexpect.Expect) string {
 	obj := e.GET("/api/admin/export").
 		WithHeader("Authentication", SUPERUSER).
 		Expect().Status(http.StatusOK).JSON().Object().Raw()
@@ -21,12 +21,13 @@ func TestExport(t *testing.T, e *httpexpect.Expect) string {
 }
 
 func testTeardown(t *testing.T, e *httpexpect.Expect) {
-	TestDeleteClientHoldings(t, e)
-	TestDeleteOrgResources(t, e)
-	TestDeleteAccounts(t, e)
+	testDeleteClientHoldings(t, e)
+	testDeleteReviews(t, e)
+	testDeleteOrgResources(t, e)
+	testDeleteAccounts(t, e)
 }
 
-func TestDeleteAccounts(t *testing.T, e *httpexpect.Expect) {
+func testDeleteAccounts(t *testing.T, e *httpexpect.Expect) {
 	// TODO this is not ideal - should be BadRequest so an attacker can't prove the existence of an account
 	e.DELETE("/api/advisor/clients/"+org2ClientId).
 		WithHeader("Authentication", ORG1_ADMIN).

@@ -3,7 +3,9 @@ package Commands
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/Array"
 )
@@ -19,6 +21,7 @@ type ReorderProviderChargesBody struct {
 
 func ReorderProviderCharges(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path ReorderProviderChargesPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -45,6 +48,14 @@ func ReorderProviderCharges(c *gin.Context) {
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if len(charges) == 0 || charges[0].PolicyProvider.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		return
 	}
 
 	ids := make([]int64, len(charges))

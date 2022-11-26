@@ -12,16 +12,21 @@ import (
 )
 
 func testCreateHoldings(t *testing.T, e *httpexpect.Expect) {
-	CreateProviderDiscount(e)
-	CreatePolicy(t, e)
-	CreatePolicyFunds(e)
-	CreatePortfolio(e)
+	testCreateProviderDiscount(e)
+	testCreatePolicy(t, e)
+	testCreatePolicyFunds(e)
+	testCreatePortfolio(e)
 }
 
-func CreateProviderDiscount(e *httpexpect.Expect) {
+func testCreateProviderDiscount(e *httpexpect.Expect) {
+	testCreateProviderDiscountBasic(e)
+	testCreateProviderDiscountSecurity(e)
+}
+
+func testCreateProviderDiscountBasic(e *httpexpect.Expect) {
 	request := ProviderDiscount.CreateOrUpdateProviderDiscountRequestBody{
 		PolicyProviderId: policyProviderId,
-		Discount:         0.12,
+		Discount:         0.000000001,
 	}
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/provider-discounts").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -29,9 +34,38 @@ func CreateProviderDiscount(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK).
 		JSON().Object()
 	providerDiscountId = resp.Value("Id").String().Raw()
+
+	request.Discount = 0.12
+
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
 }
 
-func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
+func testCreateProviderDiscountSecurity(e *httpexpect.Expect) {
+	request := ProviderDiscount.CreateOrUpdateProviderDiscountRequestBody{
+		PolicyProviderId: policyProviderId,
+		Discount:         0.000000001,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
+func testCreatePolicy(t *testing.T, e *httpexpect.Expect) {
+	testCreatePolicyBasic(t, e)
+	testCreatePolicySecurity(t, e)
+}
+
+func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
 	fileId := TestUpload(t, e, ORG1_ADVISOR, "policy.png")
 
 	request := Policies.CreateOrUpdatePolicyRequestBody{
@@ -108,17 +142,51 @@ func CreatePolicy(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, policyFileId, true)
 }
 
-func CreatePolicyFunds(e *httpexpect.Expect) {
+func testCreatePolicySecurity(t *testing.T, e *httpexpect.Expect) {
+	request := Policies.CreateOrUpdatePolicyRequestBody{
+		ExternalId:           "hacked",
+		MonthlyContributions: 10,
+		StartValue:           100,
+		EndValue:             200,
+		PolicyTypeId:         policyTypeId,
+		PolicyProviderId:     policyProviderId,
+		Notes:                "hacked",
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
+func testCreatePolicyFunds(e *httpexpect.Expect) {
+	testCreatePolicyFundsBasic(e)
+	testCreatePolicyFundsSecurity(e)
+}
+
+func testCreatePolicyFundsBasic(e *httpexpect.Expect) {
 	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
 		FundId:     fundId1,
 		PolicyId:   policyId,
-		Proportion: 0.12,
+		Proportion: 0.0000001,
 	}
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/policy-funds").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
 	policyFundId1 = resp.Value("Id").String().Raw()
+
+	request.Proportion = 0.12
+
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policyFundId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK).JSON().Object()
 
 	request = PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
 		FundId:     fundId2,
@@ -132,15 +200,64 @@ func CreatePolicyFunds(e *httpexpect.Expect) {
 	policyFundId2 = resp.Value("Id").String().Raw()
 }
 
-func CreatePortfolio(e *httpexpect.Expect) {
+func testCreatePolicyFundsSecurity(e *httpexpect.Expect) {
+	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
+		FundId:     fundId1,
+		PolicyId:   policyId,
+		Proportion: 0.0000001,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policyFundId1).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policyFundId1).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+
+}
+
+func testCreatePortfolio(e *httpexpect.Expect) {
+	testCreatePortfolioBasic(e)
+	testCreatePortfolioSecurity(e)
+}
+
+func testCreatePortfolioBasic(e *httpexpect.Expect) {
 	request := Portfolios.CreateOrUpdatePortfolioRequestBody{
 		PolicyId:   policyId,
 		ModelId:    modelId,
-		Proportion: 0.12,
+		Proportion: 0.0000000001,
 	}
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/portfolios").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
 	portfolioId = resp.Value("Id").String().Raw()
+
+	request.Proportion = 0.12
+
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+}
+
+func testCreatePortfolioSecurity(e *httpexpect.Expect) {
+	request := Portfolios.CreateOrUpdatePortfolioRequestBody{
+		PolicyId:   policyId,
+		ModelId:    modelId,
+		Proportion: 0.0000000001,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
 }

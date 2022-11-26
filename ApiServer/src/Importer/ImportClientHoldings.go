@@ -25,7 +25,6 @@ func importModules(clientId string, report Entities.ReportDetail, advisorId stri
 		if err != nil {
 			panic(err)
 		}
-		request.Header.Set("X-Ongoing-EntityId", mod.Id)
 		request.Header.Set("Authentication", advisorId)
 
 		client := &http.Client{}

@@ -8,6 +8,7 @@ import (
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -52,7 +53,10 @@ func UpdateRiskAssessment(c *gin.Context) {
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	}
 
 	if assessment.ClientId != client.Id {

@@ -10,14 +10,15 @@ import (
 )
 
 func testCreationOfOrgsAdvisorsClients(e *httpexpect.Expect) {
-	TestCreateOrgAndAdvisors(e)
-	TestCreateClients(e)
-	TestGetAdvisors(e)
-	TestUserInfo(e)
-	TestUpdateOrg(e)
+	testCreateOrgs(e)
+	testCreateAdvisors(e)
+	testCreateClients(e)
+	testGetAdvisors(e)
+	testUserInfo(e)
+	testUpdateOrg(e)
 }
 
-func TestCreateOrgAndAdvisors(e *httpexpect.Expect) {
+func testCreateOrgs(e *httpexpect.Expect) {
 	// Create org 1
 	org1spec := map[string]interface{}{
 		"Email":     ORG1_OWNER,
@@ -41,6 +42,26 @@ func TestCreateOrgAndAdvisors(e *httpexpect.Expect) {
 		Status(http.StatusBadRequest).
 		JSON().Object().ValueEqual("error", "Organisation names must be globally unique.")
 
+	// Create org 2
+	org2spec := map[string]interface{}{
+		"Email":     ORG2_OWNER,
+		"Name":      "org2",
+		"Forenames": "Ty",
+		"Surname":   "Tyson",
+	}
+	org2 := e.POST("/api/admin/organisations").
+		WithHeader("Authentication", SUPERUSER).
+		WithJSON(org2spec).Expect().
+		Status(http.StatusOK).JSON().Object()
+	org2Id = org2.Value("Id").String().Raw()
+}
+
+func testCreateAdvisors(e *httpexpect.Expect) {
+	testCreateAdvisorsBasic(e)
+	testCreateAdvisorsSecurity(e)
+}
+
+func testCreateAdvisorsBasic(e *httpexpect.Expect) {
 	// Create second advisor (first non-owner) in org 1
 	newAdvisorSpec := Commands.CreateAdvisorRequestBody{
 		Email:     ORG1_ADMIN,
@@ -77,22 +98,28 @@ func TestCreateOrgAndAdvisors(e *httpexpect.Expect) {
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(newAdvisorSpec).Expect().
 		Status(http.StatusForbidden)
-
-	// Create org 2
-	org2spec := map[string]interface{}{
-		"Email":     ORG2_OWNER,
-		"Name":      "org2",
-		"Forenames": "Ty",
-		"Surname":   "Tyson",
-	}
-	org2 := e.POST("/api/admin/organisations").
-		WithHeader("Authentication", SUPERUSER).
-		WithJSON(org2spec).Expect().
-		Status(http.StatusOK).JSON().Object()
-	org2Id = org2.Value("Id").String().Raw()
 }
 
-func TestGetAdvisors(e *httpexpect.Expect) {
+func testCreateAdvisorsSecurity(e *httpexpect.Expect) {
+	newAdvisorSpec := Commands.UpdateAdvisorRequestBody{
+		Email:     ORG1_ADMIN,
+		Forenames: "Bob",
+		Surname:   "Admin",
+		Role:      Entities.UserTypeOrgAdmin,
+	}
+	e.PUT("/api/staff/"+org1AdvisorId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(newAdvisorSpec).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/staff/"+org1AdvisorId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
+func testGetAdvisors(e *httpexpect.Expect) {
 	info := e.GET("/api/staff").
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object().Value("Advisors").Array()
@@ -122,9 +149,10 @@ func TestGetAdvisors(e *httpexpect.Expect) {
 
 }
 
-func TestCreateClients(e *httpexpect.Expect) {
+func testCreateClients(e *httpexpect.Expect) {
 	org1ClientId = createClient(e, ORG1_ADMIN, ORG1_CLIENT, "Adam", 0.1)
 	org2ClientId = createClient(e, ORG2_OWNER, ORG2_CLIENT, "Bob", 0.2)
+	testUpdateClientSecurity(e)
 }
 
 func createClient(e *httpexpect.Expect, owner, email, forename string, fee float64) string {
@@ -135,7 +163,7 @@ func createClient(e *httpexpect.Expect, owner, email, forename string, fee float
 			Email     string `binding:"required"`
 		}{
 			Forenames: forename,
-			Surname:   "Client",
+			Surname:   "Clientele",
 			Email:     email,
 		},
 		Fee: fee,
@@ -147,10 +175,43 @@ func createClient(e *httpexpect.Expect, owner, email, forename string, fee float
 		Status(http.StatusOK).JSON().Object()
 
 	clientId := resp.Value("Id").String().Raw()
+
+	client.Identity.Surname = "Client"
+
+	e.PUT("/api/advisor/clients/"+clientId).
+		WithHeader("Authentication", owner).
+		WithJSON(client).Expect().
+		Status(http.StatusOK)
+
 	return clientId
 }
 
-func TestUserInfo(e *httpexpect.Expect) {
+func testUpdateClientSecurity(e *httpexpect.Expect) {
+	client := ClientProfileCommands.CreateOrUpdateClientRequestBody{
+		Identity: struct {
+			Forenames string `binding:"required"`
+			Surname   string `binding:"required"`
+			Email     string `binding:"required"`
+		}{
+			Forenames: "spam",
+			Surname:   "spam",
+			Email:     "spam@example.com",
+		},
+		Fee: 0.12,
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(client).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
+func testUserInfo(e *httpexpect.Expect) {
 	info := e.GET("/api/user/info").
 		WithHeader("Authentication", SUPERUSER).
 		Expect().Status(http.StatusOK).JSON().Object().Value("Context").Object()
@@ -187,7 +248,7 @@ func TestUserInfo(e *httpexpect.Expect) {
 	info.ValueEqual("Role", "client")
 }
 
-func TestUpdateOrg(e *httpexpect.Expect) {
+func testUpdateOrg(e *httpexpect.Expect) {
 	// Rename org (as the superuser)
 	request := Organisation.UpdateOrganisationRequestBody{Name: "org1b"}
 	e.PUT("/api/admin/organisations/"+org1Id).

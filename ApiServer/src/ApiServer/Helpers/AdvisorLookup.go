@@ -26,6 +26,7 @@ func AdvisorFromUserUID(c *gin.Context, db *bun.DB, uid string) (*Entities.Advis
 		return nil, err
 	}
 
+	// Client tries to make a call on behalf of another org
 	if !IsSuperuser(session.Email) && advisor.Organisation.Uid != *session.OrgId {
 		msg := fmt.Sprintf("Unauthorized access attempt by: %v", session.Email)
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {

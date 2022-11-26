@@ -41,7 +41,6 @@ func importAdvisor(owner Entities.ReportUser, user Entities.OrganisationMember, 
 	request.Header.Set("X-Ongoing-EntityId-user", identity.Id)
 	request.Header.Set("X-Ongoing-EntityId-advisor", user.UserId)
 	request.Header.Set("Authentication", owner.Id)
-	//request.Header.Set("X-ViewAs", owner.Id)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)

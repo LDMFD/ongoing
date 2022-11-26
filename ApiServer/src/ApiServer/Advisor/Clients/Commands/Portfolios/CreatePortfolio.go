@@ -5,6 +5,7 @@ import (
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
 )
@@ -31,7 +32,10 @@ func CreatePortfolio(c *gin.Context) {
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	}
 
 	var policy = Entities.Policy{}

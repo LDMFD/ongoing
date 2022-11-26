@@ -3,25 +3,78 @@ package TestSuite
 import (
 	"github.com/gavv/httpexpect/v2"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ReviewModules"
 	"testing"
 )
 
 func testClientReviews(t *testing.T, e *httpexpect.Expect) {
-	testCreateAndPublishReview(e)
+	testReviews(e)
 	testGetClient(t, e)
 	testGetClients(e)
 	testGetClientSpace(t, e)
 }
 
-func testCreateAndPublishReview(e *httpexpect.Expect) {
+func testReviews(e *httpexpect.Expect) {
+	testCreateReview(e)
+	testUpdateReviewModules(e)
+	testUpdateReview(e)
+	testPublishReview(e)
+	testReviewSecurity(e)
+}
+
+func testCreateReview(e *httpexpect.Expect) {
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
 	reviewId = resp.Value("Id").String().Raw()
+}
 
+func testUpdateReview(e *httpexpect.Expect) {
+	request := ClientProfile.UpdateReviewRequestBody{
+		StartDate: "2006-01-02T15:04:05Z",
+		EndDate:   "2006-01-03T15:04:05Z",
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+}
+
+func testUpdateReviewModules(e *httpexpect.Expect) {
+	request := ReviewModules.UpdateReviewModuleRequestBody{
+		Intro: "custom intro",
+		Text:  "custom text",
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/modules/introduction").
+		WithHeader("Authentication", ORG1_OWNER).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+}
+
+func testPublishReview(e *httpexpect.Expect) {
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId+"/publish").
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK)
+}
+
+func testReviewSecurity(e *httpexpect.Expect) {
+	// Modules / Review Modules security
+	moduleRequest := ReviewModules.UpdateReviewModuleRequestBody{
+		Intro: "hacked",
+		Text:  "hacked",
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/modules/introduction").
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(moduleRequest).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/modules/introduction/field/all").
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
 
 	// Create review as the client - forbidden
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
@@ -31,6 +84,22 @@ func testCreateAndPublishReview(e *httpexpect.Expect) {
 
 	// Create review as the owner of another org - forbidden
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+
+	// Other org advisor
+	request := ClientProfile.UpdateReviewRequestBody{
+		StartDate: "2006-01-02T15:04:05Z",
+		EndDate:   "2006-01-03T15:04:05Z",
+	}
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -108,7 +177,11 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report := review.Value("Report").Object()
 	report.Value("ModulePresets").Array().Length().Equal(1)
 
-	report.Value("Modules").Array().Empty()
+	modules := report.Value("Modules").Array()
+	modules.First().Object().ValueEqual("Type", "introduction")
+	modules.First().Object().ValueEqual("Intro", "custom intro")
+	modules.First().Object().ValueEqual("Text", "custom text")
+	modules.Length().Equal(1)
 
 	report.Value("PolicyTypes").Array().First().Object().ValueEqual("Name", "ISA")
 
@@ -118,7 +191,10 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	pp.Value("CustomPricing").String().Equal("12.5")
 	report.Value("PolicyProviders").Array().Length().Equal(1)
 
-	report.Value("ProviderCharges").Array().Empty()
+	pcharges := report.Value("ProviderCharges").Array()
+	pcharges.Element(0).Object().Value("Desc").String().Equal("Charge 2")
+	pcharges.Element(1).Object().Value("Desc").String().Equal("Increased charge 1")
+	pcharges.Length().Equal(2)
 
 	pd := report.Value("ProviderDiscounts").Array().First().Object()
 	pd.ValueEqual("PolicyProviderId", policyProviderId)

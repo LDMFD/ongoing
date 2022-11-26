@@ -3,6 +3,7 @@ package ProviderDiscount
 import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -36,7 +37,10 @@ func DeleteProviderDiscount(c *gin.Context) {
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err)
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	}
 
 	if providerDiscount.ClientId != client.Id {

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -45,7 +46,7 @@ func UpdatePolicy(c *gin.Context) {
 	}
 
 	var policy = Entities.Policy{}
-	if err := db.NewSelect().
+	if err := tx.NewSelect().
 		Model(&policy).
 		Relation("FilePtr.File").
 		Where("policy.uid = ?", path.PolicyId).
@@ -56,7 +57,10 @@ func UpdatePolicy(c *gin.Context) {
 
 	var client *Entities.Client
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	}
 
 	if policy.ClientId != client.Id {
@@ -65,7 +69,7 @@ func UpdatePolicy(c *gin.Context) {
 	}
 
 	var policyType = Entities.PolicyType{}
-	if err := db.NewSelect().
+	if err := tx.NewSelect().
 		Model(&policyType).
 		Where("uid = ?", body.PolicyTypeId).
 		Scan(c); err != nil {

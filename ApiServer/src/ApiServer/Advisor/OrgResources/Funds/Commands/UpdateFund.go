@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"time"
@@ -62,6 +63,15 @@ func UpdateFund(c *gin.Context) {
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if fund.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		_ = tx.Rollback()
+		return
 	}
 
 	fund.Name = body.Name

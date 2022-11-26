@@ -9,7 +9,7 @@ import (
 )
 
 func TestAll(t *testing.T, e *httpexpect.Expect) {
-	TestHealthcheck(t, e)
+	testHealthcheck(t, e)
 
 	if os.Getenv("VALIDATION_ONLY") == "true" {
 		setupGlobals(t, e)
@@ -44,7 +44,7 @@ func runValidationTests(t *testing.T, e *httpexpect.Expect) {
 }
 
 func export(t *testing.T, e *httpexpect.Expect) string {
-	export := TestExport(t, e)
+	export := testExport(t, e)
 	buf := bytes.NewBufferString(export).Bytes()
 	path := os.Getenv("HOME") + "/.ongoing/dumps/tests-export.json"
 	if err := os.WriteFile(path, buf, 0644); err != nil {
@@ -53,7 +53,7 @@ func export(t *testing.T, e *httpexpect.Expect) string {
 	return export
 }
 
-func TestHealthcheck(t *testing.T, e *httpexpect.Expect) {
+func testHealthcheck(t *testing.T, e *httpexpect.Expect) {
 	e.GET("/api/healthcheck").
 		Expect().
 		Status(http.StatusOK).JSON().Equal("pass")

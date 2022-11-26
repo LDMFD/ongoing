@@ -8,6 +8,7 @@ const PolicyHasDependentPortfolios = "Unable to delete - policy has dependent po
 const PolicyFundDoesNotBelongToClient = "Policy fund does not belong to client"
 const UserAlreadyExists = "A user with this email already exists"
 const LevelDoesNotBelongToProvider = "Level does not belong to provider"
+const ChargesExist = "Policy has charges that must be deleted first"
 
 func PolicyProviderHasDependentPolicies(policies string) string {
 	return fmt.Sprintf("Policy provider has dependent policies: [ %v ]", policies)

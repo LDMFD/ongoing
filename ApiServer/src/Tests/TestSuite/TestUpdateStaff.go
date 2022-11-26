@@ -9,8 +9,11 @@ import (
 )
 
 func testUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
-	// As owner, deactivate admin 1
+	testUpdateStaffRolesBasic(t, e)
+	testUpdateStaffRolesSecurity(t, e)
+}
 
+func testUpdateStaffRolesBasic(t *testing.T, e *httpexpect.Expect) {
 	// As admin 1, promote org 1 advisor to org 1 admin
 	request := Commands.CreateAdvisorRequestBody{
 		Role:    Entities.UserTypeOrgAdmin,
@@ -30,8 +33,34 @@ func testUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 
+	// Change org 1's advisor's name and email
+	request2 := Commands.UpdateAdvisorRequestBody{
+		Email:     "org1.advisor2@tp1.org",
+		Forenames: "Adele",
+		Surname:   "Advisor",
+		Role:      "advisor",
+	}
+	e.PUT("/api/staff/"+org1AdvisorId).
+		WithHeader("Authentication", ORG1_ADMIN).
+		WithJSON(request2).
+		Expect().Status(http.StatusOK)
+
+	// Change it back again
+	request2 = Commands.UpdateAdvisorRequestBody{
+		Email:     ORG1_ADVISOR,
+		Forenames: "Adele",
+		Surname:   "Advisor",
+		Role:      "advisor",
+	}
+	e.PUT("/api/staff/"+org1AdvisorId).
+		WithHeader("Authentication", ORG1_ADMIN).
+		WithJSON(request2).
+		Expect().Status(http.StatusOK)
+}
+
+func testUpdateStaffRolesSecurity(t *testing.T, e *httpexpect.Expect) {
 	// As org 1 advisor, cannot promote self
-	request = Commands.CreateAdvisorRequestBody{
+	request := Commands.CreateAdvisorRequestBody{
 		Role: Entities.UserTypeOrgAdmin,
 	}
 	e.PUT("/api/staff/"+org1AdvisorId).
@@ -69,27 +98,4 @@ func testUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	// Change org 1's advisor's name and email
-	request2 := Commands.UpdateAdvisorRequestBody{
-		Email:     "org1.advisor2@tp1.org",
-		Forenames: "Adele",
-		Surname:   "Advisor",
-		Role:      "advisor",
-	}
-	e.PUT("/api/staff/"+org1AdvisorId).
-		WithHeader("Authentication", ORG1_ADMIN).
-		WithJSON(request2).
-		Expect().Status(http.StatusOK)
-
-	// Change it back again
-	request2 = Commands.UpdateAdvisorRequestBody{
-		Email:     ORG1_ADVISOR,
-		Forenames: "Adele",
-		Surname:   "Advisor",
-		Role:      "advisor",
-	}
-	e.PUT("/api/staff/"+org1AdvisorId).
-		WithHeader("Authentication", ORG1_ADMIN).
-		WithJSON(request2).
-		Expect().Status(http.StatusOK)
 }

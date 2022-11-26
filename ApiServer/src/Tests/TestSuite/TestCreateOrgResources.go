@@ -8,7 +8,8 @@ import (
 	OperatorCommands "ongoing/ApiServer/Advisor/OrgResources/Operators/Commands"
 	PolicyProviderCommands "ongoing/ApiServer/Advisor/OrgResources/PolicyProviders/Commands"
 	PolicyTypeCommands "ongoing/ApiServer/Advisor/OrgResources/PolicyTypes/Commands"
-	"ongoing/ApiServer/Advisor/OrgResources/Reviews/ModulePresets/Commands"
+	ProviderChargeCommands "ongoing/ApiServer/Advisor/OrgResources/ProviderCharges/Commands"
+	ModulePresetCommands "ongoing/ApiServer/Advisor/OrgResources/Reviews/ModulePresets/Commands"
 	RiskLevelCommands "ongoing/ApiServer/Advisor/OrgResources/RiskLevels/Commands"
 	RiskProviderCommands "ongoing/ApiServer/Advisor/OrgResources/RiskProviders/Commands"
 	"ongoing/Entities"
@@ -18,6 +19,7 @@ import (
 func testCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
 	testCreatePolicyType(e)
 	testCreatePolicyProvider(e)
+	testCreateProviderCharge(e)
 	testCreateFund(t, e)
 	testCreateOperator(e)
 	testCreateModel(t, e)
@@ -30,18 +32,52 @@ func testCreateOrgResources(t *testing.T, e *httpexpect.Expect) {
 }
 
 func testCreatePolicyType(e *httpexpect.Expect) {
+	testCreatePolicyTypeBasic(e)
+	testCreatePolicyTypeSecurity(e)
+}
+
+func testCreatePolicyTypeBasic(e *httpexpect.Expect) {
 	// Create Policy Type as org 1 advisor
-	request := PolicyTypeCommands.CreatePolicyTypeRequest{
-		Name: "ISA",
+	request := PolicyTypeCommands.CreateOrUpdatePolicyTypeRequest{
+		Name: "ISB",
 	}
 	resp := e.POST("/api/advisor/policy-types").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 	policyTypeId = resp.JSON().Object().Value("Id").String().Raw()
+
+	request = PolicyTypeCommands.CreateOrUpdatePolicyTypeRequest{
+		Name: "ISA",
+	}
+	e.PUT("/api/advisor/policy-types/"+policyTypeId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+}
+
+func testCreatePolicyTypeSecurity(e *httpexpect.Expect) {
+	request := PolicyTypeCommands.CreateOrUpdatePolicyTypeRequest{
+		Name: "ISNOT",
+	}
+	e.PUT("/api/advisor/policy-types/"+policyTypeId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/policy-types/"+policyTypeId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
 }
 
 func testCreatePolicyProvider(e *httpexpect.Expect) {
+	testCreatePolicyProviderBasic(e)
+	testCreatePolicyProviderSecurity(e)
+}
+
+func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 	// Create Policy Provider as org 1 advisor
 	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          "Aegon oops",
@@ -65,8 +101,108 @@ func testCreatePolicyProvider(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 }
 
+func testCreatePolicyProviderSecurity(e *httpexpect.Expect) {
+	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
+		Name: "Ab",
+	}
+	e.PUT("/api/advisor/policy-providers/"+policyProviderId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithJSON(request).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
+func testCreateProviderCharge(e *httpexpect.Expect) {
+	testCreateProviderChargeBasic(e)
+	testCreateProviderChargeSecurity(e)
+}
+
+func testCreateProviderChargeBasic(e *httpexpect.Expect) {
+	// Create 1
+	request := ProviderChargeCommands.CreateProviderChargeRequest{
+		Desc:       "Charge 1",
+		Charge:     0.12,
+		ProviderId: policyProviderId,
+	}
+	resp := e.POST("/api/advisor/provider-charges").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	providerChargeId1 = resp.JSON().Object().Value("Id").String().Raw()
+
+	// Update 1
+	request2 := ProviderChargeCommands.UpdateProviderChargeBody{
+		Desc:   "Increased charge 1",
+		Charge: 0.14,
+	}
+	e.PUT("/api/advisor/provider-charges/"+providerChargeId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request2).
+		Expect().Status(http.StatusOK)
+
+	// Create 2
+	request = ProviderChargeCommands.CreateProviderChargeRequest{
+		Desc:       "Charge 2",
+		Charge:     0.5,
+		ProviderId: policyProviderId,
+	}
+	resp = e.POST("/api/advisor/provider-charges").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	providerChargeId2 = resp.JSON().Object().Value("Id").String().Raw()
+
+	// Swap 1 & 2
+	request3 := ProviderChargeCommands.ReorderProviderChargesBody{
+		From: 0,
+		To:   1,
+	}
+	e.POST("/api/advisor/provider-charges/"+policyProviderId+"/sequence").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request3).
+		Expect().Status(http.StatusOK)
+}
+
+func testCreateProviderChargeSecurity(e *httpexpect.Expect) {
+	request := ProviderChargeCommands.UpdateProviderChargeBody{
+		Desc:   "Fake charge",
+		Charge: 0.14,
+	}
+	e.PUT("/api/advisor/provider-charges/"+providerChargeId1).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	request3 := ProviderChargeCommands.ReorderProviderChargesBody{
+		From: 0,
+		To:   1,
+	}
+	e.POST("/api/advisor/provider-charges/"+policyProviderId+"/sequence").
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request3).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/provider-charges/"+providerChargeId1).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
 func testCreateFund(t *testing.T, e *httpexpect.Expect) {
-	fileId1 := TestUpload(t, e, ORG1_ADVISOR, "fund.png")
+	fileId := testCreateFundBasic(t, e)
+	testCreateFundMutating(t, e, fileId)
+	testCreateFundSecurity(t, e)
+}
+
+func testCreateFundBasic(t *testing.T, e *httpexpect.Expect) (fileId1 string) {
+	fileId1 = TestUpload(t, e, ORG1_ADVISOR, "fund.png")
 
 	// Create Fund 1 (with file) as org 1 advisor
 	request := FundCommands.CreateOrUpdateFundRequestBody{
@@ -105,20 +241,24 @@ func testCreateFund(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG2_OWNER, fileId1, false)
 	TestDownload(t, e, ORG1_CLIENT, fileId1, false)
 
+	return fundId1
+}
+
+func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 	// Remove the file and re-add it, check it still works
-	request = FundCommands.CreateOrUpdateFundRequestBody{
+	request := FundCommands.CreateOrUpdateFundRequestBody{
 		Name:      "Jupiter Balanced",
 		OcfFee:    0.76,
 		ExAnteFee: 0.16,
 		Modified:  "2006-01-02T15:04:05Z",
 	}
-	resp = e.PUT("/api/advisor/funds/"+fundId1).
+	e.PUT("/api/advisor/funds/"+fundId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 
 	// Shouldn't be available anymore
-	TestDownload(t, e, ORG1_OWNER, fileId1, false)
+	TestDownload(t, e, ORG1_OWNER, fileId, false)
 
 	fundFileId = TestUpload(t, e, ORG1_ADVISOR, "fund-b.png")
 
@@ -134,7 +274,7 @@ func testCreateFund(t *testing.T, e *httpexpect.Expect) {
 			//Size:
 		},
 	}
-	resp = e.PUT("/api/advisor/funds/"+fundId1).
+	e.PUT("/api/advisor/funds/"+fundId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -145,10 +285,35 @@ func testCreateFund(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADVISOR, fundFileId, true)
 }
 
+func testCreateFundSecurity(t *testing.T, e *httpexpect.Expect) {
+	request := FundCommands.CreateOrUpdateFundRequestBody{
+		Name:      "fundless",
+		OcfFee:    0.76,
+		ExAnteFee: 0.16,
+		Modified:  "2006-01-02T12:34:05Z",
+		File:      nil, // optional file
+	}
+	e.PUT("/api/advisor/funds/"+fundId1).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/funds/"+fundId1).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
 func testCreateOperator(e *httpexpect.Expect) {
-	request := OperatorCommands.CreateOperatorRequestBody{
+	testCreateOperatorBasic(e)
+	testCreateOperatorSecurity(e)
+}
+
+func testCreateOperatorBasic(e *httpexpect.Expect) {
+	request := OperatorCommands.CreateOrUpdateOperatorRequestBody{
 		Name: "FE Invest",
-		Type: "dim",
+		Type: "firm",
 		Fee:  0.0023,
 	}
 	resp := e.POST("/api/advisor/operators").
@@ -156,9 +321,42 @@ func testCreateOperator(e *httpexpect.Expect) {
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
 	operatorId = resp.Value("Id").String().Raw()
+
+	request = OperatorCommands.CreateOrUpdateOperatorRequestBody{
+		Name: "FE Invest",
+		Type: "dim",
+		Fee:  0.0023,
+	}
+	resp = e.PUT("/api/advisor/operators/"+operatorId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK).JSON().Object()
+}
+
+func testCreateOperatorSecurity(e *httpexpect.Expect) {
+	request := OperatorCommands.CreateOrUpdateOperatorRequestBody{
+		Name: "spam",
+		Type: "dim",
+		Fee:  0.0023,
+	}
+	e.PUT("/api/advisor/operators/"+operatorId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/operators/"+operatorId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
 }
 
 func testCreateModel(t *testing.T, e *httpexpect.Expect) {
+	testCreateModelBasic(t, e)
+	testCreateModelSecurity(t, e)
+}
+
+func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model.png")
 
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
@@ -227,7 +425,32 @@ func testCreateModel(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
 }
 
+func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
+	request := ModelCommands.CreateOrUpdateModelRequestBody{
+		Name:              "sir gamble lot",
+		OperatorId:        operatorId,
+		WeightedOcfFee:    0.4,
+		WeightedExAnteFee: 0.06,
+		File:              nil,
+	}
+	e.PUT("/api/advisor/models/"+modelId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/models/"+modelId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
 func testCreateRiskProvider(e *httpexpect.Expect) {
+	testCreateRiskProviderBasic(e)
+	testCreateRiskProviderSecurity(e)
+}
+
+func testCreateRiskProviderBasic(e *httpexpect.Expect) {
 	// Create risk provider
 	request := RiskProviderCommands.CreateRiskProviderRequest{
 		Name: "Dynamic Planner oops",
@@ -248,7 +471,28 @@ func testCreateRiskProvider(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 }
 
+func testCreateRiskProviderSecurity(e *httpexpect.Expect) {
+	request := RiskProviderCommands.CreateRiskProviderRequest{
+		Name: "no name",
+	}
+	e.PUT("/api/advisor/risk-providers/"+riskProviderId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/risk-providers/"+riskProviderId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
 func testCreateRiskLevel(e *httpexpect.Expect) {
+	testCreateRiskLevelBasic(e)
+	testCreateRiskLevelSecurity(e)
+}
+
+func testCreateRiskLevelBasic(e *httpexpect.Expect) {
 	request := RiskLevelCommands.CreateRiskLevelRequest{
 		RiskProviderId: riskProviderId,
 		Level:          5,
@@ -272,15 +516,33 @@ func testCreateRiskLevel(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 }
 
+func testCreateRiskLevelSecurity(e *httpexpect.Expect) {
+	request := RiskLevelCommands.UpdateRiskLevelBody{
+		Level: 1,
+		Label: "hacked",
+		Desc:  "hacked.",
+	}
+	e.PUT("/api/advisor/risk-levels/"+riskLevelId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusForbidden)
+
+	e.DELETE("/api/advisor/risk-levels/"+riskLevelId).
+		WithHeader("Authentication", ORG2_OWNER).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		Expect().Status(http.StatusForbidden)
+}
+
 var modulePresetText = "preset intro"
 
 func testCreateModulePreset(e *httpexpect.Expect) {
-	createModulePreset(e)
-	updateModulePreset(e)
+	testCreateModulePresetBasic(e)
+	testUpdateModulePreset(e)
 }
 
-func createModulePreset(e *httpexpect.Expect) {
-	request := Commands.CreateOrUpdateModulePresetRequestBody{
+func testCreateModulePresetBasic(e *httpexpect.Expect) {
+	request := ModulePresetCommands.CreateOrUpdateModulePresetRequestBody{
 		ModuleType: Entities.ModuleTypeIntroduction,
 		Text:       "a poor introduction",
 	}
@@ -288,10 +550,34 @@ func createModulePreset(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
+
+	request = ModulePresetCommands.CreateOrUpdateModulePresetRequestBody{
+		ModuleType: Entities.ModuleTypeIntroduction,
+		Text:       "no intro needed",
+	}
+	e.POST("/api/advisor/reviews/module-presets").
+		WithHeader("Authentication", ORG2_OWNER).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/reviews/module-presets/"+Entities.ModuleTypeIntroduction).
+		WithHeader("Authentication", ORG2_OWNER).
+		Expect().Status(http.StatusOK)
+
+	// One preset of a type per org
+	request = ModulePresetCommands.CreateOrUpdateModulePresetRequestBody{
+		ModuleType: Entities.ModuleTypeIntroduction,
+		Text:       "-",
+	}
+	e.POST("/api/advisor/reviews/module-presets").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithJSON(request).
+		Expect().Status(http.StatusBadRequest)
 }
 
-func updateModulePreset(e *httpexpect.Expect) {
-	request := Commands.CreateOrUpdateModulePresetRequestBody{
+func testUpdateModulePreset(e *httpexpect.Expect) {
+	request := ModulePresetCommands.CreateOrUpdateModulePresetRequestBody{
 		ModuleType: Entities.ModuleTypeIntroduction,
 		Text:       modulePresetText,
 	}
@@ -336,7 +622,10 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 	resp.Value("PolicyTypes").Array().First().Object().Value("Name").String().Equal("ISA")
 	resp.Value("PolicyTypes").Array().Length().Equal(1)
 
-	resp.Value("ProviderCharges").Array().Empty()
+	pcharges := resp.Value("ProviderCharges").Array()
+	pcharges.Element(0).Object().Value("Desc").String().Equal("Charge 2")
+	pcharges.Element(1).Object().Value("Desc").String().Equal("Increased charge 1")
+	pcharges.Length().Equal(2)
 
 	resp.Value("RiskProviders").Array().First().Object().Value("Name").String().Equal("Dynamic Planner")
 	resp.Value("RiskProviders").Array().Length().Equal(1)

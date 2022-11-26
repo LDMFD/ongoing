@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 
 	"github.com/uptrace/bun"
@@ -43,7 +44,10 @@ func DeleteRiskAssessment(c *gin.Context) {
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		panic(err.Error())
+		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
+			panic(err)
+		}
+		return
 	}
 
 	if assessment.ClientId != client.Id {

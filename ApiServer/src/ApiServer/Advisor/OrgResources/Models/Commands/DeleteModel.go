@@ -9,6 +9,7 @@ import (
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"strings"
 
@@ -41,6 +42,14 @@ func DeleteModel(c *gin.Context) {
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if model.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		return
 	}
 
 	if len(model.Portfolios) > 0 {

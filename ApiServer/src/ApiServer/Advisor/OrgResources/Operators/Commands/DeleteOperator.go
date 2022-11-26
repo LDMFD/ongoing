@@ -2,8 +2,10 @@ package Commands
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"ongoing/Config"
 	"ongoing/Entities"
 	"strings"
 
@@ -18,6 +20,7 @@ type DeleteOperatorRequestPath struct {
 
 func DeleteOperator(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path DeleteOperatorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -33,6 +36,14 @@ func DeleteOperator(c *gin.Context) {
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	if operator.OrgId != session.Org.Id {
+		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
+			log.Println("Unauthorized access attempt by:", session.Email)
+		}
+		c.AbortWithStatus(http.StatusForbidden)
+		return
 	}
 
 	if len(operator.Models) > 0 {

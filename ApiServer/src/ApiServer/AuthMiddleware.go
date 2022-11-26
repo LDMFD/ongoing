@@ -41,6 +41,11 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			if strings.Contains(jwt, "@") {
 				email = jwt
 			} else {
+				if len(jwt) == 0 {
+					log.Println("AUTH MISSING")
+					c.AbortWithStatus(http.StatusForbidden)
+					panic(err)
+				}
 				var user Entities.User
 				if err := db.NewSelect().Model(&user).Where("uid = ?", jwt).Scan(c); err != nil {
 					c.AbortWithStatus(http.StatusForbidden)

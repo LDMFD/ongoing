@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreatePolicyTypeRequest struct {
+type CreateOrUpdatePolicyTypeRequest struct {
 	Name string `binding:"required"`
 }
 
@@ -19,7 +19,7 @@ func CreatePolicyType(c *gin.Context) {
 
 	uid := UUID.GenerateUID(c)
 
-	var req CreatePolicyTypeRequest
+	var req CreateOrUpdatePolicyTypeRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
