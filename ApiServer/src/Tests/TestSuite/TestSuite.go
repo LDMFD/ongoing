@@ -14,7 +14,6 @@ func TestAll(t *testing.T, e *httpexpect.Expect) {
 	if os.Getenv("VALIDATION_ONLY") == "true" {
 		setupGlobals(t, e)
 		runValidationTests(t, e)
-		// TODO check row counts manifest
 		return
 	}
 
@@ -34,7 +33,6 @@ func runFullTestSuite(t *testing.T, e *httpexpect.Expect) {
 	testCreateDocuments(t, e)
 	testClientReviews(t, e)
 	testUpdateStaffRoles(t, e)
-	// TODO write row counts manifest
 }
 
 func runValidationTests(t *testing.T, e *httpexpect.Expect) {
@@ -56,7 +54,5 @@ func export(t *testing.T, e *httpexpect.Expect) string {
 func testHealthcheck(t *testing.T, e *httpexpect.Expect) {
 	e.GET("/api/healthcheck").
 		Expect().
-		Status(http.StatusOK).JSON().Equal("pass")
-
-	//Importer.TestHealthcheck2(t)
+		Status(http.StatusOK)
 }

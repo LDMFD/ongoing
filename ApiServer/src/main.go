@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
-	"log"
-
+	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
+	"log"
+	"os"
+	"strings"
 )
 
 func init() {
@@ -14,6 +16,8 @@ func init() {
 }
 
 func main() {
+	initSentry()
+
 	app, err := buildApp()
 	if err != nil {
 		log.Fatalf("%+v\n", errors.WithStack(err))
@@ -28,5 +32,20 @@ func main() {
 		app.Export(*exportFlag)
 	} else {
 		app.Run()
+	}
+}
+
+var release string
+
+func initSentry() {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn:              strings.Trim(os.Getenv("ONGOING_SENTRY_DSN"), "\n\t "),
+		TracesSampleRate: 1.0,
+		Debug:            true,
+		AttachStacktrace: true,
+		Release:          release, // from build flags
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
 	}
 }

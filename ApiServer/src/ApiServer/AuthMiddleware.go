@@ -4,6 +4,8 @@ import (
 	"context"
 	firebase "firebase.google.com/go"
 	"firebase.google.com/go/auth"
+	"github.com/getsentry/sentry-go"
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"google.golang.org/api/option"
@@ -182,6 +184,14 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 				return
 			}
 			sessionContext.Org = &org
+		}
+
+		if hub := sentrygin.GetHubFromContext(c); hub != nil {
+			scope := hub.Scope()
+			scope.SetUser(sentry.User{Email: user.Email})
+			if orgId != nil {
+				scope.SetTag("ongoing.org", *orgId)
+			}
 		}
 
 		c.Set("SESSION", sessionContext)

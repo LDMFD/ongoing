@@ -43,6 +43,7 @@ func addUserInfoRoute(r *gin.Engine) {
 		Entities.UserTypeClient,
 	}))
 	routes.GET("/info", getUserInfo)
+	routes.GET("/errorcheck", errorcheck)
 }
 
 func addStorageRoutes(r *gin.Engine) {
@@ -118,7 +119,7 @@ func healthcheck(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, "pass")
+	c.String(200, "pass\n")
 }
 
 func errorcheck(c *gin.Context) {

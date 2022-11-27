@@ -14,6 +14,7 @@ include Makefiles/Healthchecks.mak
 include Makefiles/Node.mak
 include Makefiles/Releasing.mak
 include Makefiles/Secrets.mak
+include Makefiles/Sentry.mak
 include Makefiles/SpiceDB.mak
 include Makefiles/Storage.mak
 

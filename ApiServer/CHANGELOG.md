@@ -1,6 +1,10 @@
+## v1.5.0 2022-11-27
+
+- Sentry integration
+
 ## v1.4.0 2022-11-25
 
-Permissions (round 3) - cross-org resource writes
+- Permissions (round 3) - cross-org resource writes
 
 ## v1.3.2 2022-11-20
 

@@ -1,6 +1,6 @@
 # Used for building the API (see Deploy.mak)
 build-image:
-	docker-compose build --no-cache ${SERVICE}
+	docker-compose build --build-arg RELEASE=${RELEASE} --no-cache ${SERVICE}
 
 build-dashboard:
 	rm -rf DashboardServer/build

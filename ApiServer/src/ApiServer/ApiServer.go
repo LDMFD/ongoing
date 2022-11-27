@@ -1,6 +1,7 @@
 package ApiServer
 
 import (
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"net/http"
 	"ongoing/AuthService"
 	"os"
@@ -46,6 +47,23 @@ func AddAuthBackendMiddleware(authClient *AuthService.Client) gin.HandlerFunc {
 
 func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 	r := gin.New()
+
+	s.addNetworkConfig(r)
+
+	// TODO add timing - see custom middleware example
+
+	s.addErrorHandling(r)
+
+	r.Use(AddDatabaseMiddleware(s.db))
+
+	r.Use(AddAuthBackendMiddleware(s.authClient))
+
+	AddApiRoutes(r)
+
+	return r, nil
+}
+
+func (s *ApiServer) addNetworkConfig(r *gin.Engine) {
 	r.SetTrustedProxies(nil)
 
 	c := cors.New(cors.Options{
@@ -63,17 +81,15 @@ func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 		Debug: false, // Debug CORS issues
 	})
 	r.Use(c)
+}
+
+func (s *ApiServer) addErrorHandling(r *gin.Engine) {
+	// Send 500 on panic
+	r.Use(gin.Recovery())
 
 	r.Use(gin.ErrorLogger())
 
-	r.Use(gin.Recovery())
-
-	// TODO add timing - see custom middleware example
-
-	r.Use(AddDatabaseMiddleware(s.db))
-	r.Use(AddAuthBackendMiddleware(s.authClient))
-
-	AddApiRoutes(r)
-
-	return r, nil
+	r.Use(sentrygin.New(sentrygin.Options{
+		Repanic: true,
+	}))
 }

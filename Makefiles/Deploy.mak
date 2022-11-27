@@ -50,6 +50,7 @@ _deploy-api: import-env
 		--update-env-vars=POSTGRES_DB=ongoing-${ENV} \
 		--update-secrets=/app/Config/Firebase/config.json=firebase-sa-key:${SECRET_FIREBASE_SA_KEY_${ENV}} \
 		--update-secrets=/app/Config/Storage/Storage.pem=storage-credential:${SECRET_STORAGE_CREDENTIAL_${ENV}} \
+		--update-secrets=ONGOING_SENTRY_DSN=sentry-dsn:${SECRET_SENTRY_DSN_${ENV}} \
 		--update-secrets=ONGOING_SPICEDB_PSK=spicedb-key:${SECRET_SPICEDB_PSK_${ENV}} \
 		--update-secrets=ONGOING_SUPERUSERS=superusers:${SECRET_SUPERUSERS_${ENV}} \
 		--update-secrets=POSTGRES_DSN=database-connection:${SECRET_DATABASE_CONNECTION_${ENV}}
@@ -87,11 +88,11 @@ cloudrun-deploy-dashboard:
 	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
 
 redeploy-api:
-	make _deploy-api SERVICE=ongoing-api TAG=latest
+	make cloudrun-deploy-api
 	make firebase-deploy
 
 redeploy-dashboard:
-	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
+	make cloudrun-deploy-dashboard
 	make firebase-deploy
 
 redeploy-all:
@@ -104,7 +105,7 @@ up-spice:
 	make firebase-deploy
 
 up-api:
-	make build-image SERVICE=api
+	make build-image SERVICE=api RELEASE=${RELEASE}
 	make push-image IMAGE=ongoing-api
 	make cloudrun-deploy-api
 	make firebase-deploy
