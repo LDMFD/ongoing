@@ -50,7 +50,7 @@ _deploy-api: import-env
 		--update-env-vars=POSTGRES_DB=ongoing-${ENV} \
 		--update-secrets=/app/Config/Firebase/config.json=firebase-sa-key:${SECRET_FIREBASE_SA_KEY_${ENV}} \
 		--update-secrets=/app/Config/Storage/Storage.pem=storage-credential:${SECRET_STORAGE_CREDENTIAL_${ENV}} \
-		--update-secrets=ONGOING_SENTRY_DSN=sentry-dsn:${SECRET_SENTRY_DSN_${ENV}} \
+		--update-secrets=ONGOING_SENTRY_DSN=sentry-dsn-api:${SECRET_SENTRY_DSN_${ENV}} \
 		--update-secrets=ONGOING_SPICEDB_PSK=spicedb-key:${SECRET_SPICEDB_PSK_${ENV}} \
 		--update-secrets=ONGOING_SUPERUSERS=superusers:${SECRET_SUPERUSERS_${ENV}} \
 		--update-secrets=POSTGRES_DSN=database-connection:${SECRET_DATABASE_CONNECTION_${ENV}}
@@ -73,7 +73,8 @@ _deploy-dashboard: import-env
 		--update-env-vars=ONGOING_DASHBOARD_HOST=https://${DOMAIN_${ENV}} \
 		--update-env-vars=ONGOING_REACT_FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-secrets=/app/Config/Firebase/key.json=firebase-client-key:${SECRET_FIREBASE_CLIENT_KEY_${ENV}} \
-		--update-secrets=ONGOING_REACT_FIREBASE_CLIENT_ID=firebase-client-id:${SECRET_FIREBASE_CLIENT_ID_${ENV}}
+		--update-secrets=ONGOING_REACT_FIREBASE_CLIENT_ID=firebase-client-id:${SECRET_FIREBASE_CLIENT_ID_${ENV}} \
+		--update-secrets=ONGOING_SENTRY_DSN=sentry-dsn-dashboard:${SECRET_SENTRY_DSN_DASHBOARD_${ENV}}
 	make cloudrun-update-traffic SERVICE=${SERVICE}
 
 cloudrun-update-traffic:
@@ -96,8 +97,8 @@ redeploy-dashboard:
 	make firebase-deploy
 
 redeploy-all:
-	make _deploy-api SERVICE=ongoing-api TAG=latest
-	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
+	make redeploy-api
+	make redeploy-dashboard
 	make firebase-deploy
 
 up-spice:
@@ -111,7 +112,7 @@ up-api:
 	make firebase-deploy
 
 up-dashboard:
-	make build-dashboard
+	make build-dashboard RELEASE=${RELEASE}
 	make push-image IMAGE=ongoing_dashboard-server
 	make cloudrun-deploy-dashboard
 	make firebase-deploy

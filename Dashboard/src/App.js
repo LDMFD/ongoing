@@ -5,23 +5,36 @@ import {
     BrowserRouter as Router,
 } from "react-router-dom";
 
+import * as firebaseui from 'firebaseui'
+import firebase from 'firebase/compat/app';
+import json5 from 'json5';
+
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
+
 import AppDrawer from 'Components/AppDrawer'
 import StateProvider from 'State/StateProvider'
 
 import './App.css';
 import { ForceRefresh } from "Auth";
 
-import * as firebaseui from 'firebaseui'
-import firebase from 'firebase/compat/app';
-import json5 from 'json5';
-
+Sentry.init({
+    dsn: window.Config.SentryDsn,
+    release: window.Config.Release,
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1.0,
+});
+  
+// Dev mode
 if (window.Config === '__CONFIG_EMBED__') {
     let firebaseConfigB64 = atob(process.env.REACT_APP_ONGOING_REACT_FIREBASE_CONFIG);
     window.Config = {
         ApiHost: process.env.REACT_APP_ONGOING_API_HOST,
+        SentryDsn: process.env.REACT_APP_ONGOING_SENTRY_DSN,
         DashboardHost: process.env.REACT_APP_ONGOING_DASHBOARD_HOST,
         FirebaseClientId: process.env.REACT_APP_ONGOING_REACT_FIREBASE_CLIENT_ID,
         FirebaseConfig: json5.parse(firebaseConfigB64),
+        Release: 'dev',
     };
 }
 

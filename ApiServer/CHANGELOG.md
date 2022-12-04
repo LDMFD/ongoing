@@ -1,3 +1,7 @@
+## v1.5.1 2022-12-03
+
+- Rename secret
+
 ## v1.5.0 2022-11-27
 
 - Sentry integration

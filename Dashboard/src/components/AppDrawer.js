@@ -28,7 +28,7 @@ const EnvironmentWarning = () => {
         <>
             {window.location.href.includes('staging') && (
                 <span style={{ color: 'red' }}>
-                    <b> [ STAGING ]</b>
+                    <b> [ STAGING v{window.Config.Release} ] </b>
                 </span>
             )}
             {window.location.href.includes('localhost') && (

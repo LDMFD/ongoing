@@ -19,3 +19,6 @@ errorcheck-remote-staging:
 
 errorcheck-remote-staging-with-auth:
 	curl -v https://staging.amplifa.co.uk/api/user/errorcheck -H "Authentication: ${JWT}"
+
+errorcheck-remote-prod:
+	curl -v https://portal.amplifa.co.uk/api/errorcheck

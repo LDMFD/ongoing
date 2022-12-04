@@ -1,5 +1,8 @@
 FROM node:16-alpine
 
+ARG RELEASE dev
+ENV RELEASE $RELEASE
+
 WORKDIR /app
 
 COPY package*.json ./

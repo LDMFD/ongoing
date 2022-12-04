@@ -3,6 +3,7 @@ import {
     Avatar,
     Button,
 } from '@mui/material';
+import * as Sentry from "@sentry/react";
 
 import { Context } from 'State/StateProvider';
 import { Logout, ShowLogin } from 'Auth';
@@ -51,6 +52,9 @@ function AuthControl() {
         window.ApiClient.get(`/user/info`, {
             baseURL: window.Config.ApiHost,
         }).then(res => {
+            Sentry.setUser({ email: res.data.Context.Email });
+            Sentry.setTag("ongoing.org", res.data.Context.OrgId);
+
             dispatch({
                 type: LOGIN,
                 payload: {

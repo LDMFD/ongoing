@@ -5,7 +5,7 @@ services:
     container_name: ongoing-react-dashboard-builder
     build:
       context: ./Dashboard
-      dockerfile: Builder.Dockerfile
+      dockerfile: Release.Dockerfile
     volumes:
       - "./Dashboard/build:/app/build"
 

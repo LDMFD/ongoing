@@ -13,6 +13,8 @@ let config = JSON.stringify({
   DashboardHost: process.env.ONGOING_DASHBOARD_HOST,
   FirebaseClientId: process.env.ONGOING_REACT_FIREBASE_CLIENT_ID,
   FirebaseConfig: JSON5.parse(fs.readFileSync('/app/Config/Firebase/key.json').toString()),  // move string to env var
+  SentryDsn: process.env.ONGOING_SENTRY_DSN.trim(),
+  Release: process.env.RELEASE,
 });
 let indexResponse = content.replace("\"__CONFIG_EMBED__\"", config);
 

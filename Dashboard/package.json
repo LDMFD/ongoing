@@ -13,6 +13,9 @@
     "@mui/material": "^5.2.6",
     "@mui/styles": "^5.2.3",
     "@mui/x-data-grid": "^5.2.2",
+    "@sentry/cli": "^2.9.0",
+    "@sentry/react": "^7.21.1",
+    "@sentry/tracing": "^7.21.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -38,7 +41,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "release": "(react-scripts build && node scripts/sentry.js)"
   },
   "eslintConfig": {
     "extends": [

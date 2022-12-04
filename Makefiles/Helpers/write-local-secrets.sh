@@ -2,6 +2,8 @@
 
 CLIENT_ID=`gcloud secrets versions access --secret=firebase-client-key latest|base64`
 CLIENT_KEY=`gcloud secrets versions access --secret=firebase-client-id latest`
+SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn-dashboard latest`
+SENTRY_CLIRC=`gcloud secrets versions access --secret=sentry-clirc latest`
 
 cat << EOF > .env
 ONGOING_API_HOST=ongoing-api
@@ -17,6 +19,7 @@ REACT_APP_ONGOING_API_HOST=http://ongoing-api:8000/api
 REACT_APP_ONGOING_DASHBOARD_HOST=http://localhost.ongoing.tp1.org:3000
 REACT_APP_ONGOING_REACT_FIREBASE_CLIENT_ID=$CLIENT_KEY
 REACT_APP_ONGOING_REACT_FIREBASE_CONFIG=$CLIENT_ID
+REACT_APP_ONGOING_SENTRY_DSN=$SENTRY_DSN
 
 ONGOING_STORAGE_BUCKET=ongoing-$ENV-docs
 ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/credential.pem
@@ -47,4 +50,9 @@ ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/cred
 ONGOING_STORAGE_SA=storage@ongoing-$ENV.iam.gserviceaccount.com
 
 OFFLINE_AUTH=true
+EOF
+
+
+cat << EOF > Dashboard/.sentryclirc
+$SENTRY_CLIRC
 EOF
