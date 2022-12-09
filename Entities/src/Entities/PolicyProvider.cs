@@ -38,7 +38,7 @@ namespace Ongoing.Entities
         public string CustomPricing { get; set; } = null!;
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("OrgId")]

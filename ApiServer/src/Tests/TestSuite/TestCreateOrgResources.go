@@ -364,7 +364,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
-		//Modified:          "",
+		Modified:          "2006-01-02T15:04:05Z",
 		File: &Entities.RequestFile{
 			Uid:      modelFileId,
 			Filename: "sample.png",
@@ -389,8 +389,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
-		//Modified:          "2006-01-02T15:04:05Z",
-		File: nil,
+		Modified:          "2006-01-02T15:04:05Z",
+		File:              nil,
 	}
 	resp = e.PUT("/api/advisor/models/"+modelId).
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -408,6 +408,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
+		Modified:          "2006-01-02T15:04:05Z",
 		File: &Entities.RequestFile{
 			Uid:      modelFileId,
 			Filename: "sample.png",
@@ -431,6 +432,7 @@ func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
+		Modified:          "2006-01-02T15:04:05Z",
 		File:              nil,
 	}
 	e.PUT("/api/advisor/models/"+modelId).

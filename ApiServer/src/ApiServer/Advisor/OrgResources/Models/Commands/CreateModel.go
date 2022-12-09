@@ -22,7 +22,7 @@ type CreateOrUpdateModelRequestBody struct {
 	OperatorId        string  `binding:"required"`
 	WeightedOcfFee    float64 `binding:"required"`
 	WeightedExAnteFee float64 `binding:"required"`
-	Modified          string
+	Modified          string  `binding:"required"`
 	File              *Entities.RequestFile
 }
 
@@ -48,11 +48,9 @@ func CreateModel(c *gin.Context) {
 
 	var modified time.Time
 	var err error
-	if body.Modified != "" {
-		if modified, err = Date.FromCanonical(body.Modified); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
-			return
-		}
+	if modified, err = Date.FromCanonical(body.Modified); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
+		return
 	}
 
 	uid := UUID.GenerateUID(c)

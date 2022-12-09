@@ -134,7 +134,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("file_ptr_id");
 
-                    b.Property<DateTime?>("Submitted")
+                    b.Property<DateTime>("Submitted")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("submitted");
 
@@ -301,7 +301,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("file_ptr_id");
 
-                    b.Property<DateTime?>("Submitted")
+                    b.Property<DateTime>("Submitted")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("submitted");
 
@@ -355,7 +355,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("isin_number");
 
-                    b.Property<DateTime?>("Modified")
+                    b.Property<DateTime>("Modified")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("modified");
 
@@ -419,7 +419,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("file_ptr_id");
 
-                    b.Property<DateTime?>("Modified")
+                    b.Property<DateTime>("Modified")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("modified");
 
@@ -673,10 +673,6 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("end_date");
-
                     b.Property<int?>("EndValue")
                         .HasColumnType("integer")
                         .HasColumnName("end_value");
@@ -707,15 +703,11 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("policy_type_id");
 
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("start_date");
-
                     b.Property<int?>("StartValue")
                         .HasColumnType("integer")
                         .HasColumnName("start_value");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -774,7 +766,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("proportion");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -832,7 +824,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("pricing");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -878,7 +870,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("org_id");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -931,7 +923,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("numeric")
                         .HasColumnName("proportion");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -987,7 +979,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("sequence");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -1072,7 +1064,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("end_date");
 
@@ -1084,7 +1076,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("json")
                         .HasColumnName("report");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("start_date");
 
@@ -1122,7 +1114,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
 
-                    b.Property<DateTime?>("Completed")
+                    b.Property<DateTime>("Completed")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("completed");
 
@@ -1134,7 +1126,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("risk_level_id");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -1186,7 +1178,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("risk_provider_id");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")
@@ -1227,7 +1219,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("org_id");
 
-                    b.Property<DateTime?>("Timestamp")
+                    b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timestamp")

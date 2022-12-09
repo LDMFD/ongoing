@@ -32,7 +32,7 @@ namespace Ongoing.Entities
         public string Name { get; set; } = null!;
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("OrgId")]

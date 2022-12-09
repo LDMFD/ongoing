@@ -12,6 +12,7 @@ _deploy-spice: import-env
 		--add-cloudsql-instances=${DB_INSTANCE_${ENV}}:${REGION}:${DB_INSTANCE_${ENV}} \
 		--cpu=2 \
 		--memory=4Gi \
+		--min-instances=1 \
 		--max-instances=8 \
 		--port=50051 \
 		--use-http2 \
@@ -38,6 +39,7 @@ _deploy-api: import-env
 		--add-cloudsql-instances=${GCP_PROJECT_${ENV}}:${REGION}:${DB_INSTANCE_${ENV}} \
 		--cpu=2 \
 		--memory=4Gi \
+		--min-instances=1 \
 		--max-instances=8 \
 		--port=8000 \
 		--update-env-vars=FIREBASE_CONFIG=/app/Config/Firebase/config.json \

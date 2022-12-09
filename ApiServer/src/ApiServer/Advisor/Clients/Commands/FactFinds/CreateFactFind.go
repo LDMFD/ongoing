@@ -22,7 +22,7 @@ type CreateFactFindRequestPath struct {
 
 type CreateOrUpdateFactFindRequestBody struct {
 	File      *Entities.RequestFile
-	Submitted string
+	Submitted string `binding:"required"`
 }
 
 func CreateFactFind(c *gin.Context) {

@@ -26,7 +26,7 @@ type CreateOrUpdateRiskAssessmentRequestBody struct {
 	RiskProviderId string `binding:"required"`
 	RiskLevelId    string `binding:"required"`
 	File           *Entities.RequestFile
-	Completed      string
+	Completed      string `binding:"required"`
 }
 
 func CreateRiskAssessment(c *gin.Context) {

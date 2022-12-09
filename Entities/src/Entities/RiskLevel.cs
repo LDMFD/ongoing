@@ -37,7 +37,7 @@ namespace Ongoing.Entities
         public string? Desc { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("RiskProviderId")]

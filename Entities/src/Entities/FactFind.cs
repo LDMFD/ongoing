@@ -24,7 +24,7 @@ namespace Ongoing.Entities
         public int? FilePtrId { get; set; }
 
         [Column("submitted", TypeName = "timestamp without time zone")]
-        public DateTime? Submitted { get; set; }
+        public DateTime Submitted { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }

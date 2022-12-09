@@ -22,7 +22,7 @@ type CreateForecastRequestPath struct {
 
 type CreateOrUpdateForecastRequestBody struct {
 	File      *Entities.RequestFile
-	Submitted string
+	Submitted string `binding:"required"`
 }
 
 func CreateForecast(c *gin.Context) {

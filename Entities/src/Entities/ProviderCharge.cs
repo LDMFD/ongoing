@@ -32,7 +32,7 @@ namespace Ongoing.Entities
         public int Sequence { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("PolicyProviderId")]

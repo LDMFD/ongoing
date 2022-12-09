@@ -1,3 +1,8 @@
+## v1.5.2 2022-12-07
+
+- Min instance
+- Make all date fields mandatory
+
 ## v1.5.1 2022-12-03
 
 - Rename secret

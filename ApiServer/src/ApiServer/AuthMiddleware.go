@@ -186,11 +186,13 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			sessionContext.Org = &org
 		}
 
-		if hub := sentrygin.GetHubFromContext(c); hub != nil {
-			scope := hub.Scope()
-			scope.SetUser(sentry.User{Email: user.Email})
-			if orgId != nil {
-				scope.SetTag("ongoing.org", *orgId)
+		if os.Getenv("ONGOING_SENTRY_DSN") != "" {
+			if hub := sentrygin.GetHubFromContext(c); hub != nil {
+				scope := hub.Scope()
+				scope.SetUser(sentry.User{Email: user.Email})
+				if orgId != nil {
+					scope.SetTag("ongoing.org", *orgId)
+				}
 			}
 		}
 

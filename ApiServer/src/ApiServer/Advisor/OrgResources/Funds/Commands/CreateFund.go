@@ -21,7 +21,7 @@ type CreateOrUpdateFundRequestBody struct {
 	Name      string  `binding:"required"`
 	OcfFee    float64 `binding:"required"`
 	ExAnteFee float64 `binding:"required"`
-	Modified  string
+	Modified  string  `binding:"required"`
 	File      *Entities.RequestFile
 }
 

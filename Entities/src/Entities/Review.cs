@@ -32,10 +32,10 @@ namespace Ongoing.Entities
         public string? Report { get; set; }
         
         [Column("start_date", TypeName = "timestamp without time zone")]
-        public DateTime? StartDate { get; set; }
+        public DateTime StartDate { get; set; }
         
         [Column("end_date", TypeName = "timestamp without time zone")]
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
         
         [Column("finalized_date", TypeName = "timestamp without time zone")]
         public DateTime? FinalizedDate { get; set; }

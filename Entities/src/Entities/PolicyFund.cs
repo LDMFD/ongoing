@@ -31,7 +31,7 @@ namespace Ongoing.Entities
         public decimal Proportion { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("ClientId")]

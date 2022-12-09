@@ -40,11 +40,9 @@ func UpdateFund(c *gin.Context) {
 
 	var modified time.Time
 	var err error
-	if body.Modified != "" {
-		if modified, err = Date.FromCanonical(body.Modified); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
-			panic(err.Error())
-		}
+	if modified, err = Date.FromCanonical(body.Modified); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Couldn't parse 'modified' timestamp"})
+		panic(err.Error())
 	}
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})

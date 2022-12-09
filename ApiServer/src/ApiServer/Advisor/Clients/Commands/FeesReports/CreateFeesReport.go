@@ -22,7 +22,7 @@ type CreateFeesReportRequestPath struct {
 
 type CreateOrUpdateFeesReportRequestBody struct {
 	File      *Entities.RequestFile
-	Submitted string
+	Submitted string `binding:"required"`
 }
 
 func CreateFeesReport(c *gin.Context) {

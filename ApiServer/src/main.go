@@ -38,8 +38,13 @@ func main() {
 var release string
 
 func initSentry() {
+	dsn := os.Getenv("ONGOING_SENTRY_DSN")
+	if dsn == "" {
+		return
+	}
+
 	err := sentry.Init(sentry.ClientOptions{
-		Dsn:              strings.Trim(os.Getenv("ONGOING_SENTRY_DSN"), "\n\t "),
+		Dsn:              strings.Trim(dsn, "\n\t "),
 		TracesSampleRate: 1.0,
 		Debug:            true,
 		AttachStacktrace: true,

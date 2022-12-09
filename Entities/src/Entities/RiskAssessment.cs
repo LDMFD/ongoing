@@ -29,10 +29,10 @@ namespace Ongoing.Entities
         public int? FilePtrId { get; set; }
         
         [Column("completed", TypeName = "timestamp without time zone")]
-        public DateTime? Completed { get; set; }
+        public DateTime Completed { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("ClientId")]

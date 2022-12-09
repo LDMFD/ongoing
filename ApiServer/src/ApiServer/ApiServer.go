@@ -89,7 +89,10 @@ func (s *ApiServer) addErrorHandling(r *gin.Engine) {
 
 	r.Use(gin.ErrorLogger())
 
-	r.Use(sentrygin.New(sentrygin.Options{
-		Repanic: true,
-	}))
+	dsn := os.Getenv("ONGOING_SENTRY_DSN")
+	if dsn != "" {
+		r.Use(sentrygin.New(sentrygin.Options{
+			Repanic: true,
+		}))
+	}
 }

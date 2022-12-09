@@ -45,12 +45,6 @@ namespace Ongoing.Entities
         [Column("end_value")]
         public int? EndValue { get; set; }
         
-        [Column("start_date", TypeName = "timestamp without time zone")]
-        public DateTime? StartDate { get; set; }
-        
-        [Column("end_date", TypeName = "timestamp without time zone")]
-        public DateTime? EndDate { get; set; }
-        
         [Column("notes")]
         public string Notes { get; set; } = null!;
         
@@ -58,7 +52,7 @@ namespace Ongoing.Entities
         public int? FilePtrId { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
-        public DateTime? Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         
         [ForeignKey("ClientId")]
