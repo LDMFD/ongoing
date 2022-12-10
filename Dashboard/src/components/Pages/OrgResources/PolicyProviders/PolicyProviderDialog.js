@@ -55,9 +55,13 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                                         onChange     = {handlers.SetCustomPricing} />
                         <small>Use <code>{'{{ charge }}'}</code> to embed the discount.</small>
 
-                        <p>
-                            Switch to <Link to={{ pathname: `/policy-providers/id/${policyProvider.Id}/provider-charges` }}>Charges table</Link>.
-                        </p>
+                        {submitLabel === 'Add' ?
+                            <p>Create provider first to edit charges</p>
+                        :
+                            <p>
+                                Switch to <Link to={{ pathname: `/policy-providers/id/${policyProvider.Id}/provider-charges` }}>Charges table</Link>.
+                            </p>
+                        }
 
                     </DialogContent>
                     <DialogActions>

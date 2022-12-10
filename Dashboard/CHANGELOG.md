@@ -1,4 +1,8 @@
-## 1.4.8 2022-1-9
+## 1.4.9 2022-12-10
+
+- Disable edit provider charges before provider is created.
+
+## 1.4.8 2022-12-9
 
 - More fact Find & Forecast date fixes
 
