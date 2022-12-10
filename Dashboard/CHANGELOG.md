@@ -1,3 +1,7 @@
+## 1.4.8 2022-1-9
+
+- More fact Find & Forecast date fixes
+
 ## 1.4.7 2022-12-9
 
 - Fix Fact Find "Date Submitted" module

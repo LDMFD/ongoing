@@ -17,7 +17,7 @@ const FactFind = () => {
     let factFind = report.FactFinds.map(ff => {
         return {
             id:        ff.Id,
-            submitted: Day(ff.Submitted).utc(false).format('DD-MM-YYYY'),
+            submitted: ff.Submitted,
             file:      ff.File,
         };
     }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0))[0];
