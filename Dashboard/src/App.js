@@ -157,7 +157,7 @@ function FallbackComponent() {
             textAlign: 'center',
             paddingTop: '40vh',
         }}>
-            An error has occurred - please start from the <a href="/">top</a>.
+            An error has occurred - please <a href="/">start again</a>.
         </div>
     );
 }

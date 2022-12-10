@@ -2,7 +2,9 @@ _release:
 	git tag releases/${SERVICE}/v${RELEASE}
 	git push origin releases/${SERVICE}/v${RELEASE}
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${RELEASE}
+	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
 	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${RELEASE}
+	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
 
 # Usage: make release-api RELEASE=1.2.3
 release-api:
@@ -20,13 +22,4 @@ deploy-api:
 deploy-dashboard:
 	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=v${RELEASE}
 
-push-image:
-	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
-	
-	gcloud auth configure-docker ${REGISTRY_HOST}
-
-	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:${UUID}
-	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
-
-	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:${UUID}	
-	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
+#	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
