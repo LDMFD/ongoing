@@ -17,9 +17,9 @@
 
 # Version the current build (tags and pushes Git and Docker tags)
 
-    make release-{api|dashboard} VERSION=1.0.1
+    make release-{api|dashboard} RELEASE=1.2.3
 
 # Deployment to Prod
 
     make work-on-prod
-    make deploy-{api|dashboard} VERSION=1.0.1
+    make deploy-{api|dashboard} RELEASE=1.2.3
