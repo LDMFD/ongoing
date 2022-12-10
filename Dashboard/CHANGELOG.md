@@ -1,3 +1,7 @@
+## 1.4.7 2022-12-9
+
+- Fix Fact Find "Date Submitted" module
+
 ## 1.4.6 2022-12-9
 
 - Sentry ErrorBoundary

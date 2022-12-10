@@ -28,7 +28,7 @@ const FactFind = () => {
  
             {factFind &&
                 <p>
-                    Submitted: {Day(factFind.Submitted).utc(false).format('DD-MM-YYYY')}
+                    Submitted: {Day(factFind.submitted).utc(false).format('DD-MM-YYYY')}
 
                     <br />
                     <button onClick={downloadFile(factFind.file.Uid)} className='ong-openFileIcon'>
