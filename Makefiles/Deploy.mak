@@ -109,13 +109,13 @@ up-spice:
 
 up-api:
 	make build-image SERVICE=api RELEASE=${RELEASE}
-	make push-image IMAGE=ongoing-api
+	make release-api RELEASE=${RELEASE}
 	make cloudrun-deploy-api
 	make firebase-deploy
 
 up-dashboard:
 	make build-dashboard RELEASE=${RELEASE}
-	make push-image IMAGE=ongoing_dashboard-server
+	make release-dashboard RELEASE=${RELEASE}
 	make cloudrun-deploy-dashboard
 	make firebase-deploy
 
