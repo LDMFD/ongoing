@@ -14,8 +14,8 @@ type UpdateProviderChargePath struct {
 }
 
 type UpdateProviderChargeBody struct {
-	Desc   string  `binding:"required"`
-	Charge float64 `binding:"required"`
+	Desc   string `binding:"required"`
+	Charge float64
 }
 
 func UpdateProviderCharge(c *gin.Context) {

@@ -10,9 +10,9 @@ import (
 )
 
 type CreateProviderChargeRequest struct {
-	Desc       string  `binding:"required"`
-	Charge     float64 `binding:"required"`
-	ProviderId string  `binding:"required"`
+	Desc       string `binding:"required"`
+	Charge     float64
+	ProviderId string `binding:"required"`
 }
 
 func CreateProviderCharge(c *gin.Context) {
