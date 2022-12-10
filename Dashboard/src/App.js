@@ -153,8 +153,11 @@ window.ApiClient.interceptors.response.use((response) => {
 
 function FallbackComponent() {
     return (
-        <div>
-            An error has occurred - please reload the page.
+        <div style={{
+            textAlign: 'center',
+            paddingTop: '40vh',
+        }}>
+            An error has occurred - please start from the <a href="/">top</a>.
         </div>
     );
 }

@@ -1,3 +1,7 @@
+## 1.4.11 2022-12-10
+
+- Fix error page styling.
+
 ## 1.4.9 2022-12-10
 
 - Disable edit provider charges before provider is created.
