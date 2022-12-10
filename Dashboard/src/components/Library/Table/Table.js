@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react'
 import { useTable, useFlexLayout, useExpanded } from 'react-table'
-import { Container, Draggable } from "react-smooth-dnd";
 
 import {
     Table,
@@ -9,11 +8,10 @@ import {
     TableHead,
     TableRow 
 } from '@mui/material';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 import './Table.css';
 
-function OgTable({ columns, data, reorderFn, renderRowSubComponent }) {
+function OgTable({ columns, data, renderRowSubComponent }) {
     columns = React.useMemo(() => columns, [columns]);
     data = React.useMemo(() => data, [data]);
 
@@ -34,12 +32,6 @@ function OgTable({ columns, data, reorderFn, renderRowSubComponent }) {
         useExpanded
     );
 
-    const onDrop = ({ removedIndex: from, addedIndex: to }) => {
-        reorderFn(from, to);
-    };
-
-    let id = 0;
-
     return (
         <div className="tableWrap">
             <Table {...getTableProps()}>
@@ -55,36 +47,27 @@ function OgTable({ columns, data, reorderFn, renderRowSubComponent }) {
                     ))}
                 </TableHead>
                 <TableBody {...getTableBodyProps()}>
-                    <Container dragHandleSelector=".drag-handle" lockAxis="y" onDrop={onDrop}>
-                        {rows.map((row, i) => {
-                            prepareRow(row)
-                            return (
-                                <Fragment key={row.getRowProps().key}>
-                                    <Draggable key={id++}>
-                                        <TableRow {...row.getRowProps()}>
-                                            {reorderFn &&
-                                                <div className='drag-handle'>
-                                                    <DragHandleIcon />
-                                                </div>
-                                            }
-                                            {row.cells.map(cell => (
-                                                <TableCell {...cell.getCellProps()}>
-                                                    {cell.render('Cell')}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                        {row.isExpanded &&
-                                            <TableRow>
-                                                <TableCell colSpan={visibleColumns.length}>
-                                                    {renderRowSubComponent(row)}
-                                                </TableCell>
-                                            </TableRow>
-                                        }
-                                    </Draggable>
-                                </Fragment>
-                            )
-                        })}
-                    </Container>
+                    {rows.map((row, i) => {
+                        prepareRow(row)
+                        return (
+                            <Fragment key={row.getRowProps().key}>
+                                <TableRow {...row.getRowProps()}>
+                                    {row.cells.map(cell => (
+                                        <TableCell {...cell.getCellProps()}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                                {row.isExpanded &&
+                                    <TableRow>
+                                        <TableCell colSpan={visibleColumns.length}>
+                                            {renderRowSubComponent(row)}
+                                        </TableCell>
+                                    </TableRow>
+                                }
+                            </Fragment>
+                        )
+                    })}
                 </TableBody>
             </Table>
         </div>

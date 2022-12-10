@@ -151,15 +151,27 @@ window.ApiClient.interceptors.response.use((response) => {
     throw err;  // prevent goBack() on error
 });
 
+function FallbackComponent() {
+    return (
+        <div>
+            An error has occurred - please reload the page.
+        </div>
+    );
+}
+  
+const myFallback = <FallbackComponent />;
+
 function App() {
     return (
-        <StateProvider>
-            <Router>
-                <AppDrawer />
-            </Router>
+        <Sentry.ErrorBoundary fallback={myFallback} showDialog>
+            <StateProvider>
+                <Router>
+                    <AppDrawer />
+                </Router>
 
-            <ForceRefresh />
-        </StateProvider>
+                <ForceRefresh />
+            </StateProvider>
+        </Sentry.ErrorBoundary>
     );
 }
 

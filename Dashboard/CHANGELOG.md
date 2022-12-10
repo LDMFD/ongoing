@@ -1,3 +1,8 @@
+## 1.4.6 2022-12-9
+
+- Sentry ErrorBoundary
+- Separate SortableTable from Table to avoid console errors
+
 ## 1.4.5 2022-12-4
 
 - Sentry
