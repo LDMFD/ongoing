@@ -86,9 +86,11 @@ cloudrun-update-traffic:
 
 cloudrun-deploy-api:
 	make _deploy-api SERVICE=ongoing-api TAG=latest
+	make firebase-deploy
 
 cloudrun-deploy-dashboard:
 	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
+	make firebase-deploy
 
 redeploy-api:
 	make cloudrun-deploy-api
@@ -109,15 +111,13 @@ up-spice:
 
 up-api:
 	make build-image SERVICE=api RELEASE=${RELEASE}
-	make push-image IMAGE=ongoing-api
+	make release-api RELEASE=${RELEASE}
 	make cloudrun-deploy-api
-	make firebase-deploy
 
 up-dashboard:
 	make build-dashboard RELEASE=${RELEASE}
-	make push-image IMAGE=ongoing_dashboard-server
+	make release-dashboard RELEASE=${RELEASE}
 	make cloudrun-deploy-dashboard
-	make firebase-deploy
 
 up-all:
 	make up-api
