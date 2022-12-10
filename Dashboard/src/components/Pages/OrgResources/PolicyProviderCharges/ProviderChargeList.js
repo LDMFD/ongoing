@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { GoBack } from 'Utils/Routing';
 
 import { Context, Api } from 'State'
-import Table from 'Components/Library/Table/Table';
+import ReorderableTable from 'Components/Library/Table/SortableTable';
 import { PROVIDER_CHARGE_REORDER } from 'State/Reducer';
 
 const ProviderChargeList = () => {
@@ -97,9 +97,9 @@ const ProviderChargeList = () => {
                         <Link to={{ pathname: `/policy-providers/id/${policyProviderId}/provider-charges/add` }}><Button>Add new charge</Button></Link>
                     </Toolbar>
 
-                    <Table columns   = {columns}
-                           data      = {providerCharges}
-                           reorderFn = {reorderCallback} />
+                    <ReorderableTable columns   = {columns}
+                                      data      = {providerCharges}
+                                      reorderFn = {reorderCallback} />
 
                 </DialogContent>
                 <DialogActions>
