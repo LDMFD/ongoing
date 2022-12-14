@@ -93,7 +93,7 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 	request2 := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          "Aegon",
 		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{{ table }}</p>",
-		CustomPricing: "12.5",
+		CustomPricing: "Custom pricing description",
 	}
 	e.PUT("/api/advisor/policy-providers/"+policyProviderId).
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -124,72 +124,53 @@ func testCreateProviderCharge(e *httpexpect.Expect) {
 
 func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 	// Create 1
-	request := ProviderChargeCommands.CreateProviderChargeRequest{
-		Desc:       "Charge 1",
-		Charge:     0.12,
-		ProviderId: policyProviderId,
-	}
-	resp := e.POST("/api/advisor/provider-charges").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	providerChargeId1 = resp.JSON().Object().Value("Id").String().Raw()
+	providerCharges = make([]string, 5)
+	providerCharges[0] = createProviderCharge(e, policyProviderId, 100, 0.12)
 
 	// Update 1
 	request2 := ProviderChargeCommands.UpdateProviderChargeBody{
-		Desc:   "Increased charge 1",
-		Charge: 0.14,
+		Boundary: 0,
+		Charge:   0.42,
 	}
-	e.PUT("/api/advisor/provider-charges/"+providerChargeId1).
+	e.PUT("/api/advisor/provider-charges/"+providerCharges[0]).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request2).
 		Expect().Status(http.StatusOK)
 
 	// Create 2
-	request = ProviderChargeCommands.CreateProviderChargeRequest{
-		Desc:       "Charge 2",
-		Charge:     0.5,
-		ProviderId: policyProviderId,
+	providerCharges[1] = createProviderCharge(e, policyProviderId, 30000, 0.39)
+
+	// Create the remainder
+	providerCharges[2] = createProviderCharge(e, policyProviderId, 50000, 0.35)
+	providerCharges[3] = createProviderCharge(e, policyProviderId, 100000, 0.32)
+	providerCharges[4] = createProviderCharge(e, policyProviderId, 250000, 0)
+}
+
+func createProviderCharge(e *httpexpect.Expect, providerId string, boundary float64, charge float64) string {
+	request := ProviderChargeCommands.CreateProviderChargeRequest{
+		Boundary:   boundary,
+		Charge:     charge,
+		ProviderId: providerId,
 	}
-	resp = e.POST("/api/advisor/provider-charges").
+	resp := e.POST("/api/advisor/provider-charges").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	providerChargeId2 = resp.JSON().Object().Value("Id").String().Raw()
-
-	// Swap 1 & 2
-	request3 := ProviderChargeCommands.ReorderProviderChargesBody{
-		From: 0,
-		To:   1,
-	}
-	e.POST("/api/advisor/provider-charges/"+policyProviderId+"/sequence").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request3).
-		Expect().Status(http.StatusOK)
+	return resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func testCreateProviderChargeSecurity(e *httpexpect.Expect) {
 	request := ProviderChargeCommands.UpdateProviderChargeBody{
-		Desc:   "Fake charge",
-		Charge: 0.14,
+		Boundary: 100,
+		Charge:   0.14,
 	}
-	e.PUT("/api/advisor/provider-charges/"+providerChargeId1).
+	e.PUT("/api/advisor/provider-charges/"+providerCharges[0]).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	request3 := ProviderChargeCommands.ReorderProviderChargesBody{
-		From: 0,
-		To:   1,
-	}
-	e.POST("/api/advisor/provider-charges/"+policyProviderId+"/sequence").
-		WithHeader("Authentication", ORG2_OWNER).
-		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		WithJSON(request3).
-		Expect().Status(http.StatusForbidden)
-
-	e.DELETE("/api/advisor/provider-charges/"+providerChargeId1).
+	e.DELETE("/api/advisor/provider-charges/"+providerCharges[0]).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -618,16 +599,16 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 	policyProvider := resp.Value("PolicyProviders").Array().First().Object()
 	policyProvider.Value("Name").String().Equal("Aegon")
 	policyProvider.Value("Pricing").String().Contains("tiered charging structure")
-	policyProvider.Value("CustomPricing").String().Equal("12.5")
+	policyProvider.Value("CustomPricing").String().Equal("Custom pricing description")
 	resp.Value("PolicyProviders").Array().Length().Equal(1)
 
 	resp.Value("PolicyTypes").Array().First().Object().Value("Name").String().Equal("ISA")
 	resp.Value("PolicyTypes").Array().Length().Equal(1)
 
 	pcharges := resp.Value("ProviderCharges").Array()
-	pcharges.Element(0).Object().Value("Desc").String().Equal("Charge 2")
-	pcharges.Element(1).Object().Value("Desc").String().Equal("Increased charge 1")
-	pcharges.Length().Equal(2)
+	pcharges.Element(0).Object().Value("Charge").Equal(0.42)
+	pcharges.Element(1).Object().Value("Charge").Equal(0.39)
+	pcharges.Length().Equal(5)
 
 	resp.Value("RiskProviders").Array().First().Object().Value("Name").String().Equal("Dynamic Planner")
 	resp.Value("RiskProviders").Array().Length().Equal(1)

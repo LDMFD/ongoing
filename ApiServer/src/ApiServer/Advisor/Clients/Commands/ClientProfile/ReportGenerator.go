@@ -186,7 +186,7 @@ func (gen *ReportGenerator) generatePolicies() {
 		gen.report.PolicyProviders = append(gen.report.PolicyProviders, pp.ToReport())
 	}
 	sort.Slice(gen.report.ProviderCharges, func(i, j int) bool {
-		return gen.report.ProviderCharges[i].Desc < gen.report.ProviderCharges[j].Desc
+		return gen.report.ProviderCharges[i].Boundary < gen.report.ProviderCharges[j].Boundary
 	})
 	sort.Slice(gen.report.PolicyProviders, func(i, j int) bool {
 		return gen.report.PolicyProviders[i].Name < gen.report.PolicyProviders[j].Name

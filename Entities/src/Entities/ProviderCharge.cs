@@ -22,14 +22,11 @@ namespace Ongoing.Entities
         [Column("policy_provider_id")]
         public int PolicyProviderId { get; set; }
         
-        [Column("desc")]
-        public string Desc { get; set; } = null!;
+        [Column("boundary")]
+        public decimal Boundary { get; set; }
         
         [Column("charge")]
         public decimal Charge { get; set; }
-        
-        [Column("sequence")]
-        public int Sequence { get; set; }
         
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }

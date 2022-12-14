@@ -105,7 +105,7 @@ func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesRespons
 			Model(&providerCharges).
 			Relation("PolicyProvider").
 			Where("policy_provider.uid = ?", pp.Uid).
-			OrderExpr("sequence ASC").
+			OrderExpr("boundary ASC").
 			Scan(c); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			panic(err.Error())

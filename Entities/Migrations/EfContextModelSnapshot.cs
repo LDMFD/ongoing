@@ -962,22 +962,17 @@ namespace Ongoing.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
+                    b.Property<decimal>("Boundary")
+                        .HasColumnType("numeric")
+                        .HasColumnName("boundary");
+
                     b.Property<decimal>("Charge")
                         .HasColumnType("numeric")
                         .HasColumnName("charge");
 
-                    b.Property<string>("Desc")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("desc");
-
                     b.Property<int>("PolicyProviderId")
                         .HasColumnType("integer")
                         .HasColumnName("policy_provider_id");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("integer")
-                        .HasColumnName("sequence");
 
                     b.Property<DateTime>("Timestamp")
                         .ValueGeneratedOnAdd()

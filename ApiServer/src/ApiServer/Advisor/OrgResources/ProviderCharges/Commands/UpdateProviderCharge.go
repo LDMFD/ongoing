@@ -14,8 +14,8 @@ type UpdateProviderChargePath struct {
 }
 
 type UpdateProviderChargeBody struct {
-	Desc   string `binding:"required"`
-	Charge float64
+	Boundary float64
+	Charge   float64
 }
 
 func UpdateProviderCharge(c *gin.Context) {
@@ -52,13 +52,13 @@ func UpdateProviderCharge(c *gin.Context) {
 		return
 	}
 
-	providerCharge.Desc = body.Desc
+	providerCharge.Boundary = body.Boundary
 	providerCharge.Charge = body.Charge
 
 	if _, err := db.NewUpdate().
 		Model(&providerCharge).
 		Where("uid = ?", path.ProviderChargeId).
-		Column("desc").
+		Column("boundary").
 		Column("charge").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

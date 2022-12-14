@@ -32,8 +32,7 @@ var (
 	policyProviderId string
 	policyTypeId     string
 
-	providerChargeId1 string
-	providerChargeId2 string
+	providerCharges []string
 
 	portfolioId string
 

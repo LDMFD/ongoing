@@ -65,13 +65,11 @@ func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 }
 
 func TestDeleteProviderCharges(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/provider-charges/"+providerChargeId1).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/provider-charges/"+providerChargeId2).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
+	for i := range providerCharges {
+		e.DELETE("/api/advisor/provider-charges/"+providerCharges[i]).
+			WithHeader("Authentication", ORG1_ADVISOR).
+			Expect().Status(http.StatusOK)
+	}
 }
 
 func TestDeletePolicyProviders(t *testing.T, e *httpexpect.Expect) {

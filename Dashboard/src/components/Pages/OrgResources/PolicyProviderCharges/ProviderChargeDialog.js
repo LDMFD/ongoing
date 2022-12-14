@@ -17,8 +17,8 @@ export const ProviderChargeDialog = ({ providerCharge, setProviderCharge, submit
     let goBack = GoBack(history);
 
     const handlers = {
-        EditDesc:      (event) => { setProviderCharge({ ...providerCharge, Desc:   event.target.value }); },
-        EditCharge:    (event) => { setProviderCharge({ ...providerCharge, Charge: parseFloat(event.target.value) }); },
+        EditBoundary:  (event) => { setProviderCharge({ ...providerCharge, Boundary: event.target.value }); },
+        EditCharge:    (event) => { setProviderCharge({ ...providerCharge, Charge:   parseFloat(event.target.value) }); },
     };
     
     return (
@@ -30,10 +30,10 @@ export const ProviderChargeDialog = ({ providerCharge, setProviderCharge, submit
                         Enter charge details
                     </DialogContentText>
 
-                    <TextField value    = {providerCharge.Desc}
-                               onChange = {handlers.EditDesc}
+                    <TextField value    = {providerCharge.Boundary}
+                               onChange = {handlers.EditBoundary}
                                margin   = "dense"
-                               id       = "desc"
+                               id       = "boundary"
                                label    = "Tier (£)"
                                type     = "text"
                                autoFocus fullWidth />

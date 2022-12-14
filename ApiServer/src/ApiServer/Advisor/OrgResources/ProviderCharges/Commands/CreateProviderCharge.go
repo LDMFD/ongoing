@@ -10,7 +10,7 @@ import (
 )
 
 type CreateProviderChargeRequest struct {
-	Desc       string `binding:"required"`
+	Boundary   float64
 	Charge     float64
 	ProviderId string `binding:"required"`
 }
@@ -37,7 +37,7 @@ func CreateProviderCharge(c *gin.Context) {
 
 	var providerCharge = Entities.ProviderCharge{
 		Uid:        uid,
-		Desc:       body.Desc,
+		Boundary:   body.Boundary,
 		Charge:     body.Charge,
 		ProviderId: provider.Id,
 	}
