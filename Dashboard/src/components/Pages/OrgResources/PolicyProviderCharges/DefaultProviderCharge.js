@@ -1,4 +1,4 @@
 export const DefaultProviderCharge = {
-    Desc: '',
+    Desc: 0,
     Charge: 0,
 };
