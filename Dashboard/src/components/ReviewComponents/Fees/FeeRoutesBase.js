@@ -3,12 +3,9 @@ import { useLocation, useRouteMatch, Switch, Route } from "react-router-dom";
 
 import FeeTabs from './FeeTabs';
 
-import FundLevelFees      from './FeeModules/FundLevelFees';
-import PortfolioLevelFees from './FeeModules/PortfolioLevelFees';
 import FeesIntroduction   from './FeeModules/FeesIntroduction';
-import AdviceFees         from './FeeModules/AdviceFees';
-import PlatformFees       from './FeeModules/PlatformFees';
-import DimFees            from './FeeModules/DimFees';
+import FeeDetailsRoutes   from './FeeModules/Details/FeeDetailsRoutes';
+import FeeTotals          from './FeeModules/FeeTotals';
 
 const FeeRoutesBase = ({ basePath, baseTarget }) => {
     let { path } = useRouteMatch();
@@ -23,12 +20,9 @@ const FeeRoutesBase = ({ basePath, baseTarget }) => {
                 <Route path={`${path}`}>
                     <FeeTabs basePath={basePath} baseTarget={baseTarget}>
                         <Switch>
-                            <Route path={`${basePath}/intro`}           component={FeesIntroduction} />
-                            <Route path={`${basePath}/advice`}          component={AdviceFees} />
-                            <Route path={`${basePath}/platform`}        component={PlatformFees} />
-                            <Route path={`${basePath}/fund-level`}      component={FundLevelFees} />
-                            <Route path={`${basePath}/portfolio-level`} component={PortfolioLevelFees} />
-                            <Route path={`${basePath}/dim`}             component={DimFees} />
+                            <Route path={`${basePath}/intro`}            component={FeesIntroduction} />
+                            <Route path={`${basePath}/totals`}           component={FeeTotals} />
+                            <Route path={`${basePath}/details/:feepage`} component={FeeDetailsRoutes} />
                         </Switch>
                     </FeeTabs>
                 </Route>
