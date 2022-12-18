@@ -78,7 +78,7 @@ func testCreatePolicyProvider(e *httpexpect.Expect) {
 }
 
 func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
-	// Create Policy Provider as org 1 advisor
+	// Create Aegon Policy Provider as org 1 advisor
 	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          "Aegon oops",
 		Pricing:       "Aegon does nothing",
@@ -88,30 +88,42 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	policyProviderId = resp.JSON().Object().Value("Id").String().Raw()
+	policyProviderId2 = resp.JSON().Object().Value("Id").String().Raw()
 
 	request2 := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
-		Name:          "Aegon",
+		Name:          policyProviderName2,
 		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{{ table }}</p>",
 		CustomPricing: "Custom pricing description",
 	}
-	e.PUT("/api/advisor/policy-providers/"+policyProviderId).
+	e.PUT("/api/advisor/policy-providers/"+policyProviderId2).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request2).
 		Expect().Status(http.StatusOK)
+
+	// Aviva
+	request = PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
+		Name:          policyProviderName1,
+		Pricing:       "Aviva levy a platform fee for their pensions, on a tiered basis",
+		CustomPricing: "In your case, a single of {{ charge }}% per year is levied.",
+	}
+	resp = e.POST("/api/advisor/policy-providers").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	policyProviderId1 = resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func testCreatePolicyProviderSecurity(e *httpexpect.Expect) {
 	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name: "Ab",
 	}
-	e.PUT("/api/advisor/policy-providers/"+policyProviderId).
+	e.PUT("/api/advisor/policy-providers/"+policyProviderId1).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithJSON(request).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/policy-providers/"+policyProviderId).
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -125,7 +137,7 @@ func testCreateProviderCharge(e *httpexpect.Expect) {
 func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 	// Create 1
 	providerCharges = make([]string, 5)
-	providerCharges[0] = createProviderCharge(e, policyProviderId, 100, 0.12)
+	providerCharges[0] = createProviderCharge(e, policyProviderId2, 1234, 0.00000001)
 
 	// Update 1
 	request2 := ProviderChargeCommands.UpdateProviderChargeBody{
@@ -138,12 +150,12 @@ func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 
 	// Create 2
-	providerCharges[1] = createProviderCharge(e, policyProviderId, 30000, 0.39)
+	providerCharges[1] = createProviderCharge(e, policyProviderId2, 30000, 0.39)
 
 	// Create the remainder
-	providerCharges[2] = createProviderCharge(e, policyProviderId, 50000, 0.35)
-	providerCharges[3] = createProviderCharge(e, policyProviderId, 100000, 0.32)
-	providerCharges[4] = createProviderCharge(e, policyProviderId, 250000, 0)
+	providerCharges[2] = createProviderCharge(e, policyProviderId2, 50000, 0.35)
+	providerCharges[3] = createProviderCharge(e, policyProviderId2, 100000, 0.32)
+	providerCharges[4] = createProviderCharge(e, policyProviderId2, 250000, 0)
 }
 
 func createProviderCharge(e *httpexpect.Expect, providerId string, boundary float64, charge float64) string {
@@ -161,8 +173,8 @@ func createProviderCharge(e *httpexpect.Expect, providerId string, boundary floa
 
 func testCreateProviderChargeSecurity(e *httpexpect.Expect) {
 	request := ProviderChargeCommands.UpdateProviderChargeBody{
-		Boundary: 100,
-		Charge:   0.14,
+		Boundary: 1234,
+		Charge:   0.00000001,
 	}
 	e.PUT("/api/advisor/provider-charges/"+providerCharges[0]).
 		WithHeader("Authentication", ORG2_OWNER).
@@ -185,36 +197,11 @@ func testCreateFund(t *testing.T, e *httpexpect.Expect) {
 func testCreateFundBasic(t *testing.T, e *httpexpect.Expect) (fileId1 string) {
 	fileId1 = TestUpload(t, e, ORG1_ADVISOR, "fund.png")
 
-	// Create Fund 1 (with file) as org 1 advisor
-	request := FundCommands.CreateOrUpdateFundRequestBody{
-		Name:      "Jupiter Balanced",
-		OcfFee:    0.76,
-		ExAnteFee: 0.16,
-		Modified:  "2006-01-02T15:04:05Z",
-		File: &Entities.RequestFile{
-			Uid:      fileId1,
-			Filename: "sample.png",
-			//Size:
-		},
-	}
-	resp := e.POST("/api/advisor/funds").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	fundId1 = resp.JSON().Object().Value("Id").String().Raw()
-
-	// Create Fund 2 (no file) as org 1 advisor
-	request = FundCommands.CreateOrUpdateFundRequestBody{
-		Name:      "LF Equity Income C Acc",
-		OcfFee:    0.75,
-		ExAnteFee: 0.38,
-		Modified:  "2022-05-20T15:04:05Z",
-	}
-	resp = e.POST("/api/advisor/funds").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	fundId2 = resp.JSON().Object().Value("Id").String().Raw()
+	fundId1 = createFund(e, fundName1, 0.76, 0.16, &fileId1)
+	fundId2 = createFund(e, fundName2, 0.67, 0.11, nil)
+	fundId3 = createFund(e, fundName3, 0.81, 0.09, nil)
+	fundId4 = createFund(e, fundName4, 0.69, 0.08, nil)
+	fundId5 = createFund(e, fundName5, 0.2, 0.12, nil)
 
 	// Test fund 1 file download with different user types
 	TestDownload(t, e, ORG1_OWNER, fileId1, true)
@@ -225,10 +212,31 @@ func testCreateFundBasic(t *testing.T, e *httpexpect.Expect) (fileId1 string) {
 	return fundId1
 }
 
+func createFund(e *httpexpect.Expect, fundName string, ocf float64, exAnte float64, fileId *string) string {
+	request := FundCommands.CreateOrUpdateFundRequestBody{
+		Name:      fundName,
+		OcfFee:    ocf,
+		ExAnteFee: exAnte,
+		Modified:  "2006-01-02T15:04:05Z",
+	}
+	if fileId != nil {
+		request.File = &Entities.RequestFile{
+			Uid:      *fileId,
+			Filename: "sample.png",
+			//Size:
+		}
+	}
+	resp := e.POST("/api/advisor/funds").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	return resp.JSON().Object().Value("Id").String().Raw()
+}
+
 func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 	// Remove the file and re-add it, check it still works
 	request := FundCommands.CreateOrUpdateFundRequestBody{
-		Name:      "Jupiter Balanced",
+		Name:      fundName1,
 		OcfFee:    0.76,
 		ExAnteFee: 0.16,
 		Modified:  "2006-01-02T15:04:05Z",
@@ -245,7 +253,7 @@ func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 
 	// Add a new file
 	request = FundCommands.CreateOrUpdateFundRequestBody{
-		Name:      "Jupiter Balanced",
+		Name:      fundName1,
 		OcfFee:    0.76,
 		ExAnteFee: 0.16,
 		Modified:  "2006-01-02T15:04:05Z",
@@ -293,9 +301,9 @@ func testCreateOperator(e *httpexpect.Expect) {
 
 func testCreateOperatorBasic(e *httpexpect.Expect) {
 	request := OperatorCommands.CreateOrUpdateOperatorRequestBody{
-		Name: "FE Invest",
+		Name: operatorName,
 		Type: "firm",
-		Fee:  0.0023,
+		Fee:  0.002,
 	}
 	resp := e.POST("/api/advisor/operators").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -304,9 +312,9 @@ func testCreateOperatorBasic(e *httpexpect.Expect) {
 	operatorId = resp.Value("Id").String().Raw()
 
 	request = OperatorCommands.CreateOrUpdateOperatorRequestBody{
-		Name: "FE Invest",
+		Name: operatorName,
 		Type: "dim",
-		Fee:  0.0023,
+		Fee:  0.002,
 	}
 	resp = e.PUT("/api/advisor/operators/"+operatorId).
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -341,7 +349,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model.png")
 
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              "FE Invest Hybrid Risk Level 3 Long",
+		Name:              modelName1,
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
@@ -356,7 +364,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	modelId = resp.JSON().Object().Value("Id").String().Raw()
+	modelId1 = resp.JSON().Object().Value("Id").String().Raw()
 
 	// Test model file download with different user types
 	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
@@ -366,14 +374,14 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 
 	// Remove the file and re-add it, check it still works
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              "FE Invest Hybrid Risk Level 3 Long",
+		Name:              modelName1,
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
 		Modified:          "2006-01-02T15:04:05Z",
 		File:              nil,
 	}
-	resp = e.PUT("/api/advisor/models/"+modelId).
+	resp = e.PUT("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -385,7 +393,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 
 	// Add a new file
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              "FE Invest Hybrid Risk Level 3 Long",
+		Name:              modelName1,
 		OperatorId:        operatorId,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
@@ -396,7 +404,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 			//Size:
 		},
 	}
-	resp = e.PUT("/api/advisor/models/"+modelId).
+	resp = e.PUT("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -405,6 +413,33 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
 	TestDownload(t, e, ORG1_ADMIN, modelFileId, true)
 	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
+
+	// Models 2 & 3
+	request = ModelCommands.CreateOrUpdateModelRequestBody{
+		Name:              modelName2,
+		OperatorId:        operatorId,
+		WeightedOcfFee:    0.4,
+		WeightedExAnteFee: 0.06,
+		Modified:          "2006-01-02T15:04:05Z",
+	}
+	resp = e.POST("/api/advisor/models").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	modelId2 = resp.JSON().Object().Value("Id").String().Raw()
+
+	request = ModelCommands.CreateOrUpdateModelRequestBody{
+		Name:              modelName3,
+		OperatorId:        operatorId,
+		WeightedOcfFee:    0.4,
+		WeightedExAnteFee: 0.06,
+		Modified:          "2006-01-02T15:04:05Z",
+	}
+	resp = e.POST("/api/advisor/models").
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK)
+	modelId3 = resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
@@ -416,13 +451,13 @@ func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
 		Modified:          "2006-01-02T15:04:05Z",
 		File:              nil,
 	}
-	e.PUT("/api/advisor/models/"+modelId).
+	e.PUT("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/models/"+modelId).
+	e.DELETE("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -578,29 +613,29 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 		Value("Resources").Object()
 
 	fund := resp.Value("Funds").Array().First().Object()
-	fund.Value("Name").String().Equal("Jupiter Balanced")
+	fund.Value("Name").String().Equal(fundName4) // Baillie
 	fund.Value("Modified").String().NotEmpty()
-	fund.Value("OcfFee").Number().Equal(0.76)
-	fund.Value("ExAnteFee").Number().Equal(0.16)
+	fund.Value("OcfFee").Number().Equal(0.69)
+	fund.Value("ExAnteFee").Number().Equal(0.08)
 	fund.Value("Modified").String().NotEmpty()
-	resp.Value("Funds").Array().Length().Equal(2)
+	resp.Value("Funds").Array().Length().Equal(5)
 
-	resp.Value("Models").Array().First().Object().Value("Name").String().Equal("FE Invest Hybrid Risk Level 3 Long")
-	resp.Value("Models").Array().Length().Equal(1)
+	resp.Value("Models").Array().First().Object().Value("Name").String().Equal(modelName1)
+	resp.Value("Models").Array().Length().Equal(3)
 
 	resp.Value("ModulePresets").Array().Length().Equal(1)
 
 	operator := resp.Value("Operators").Array().First().Object()
-	operator.Value("Name").String().Equal("FE Invest")
+	operator.Value("Name").String().Equal(operatorName)
 	operator.Value("Type").String().Equal("dim")
-	operator.Value("Fee").Number().Equal(0.0023)
+	operator.Value("Fee").Number().Equal(0.002)
 	resp.Value("Operators").Array().Length().Equal(1)
 
 	policyProvider := resp.Value("PolicyProviders").Array().First().Object()
 	policyProvider.Value("Name").String().Equal("Aegon")
 	policyProvider.Value("Pricing").String().Contains("tiered charging structure")
 	policyProvider.Value("CustomPricing").String().Equal("Custom pricing description")
-	resp.Value("PolicyProviders").Array().Length().Equal(1)
+	resp.Value("PolicyProviders").Array().Length().Equal(2)
 
 	resp.Value("PolicyTypes").Array().First().Object().Value("Name").String().Equal("ISA")
 	resp.Value("PolicyTypes").Array().Length().Equal(1)
@@ -608,6 +643,9 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 	pcharges := resp.Value("ProviderCharges").Array()
 	pcharges.Element(0).Object().Value("Charge").Equal(0.42)
 	pcharges.Element(1).Object().Value("Charge").Equal(0.39)
+	pcharges.Element(2).Object().Value("Charge").Equal(0.35)
+	pcharges.Element(3).Object().Value("Charge").Equal(0.32)
+	pcharges.Element(4).Object().Value("Charge").Equal(0)
 	pcharges.Length().Equal(5)
 
 	resp.Value("RiskProviders").Array().First().Object().Value("Name").String().Equal("Dynamic Planner")

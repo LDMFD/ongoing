@@ -80,23 +80,41 @@ func TestDeleteRiskAssessments(t *testing.T, e *httpexpect.Expect) {
 }
 
 func TestDeletePortfolios(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId).
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId2).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId3).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }
 
 func TestDeletePolicyFunds(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policyFundId1).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
+	deletePolicyFund(e, policy1FundId1)
+	deletePolicyFund(e, policy1FundId2)
+	deletePolicyFund(e, policy1FundId3)
+	deletePolicyFund(e, policy1FundId4)
+	deletePolicyFund(e, policy1FundId5)
+	//deletePolicyFund(e, policy1FundId6)
+	deletePolicyFund(e, policy2FundId)
+}
 
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policyFundId2).
+func deletePolicyFund(e *httpexpect.Expect, policyFundId string) {
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policyFundId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }
 
 func TestDeletePolicies(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId2).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 

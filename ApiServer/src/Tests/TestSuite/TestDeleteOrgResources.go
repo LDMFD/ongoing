@@ -22,7 +22,15 @@ func testDeleteOrgResources(t *testing.T, e *httpexpect.Expect) {
 func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
 
-	e.DELETE("/api/advisor/models/"+modelId).
+	e.DELETE("/api/advisor/models/"+modelId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/models/"+modelId2).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/models/"+modelId3).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 
@@ -46,13 +54,11 @@ func TestDeleteOperators(t *testing.T, e *httpexpect.Expect) {
 func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_OWNER, fundFileId, true)
 
-	e.DELETE("/api/advisor/funds/"+fundId1).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/funds/"+fundId2).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
+	deleteFund(e, fundId1)
+	deleteFund(e, fundId2)
+	deleteFund(e, fundId3)
+	deleteFund(e, fundId4)
+	deleteFund(e, fundId5)
 
 	//// Owner can still read the file due to the client review
 	//TestDownload(t, e, ORG1_OWNER, fundFileId, true)
@@ -64,6 +70,12 @@ func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADVISOR, fundFileId, false)
 }
 
+func deleteFund(e *httpexpect.Expect, fundId string) {
+	e.DELETE("/api/advisor/funds/"+fundId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+}
+
 func TestDeleteProviderCharges(t *testing.T, e *httpexpect.Expect) {
 	for i := range providerCharges {
 		e.DELETE("/api/advisor/provider-charges/"+providerCharges[i]).
@@ -73,7 +85,11 @@ func TestDeleteProviderCharges(t *testing.T, e *httpexpect.Expect) {
 }
 
 func TestDeletePolicyProviders(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/policy-providers/"+policyProviderId).
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId2).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }

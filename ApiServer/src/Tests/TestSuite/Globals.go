@@ -16,25 +16,52 @@ var (
 	org2ClientId  string
 	reviewId      string
 
-	fundId1       string
-	fundId2       string
-	fundFileId    string // fund1
-	policyFundId1 string // fund1
-	policyFundId2 string // fund1
+	fundName1      = "Jupiter Balanced"
+	fundName2      = "Invesco High Income"
+	fundName3      = "Fundsmith Equity"
+	fundName4      = "Baillie Gifford Japan"
+	fundName5      = "Threadneedle US Equity Tracker"
+	fundId1        string
+	fundId2        string
+	fundId3        string
+	fundId4        string
+	fundId5        string
+	fundFileId     string
+	policy1FundId1 string
+	policy1FundId2 string
+	policy1FundId3 string
+	policy1FundId4 string
+	policy1FundId5 string
+	//policy1FundId6 string
+	policy2FundId string
 
-	modelId     string
+	modelId1    string
+	modelId2    string
+	modelId3    string
 	modelFileId string
+	modelName1  = "LGT Vestra Adventurous"
+	modelName2  = "LGT Vestra Balanced"
+	modelName3  = "Tatton Core Active"
 
-	operatorId string
+	operatorName = "LGT WM"
+	operatorId   string
 
-	policyId         string
-	policyFileId     string
-	policyProviderId string
-	policyTypeId     string
+	policyNumber1       = "pol_a"
+	policyNumber2       = "pol_b"
+	policyId1           string
+	policyId2           string
+	policyFileId        string
+	policyProviderId1   string
+	policyProviderId2   string
+	policyProviderName1 = "Aviva"
+	policyProviderName2 = "Aegon"
+	policyTypeId        string
 
 	providerCharges []string
 
-	portfolioId string
+	portfolioId1 string
+	portfolioId2 string
+	portfolioId3 string
 
 	riskProviderId   string
 	riskLevelId      string
@@ -83,15 +110,15 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 	review := obj.Value("Reviews").Array().First().Object()
 	reviewId = review.Value("Id").String().Raw()
 	report := review.Value("Report").Object()
-	policyProviderId = report.Value("PolicyProviders").Array().First().Object().Value("Id").String().Raw()
+	policyProviderId1 = report.Value("PolicyProviders").Array().First().Object().Value("Id").String().Raw()
 	policyTypeId = report.Value("PolicyTypes").Array().Element(0).Object().Value("Id").String().Raw()
 	fundId1 = report.Value("Funds").Array().Element(0).Object().Value("Id").String().Raw()
 	fundId2 = report.Value("Funds").Array().Element(1).Object().Value("Id").String().Raw()
 	fundFileId = report.Value("Funds").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
-	policyId = report.Value("Policies").Array().Element(0).Object().Value("Id").String().Raw()
+	policyId1 = report.Value("Policies").Array().Element(0).Object().Value("Id").String().Raw()
 	policyFileId = report.Value("Policies").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
 	operatorId = report.Value("Operators").Array().Element(0).Object().Value("Id").String().Raw()
-	modelId = report.Value("Models").Array().Element(0).Object().Value("Id").String().Raw()
+	modelId1 = report.Value("Models").Array().Element(0).Object().Value("Id").String().Raw()
 	modelFileId = report.Value("Models").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
 	riskLevelId = report.Value("RiskLevels").Array().Element(0).Object().Value("Id").String().Raw()
 	riskProviderId = report.Value("RiskProviders").Array().Element(0).Object().Value("Id").String().Raw()
@@ -102,15 +129,15 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 
 	if org1AdvisorId == "" ||
 		reviewId == "" ||
-		policyProviderId == "" ||
+		policyProviderId1 == "" ||
 		policyTypeId == "" ||
 		fundId1 == "" ||
 		fundId2 == "" ||
 		fundFileId == "" ||
-		policyId == "" ||
+		policyId1 == "" ||
 		policyFileId == "" ||
 		operatorId == "" ||
-		modelId == "" ||
+		modelId1 == "" ||
 		modelFileId == "" ||
 		riskLevelId == "" ||
 		riskProviderId == "" ||
