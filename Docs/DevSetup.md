@@ -65,6 +65,15 @@ To test the Node server (server.js):
 
 Open a browser at http://localhost:8080/
 
+# Dashboard
+
+    docker-compose up dashboard
+    ...
+    docker-compose stop dashboard
+    docker-compose rm -f dashboard
+    docker rmi ongoing_dashboard
+    docker volume rm ongoing_node_modules
+
 # API server
 
 The API server has its own Makefile in ApiServer/Makefile; this is used for wire and package installation.
