@@ -9,6 +9,14 @@ node-install-package-dash:
 		PACKAGE=${PACKAGE}
 	make _node-generate-package-lock IMAGE=ongoing-dash DEST=Dashboard/
 
+node-install-package-dash-dev:
+	make _node-install-package-dev \
+		IMAGE=ongoing_dash \
+		CONTAINER=ongoing-dash \
+		FOLDER=Dashboard \
+		PACKAGE=${PACKAGE}
+	make _node-generate-package-lock IMAGE=ongoing-dash DEST=Dashboard/
+
 # Entrypoint
 node-install-package-server:
 	make _node-install-package \
@@ -19,7 +27,12 @@ node-install-package-server:
 	make _node-generate-package-lock IMAGE=ongoing_dash-server DEST=DashboardServer/
 
 _node-install-package:
-	docker exec -ti ongoing-dash npm install --legacy-peer-deps ${PACKAGE}
+	docker exec -ti ongoing-dash npm install ${PACKAGE}
+	docker cp ongoing-dash:/app/package.json Dashboard/
+	docker cp ongoing-dash:/app/package-lock.json Dashboard/
+
+_node-install-package-dev:
+	docker exec -ti ongoing-dash npm install --save-dev ${PACKAGE}
 	docker cp ongoing-dash:/app/package.json Dashboard/
 	docker cp ongoing-dash:/app/package-lock.json Dashboard/
 

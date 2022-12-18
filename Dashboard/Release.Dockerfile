@@ -6,7 +6,7 @@ ENV RELEASE $RELEASE
 WORKDIR /app
 
 COPY package*.json .
-RUN npm install --legacy-peer-deps
+RUN npm install
 
 ADD public public
 ADD scripts scripts

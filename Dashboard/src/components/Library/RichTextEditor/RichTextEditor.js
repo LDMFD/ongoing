@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import ReactQuill from 'react-quill';
+// import 'react-quill/dist/quill.snow.css';
 
 import './RichTextEditor.css';
 
@@ -9,21 +9,21 @@ let toolbarId = 0;
 const RichTextEditor = ({ label, initialValue, onChange }) => {
     let tId = useRef(toolbarId++);
 
-    let modules = {
-        toolbar: {
-            container: `#rich-toolbar-${tId.current}`,
-        },
-        clipboard: {
-            matchVisual: false,
-        },
-    }
+    // let modules = {
+    //     toolbar: {
+    //         container: `#rich-toolbar-${tId.current}`,
+    //     },
+    //     clipboard: {
+    //         matchVisual: false,
+    //     },
+    // }
 
-    let formats = [
-        'header',
-        'bold', 'italic', 'underline', 'strike', 'blockquote',
-        'list', 'bullet', 'indent',
-        'link',
-    ]
+    // let formats = [
+    //     'header',
+    //     'bold', 'italic', 'underline', 'strike', 'blockquote',
+    //     'list', 'bullet', 'indent',
+    //     'link',
+    // ]
 
     return (
         <div className="text-editor">
@@ -46,11 +46,12 @@ const RichTextEditor = ({ label, initialValue, onChange }) => {
                 <button className="ql-link"></button>
                 <button className="ql-clean"></button>
             </div>
-            <ReactQuill theme    = 'snow'
+            editor removed
+            {/* <ReactQuill theme    = 'snow'
                         modules  = {modules}
                         formats  = {formats}
                         value    = {initialValue}
-                        onChange = {onChange} />
+                        onChange = {onChange} /> */}
         </div>
     )
 }
