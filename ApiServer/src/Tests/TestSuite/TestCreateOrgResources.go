@@ -149,10 +149,8 @@ func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 		WithJSON(request2).
 		Expect().Status(http.StatusOK)
 
-	// Create 2
-	providerCharges[1] = createProviderCharge(e, policyProviderId2, 30000, 0.39)
-
 	// Create the remainder
+	providerCharges[1] = createProviderCharge(e, policyProviderId2, 30000, 0.39)
 	providerCharges[2] = createProviderCharge(e, policyProviderId2, 50000, 0.35)
 	providerCharges[3] = createProviderCharge(e, policyProviderId2, 100000, 0.32)
 	providerCharges[4] = createProviderCharge(e, policyProviderId2, 250000, 0)
