@@ -85,11 +85,11 @@ func TestDeleteProviderCharges(t *testing.T, e *httpexpect.Expect) {
 }
 
 func TestDeletePolicyProviders(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1).
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1Aviva).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 
-	e.DELETE("/api/advisor/policy-providers/"+policyProviderId2).
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId2Aegon).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }

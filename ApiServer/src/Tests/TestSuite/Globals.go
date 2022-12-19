@@ -46,16 +46,21 @@ var (
 	operatorName = "LGT WM"
 	operatorId   string
 
-	policyNumber1       = "pol_a"
-	policyNumber2       = "pol_b"
-	policyId1           string
-	policyId2           string
-	policyFileId        string
-	policyProviderId1   string
-	policyProviderId2   string
-	policyProviderName1 = "Aviva"
-	policyProviderName2 = "Aegon"
-	policyTypeId        string
+	policyNumber1          = "pol_a"
+	policyNumber2          = "pol_b"
+	policyNumber3          = "pol_c"
+	policyId1              string
+	policyId2              string
+	policyId3              string
+	policyFileId           string
+	policyProviderId1Aviva string
+	policyProviderId2Aegon string
+	policyProviderName1    = "Aviva"
+	policyProviderName2    = "Aegon"
+	policyTypeId           string
+	policy1EndValue        int64 = 534000
+	policy2EndValue        int64 = 325000
+	policy3EndValue        int64 = 645318
 
 	providerCharges []string
 
@@ -110,7 +115,7 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 	review := obj.Value("Reviews").Array().First().Object()
 	reviewId = review.Value("Id").String().Raw()
 	report := review.Value("Report").Object()
-	policyProviderId1 = report.Value("PolicyProviders").Array().First().Object().Value("Id").String().Raw()
+	policyProviderId1Aviva = report.Value("PolicyProviders").Array().First().Object().Value("Id").String().Raw()
 	policyTypeId = report.Value("PolicyTypes").Array().Element(0).Object().Value("Id").String().Raw()
 	fundId1 = report.Value("Funds").Array().Element(0).Object().Value("Id").String().Raw()
 	fundId2 = report.Value("Funds").Array().Element(1).Object().Value("Id").String().Raw()
@@ -129,7 +134,7 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 
 	if org1AdvisorId == "" ||
 		reviewId == "" ||
-		policyProviderId1 == "" ||
+		policyProviderId1Aviva == "" ||
 		policyTypeId == "" ||
 		fundId1 == "" ||
 		fundId2 == "" ||

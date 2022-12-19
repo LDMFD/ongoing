@@ -4,7 +4,7 @@ import { useLocation, useRouteMatch, Switch, Route } from "react-router-dom";
 import FeeDetailsTabs from './FeeDetailsTabs';
 
 import AdviceFees         from './DetailModules/AdviceFees';
-import PlatformFees       from './DetailModules/PlatformFees';
+import PlatformFees       from './DetailModules/PlatformFees/PlatformFees';
 import FundLevelFees      from './DetailModules/FundLevelFees';
 import PortfolioLevelFees from './DetailModules/PortfolioLevelFees';
 import DimFees            from './DetailModules/DimFees';

@@ -88,14 +88,14 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	policyProviderId2 = resp.JSON().Object().Value("Id").String().Raw()
+	policyProviderId2Aegon = resp.JSON().Object().Value("Id").String().Raw()
 
 	request2 := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          policyProviderName2,
 		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{{ table }}</p>",
 		CustomPricing: "Custom pricing description",
 	}
-	e.PUT("/api/advisor/policy-providers/"+policyProviderId2).
+	e.PUT("/api/advisor/policy-providers/"+policyProviderId2Aegon).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request2).
 		Expect().Status(http.StatusOK)
@@ -110,20 +110,20 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	policyProviderId1 = resp.JSON().Object().Value("Id").String().Raw()
+	policyProviderId1Aviva = resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func testCreatePolicyProviderSecurity(e *httpexpect.Expect) {
 	request := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name: "Ab",
 	}
-	e.PUT("/api/advisor/policy-providers/"+policyProviderId1).
+	e.PUT("/api/advisor/policy-providers/"+policyProviderId1Aviva).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithJSON(request).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1).
+	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1Aviva).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -137,7 +137,7 @@ func testCreateProviderCharge(e *httpexpect.Expect) {
 func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 	// Create 1
 	providerCharges = make([]string, 5)
-	providerCharges[0] = createProviderCharge(e, policyProviderId2, 1234, 0.00000001)
+	providerCharges[0] = createProviderCharge(e, policyProviderId2Aegon, 1234, 0.00000001)
 
 	// Update 1
 	request2 := ProviderChargeCommands.UpdateProviderChargeBody{
@@ -149,13 +149,11 @@ func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 		WithJSON(request2).
 		Expect().Status(http.StatusOK)
 
-	// Create 2
-	providerCharges[1] = createProviderCharge(e, policyProviderId2, 30000, 0.39)
-
 	// Create the remainder
-	providerCharges[2] = createProviderCharge(e, policyProviderId2, 50000, 0.35)
-	providerCharges[3] = createProviderCharge(e, policyProviderId2, 100000, 0.32)
-	providerCharges[4] = createProviderCharge(e, policyProviderId2, 250000, 0)
+	providerCharges[1] = createProviderCharge(e, policyProviderId2Aegon, 30000, 0.39)
+	providerCharges[2] = createProviderCharge(e, policyProviderId2Aegon, 50000, 0.35)
+	providerCharges[3] = createProviderCharge(e, policyProviderId2Aegon, 100000, 0.32)
+	providerCharges[4] = createProviderCharge(e, policyProviderId2Aegon, 250000, 0)
 }
 
 func createProviderCharge(e *httpexpect.Expect, providerId string, boundary float64, charge float64) string {
@@ -395,8 +393,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              modelName1,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.4,
-		WeightedExAnteFee: 0.06,
+		WeightedOcfFee:    0.75,
+		WeightedExAnteFee: 0.15,
 		Modified:          "2006-01-02T15:04:05Z",
 		File: &Entities.RequestFile{
 			Uid:      modelFileId,
@@ -418,8 +416,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              modelName2,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.4,
-		WeightedExAnteFee: 0.06,
+		WeightedOcfFee:    0.58,
+		WeightedExAnteFee: 0.14,
 		Modified:          "2006-01-02T15:04:05Z",
 	}
 	resp = e.POST("/api/advisor/models").
@@ -431,8 +429,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              modelName3,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.4,
-		WeightedExAnteFee: 0.06,
+		WeightedOcfFee:    0.55,
+		WeightedExAnteFee: 0.12,
 		Modified:          "2006-01-02T15:04:05Z",
 	}
 	resp = e.POST("/api/advisor/models").
