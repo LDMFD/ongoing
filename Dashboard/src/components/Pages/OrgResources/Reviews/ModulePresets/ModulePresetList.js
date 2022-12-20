@@ -61,7 +61,6 @@ const ModulePresetList = () => {
             text:  p.Text,
         };
     });
-    console.log(modulePresets)
 
     return (
         <>
