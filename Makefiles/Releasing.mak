@@ -1,6 +1,6 @@
 _release:
-	git tag releases/${SERVICE}/v${RELEASE}
-	git push origin releases/${SERVICE}/v${RELEASE}
+#	git tag releases/${SERVICE}/v${RELEASE}
+#	git push origin releases/${SERVICE}/v${RELEASE}
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${RELEASE}
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
 	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${RELEASE}

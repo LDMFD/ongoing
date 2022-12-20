@@ -27,7 +27,12 @@ func testCreateReview(e *httpexpect.Expect) {
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
-	reviewId = resp.Value("Id").String().Raw()
+	review1Id = resp.Value("Id").String().Raw()
+
+	resp = e.POST("/api/advisor/clients/"+org2ClientId+"/reviews").
+		WithHeader("Authentication", ORG2_OWNER).
+		Expect().Status(http.StatusOK).JSON().Object()
+	review2Id = resp.Value("Id").String().Raw()
 }
 
 func testUpdateReview(e *httpexpect.Expect) {
@@ -35,7 +40,7 @@ func testUpdateReview(e *httpexpect.Expect) {
 		StartDate: "2006-01-02T15:04:05Z",
 		EndDate:   "2006-01-03T15:04:05Z",
 	}
-	e.PUT("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/reviews/"+review1Id).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
@@ -54,8 +59,12 @@ func testUpdateReviewModules(e *httpexpect.Expect) {
 }
 
 func testPublishReview(e *httpexpect.Expect) {
-	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId+"/publish").
+	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews/"+review1Id+"/publish").
 		WithHeader("Authentication", ORG1_OWNER).
+		Expect().Status(http.StatusOK)
+
+	e.POST("/api/advisor/clients/"+org2ClientId+"/reviews/"+review2Id+"/publish").
+		WithHeader("Authentication", ORG2_OWNER).
 		Expect().Status(http.StatusOK)
 }
 
@@ -93,25 +102,40 @@ func testReviewSecurity(e *httpexpect.Expect) {
 		StartDate: "2006-01-02T15:04:05Z",
 		EndDate:   "2006-01-03T15:04:05Z",
 	}
-	e.PUT("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/reviews/"+review1Id).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/reviews/"+review1Id).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
 }
 
 func testGetClient(t *testing.T, e *httpexpect.Expect) {
+	testGetClientBasic(t, e)
+	testGetClientSecurity(t, e)
+}
+
+func testGetClientBasic(t *testing.T, e *httpexpect.Expect) {
+	// org 1
 	obj := e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	validateClientResponse(t, e, obj)
+	validateClient1(t, e, obj)
 
+	// org 2
+	obj = e.GET("/api/advisor/clients/"+org2ClientId).
+		WithHeader("Authentication", ORG2_OWNER).
+		Expect().Status(http.StatusOK).JSON().Object()
+
+	validateClient2(t, e, obj)
+}
+
+func testGetClientSecurity(t *testing.T, e *httpexpect.Expect) {
 	// As the client - forbidden
 	e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG1_CLIENT).
@@ -145,7 +169,7 @@ func testOrg1ClientSpace(t *testing.T, e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG1_CLIENT).
 		Expect().Status(http.StatusOK).JSON().Object()
 
-	validateClientResponse(t, e, obj)
+	validateClient1(t, e, obj)
 }
 
 func testOrg2ClientSpace(e *httpexpect.Expect) {
@@ -160,10 +184,10 @@ func testOrg2ClientSpace(e *httpexpect.Expect) {
 	cc.Value("Identity").Object().ValueEqual("Forenames", "Bob")
 	cc.Value("Identity").Object().ValueEqual("Surname", "Client")
 
-	obj.Value("Reviews").Array().Empty()
+	obj.Value("Reviews").Array().Length().Equal(1)
 }
 
-func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object) {
+func validateClient1(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object) {
 	cc := obj.Value("Metadata").Object()
 	cc.ValueEqual("Id", org1ClientId)
 	cc.ValueEqual("Fee", 0.75)
@@ -172,7 +196,7 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	cc.Value("Identity").Object().ValueEqual("Surname", "Client")
 
 	review := obj.Value("Reviews").Array().First().Object()
-	review.ValueEqual("Id", reviewId)
+	review.ValueEqual("Id", review1Id)
 
 	report := review.Value("Report").Object()
 	report.Value("ModulePresets").Array().Length().Equal(1)
@@ -307,4 +331,35 @@ func validateClientResponse(t *testing.T, e *httpexpect.Expect, obj *httpexpect.
 	report.Value("Forecasts").Array().Length().Equal(1)
 	report.Value("Forecasts").Array().First().Object().Value("File").Object().ValueEqual("Filename", "sample.png")
 	TestDownload(t, e, ORG1_CLIENT, forecastFileId, true)
+}
+
+func validateClient2(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object) {
+	cc := obj.Value("Metadata").Object()
+	cc.ValueEqual("Id", org2ClientId)
+	cc.ValueEqual("Fee", 0.75)
+	cc.Value("Identity").Object().ValueEqual("Email", ORG2_CLIENT)
+
+	review := obj.Value("Reviews").Array().First().Object()
+	review.ValueEqual("Id", review2Id)
+	obj.Value("Reviews").Array().Length().Equal(1)
+
+	report := review.Value("Report").Object()
+
+	report.Value("Funds").Array().Empty()
+	report.Value("Models").Array().Empty()
+	report.Value("ModulePresets").Array().Empty()
+	report.Value("Operators").Array().Empty()
+	report.Value("PolicyProviders").Array().Empty()
+	report.Value("PolicyTypes").Array().Empty()
+	report.Value("Policies").Array().Empty()
+	report.Value("ProviderCharges").Array().Empty()
+	report.Value("ProviderDiscounts").Array().Empty()
+	report.Value("RiskProviders").Array().Empty()
+	report.Value("RiskLevels").Array().Empty()
+	report.Value("PolicyFunds").Array().Empty()
+	report.Value("Portfolios").Array().Empty()
+	report.Value("RiskAssessments").Array().Empty()
+	report.Value("FactFinds").Array().Empty()
+	report.Value("FeesReports").Array().Empty()
+	report.Value("Forecasts").Array().Empty()
 }

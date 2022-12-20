@@ -33,7 +33,26 @@ func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool
 		authClient:        c.MustGet("AUTH").(*AuthService.Client),
 		clientId:          clientId,
 		grantClientAccess: createRelationships,
-		report:            &Entities.ReportDetail{},
+		report: &Entities.ReportDetail{
+			ModulePresets:     []Entities.ReportModulePreset{},
+			Modules:           []Entities.ReportModule{},
+			PolicyTypes:       []Entities.ReportPolicyType{},
+			PolicyProviders:   []Entities.ReportPolicyProvider{},
+			ProviderCharges:   []Entities.ReportProviderCharge{},
+			ProviderDiscounts: []Entities.ReportProviderDiscount{},
+			Policies:          []Entities.ReportPolicy{},
+			Funds:             []Entities.ReportFund{},
+			PolicyFunds:       []Entities.ReportPolicyFund{},
+			Operators:         []Entities.ReportOperator{},
+			Models:            []Entities.ReportModel{},
+			Portfolios:        []Entities.ReportPortfolio{},
+			RiskProviders:     []Entities.ReportRiskProvider{},
+			RiskLevels:        []Entities.ReportRiskLevel{},
+			RiskAssessments:   []Entities.ReportRiskAssessment{},
+			FactFinds:         []Entities.ReportFactFind{},
+			FeesReports:       []Entities.ReportFeesReport{},
+			Forecasts:         []Entities.ReportForecast{},
+		},
 	}
 }
 

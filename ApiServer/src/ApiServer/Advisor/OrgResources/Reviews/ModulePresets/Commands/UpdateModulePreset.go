@@ -15,6 +15,7 @@ type UpdateOrDeleteModulePresetRequestPath struct {
 
 func UpdateModulePreset(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path UpdateOrDeleteModulePresetRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -32,7 +33,10 @@ func UpdateModulePreset(c *gin.Context) {
 		ModuleType: body.ModuleType,
 		Text:       body.Text,
 	}
-	if _, err := db.NewUpdate().Model(&modulePreset).Where("module_type = ?", path.Type).
+	if _, err := db.NewUpdate().
+		Model(&modulePreset).
+		Where("module_type = ?", path.Type).
+		Where("org_id = ?", session.Org.Id).
 		Column("module_type").
 		Column("text").
 		Exec(c); err != nil {

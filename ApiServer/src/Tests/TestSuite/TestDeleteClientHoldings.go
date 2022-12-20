@@ -26,12 +26,18 @@ func TestDeleteHoldings(t *testing.T, e *httpexpect.Expect) {
 }
 
 func testDeleteReviews(t *testing.T, e *httpexpect.Expect) {
+	// org 1
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/modules/introduction/field/all").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/reviews/"+reviewId).
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/reviews/"+review1Id).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	// org 2
+	e.DELETE("/api/advisor/clients/"+org2ClientId+"/reviews/"+review2Id).
+		WithHeader("Authentication", ORG2_OWNER).
 		Expect().Status(http.StatusOK)
 }
 
@@ -115,6 +121,10 @@ func TestDeletePolicies(t *testing.T, e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId2).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
+
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId3).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 

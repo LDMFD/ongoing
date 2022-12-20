@@ -14,7 +14,8 @@ var (
 	org1AdvisorId string
 	org1ClientId  string
 	org2ClientId  string
-	reviewId      string
+	review1Id     string
+	review2Id     string
 
 	fundName1      = "Jupiter Balanced"
 	fundName2      = "Invesco High Income"
@@ -113,7 +114,7 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 
 	org1AdvisorId = obj.Value("Metadata").Object().Value("AdvisorId").String().Raw()
 	review := obj.Value("Reviews").Array().First().Object()
-	reviewId = review.Value("Id").String().Raw()
+	review1Id = review.Value("Id").String().Raw()
 	report := review.Value("Report").Object()
 	policyProviderId1Aviva = report.Value("PolicyProviders").Array().First().Object().Value("Id").String().Raw()
 	policyTypeId = report.Value("PolicyTypes").Array().Element(0).Object().Value("Id").String().Raw()
@@ -133,7 +134,7 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 	forecastFileId = report.Value("Forecasts").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
 
 	if org1AdvisorId == "" ||
-		reviewId == "" ||
+		review1Id == "" ||
 		policyProviderId1Aviva == "" ||
 		policyTypeId == "" ||
 		fundId1 == "" ||

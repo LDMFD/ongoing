@@ -20,8 +20,15 @@ func GetModulePresets(c *gin.Context) {
 }
 
 func GetModulePresetsInternal(c *gin.Context, db *bun.DB) []Entities.ModulePreset {
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+
 	var modulePresets []Entities.ModulePreset
-	if err := db.NewSelect().Model(&modulePresets).OrderExpr("module_type ASC").Scan(c); err != nil {
+	if err := db.NewSelect().
+		Model(&modulePresets).
+		OrderExpr("module_type ASC").
+		Relation("Org").
+		Where("Org.Uid = ?", session.OrgId).
+		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
