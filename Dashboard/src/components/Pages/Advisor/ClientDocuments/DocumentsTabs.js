@@ -27,8 +27,8 @@ const DocumentsTabs = ({ children }) => {
         
         return (
             <Tabs value={currentTab}>
-                <Tab label="Risk Assessments" value={`${basePath}/risk-assessments`} to={`${baseTarget}/risk-assessments`} component={Link} />
                 <Tab label="Fact Finds"       value={`${basePath}/fact-finds`}       to={`${baseTarget}/fact-finds`}       component={Link} />
+                <Tab label="Risk Assessments" value={`${basePath}/risk-assessments`} to={`${baseTarget}/risk-assessments`} component={Link} />
                 <Tab label="Fees Reports"     value={`${basePath}/fees-reports`}     to={`${baseTarget}/fees-reports`}     component={Link} />
                 <Tab label="Forecasts"        value={`${basePath}/forecasts`}        to={`${baseTarget}/forecasts`}        component={Link} />
             </Tabs>
