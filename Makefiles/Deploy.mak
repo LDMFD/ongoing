@@ -46,6 +46,7 @@ _deploy-api: import-env
 		--update-env-vars=ONGOING_API_HOST=${DOMAIN_${ENV}} \
 		--update-env-vars=ONGOING_API_PORT=8000 \
 		--update-env-vars=ONGOING_SPICEDB_HOST=${URI}:443 \
+		--update-env-vars=ONGOING_SPICEDB_DB=spicedb-${ENV} \
 		--update-env-vars=ONGOING_STORAGE_BUCKET=ongoing-${ENV}-docs \
 		--update-env-vars=ONGOING_STORAGE_CREDENTIAL=/app/Config/Storage/Storage.pem \
 		--update-env-vars=ONGOING_STORAGE_SA=storage@ongoing-${ENV}.iam.gserviceaccount.com \
@@ -110,13 +111,15 @@ up-spice:
 	make firebase-deploy
 
 up-api:
-	make build-image SERVICE=api RELEASE=${RELEASE}
-	make release-api RELEASE=${RELEASE}
+	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
+	make build-image SERVICE=api RELEASE=${UUID}
+	make release-api RELEASE=${UUID}
 	make cloudrun-deploy-api
 
 up-dashboard:
-	make build-dashboard RELEASE=${RELEASE}
-	make release-dashboard RELEASE=${RELEASE}
+	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
+	make build-dashboard RELEASE=${UUID}
+	make release-dashboard RELEASE=${UUID}
 	make cloudrun-deploy-dashboard
 
 up-all:

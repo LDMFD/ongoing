@@ -79,7 +79,7 @@ func wipeDatabases(appdb *bun.DB) {
 		log.Fatal(err)
 	}
 
-	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
+	spicedb := connect(os.Getenv("POSTGRES_DSN"), os.Getenv("ONGOING_SPICEDB_DB"))
 	defer func() {
 		spicedb.Close()
 	}()
@@ -123,7 +123,7 @@ func RowCount(db *bun.DB) int {
 }
 
 func AuthDbRows() int {
-	spicedb := connect(os.Getenv("POSTGRES_DSN"), "spicedb-local")
+	spicedb := connect(os.Getenv("POSTGRES_DSN"), os.Getenv("ONGOING_SPICEDB_DB"))
 	var relations int
 	defer func() {
 		spicedb.Close()

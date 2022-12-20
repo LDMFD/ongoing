@@ -41,6 +41,7 @@ ONGOING_API_PORT=8000
 ONGOING_SPICEDB_HOST=localhost:50051
 ONGOING_SPICEDB_INSECURE=true
 ONGOING_SPICEDB_PSK=spice
+ONGOING_SPICEDB_DB=spicedb-local
 ONGOING_SUPERUSERS=darren@amplifa.co.uk,paul@amplifa.co.uk
 
 POSTGRES_DB=ongoing-local

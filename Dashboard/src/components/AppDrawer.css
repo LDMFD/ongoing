@@ -13,3 +13,12 @@
     left: 1rem;
     z-index: 10001;
 }
+
+.version {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    color: darkgray;
+    z-index: 10001;
+    font-size: 8pt;
+}

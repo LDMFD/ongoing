@@ -1,6 +1,7 @@
 package ApiServer
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"log"
@@ -119,7 +120,7 @@ func healthcheck(c *gin.Context) {
 		return
 	}
 
-	c.String(200, "pass\n")
+	c.String(200, fmt.Sprintf("version: %v\n", Release))
 }
 
 func errorcheck(c *gin.Context) {

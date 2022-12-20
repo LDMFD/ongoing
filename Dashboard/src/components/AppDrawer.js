@@ -28,7 +28,7 @@ const EnvironmentWarning = () => {
         <>
             {window.location.href.includes('staging') && (
                 <span style={{ color: 'red' }}>
-                    <b> [ STAGING v{window.Config.Release} ] </b>
+                    <b> [ STAGING ] </b>
                 </span>
             )}
             {window.location.href.includes('localhost') && (
@@ -207,6 +207,10 @@ export default function PermanentDrawerLeft() {
 
             <div className='request-spinner'>
                 <CircularProgress />
+            </div>
+
+            <div className='version'>
+                {window.Config.Release}
             </div>
         </Box>
     );

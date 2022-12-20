@@ -2,7 +2,11 @@ healthcheck-local:
 	curl localhost:8000/api/healthcheck
 	@echo
 
-healthcheck-remote:
+healthcheck-remote-staging:
+	curl https://staging.amplifa.co.uk/api/healthcheck
+	@echo
+
+healthcheck-remote-prod:
 	curl https://portal.amplifa.co.uk/api/healthcheck
 	@echo
 

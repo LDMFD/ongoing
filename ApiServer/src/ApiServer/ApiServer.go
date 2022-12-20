@@ -12,6 +12,8 @@ import (
 	"github.com/uptrace/bun"
 )
 
+var Release string
+
 type ApiServer struct {
 	db         *bun.DB
 	server     *http.Server

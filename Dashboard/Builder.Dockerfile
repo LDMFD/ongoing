@@ -9,6 +9,6 @@ ADD public public
 ADD scripts scripts
 ADD src src
 ADD .sentryclirc .
-ADD jsconfig.json .
+ADD tsconfig.json .
 
 CMD npm run build

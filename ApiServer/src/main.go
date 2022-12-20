@@ -5,6 +5,7 @@ import (
 	"github.com/getsentry/sentry-go"
 	"github.com/pkg/errors"
 	"log"
+	"ongoing/ApiServer"
 	"os"
 	"strings"
 )
@@ -17,6 +18,8 @@ func init() {
 
 func main() {
 	initSentry()
+
+	ApiServer.Release = release
 
 	app, err := buildApp()
 	if err != nil {
