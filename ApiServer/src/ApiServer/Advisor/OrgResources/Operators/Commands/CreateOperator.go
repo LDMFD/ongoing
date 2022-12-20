@@ -9,9 +9,9 @@ import (
 )
 
 type CreateOrUpdateOperatorRequestBody struct {
-	Name string  `binding:"required"`
-	Type string  `binding:"required,oneof=dim firm individual none"`
-	Fee  float64 `binding:"required"`
+	Name string `binding:"required"`
+	Type string `binding:"required,oneof=dim firm individual none"`
+	Fee  float64
 }
 
 func CreateOperator(c *gin.Context) {

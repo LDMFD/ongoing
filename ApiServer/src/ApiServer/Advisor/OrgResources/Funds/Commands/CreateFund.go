@@ -20,8 +20,8 @@ import (
 type CreateOrUpdateFundRequestBody struct {
 	Name      string `binding:"required"`
 	OcfFee    float64
-	ExAnteFee float64 `binding:"required"`
-	Modified  string  `binding:"required"`
+	ExAnteFee float64
+	Modified  string `binding:"required"`
 	File      *Entities.RequestFile
 }
 

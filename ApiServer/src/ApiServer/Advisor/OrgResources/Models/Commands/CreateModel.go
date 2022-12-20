@@ -18,11 +18,11 @@ import (
 )
 
 type CreateOrUpdateModelRequestBody struct {
-	Name              string  `binding:"required"`
-	OperatorId        string  `binding:"required"`
-	WeightedOcfFee    float64 `binding:"required"`
-	WeightedExAnteFee float64 `binding:"required"`
-	Modified          string  `binding:"required"`
+	Name              string `binding:"required"`
+	OperatorId        string `binding:"required"`
+	WeightedOcfFee    float64
+	WeightedExAnteFee float64
+	Modified          string `binding:"required"`
 	File              *Entities.RequestFile
 }
 

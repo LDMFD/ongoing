@@ -235,8 +235,8 @@ func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 	// Remove the file and re-add it, check it still works
 	request := FundCommands.CreateOrUpdateFundRequestBody{
 		Name:      fundName1,
-		OcfFee:    0.76,
-		ExAnteFee: 0.16,
+		OcfFee:    0, // Test 0 allowed
+		ExAnteFee: 0,
 		Modified:  "2006-01-02T15:04:05Z",
 	}
 	e.PUT("/api/advisor/funds/"+fundId1).
@@ -301,7 +301,7 @@ func testCreateOperatorBasic(e *httpexpect.Expect) {
 	request := OperatorCommands.CreateOrUpdateOperatorRequestBody{
 		Name: operatorName,
 		Type: "firm",
-		Fee:  0.002,
+		Fee:  0, // Test zero allowed
 	}
 	resp := e.POST("/api/advisor/operators").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -349,8 +349,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              modelName1,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.4,
-		WeightedExAnteFee: 0.06,
+		WeightedOcfFee:    0, // Test zero allowed
+		WeightedExAnteFee: 0,
 		Modified:          "2006-01-02T15:04:05Z",
 		File: &Entities.RequestFile{
 			Uid:      modelFileId,

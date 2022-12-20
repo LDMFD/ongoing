@@ -151,7 +151,7 @@ func testGetAdvisors(e *httpexpect.Expect) {
 
 func testCreateClients(e *httpexpect.Expect) {
 	org1ClientId = createClient(e, ORG1_ADMIN, ORG1_CLIENT, "Adam", 0.75)
-	org2ClientId = createClient(e, ORG2_OWNER, ORG2_CLIENT, "Bob", 0.75)
+	org2ClientId = createClient(e, ORG2_OWNER, ORG2_CLIENT, "Bob", 0) // Test zero fee
 	testUpdateClientSecurity(e)
 }
 

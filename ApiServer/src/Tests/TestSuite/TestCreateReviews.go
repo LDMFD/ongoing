@@ -179,7 +179,7 @@ func testOrg2ClientSpace(e *httpexpect.Expect) {
 
 	cc := obj.Value("Metadata").Object()
 	cc.ValueEqual("Id", org2ClientId)
-	cc.ValueEqual("Fee", 0.75)
+	cc.ValueEqual("Fee", 0)
 	cc.Value("Identity").Object().ValueEqual("Email", ORG2_CLIENT)
 	cc.Value("Identity").Object().ValueEqual("Forenames", "Bob")
 	cc.Value("Identity").Object().ValueEqual("Surname", "Client")
@@ -336,7 +336,7 @@ func validateClient1(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object)
 func validateClient2(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object) {
 	cc := obj.Value("Metadata").Object()
 	cc.ValueEqual("Id", org2ClientId)
-	cc.ValueEqual("Fee", 0.75)
+	cc.ValueEqual("Fee", 0)
 	cc.Value("Identity").Object().ValueEqual("Email", ORG2_CLIENT)
 
 	review := obj.Value("Reviews").Array().First().Object()
