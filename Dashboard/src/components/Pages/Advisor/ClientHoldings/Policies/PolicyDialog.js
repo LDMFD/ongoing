@@ -122,14 +122,14 @@ const PolicyDialog = ({ policy, setPolicy, submitLabel, submitHandler }) => {
                                     initialValue = {policy.Notes || ''}
                                     onChange     = {handlers.SetNotes} />
 
-                    <FileUploader file         = {policy.File}
+                    <FileUploader label        = 'Policy file'
                                   stateUpdater = {setPolicy}
                                   state        = {policy} />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={policy.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

@@ -86,14 +86,14 @@ export const FundDialog = ({ fund, setFund, submitLabel, submitHandler }) => {
                                   selected = {fund.Modified}
                                   onChange = {handlers.SetModified} />
 
-                    <FileUploader file         = {fund.File}
+                    <FileUploader label        = 'Fund file'
                                   stateUpdater = {setFund}
                                   state        = {fund} />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={fund.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

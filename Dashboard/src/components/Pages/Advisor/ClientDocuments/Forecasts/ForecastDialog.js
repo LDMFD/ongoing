@@ -41,14 +41,14 @@ export const ForecastDialog = ({ forecast, setForecast, submitLabel, submitHandl
                                   selected = {forecast.Submitted}
                                   onChange = {handlers.SetSubmitted} />
 
-                    <FileUploader file         = {forecast.File}
+                    <FileUploader label        = 'Forecast file'
                                   stateUpdater = {setForecast}
                                   state        = {forecast} />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={forecast.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

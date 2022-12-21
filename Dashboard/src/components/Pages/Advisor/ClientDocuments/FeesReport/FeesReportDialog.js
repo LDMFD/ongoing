@@ -37,14 +37,14 @@ export const FeesReportDialog = ({ feesReport, setFeesReport, submitLabel, submi
                                   selected = {feesReport.Submitted}
                                   onChange = {handlers.SetSubmitted} />
 
-                    <FileUploader file         = {feesReport.File}
+                    <FileUploader label        = 'Fees Report file'
                                   stateUpdater = {setFeesReport}
                                   state        = {feesReport} />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={feesReport.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

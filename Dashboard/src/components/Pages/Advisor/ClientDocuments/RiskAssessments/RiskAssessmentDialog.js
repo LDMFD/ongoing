@@ -100,7 +100,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                                   selected = {assessment.Completed}
                                   onChange = {handlers.SetCompleted} />
 
-                    <FileUploader file         = {assessment.File}
+                    <FileUploader label        = 'Risk Assessment Questionnaire file'
                                   stateUpdater = {setAssessment}
                                   state        = {assessment}
                                   property     = 'Questionnaire' />
@@ -108,7 +108,7 @@ export const RiskAssessmentDialog = ({ assessment, setAssessment, submitLabel, s
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={assessment.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

@@ -1,16 +1,40 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Prompt } from 'react-router-dom';
 import {
     Button,
+    LinearProgress,
 } from '@mui/material';
+import Clear from '@mui/icons-material/Clear';
 import axios from 'axios';
-import Day from 'dayjs';
 
-import { Download } from './FileDownloader';
+const COMPLETION_PERCENT = 5;                                         // 5% of progress bar reserved for commit state
+const MAX_FRACTION_BEFORE_COMPLETION = 1 - COMPLETION_PERCENT / 100;  // 0.95
 
-const File = ({ file, completionCallback }) => {
+var upload_count = 0;
+
+const controller = new AbortController();
+
+const File = ({ file, onProgress, onCompletion }) => {
     let [ uploaded, setUploaded ] = useState(false);
 
-    const upload = useCallback((file, completionCallback) => {
+    let [ percent, setPercent ] = useState(0);
+
+    const _onProgress = useCallback((proportion, inCompletion) => {
+        let p = proportion * 100;
+        if (!inCompletion) {
+            p *= MAX_FRACTION_BEFORE_COMPLETION;
+        }
+        p = Math.round(Math.min(p, 100));
+        setPercent(p);
+
+        // Report to containing dialog
+        onProgress(p);
+    }, [ setPercent, onProgress ]);
+
+    const upload = useCallback((file, onCompletion) => {
+        // Prevent page unload whilst files are still uploading
+        ++upload_count;
+
         let fileSpec = {
             Uid: '',
             Filename: '',
@@ -28,12 +52,16 @@ const File = ({ file, completionCallback }) => {
             postData.append('file', file);
             
             axios({
+                signal: controller.signal,
                 method: "POST",
                 url: res.data.Url,  // GCP upload
                 data: postData,
                 headers: {
                     "Cache-Control": "no-cache,max-age=0",
                     "Content-Disposition": `attachment; filename=${file.Filename}`,
+                },
+                onUploadProgress: (progressEvent) => {
+                    _onProgress(progressEvent.loaded / progressEvent.total);
                 },
             }).then(_ => {
                 fileSpec = {
@@ -43,101 +71,113 @@ const File = ({ file, completionCallback }) => {
                 };
 
                 window.ApiClient.post('storage/signal', fileSpec)
-                .then(() => {
-                    setUploaded(true);
-                    completionCallback(fileSpec);
-                })
-                .catch((error) => {
-                    console.log('error',error);
-                    alert(error?.response?.data?.error);  // https://stackoverflow.com/questions/49967779/axios-handling-errors
-                })
+                    .then(() => {
+                        _onProgress(100, true);
+                        setUploaded(true);
+                        onCompletion(fileSpec);
+                        --upload_count;
+                    })
+                    .catch((error) => {
+                        --upload_count;
+                        console.log('error',error);
+                        alert(error?.response?.data?.error);  // https://stackoverflow.com/questions/49967779/axios-handling-errors
+                    })
             })
             .catch(response => {
                 console.log('error',response);
             });
         });
-    }, []);
+    }, [ _onProgress ]);
 
-    // Prevent upload loop due to completionCallback
+    // Prevent upload loop due to onCompletion
     useEffect(() => {
-        if (!uploaded) {
-            upload(file, completionCallback);
+        if (!uploaded && upload_count === 0) {
+            upload(file, onCompletion);
         }
-    }, [ uploaded, upload, file, completionCallback ])
+    }, [ uploaded, upload, file, onCompletion ])
 
     return (
         <div>
-            {file.name} {file.size} {file.type}
+            {percent < 100 &&
+                <LinearProgress variant="determinate" value={percent} />
+            }
+            <Prompt when={percent < 100} message="File upload in progress - abort?" />
         </div>
     );
 }
 
-const FileInput = ({ completionCallback }) => {
+const FileInput = ({ onProgress, onCompletion, onRemove }) => {
     const [ file, setFile ] = useState(null);
 
     let input = React.createRef();
 
-    const triggerUpload = (event) => {
+    const _triggerUpload = (event) => {
         event.preventDefault();
         setFile(Array.from(input.current.files)[0]);
     };
 
+    const _remove = (event) => {
+        setFile(null);
+        onRemove();
+        // controller.abort()
+        event.preventDefault();
+    }
+
     return (
         <>
             <label>
-                <input type="file" multiple onChange={triggerUpload} ref={input} />
+                {!file &&
+                    <input type="file" onChange={_triggerUpload} ref={input} />
+                }
             </label>
             <br />
-            {/* <button onClick={triggerUpload}>Submit</button> */}
 
             {file &&
-                <File file               = {file}
-                        completionCallback = {completionCallback} />
+                <>
+                    <div>
+                        {file.name}<Button onClick={_remove}><Clear /></Button>
+                    </div>
+                    <File file         = {file}
+                          onProgress   = {onProgress}
+                          onCompletion = {onCompletion} />
+                </>
             }
-
-            {/* {files && (
-                <ul>
-                    {files.map((f, ix) => (
-                        <File key={ix} reviewId={reviewId} file={f} />
-                    ))}
-                </ul>
-            )} */}
         </>
     );
 }
 
-const FileUploader = ({file, stateUpdater, state, property='File' }) => {
-    const download = (uid) => {
-        Download(uid);
-    };
-    
-    const remove = () => {
+const FileUploader = ({ label, stateUpdater, state, property='File' }) => {
+
+    const _onRemove = () => {
         stateUpdater({
             ...state,
             [property]: null,
+            // Uploading: false,
         });
     };
     
-    let fileUploaded = (fileSpec) => {
+    let _onCompletion = (fileSpec) => {
         stateUpdater({
             ...state,
             [property]: fileSpec,
+            // Uploading: false,
         });
     };
+
+    let _onProgress = (percent) => {
+        stateUpdater({
+            ...state,
+            Uploading: percent !== 100,
+        });
+    }
     
     return (
         <>
-            <b>File upload</b>
+            <b>{label}</b>
             <br />
-            {file?.Uid ? (
-                <div>
-                    {file.Filename} (uploaded {`${Day(file.Date)}`})
-                    <Button onClick={download.bind(null, file.Uid)}>Download</Button>
-                    <Button onClick={remove}>Remove</Button>
-                </div>
-            ) : <p>No files</p>}
-
-            <FileInput completionCallback={fileUploaded} />
+            <FileInput onProgress   = {_onProgress}
+                       onCompletion = {_onCompletion}
+                       onRemove     = {_onRemove} />
         </>
     );
 }

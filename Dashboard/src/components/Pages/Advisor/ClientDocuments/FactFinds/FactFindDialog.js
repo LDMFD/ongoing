@@ -37,14 +37,14 @@ export const FactFindDialog = ({ factFind, setFactFind, submitLabel, submitHandl
                                   selected = {factFind.Submitted}
                                   onChange = {handlers.SetSubmitDate} />
 
-                    <FileUploader file         = {factFind.File}
+                    <FileUploader label        = 'Fact-find file'
                                   stateUpdater = {setFactFind}
                                   state        = {factFind} />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={factFind.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>

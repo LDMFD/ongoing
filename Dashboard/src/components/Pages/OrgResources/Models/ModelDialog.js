@@ -108,14 +108,14 @@ export const ModelDialog = ({ model, setModel, submitLabel, submitHandler, inclu
                                   selected = {model.Modified}
                                   onChange = {handlers.SetModified} />
 
-                    <FileUploader file         = {model.File}
+                    <FileUploader label        = 'Model file'
                                   stateUpdater = {setModel}
                                   state        = {model} />
 
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
+                    <Button type='submit' disabled={model.Uploading}>{submitLabel}</Button>
                 </DialogActions>
             </form>
         </Dialog>
