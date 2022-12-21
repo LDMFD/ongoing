@@ -28,9 +28,12 @@ type ReportForecast struct {
 }
 
 func (a *Forecast) ToReport() ReportForecast {
-	return ReportForecast{
+	f := ReportForecast{
 		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
-		File:      a.FilePtr.ToReport(),
 	}
+	if a.FilePtr != nil {
+		f.File = a.FilePtr.ToReport()
+	}
+	return f
 }

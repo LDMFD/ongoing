@@ -50,7 +50,7 @@ const FactFindList = () => {
             accessor: 'factFind',
             Header: 'FactFind',
             width: 3,
-            Cell: ({ row }) => (
+            Cell: ({ row }) => row.original.factFind && (
                 <button onClick={downloadFile(row.original.factFind.Uid)} className='ong-openFileIcon'>
                     {row.original.factFind.Filename}
                     <DownloadIcon />

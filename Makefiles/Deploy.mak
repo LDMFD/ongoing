@@ -115,14 +115,14 @@ up-api:
 	make build-image SERVICE=api RELEASE=${UUID}
 	make release-api RELEASE=${UUID}
 	make cloudrun-deploy-api
-	echo DEPLOYED API SERVER ${UUID}
+	@echo *** DEPLOYED API SERVER ${UUID}
 
 up-dashboard:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
 	make build-dashboard RELEASE=${UUID}
 	make release-dashboard RELEASE=${UUID}
 	make cloudrun-deploy-dashboard
-	echo DEPLOYED DASHBOARD ${UUID}
+	@echo *** DEPLOYED DASHBOARD ${UUID}
 
 up-all:
 	make up-api

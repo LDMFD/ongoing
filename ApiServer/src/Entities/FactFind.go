@@ -28,9 +28,12 @@ type ReportFactFind struct {
 }
 
 func (a *FactFind) ToReport() ReportFactFind {
-	return ReportFactFind{
+	ff := ReportFactFind{
 		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
-		File:      a.FilePtr.ToReport(),
 	}
+	if a.FilePtr != nil {
+		ff.File = a.FilePtr.ToReport()
+	}
+	return ff
 }

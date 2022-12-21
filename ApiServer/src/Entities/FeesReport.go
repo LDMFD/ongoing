@@ -28,9 +28,12 @@ type ReportFeesReport struct {
 }
 
 func (a *FeesReport) ToReport() ReportFeesReport {
-	return ReportFeesReport{
+	fr := ReportFeesReport{
 		Id:        a.Uid,
 		Submitted: Date.ToCanonical(&a.Submitted),
-		File:      a.FilePtr.ToReport(),
 	}
+	if a.FilePtr != nil {
+		fr.File = a.FilePtr.ToReport()
+	}
+	return fr
 }
