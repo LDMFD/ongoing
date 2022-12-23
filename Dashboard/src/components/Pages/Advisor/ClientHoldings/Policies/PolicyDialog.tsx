@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import {
     Button,
     Box,
-    Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
@@ -18,6 +17,7 @@ import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
 import { File, State } from 'Types/Types';
+import Dialog from 'Components/Library/Dialog/Dialog';
 
 interface FormFile extends File {
     Uploading: boolean,
@@ -69,9 +69,12 @@ const PolicyDialog = (props: {
     let submitRef = React.createRef();
 
     return (
-        <Dialog open={true} onClose={goBack}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <DialogTitle>{props.submitLabel} Policy</DialogTitle>
+        <Dialog
+            title       = {`${props.submitLabel} Policy`}
+            submitLabel = {props.submitLabel}
+            submitRef   = {submitRef}
+            onSubmit    = {handleSubmit(onSubmit)}
+            content = {
                 <DialogContent>
                     <DialogContentText>
                         Enter policy details:
@@ -97,12 +100,8 @@ const PolicyDialog = (props: {
                     </Box>
 
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' ref={submitRef as any}>{props.submitLabel}</Button>
-                </DialogActions>
-            </form>
-        </Dialog>
+            }
+        />
     );
 }
 

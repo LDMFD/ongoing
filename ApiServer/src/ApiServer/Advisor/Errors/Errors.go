@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+const PolicyNumberAlreadyExists = "A policy with this policy number already exists."
 const PolicyHasDependentPortfolios = "Unable to delete - policy has dependent portfolios"
 const PolicyFundDoesNotBelongToClient = "Policy fund does not belong to client"
 const UserAlreadyExists = "A user with this email already exists"

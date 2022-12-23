@@ -6,6 +6,7 @@ import (
 	"github.com/uptrace/bun"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
@@ -51,6 +52,14 @@ func CreatePolicy(c *gin.Context) {
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
 		panic(err.Error())
+	}
+
+	if exists, err := db.NewSelect().Model((*Entities.Policy)(nil)).Where("external_id = ?", body.ExternalId).Exists(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	} else if exists {
+		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyNumberAlreadyExists})
+		return
 	}
 
 	var policyType = Entities.PolicyType{}

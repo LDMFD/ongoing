@@ -11,6 +11,10 @@ let toolbarId = 0;
 const RichTextEditor = (props: FormInputProps) => {
     let tId = useRef(toolbarId++);
 
+    if (!props.control) {
+        return null;
+    }
+
     let modules = {
         toolbar: {
             container: `#rich-toolbar-${tId.current}`,
@@ -28,7 +32,7 @@ const RichTextEditor = (props: FormInputProps) => {
     ]
 
     return (
-        <div className="text-editor">
+        <div className="ong-richtext">
             <label>{props.label}</label>
             <div id={`rich-toolbar-${tId.current}`}>
                 <select className="ql-header" defaultValue={""} onChange={e => e.persist()}>

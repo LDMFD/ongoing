@@ -1,21 +1,15 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import {
-    Button,
     Box,
-    Dialog,
-    DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
 } from '@mui/material';
 
-import { GoBack } from 'Utils/Routing';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
-import './ClientDialog.css';
 import { Client } from 'Types/Types';
+import Dialog from 'Components/Library/Dialog/Dialog';
 
 interface ClientFormInput {
     Surname: string,
@@ -24,26 +18,21 @@ interface ClientFormInput {
     Fee: number,
 }
 
-const ClientDialog = (params: {
+const ClientDialog = (props: {
     client: Client,
     submitLabel: string,
     submitHandler: (client: Client) => void,
 }) => {
-    let { client, submitLabel, submitHandler } = params;
-        
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const { handleSubmit, control } = useForm<ClientFormInput>({
         defaultValues: {
-            ...client.Identity,
-            ...client,
+            ...props.client.Identity,
+            ...props.client,
         }
     });
 
     const onSubmit = (data: ClientFormInput) => {
-        submitHandler({
-            ...client,
+        props.submitHandler({
+            ...props.client,
             Fee: parseFloat(data.Fee as unknown as string),
             Identity: {
                 Forenames: data.Forenames,
@@ -54,28 +43,26 @@ const ClientDialog = (params: {
     };
 
     return (
-        <Dialog open={true} onClose={goBack}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <DialogTitle>{submitLabel} Client</DialogTitle>
+        <Dialog
+            submitLabel = {props.submitLabel}
+            title       = {`${props.submitLabel} Client`}
+            onSubmit    = {handleSubmit(onSubmit)}
+            content = {
                 <DialogContent>
                     <DialogContentText>
                         Enter new client details:
                     </DialogContentText>
 
                     <Box>
-                        <TextInput name='Surname'   label='Surname'   control={control} required />
-                        <TextInput name='Forenames' label='Forenames' control={control} required />
-                        <TextInput name='Email'     label='Email'     control={control} required type='email' />
-                        <TextInput name='Fee'       label='Fee'       control={control} required type='numeric' />
+                        <TextInput name='Email'     label='Email'      control={control} required type='email' />
+                        <TextInput name='Surname'   label='Surname'    control={control} required />
+                        <TextInput name='Forenames' label='Forenames'  control={control} required />
+                        <TextInput name='Fee'       label='Advice Fee' control={control} required type='numeric' />
                     </Box>
 
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit'>{submitLabel}</Button>
-                </DialogActions>
-            </form>
-        </Dialog>
+            }
+        />
     );
 }
 

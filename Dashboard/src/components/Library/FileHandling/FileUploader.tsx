@@ -179,25 +179,27 @@ interface FileInputProps extends FormInputProps {
 
 const FileUploader = (props: FileInputProps) => {
     return (
-        <Controller
-            name    = {props.name}
-            control = {props.control}
-            render={({
-                field: { onChange, value },
-                fieldState: { error },
-                formState,
-            }) => (
-                <Paper elevation={1}>
-                    <div className='ong-uploader-label'>
-                        {props.label}
-                    </div>
+        <div className='ong-uploader'>
+            <Controller
+                name    = {props.name}
+                control = {props.control}
+                render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                    formState,
+                }) => (
+                    <Paper elevation={1}>
+                        <div className='ong-uploader-label'>
+                            {props.label}
+                        </div>
 
-                    <FileInput file      = {value}
-                                onChange  = {onChange}
-                                submitRef = {props.submitRef} />
-                </Paper>
-            )}
-        />
+                        <FileInput file      = {value}
+                                    onChange  = {onChange}
+                                    submitRef = {props.submitRef} />
+                    </Paper>
+                )}
+            />
+        </div>
     );
 }
 

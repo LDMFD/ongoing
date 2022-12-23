@@ -1,0 +1,13 @@
+/* Leave space after dialog intro text */
+.ong-dialog .MuiDialogContentText-root {
+    margin: 0 0 1rem !important;
+}
+
+/* Add space around input fields */
+.ong-dialog .MuiTextField-root {
+    margin: 0 1rem 1rem 0 !important;
+}
+
+.ong-dialog .MuiDialogActions-root {
+    padding: 0 16px 6px;
+}

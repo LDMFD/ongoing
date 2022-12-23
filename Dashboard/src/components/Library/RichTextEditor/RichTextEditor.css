@@ -1,9 +1,9 @@
-.text-editor {
+.ong-richtext {
     padding: 0.5rem 0;
     margin-top: -28px;
 }
 
-.text-editor label {
+.ong-richtext label {
     background: white;
     color: rgba(0, 0, 0, 0.6);
     padding: 0 5px;
