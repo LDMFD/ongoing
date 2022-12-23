@@ -1,12 +1,14 @@
 import React, { useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { Controller } from 'react-hook-form';
 
 import './RichTextEditor.css';
+import { FormInputProps } from '../FormControls/FormInputProps';
 
 let toolbarId = 0;
 
-const RichTextEditor = ({ label, initialValue, onChange }) => {
+const RichTextEditor = (props: FormInputProps) => {
     let tId = useRef(toolbarId++);
 
     let modules = {
@@ -27,7 +29,7 @@ const RichTextEditor = ({ label, initialValue, onChange }) => {
 
     return (
         <div className="text-editor">
-            {label}
+            <label>{props.label}</label>
             <div id={`rich-toolbar-${tId.current}`}>
                 <select className="ql-header" defaultValue={""} onChange={e => e.persist()}>
                     <option value="1"></option>
@@ -47,11 +49,22 @@ const RichTextEditor = ({ label, initialValue, onChange }) => {
                 <button className="ql-clean"></button>
             </div>
 
-            <ReactQuill theme    = 'snow'
-                        modules  = {modules}
-                        formats  = {formats}
-                        value    = {initialValue}
-                        onChange = {onChange} />
+            <Controller
+                name    = {props.name}
+                control = {props.control}
+                render = {({
+                    field: { onChange, value },
+                    fieldState: { error },
+                    formState,
+                }) => (
+                    <ReactQuill theme    = 'snow'
+                                modules  = {modules}
+                                formats  = {formats}
+                                value    = {value}
+                                onChange = {onChange} />
+                )}
+            />
+                                                 
         </div>
     )
 }

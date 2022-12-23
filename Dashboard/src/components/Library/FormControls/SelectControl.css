@@ -1,0 +1,11 @@
+.ong-select {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.ong-select .MuiFormControl-root {
+    width: 100%;
+}
+.ong-select .MuiFormLabel-root {
+    background-color: white;
+    padding-right: 5px;
+}

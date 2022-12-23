@@ -1,0 +1,17 @@
+.MuiPaper-root {
+    margin-top: 12px;
+    padding: 1rem;
+}
+
+.ong-uploader-controls {
+    margin-top: -18px;
+}
+
+.ong-uploader-label {
+    position: relative;
+    top: -24px;
+    left: -8px;
+    font-size: 9pt;
+    padding: 0 5px;
+    color: rgba(0, 0, 0, 0.6);
+}

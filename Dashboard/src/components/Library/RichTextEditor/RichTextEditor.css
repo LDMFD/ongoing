@@ -1,10 +1,27 @@
 .text-editor {
     padding: 0.5rem 0;
+    margin-top: -28px;
 }
+
+.text-editor label {
+    background: white;
+    color: rgba(0, 0, 0, 0.6);
+    padding: 0 5px;
+    font-size: 9pt;
+    position: relative;
+    top: 10px;
+    left: 8px;
+}
+
 .ql-container.ql-snow {
     border-radius: 0 0 5px 5px;
     border-top: none;
 }
+
+.ql-toolbar {
+    border-radius: 5px 5px 0 0;
+}
+
 .ql-editor p,
 .ql-editor ol,
 .ql-editor ul,

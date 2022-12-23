@@ -1,3 +1,16 @@
+export interface Org {
+    Resources: OrgResources,
+}
+
+export interface OrgResources {
+    PolicyTypes: PolicyType[],
+    PolicyProviders: PolicyProvider[],
+}
+
+export interface State {
+    Resources: OrgResources,
+}
+
 export interface ClientIdentity {
     Email:     string,
 	Forenames: string,
@@ -16,6 +29,11 @@ export interface File {
     Uid: string,
     Filename: string,
     Size: number,
+}
+
+export interface PolicyType {
+    Id: string,
+    Name: string,
 }
 
 export interface PolicyProvider {
