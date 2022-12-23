@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,18 +11,13 @@ const EditClient = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch ] = useContext(Context);
-    let [ client, setClient ] = useState(null);
 
     let { clientId } = useParams();
 
-    if (!client) {
-        setClient(state.Clients.find(c => c.Id === clientId));
-        return;
-    }
+    let client = state.Clients.find(c => c.Id === clientId);
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.Advisor.ClientDetail.Update(client);
+    const submitHandler = async (c) => {
+        await Api.Advisor.ClientDetail.Update(c);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         await Api.Advisor.Clients.Read(dispatch);  // TODO optimize this
         goBack();
@@ -31,7 +26,6 @@ const EditClient = () => {
 
     return (
         <ClientDialog client        = {client}
-                      setClient     = {setClient}
                       submitLabel   = 'Update'
                       submitHandler = {submitHandler}  />
     );

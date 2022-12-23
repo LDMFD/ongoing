@@ -1,0 +1,8 @@
+.MuiDialogContentText-root {
+    margin: 0 0 1rem !important;
+}
+
+.MuiTextField-root {
+    margin: 0 1rem 1rem 0 !important;
+    width: 25ch !important;
+}
