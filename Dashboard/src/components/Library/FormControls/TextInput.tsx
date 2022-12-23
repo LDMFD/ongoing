@@ -1,26 +1,20 @@
-import React from "react";
-import { Controller } from "react-hook-form";
-import { TextField } from "@mui/material";
-import { FormInputProps } from "./FormInputProps";
+import React from 'react';
+import { Controller } from 'react-hook-form';
+import { TextField } from '@mui/material';
+import { FormInputProps } from './FormInputProps';
 
 interface TextInputProps extends FormInputProps {
     type?: 'text' | 'email' | 'numeric',
 }
 
-export const TextInput = (params: TextInputProps) => {
-    let {
-        name,
-        control,
-        label,
-        required,
-        type } = params;
+export const TextInput = (props: TextInputProps) => {
     let rules: any = {
         required: {
-            value: required,
-            message: 'This field is required',
+            value: props.required,
+            message: 'Required field',
         },
     };
-    switch (type) {
+    switch (props.type) {
         case 'email':
             rules.pattern = {
                 value: /\S+@\S+\.\S+/,
@@ -31,30 +25,30 @@ export const TextInput = (params: TextInputProps) => {
         case 'numeric':
             rules.pattern = {
                 value: /^-?\d*(\.\d+)?$/,
-                message: 'Enter a valid number',
+                message: 'Enter a number',
             }
             break;
     }
 
     return (
         <Controller
-            name={name}
-            control={control}
-            rules={rules}
-            render={({
+            name    = {props.name}
+            control = {props.control}
+            rules   = {rules}
+            render = {({
                 field: { onChange, value },
                 fieldState: { error },
                 formState,
             }) => (
                 <TextField helperText = {error ? error.message : null}
-                           size       = "small"
+                           size       = 'small'
                            error      = {!!error}
                            onChange   = {onChange}
-                           type       = {'text'}
+                           type       = 'text'
                            value      = {value}
-                           label      = {label}
-                           variant    = "outlined"
-                           inputProps = { type === 'numeric' ? { inputMode: 'numeric' } : {}}
+                           label      = {props.label}
+                           variant    = 'outlined'
+                           inputProps = { props.type === 'numeric' ? { inputMode: 'numeric' } : {}}
                            fullWidth
                 />
             )}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useForm } from "react-hook-form";
+import { useForm } from 'react-hook-form';
 import {
     Button,
     Box,
@@ -17,7 +17,7 @@ import { TextInput } from 'Components/Library/FormControls/TextInput';
 import './ClientDialog.css';
 import { Client } from 'Types/Types';
 
-interface IFormInput {
+interface ClientFormInput {
     Surname: string,
     Forenames: string,
     Email: string,
@@ -34,13 +34,14 @@ const ClientDialog = (params: {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const methods = useForm<IFormInput>({ defaultValues: {
-        ...client.Identity,
-        ...client,
-    }});
-    const { handleSubmit, control } = methods;
+    const { handleSubmit, control } = useForm<ClientFormInput>({
+        defaultValues: {
+            ...client.Identity,
+            ...client,
+        }
+    });
 
-    const onSubmit = (data: IFormInput) => {
+    const onSubmit = (data: ClientFormInput) => {
         submitHandler({
             ...client,
             Fee: parseFloat(data.Fee as unknown as string),
@@ -58,14 +59,14 @@ const ClientDialog = (params: {
                 <DialogTitle>{submitLabel} Client</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Enter new client details.
+                        Enter new client details:
                     </DialogContentText>
 
                     <Box>
-                        <TextInput name="Surname"   label="Surname"   control={control} required />
-                        <TextInput name="Forenames" label="Forenames" control={control} required />
-                        <TextInput name="Email"     label="Email"     control={control} required type='email' />
-                        <TextInput name="Fee"       label="Fee"       control={control} required type='numeric' />
+                        <TextInput name='Surname'   label='Surname'   control={control} required />
+                        <TextInput name='Forenames' label='Forenames' control={control} required />
+                        <TextInput name='Email'     label='Email'     control={control} required type='email' />
+                        <TextInput name='Fee'       label='Fee'       control={control} required type='numeric' />
                     </Box>
 
                 </DialogContent>
