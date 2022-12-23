@@ -63,7 +63,7 @@ _deploy-dashboard: import-env
 	gcloud run deploy ${SERVICE} \
 		--project=ongoing-${ENV} \
 		--service-account=ongoing-${ENV}-cloud-run@ongoing-${ENV}.iam.gserviceaccount.com \
-		--image=${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing_dashboard-server:${TAG} \
+		--image=${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-dashboard-server:${TAG} \
 		--region=${REGION} \
 		--platform=managed \
 		--allow-unauthenticated \
@@ -86,19 +86,19 @@ cloudrun-update-traffic:
 		--to-latest
 
 cloudrun-deploy-api:
-	make _deploy-api SERVICE=ongoing-api TAG=latest
+	make _deploy-api SERVICE=ongoing-api TAG=${TAG}
 	make firebase-deploy
 
 cloudrun-deploy-dashboard:
-	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=latest
+	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=${TAG}
 	make firebase-deploy
 
 redeploy-api:
-	make cloudrun-deploy-api
+	make cloudrun-deploy-api TAG=latest
 	make firebase-deploy
 
 redeploy-dashboard:
-	make cloudrun-deploy-dashboard
+	make cloudrun-deploy-dashboard TAG=latest
 	make firebase-deploy
 
 redeploy-all:
@@ -112,17 +112,19 @@ up-spice:
 
 up-api:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
+	@echo "*** DEPLOYING API SERVER ${UUID}"
 	make build-image SERVICE=api RELEASE=${UUID}
 	make release-api RELEASE=${UUID}
 	make cloudrun-deploy-api
-	@echo *** DEPLOYED API SERVER ${UUID}
+	@echo "*** DEPLOYED API SERVER ${UUID}"
 
 up-dashboard:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
+	@echo "*** DEPLOYING DASHBOARD ${UUID}"
 	make build-dashboard RELEASE=${UUID}
 	make release-dashboard RELEASE=${UUID}
-	make cloudrun-deploy-dashboard
-	@echo *** DEPLOYED DASHBOARD ${UUID}
+	make cloudrun-deploy-dashboard TAG=${UUID}
+	@echo "*** DEPLOYED DASHBOARD ${UUID}"
 
 up-all:
 	make up-api

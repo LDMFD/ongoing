@@ -1,9 +1,9 @@
 _release:
 #	git tag releases/${SERVICE}/v${RELEASE}
 #	git push origin releases/${SERVICE}/v${RELEASE}
-	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${RELEASE}
+	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:${RELEASE}
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
-	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:v${RELEASE}
+	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:${RELEASE}
 	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
 
 # Usage: make release-api RELEASE=1.2.3
@@ -12,14 +12,14 @@ release-api:
 
 # Usage: make release-dashboard RELEASE=1.2.3
 release-dashboard:
-	make _release SERVICE=dashboard IMAGE=ongoing_dashboard-server
+	make _release SERVICE=dashboard IMAGE=ongoing-dashboard-server
 
 # Usage: make deploy-api RELEASE=1.2.3
 deploy-api:
-	make _deploy-api SERVICE=ongoing-api TAG=v${RELEASE}
+	make _deploy-api SERVICE=ongoing-api TAG=${RELEASE}
 
 # Usage: make deploy-dashboard RELEASE=1.2.3
 deploy-dashboard:
-	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=v${RELEASE}
+	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=${RELEASE}
 
 #	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
