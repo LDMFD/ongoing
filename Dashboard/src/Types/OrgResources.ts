@@ -1,7 +1,8 @@
 export interface OrgResources {
-    PolicyTypes: PolicyType[],
-    PolicyProviders: PolicyProvider[],
     Funds: Fund[],
+    Models: Model[],
+    PolicyProviders: PolicyProvider[],
+    PolicyTypes: PolicyType[],
 }
 
 export interface PolicyType {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,22 +11,19 @@ const AddPortfolio = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [, dispatch] = useContext(Context);
-    let [ portfolio, setPortfolio ] = useState(DefaultPortfolio);
-
     let { clientId } = useParams();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const [ state, dispatch ] = useContext(Context);
+
+    const submitHandler = async (portfolio) => {
         await Api.Advisor.Portfolios.Create(clientId, portfolio);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
-        return false;
     };
     
     return (
-        <PortfolioDialog portfolio     = {portfolio}
-                         setPortfolio  = {setPortfolio}
+        <PortfolioDialog portfolio     = {DefaultPortfolio}
+                         state         = {state}
                          submitLabel   = 'Add'
                          submitHandler = {submitHandler}  />
     );

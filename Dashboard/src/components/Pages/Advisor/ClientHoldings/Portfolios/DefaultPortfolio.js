@@ -1,5 +1,5 @@
 export const DefaultPortfolio = {
-    PolicyId: 'select',
-    ModelId: 'select',
+    PolicyId: '',
+    ModelId: '',
     Proportion: 1,
 };

@@ -13,13 +13,12 @@ const AddPolicyFund = () => {
 
     let { clientId } = useParams();
 
-    const [ state, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     const submitHandler = async (policyFund) => {
         await Api.Advisor.PolicyFunds.Create(clientId, policyFund);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
-        return false;
     };
 
     return (
