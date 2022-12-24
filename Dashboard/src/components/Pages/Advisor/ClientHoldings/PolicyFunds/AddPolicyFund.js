@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -13,15 +13,9 @@ const AddPolicyFund = () => {
 
     let { clientId } = useParams();
 
-    const [, dispatch] = useContext(Context);
+    const [ state, dispatch] = useContext(Context);
 
-    let [ policyFund, setPolicyFund ] = useState(DefaultPolicyFund);
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        // if (policyFund.Proportion === '') {
-        //     policyFund.Proportion = 1;
-        // }
+    const submitHandler = async (policyFund) => {
         await Api.Advisor.PolicyFunds.Create(clientId, policyFund);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
@@ -29,8 +23,8 @@ const AddPolicyFund = () => {
     };
 
     return (
-        <PolicyFundDialog policyFund    = {policyFund}
-                          setPolicyFund = {setPolicyFund}
+        <PolicyFundDialog policyFund    = {DefaultPolicyFund}
+                          state         = {state}
                           submitLabel   = 'Add'
                           submitHandler = {submitHandler}  />
     );

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,31 +11,22 @@ const EditPolicyFund = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ policyFund, setPolicyFund ] = useState(null);
 
     let { policyFundId } = useParams();
     
     let client = state.Metadata;
     
-    if (!policyFund) {
-        setPolicyFund(state.Report.PolicyFunds.find(h => h.Id === policyFundId))
-        return;
-    }
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        // if (policyFund.Proportion === '') {
-        //     policyFund.Proportion = 1;
-        // }
+    const submitHandler = async (policyFund) => {
         await Api.Advisor.PolicyFunds.Update(client.Id, policyFund);
         await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
         goBack();
-        return false;
     };
+
+    let policyFund = state.Report.PolicyFunds.find(h => h.Id === policyFundId);
 
     return (
         <PolicyFundDialog policyFund       = {policyFund}
-                          setPolicyFund    = {setPolicyFund}
+                          state            = {state}
                           submitLabel      = 'Update'
                           submitHandler    = {submitHandler}  />
     );

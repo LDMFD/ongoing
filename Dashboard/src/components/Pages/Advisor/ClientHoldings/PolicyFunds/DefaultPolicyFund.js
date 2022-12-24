@@ -1,5 +1,5 @@
 export const DefaultPolicyFund = {
-    FundId: 'select',
-    PolicyId: 'select',
+    FundId: '',
+    PolicyId: '',
     Proportion: 1,
 };

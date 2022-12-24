@@ -5,10 +5,12 @@ export interface Org {
 export interface OrgResources {
     PolicyTypes: PolicyType[],
     PolicyProviders: PolicyProvider[],
+    Funds: Fund[],
 }
 
 export interface State {
     Resources: OrgResources,
+    Report: Report,
 }
 
 export interface ClientIdentity {
@@ -58,6 +60,15 @@ export interface ProviderDiscount {
     Id: string,
 	PolicyProviderId: string,
 	Discount: number,
+}
+
+export interface Fund {
+    Id:        string,
+	Name:      string,
+	OcfFee:    number,
+	ExAnteFee: number,
+	Modified:  string,
+	File?:     File,
 }
 
 export interface Policy {
