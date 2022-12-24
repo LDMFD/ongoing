@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import Table from 'Components/Library/Table/Table';
 import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
 import { ProviderChargesPropType, Row } from './CalculatedCharges';
-import { Policy } from 'Types/Types';
+import { Policy } from 'Types/Client';
 
 const PoliciesTable = (params: {
     policies: Policy[],

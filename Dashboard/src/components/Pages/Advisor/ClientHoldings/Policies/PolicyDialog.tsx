@@ -13,6 +13,7 @@ import { TextInput } from 'Components/Library/FormControls/TextInput';
 
 import { File, State } from 'Types/Types';
 import Dialog from 'Components/Library/Dialog/Dialog';
+import { PolicyProvider, PolicyType } from 'Types/OrgResources';
 
 interface FormFile extends File {
     Uploading: boolean,
@@ -48,12 +49,12 @@ const PolicyDialog = (props: {
         });
     };
 
-    let policyTypes = props.state.Resources.PolicyTypes.map(t => ({
+    let policyTypes = props.state.Resources.PolicyTypes.map((t: PolicyType) => ({
         Id: t.Id,
         Name: t.Name
     }));
 
-    let policyProviders = props.state.Resources.PolicyProviders.map(t => ({
+    let policyProviders = props.state.Resources.PolicyProviders.map((t: PolicyProvider) => ({
         Id: t.Id,
         Name: t.Name
     }));

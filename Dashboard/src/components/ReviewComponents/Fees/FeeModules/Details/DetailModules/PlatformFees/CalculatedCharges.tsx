@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'Components/Library/Table/Table';
 import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
-import { ProviderCharge } from 'Types/Types';
+import { ProviderCharge } from 'Types/OrgResources';
 
 export type Row = {
     original: any,

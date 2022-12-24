@@ -5,7 +5,7 @@ import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { CalculatePlatformModel } from '../Model/FeeModel';
 import { ProviderBlockView } from '../Model/FeeTypes';
-import { Client } from 'Types/Types';
+import { Client } from 'Types/Client';
 import { Context } from 'State';
 
 const FeeTotals = () => {

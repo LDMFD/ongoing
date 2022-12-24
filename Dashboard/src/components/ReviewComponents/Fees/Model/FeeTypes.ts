@@ -1,4 +1,5 @@
-import { Policy, ProviderCharge, ProviderDiscount } from "Types/Types";
+import { ProviderCharge, ProviderDiscount } from "Types/OrgResources";
+import { Policy } from "Types/Client";
 
 export interface ProviderBlockView {
     Id?: string,

@@ -10,7 +10,8 @@ import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
-import { Fund, State } from 'Types/Types';
+import { State } from 'Types/Types';
+import { Fund } from 'Types/OrgResources';
 
 interface PolicyFundForm {
     PolicyId: string,

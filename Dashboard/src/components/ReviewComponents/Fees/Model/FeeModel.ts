@@ -1,6 +1,5 @@
-import { PolicyProvider, ProviderDiscount, Report } from 'Types/Types';
-
-import { Policy, ProviderCharge } from "Types/Types";
+import { ProviderCharge, PolicyProvider, ProviderDiscount } from 'Types/OrgResources';
+import { Policy, Report } from "Types/Client";
 import { PlatformView, ProviderBlockView } from './FeeTypes';
 
 interface ProviderBlock {

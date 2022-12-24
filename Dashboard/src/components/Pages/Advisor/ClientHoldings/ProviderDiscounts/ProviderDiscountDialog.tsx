@@ -9,7 +9,8 @@ import {
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
-import { ProviderDiscount, State } from 'Types/Types';
+import { State } from 'Types/Types';
+import { ProviderDiscount } from 'Types/OrgResources';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 
 interface ProviderDiscountForm {
