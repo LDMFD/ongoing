@@ -15,7 +15,7 @@ const Dialog = (props: {
     title: string,
     onSubmit: any,
     submitLabel: string,
-    submitRef: any,
+    submitRef?: any,
     content: any,
 }) => {
     let history = useHistory();

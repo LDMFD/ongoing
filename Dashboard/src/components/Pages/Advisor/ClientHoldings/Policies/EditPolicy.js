@@ -18,7 +18,6 @@ const EditPolicy = () => {
         await Api.Advisor.Policies.Update(clientId, pol);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
-        return false;
     };
 
     let policy = state.Report.Policies.find(p => p.Id === policyId);

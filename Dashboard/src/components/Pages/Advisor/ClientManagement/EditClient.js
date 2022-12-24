@@ -21,7 +21,6 @@ const EditClient = () => {
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         await Api.Advisor.Clients.Read(dispatch);  // TODO optimize this
         goBack();
-        return false;
     };
 
     return (

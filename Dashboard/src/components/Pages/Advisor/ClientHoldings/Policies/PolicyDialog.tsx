@@ -1,17 +1,12 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import {
-    Button,
     Box,
-    DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
 } from '@mui/material';
 import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
 
-import { GoBack } from 'Utils/Routing';
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
@@ -40,9 +35,6 @@ const PolicyDialog = (props: {
     submitLabel: string,
     submitHandler: (policy: PolicyFormInput) => void,
 }) => {
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const { handleSubmit, control } = useForm<PolicyFormInput>({
         defaultValues: props.policy
     });

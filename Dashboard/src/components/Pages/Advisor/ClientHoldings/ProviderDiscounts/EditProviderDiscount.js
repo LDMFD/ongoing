@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,26 +11,20 @@ const EditProviderDiscount = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch ] = useContext(Context);
-    let [ providerDiscount, setProviderDiscount ] = useState(null);
 
     let { clientId, providerDiscountId } = useParams();
 
-    if (!providerDiscount) {
-        setProviderDiscount(state.Report.ProviderDiscounts.find(p => p.Id === providerDiscountId))
-        return;
-    }
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.Advisor.ProviderDiscounts.Update(clientId, providerDiscount);
+    const submitHandler = async (discount) => {
+        await Api.Advisor.ProviderDiscounts.Update(clientId, discount);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
-        return false;
     };
 
+    let discount = state.Report.ProviderDiscounts.find(p => p.Id === providerDiscountId);
+
     return (
-        <ProviderDiscountDialog providerDiscount    = {providerDiscount}
-                                setProviderDiscount = {setProviderDiscount}
+        <ProviderDiscountDialog providerDiscount    = {discount}
+                                state               = {state}
                                 submitLabel         = 'Update'
                                 submitHandler       = {submitHandler}  />
     );

@@ -1,4 +1,4 @@
 export const DefaultProviderDiscount = {
-    PolicyProviderId: 'select',
+    PolicyProviderId: '',
     Discount: '',
 };
