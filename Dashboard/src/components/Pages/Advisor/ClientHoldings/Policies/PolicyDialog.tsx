@@ -5,9 +5,9 @@ import {
     DialogContent,
     DialogContentText,
 } from '@mui/material';
-import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEditor';
 
-import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEditor2';
+import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
@@ -86,7 +86,7 @@ const PolicyDialog = (props: {
                                         label   = 'Notes'
                                         control = {control} />
 
-                        <FileUploader label        = 'Policy file'
+                        <FileUploader2 label        = 'Policy file'
                                       name         = 'File'
                                       control      = {control}
                                       submitRef    = {submitRef} />

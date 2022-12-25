@@ -6,7 +6,7 @@ import {
     DialogContentText,
 } from '@mui/material';
 
-import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { State } from 'Types/Types';
@@ -98,7 +98,7 @@ const RiskAssessmentDialog = (props: {
                                 required
                             />
 
-                            <FileUploader
+                            <FileUploader2
                                 label        = 'Risk assessment file'
                                 name         = 'File'
                                 control      = {control}

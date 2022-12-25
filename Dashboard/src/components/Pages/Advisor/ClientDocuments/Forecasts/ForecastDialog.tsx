@@ -6,7 +6,7 @@ import {
     DialogContentText,
 } from '@mui/material';
 
-import FileUploader from 'Components/Library/FileHandling/FileUploader';
+import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { File, State } from 'Types/Types';
@@ -59,7 +59,7 @@ const ForecastDialog = (props: {
                                 required
                             />
 
-                            <FileUploader
+                            <FileUploader2
                                 label        = 'Forecast file'
                                 name         = 'File'
                                 control      = {control}
