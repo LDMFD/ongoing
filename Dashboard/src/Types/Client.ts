@@ -32,3 +32,11 @@ export interface Report {
     ProviderCharges: ProviderCharge[],
     ProviderDiscounts: ProviderDiscount[],
 }
+
+export interface RiskAssessment {
+    Id: string,
+    RiskProviderId: string,
+	RiskLevelId: string,
+	Completed: string,
+	File?: File,
+}

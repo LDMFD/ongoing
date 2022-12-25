@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,27 +11,22 @@ const EditForecast = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ forecast, setForecast ] = useState(null);
 
     let { forecastId } = useParams();
 
     let client = state.Metadata;
 
-    if (!forecast) {
-        setForecast(state.Report.Forecasts.find(h => h.Id === forecastId))
-        return;
-    }
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (forecast) => {
         await Api.Advisor.Forecasts.Update(client.Id, forecast)
         await Api.Advisor.ClientDetail.Read(dispatch, client.Id)
         goBack();
-        return false;
     };
+    
+    let forecast = state.Report.Forecasts.find(h => h.Id === forecastId);
 
     return (
         <ForecastDialog forecast      = {forecast}
-                        setForecast   = {setForecast}
+                        state         = {state}
                         submitLabel   = 'Update'
                         submitHandler = {submitHandler}  />
     );

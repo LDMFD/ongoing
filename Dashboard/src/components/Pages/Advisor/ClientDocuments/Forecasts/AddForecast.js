@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,22 +11,19 @@ const AddForecast = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [, dispatch] = useContext(Context);
-    let [ forecast, setForecast ] = useState(DefaultForecast);
+    const [ state, dispatch] = useContext(Context);
 
     let { clientId } = useParams();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (forecast) => {
         await Api.Advisor.Forecasts.Create(clientId, forecast);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
-        return false;
     };
     
     return (
-        <ForecastDialog forecast      = {forecast}
-                        setForecast   = {setForecast}
+        <ForecastDialog forecast      = {DefaultForecast}
+                        state         = {state}
                         submitLabel   = 'Add'
                         submitHandler = {submitHandler}  />
     );

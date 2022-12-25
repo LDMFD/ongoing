@@ -1,3 +1,7 @@
-.factfind-dialog .MuiDialogContent-root {
-    min-height: 18rem;
+.MuiDialogContent-root {
+    min-height: 23rem;
+}
+
+.ong-date {
+    padding: 1rem 0;
 }

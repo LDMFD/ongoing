@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,27 +11,22 @@ const EditFeesReport = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ feesReport, setFeesReport ] = useState(null);
 
     let { feesReportId } = useParams();
 
     let client = state.Metadata;
 
-    if (!feesReport) {
-        setFeesReport(state.Report.FeesReports.find(h => h.Id === feesReportId))
-        return;
-    }
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (feesReport) => {
         await Api.Advisor.FeesReports.Update(client.Id, feesReport)
         await Api.Advisor.ClientDetail.Read(dispatch, client.Id)
         goBack();
-        return false;
     };
+
+    let feesReport = state.Report.FeesReports.find(h => h.Id === feesReportId);
 
     return (
         <FeesReportDialog feesReport    = {feesReport}
-                          setFeesReport = {setFeesReport}
+                          state         = {state}
                           submitLabel   = 'Update'
                           submitHandler = {submitHandler}  />
     );

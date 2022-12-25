@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,27 +11,20 @@ const EditRiskAssessment = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ assessment, setAssessment ] = useState(null);
 
-    let { riskAssessmentId } = useParams();
+    let { clientId, riskAssessmentId } = useParams();
 
-    let client = state.Metadata;
-
-    if (!assessment) {
-        setAssessment(state.Report.RiskAssessments.find(h => h.Id === riskAssessmentId))
-        return;
-    }
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.Advisor.RiskAssessments.Update(client.Id, assessment)
-        await Api.Advisor.ClientDetail.Read(dispatch, client.Id)
+    const submitHandler = async (assessment) => {
+        await Api.Advisor.RiskAssessments.Update(clientId, assessment)
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId)
         goBack();
-        return false;
     };
+
+    let assessment = state.Report.RiskAssessments.find(h => h.Id === riskAssessmentId);
 
     return (
         <RiskAssessmentDialog assessment     = {assessment}
-                              setAssessment  = {setAssessment}
+                              state          = {state}
                               submitLabel    = 'Update'
                               submitHandler  = {submitHandler}  />
     );

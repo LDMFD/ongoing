@@ -174,15 +174,24 @@ const FileInput = (props: {
 }
 
 interface FileInputProps extends FormInputProps {
+    // A submit button to disable when upload is in progress
     submitRef: any,
 }
 
 const FileUploader = (props: FileInputProps) => {
+    let rules: any = {
+        required: {
+            value: props.required,
+            message: 'Required field',
+        },
+    };
+
     return (
         <div className='ong-uploader'>
             <Controller
                 name    = {props.name}
                 control = {props.control}
+                rules   = {rules}
                 render={({
                     field: { onChange, value },
                     fieldState: { error },
@@ -196,6 +205,12 @@ const FileUploader = (props: FileInputProps) => {
                         <FileInput file      = {value}
                                     onChange  = {onChange}
                                     submitRef = {props.submitRef} />
+
+                        {error?.type === 'required' &&
+                            <div className='ong-form-error'>
+                                {error.message}
+                            </div>
+                        }
                     </Paper>
                 )}
             />

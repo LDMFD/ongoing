@@ -17,6 +17,7 @@ const Dialog = (props: {
     submitLabel: string,
     submitRef?: any,
     content: any,
+    sx?: any,
 }) => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -24,7 +25,7 @@ const Dialog = (props: {
     let ref = props.submitRef as any;
 
     return (
-        <MuiDialog open={true} onClose={goBack}>
+        <MuiDialog open={true} onClose={goBack} sx={props.sx}>
             <div className='ong-dialog'>
                 <form onSubmit={props.onSubmit}>
                     <DialogTitle>{props.title}</DialogTitle>

@@ -1,6 +1,6 @@
 export const DefaultRiskAssessment = {
     RiskProviderId: null,
     RiskLevelId: null,
-    Questionnaire: null,
+    File: null,
     Completed: null,
 };

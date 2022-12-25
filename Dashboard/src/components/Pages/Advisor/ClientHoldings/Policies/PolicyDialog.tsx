@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogContentText,
 } from '@mui/material';
-import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
+import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEditor';
 
 import FileUploader from 'Components/Library/FileHandling/FileUploader';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
@@ -82,7 +82,7 @@ const PolicyDialog = (props: {
                         <SelectControl name='PolicyTypeId'     options={policyTypes}     label='Policy Type'     control={control} required />
                         <SelectControl name='PolicyProviderId' options={policyProviders} label='Policy Provider' control={control} required />
 
-                        <RichTextEditor name    = 'Notes'
+                        <RichTextEditor2 name    = 'Notes'
                                         label   = 'Notes'
                                         control = {control} />
 

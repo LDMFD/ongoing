@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,22 +11,19 @@ const AddRiskAssessment = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [, dispatch] = useContext(Context);
-    let [ assessment, setAssessment ] = useState(DefaultRiskAssessment);
+    const [ state, dispatch] = useContext(Context);
 
     let { clientId } = useParams();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (assessment) => {
         await Api.Advisor.RiskAssessments.Create(clientId, assessment);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
         goBack();
-        return false;
     };
     
     return (
-        <RiskAssessmentDialog assessment     = {assessment}
-                              setAssessment  = {setAssessment}
+        <RiskAssessmentDialog assessment     = {DefaultRiskAssessment}
+                              state          = {state}
                               submitLabel    = 'Add'
                               submitHandler  = {submitHandler}  />
     );

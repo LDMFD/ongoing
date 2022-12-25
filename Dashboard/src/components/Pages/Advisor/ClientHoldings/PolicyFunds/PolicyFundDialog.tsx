@@ -53,13 +53,10 @@ const PolicyFund = (props: {
         Name: t.Name
     }));
 
-    let submitRef = React.createRef();
-
     return (
         <Dialog
             title       = {`${props.submitLabel} Holding`}
             submitLabel = {props.submitLabel}
-            submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
                 <DialogContent>

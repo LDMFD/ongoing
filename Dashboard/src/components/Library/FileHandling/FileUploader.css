@@ -3,7 +3,7 @@
     padding: 1rem;
 }
 
-.ong-uploader-controls {
+.ong-uploader-control {
     margin-top: -18px;
 }
 
@@ -14,4 +14,13 @@
     font-size: 9pt;
     padding: 0 5px;
     color: rgba(0, 0, 0, 0.6);
+}
+
+/* Used by FileUploader and DateSelector */
+.ong-form-error {
+    color: #d32f2f;
+    font-size: 9pt;
+    position: relative;
+    top: 12px;
+    left: -4px;
 }

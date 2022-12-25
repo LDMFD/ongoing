@@ -5,13 +5,13 @@ import { FormInputProps } from './FormInputProps';
 
 import './SelectControl.css';
 
-interface PolicyTypeMenuItem {
+interface SelectMenuItem {
     Id: string,
     Name: string,
 }
 
 interface SelectControlProps extends FormInputProps {
-    options: PolicyTypeMenuItem[],
+    options: SelectMenuItem[],
 }
 
 export const SelectControl = (props: SelectControlProps) => {

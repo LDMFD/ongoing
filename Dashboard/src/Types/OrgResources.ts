@@ -3,6 +3,8 @@ export interface OrgResources {
     Models: Model[],
     PolicyProviders: PolicyProvider[],
     PolicyTypes: PolicyType[],
+    RiskLevels: RiskLevel[],
+    RiskProviders: RiskProvider[],
 }
 
 export interface PolicyType {
@@ -50,4 +52,17 @@ export interface Model {
     WeightedOcfFee: number,
     WeightedExAnteFee: number,
     File?: File,
+}
+
+export interface RiskProvider {
+    Id: string,
+    Name: string,
+}
+
+export interface RiskLevel {
+    Id: string,
+    RiskProviderId: string,
+	Level: number,
+	Label: string,
+	Desc: string,
 }
