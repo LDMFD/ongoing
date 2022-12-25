@@ -33,6 +33,7 @@ const ForecastDialog = (props: {
         props.submitHandler(forecast);
     };
 
+    // let dialogRef = React.createRef();
     let submitRef = React.createRef();
 
     return (
@@ -40,6 +41,7 @@ const ForecastDialog = (props: {
             <Dialog
                 title       = {`${props.submitLabel} Forecast`}
                 submitLabel = {props.submitLabel}
+                // ref         = {dialogRef}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
@@ -50,9 +52,10 @@ const ForecastDialog = (props: {
 
                         <Box>
                             <DateSelector2
-                                name     = 'Submitted'
-                                label    = 'Submit date'
-                                control  = {control}
+                                name      = 'Submitted'
+                                label     = 'Submit date'
+                                control   = {control}
+                                // dialogRef = {dialogRef}
                                 required
                             />
 

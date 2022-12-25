@@ -26,13 +26,20 @@ export const DateSelector = ({ selected, onChange, label='Date' }: any) => {
     );
 }
 
-export const DateSelector2 = (props: FormInputProps) => {
+interface DateControlProps extends FormInputProps {
+    // Scroll the dialog to keep the date selector in view
+    // dialogRef: any,
+}
+
+export const DateSelector2 = (props: DateControlProps) => {
     let rules: any = {
         required: {
             value: props.required,
             message: 'Required field',
         },
     };
+
+    // console.log(props.dialogRef.getBoundingClientRect().bottom);
 
     return (
         <div className='ong-date'>
