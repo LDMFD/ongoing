@@ -18,7 +18,7 @@ import ReportFeeRoutes        from './ReportFeeRoutes';
 import ReportProfileRoutes    from './ReportProfileRoutes';
 import ReportTabs             from './ReportTabs';
 
-const ReportRoutes = () => {
+const AdvisorReportRoutes = () => {
     let { path } = useRouteMatch();
 
     let location = useLocation();
@@ -65,4 +65,4 @@ const ReportRoutes = () => {
     );
 }
 
-export default ReportRoutes;
+export default AdvisorReportRoutes;

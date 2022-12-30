@@ -1,18 +1,18 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import AddClient          from './ClientManagement/AddClient';
-import ClientAccountPage  from './ClientManagement/ClientAccountPage'
-import ClientList         from './ClientManagement/ClientList';
-import ClientWrapper      from './AdvisorSpaceWrapper';
-import EditClient         from './ClientManagement/EditClient';
-import HoldingsRoutes     from './ClientHoldings/HoldingsRoutes';
-import DocumentsRoutes    from './ClientDocuments/DocumentsRoutes';
-import ReportRoutes       from './AdvisorReport/ReportRoutes';
-import ReviewList         from './Reviews/AdvisorReviewList';
-import ReviewRoutes       from './Reviews/ReviewRoutes';
+import AddClient           from './ClientManagement/AddClient';
+import ClientAccountPage   from './ClientManagement/ClientAccountPage'
+import ClientList          from './ClientManagement/ClientList';
+import ClientWrapper       from './AdvisorSpaceWrapper';
+import EditClient          from './ClientManagement/EditClient';
+import HoldingsRoutes      from './ClientHoldings/HoldingsRoutes';
+import DocumentsRoutes     from './ClientDocuments/DocumentsRoutes';
+import AdvisorReportRoutes from './AdvisorReport/ReportRoutes';
+import AdvisorReviewList   from './Reviews/AdvisorReviewList';
+import AdvisorReviewRoutes from './Reviews/AdvisorReviewRoutes';
 
-const ClientRoutes = () => {
+const AdvisorClientRoutes = () => {
     let { path } = useRouteMatch();
 
     let location = useLocation();
@@ -26,16 +26,16 @@ const ClientRoutes = () => {
                 <Route path={`${path}/id/:clientId`}>
                     <ClientWrapper>
                         <Switch>
-                            <Route path={`${path}/id/:clientId/reviews/id/:reviewId/modules/:module`} component={ReviewRoutes} />
-                            <Route path={`${path}/id/:clientId/reviews/id/:reviewId`} component={ReviewRoutes} />
+                            <Route path={`${path}/id/:clientId/reviews/id/:reviewId/modules/:module`} component={AdvisorReviewRoutes} />
+                            <Route path={`${path}/id/:clientId/reviews/id/:reviewId`} component={AdvisorReviewRoutes} />
 
                             <Route path={`${path}/id/:clientId/holdings`} component={HoldingsRoutes} />
                             <Route path={`${path}/id/:clientId/documents`} component={DocumentsRoutes} />
 
-                            <Route path={`${path}/id/:clientId/modules/:module`} component={ReportRoutes} />
-                            <Route path={`${path}/id/:clientId/report`} component={ReportRoutes} />
+                            <Route path={`${path}/id/:clientId/modules/:module`} component={AdvisorReportRoutes} />
+                            <Route path={`${path}/id/:clientId/report`} component={AdvisorReportRoutes} />
 
-                            <Route path={`${path}/id/:clientId/reviews`} component={ReviewList} />
+                            <Route path={`${path}/id/:clientId/reviews`} component={AdvisorReviewList} />
                             <Route path={`${path}/id/:clientId`} component={ClientAccountPage} />
                         </Switch>
                         
@@ -50,4 +50,4 @@ const ClientRoutes = () => {
     );
 }
     
-export default ClientRoutes;
+export default AdvisorClientRoutes;

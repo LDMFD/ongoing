@@ -12,7 +12,7 @@ import PublishState          from './PublishState';
 import EditReviewStateDialog from './EditReviewStateDialog';
 import ProfileRoutes         from './AdvisorReviewProfileRoutes';
 
-const ReviewRoutes = () => {
+const AdvisorReviewRoutes = () => {
     let { path } = useRouteMatch();
 
     let location = useLocation();
@@ -43,4 +43,4 @@ const ReviewRoutes = () => {
     );
 }
 
-export default ReviewRoutes;
+export default AdvisorReviewRoutes;

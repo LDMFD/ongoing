@@ -8,7 +8,7 @@ import { Context } from 'State/StateProvider'
 import { Api } from 'State';
 import { FromCanonical } from 'Utils/DateTime';
 
-const ReviewList = () => {
+const AdvisorReviewList = () => {
     let history = useHistory();
     const [state, dispatch ] = useContext(Context);
     let {
@@ -66,4 +66,4 @@ const ReviewList = () => {
     );
 }
 
-export default ReviewList;
+export default AdvisorReviewList;

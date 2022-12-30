@@ -2,8 +2,8 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ClientSpaceWrapper from './ClientSpaceWrapper';
-import ReviewRoutes       from './ClientSpaceReviewRoutes';
-import ReviewList         from './ClientSpaceReviewList';
+import ClientSpaceReviewRoutes       from './ClientSpaceReviewRoutes';
+import ClientSpaceReviewList         from './ClientSpaceReviewList';
 
 const ClientSpaceRoutes = () => {
     let { path } = useRouteMatch();
@@ -18,10 +18,10 @@ const ClientSpaceRoutes = () => {
                 <Route path={`${path}`}>
                     <ClientSpaceWrapper>
                         <Switch>
-                            <Route path={`${path}/reviews/:reviewId/modules/:module`} component={ReviewRoutes} />
-                            <Route path={`${path}/reviews/:reviewId`} component={ReviewRoutes} />
+                            <Route path={`${path}/reviews/:reviewId/modules/:module`} component={ClientSpaceReviewRoutes} />
+                            <Route path={`${path}/reviews/:reviewId`} component={ClientSpaceReviewRoutes} />
 
-                            <Route path={`${path}`} component={ReviewList} />
+                            <Route path={`${path}`} component={ClientSpaceReviewList} />
                         </Switch>
                     </ClientSpaceWrapper>
                 </Route>
