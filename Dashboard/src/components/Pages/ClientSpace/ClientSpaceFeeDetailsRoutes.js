@@ -1,22 +1,25 @@
+import AdviceFees from 'Components/ReviewComponents/Fees/FeeModules/Details/DetailModules/AdviceFees';
+import DimFees from 'Components/ReviewComponents/Fees/FeeModules/Details/DetailModules/DimFees';
+import FundLevelFees from 'Components/ReviewComponents/Fees/FeeModules/Details/DetailModules/FundLevelFees';
+import PlatformFees from 'Components/ReviewComponents/Fees/FeeModules/Details/DetailModules/PlatformFees/PlatformFees';
+import PortfolioLevelFees from 'Components/ReviewComponents/Fees/FeeModules/Details/DetailModules/PortfolioLevelFees';
+import FeeDetailsTabs from 'Components/ReviewComponents/Fees/FeeModules/Details/FeeDetailsTabs';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
 import React from 'react';
 import { useLocation, useRouteMatch, Switch, Route } from "react-router-dom";
 
-import FeeDetailsTabs from './FeeDetailsTabs';
+const ClientSpaceFeeDetailsRoutes = () => {
+    let report = GetReport();
+    
+    let basePath = '/client-space/reviews/:reviewId/modules/:module/details';
+    let baseTarget = `/client-space/reviews/${report.Id}/modules/fees/details`;
 
-import AdviceFees         from './DetailModules/AdviceFees';
-import PlatformFees       from './DetailModules/PlatformFees/PlatformFees';
-import FundLevelFees      from './DetailModules/FundLevelFees';
-import PortfolioLevelFees from './DetailModules/PortfolioLevelFees';
-import DimFees            from './DetailModules/DimFees';
-
-const FeeDetailsRoutes = ({ baseTarget }) => {
     let { path } = useRouteMatch();
 
     let location = useLocation();
 
     let background = location.state && location.state.background;
 
-    let basePath = '/clients/id/:clientId/modules/fees/details';
     return (
         <div style={{ position: "relative"}}>
             <Switch location={background || location}>
@@ -37,4 +40,4 @@ const FeeDetailsRoutes = ({ baseTarget }) => {
     );
 };
 
-export default FeeDetailsRoutes;
+export default ClientSpaceFeeDetailsRoutes;

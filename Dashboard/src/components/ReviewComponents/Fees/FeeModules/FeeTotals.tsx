@@ -1,19 +1,13 @@
 import React, { useContext } from 'react';
-import { useParams } from "react-router-dom";
 
 import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { CalculatePlatformModel } from '../Model/FeeModel';
 import { ProviderBlockView } from '../Model/FeeTypes';
-import { Client } from 'Types/Client';
 import { Context } from 'State';
 
 const FeeTotals = () => {
     const [state]: any = useContext(Context);    
-
-    let { clientId }: any = useParams();
-
-    let client: Client = state.Clients.find((c: Client) => c.Id === clientId);
 
     let report = GetReport();
 
@@ -29,7 +23,7 @@ const FeeTotals = () => {
             <ProviderBlock key    = {ix}
                            block  = {b}
                            total  = {view.Total}
-                           client = {client} />
+                           fee    = {state.Metadata.Fee} />
         ))}
     </>
 }
@@ -54,9 +48,10 @@ const FeeTotalsProviderSummary = (params: {
 )
 
 const ProviderBlock = (params: {
+    key: any,
     block: ProviderBlockView,
     total: number,
-    client: Client,
+    fee: number,
 }) => {
     let {
         PlatformFeePercent: platformFeePercent,
@@ -65,7 +60,7 @@ const ProviderBlock = (params: {
         TotalPercent: totalPercent,
         TotalCharge: totalCharge } = params.block;
 
-        let feeGBP = CurrencyFormatter.format(params.client.Fee / 100 * total);
+        let feeGBP = CurrencyFormatter.format(params.fee / 100 * total);
 
         return (
         <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>
@@ -81,7 +76,7 @@ const ProviderBlock = (params: {
                     ({(totalPercent).toPrecision(4)}%)
                 </li>
                 <li>
-                    Advice (client fee): {params.client.Fee}% ({feeGBP})
+                    Advice (client fee): {params.fee}% ({feeGBP})
                 </li>
                 <li>
                     Estimated annual charges: {CurrencyFormatterPence.format(totalCharge)} ({(platformFeePercent).toPrecision(2)}% of your holdings).

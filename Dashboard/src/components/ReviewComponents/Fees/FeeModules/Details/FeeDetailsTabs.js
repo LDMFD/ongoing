@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
     Tab,
@@ -7,16 +7,9 @@ import {
 import { RouteMatch } from 'Utils/Routing';
 
 import { GetReport } from '../../../GetReport';
-import { Context } from 'State';
 
-const FeeDetailsTabs = ({ children }) => {
+const FeeDetailsTabs = ({ children, basePath, baseTarget }) => {
     const { pathname } = useLocation();
-
-    const [ state, ] = useContext(Context);
-    let client = state.Metadata;
-
-    let basePath = '/clients/id/:clientId/modules/fees/details';
-    let baseTarget = `/clients/id/${client.Id}/modules/fees/details`;
 
     let routeMatch = RouteMatch(pathname, [
         `${basePath}/advice`,

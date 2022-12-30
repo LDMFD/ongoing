@@ -17,7 +17,6 @@ const AdvisorClientRoutes = () => {
 
     let location = useLocation();
 
-    // See https://v5.reactrouter.com/web/example/modal-gallery
     let background = location.state && location.state.background;
 
     return (

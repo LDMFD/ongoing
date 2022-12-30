@@ -3,7 +3,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import ClientSpaceReviewTabs from './ClientSpaceReviewTabs';
 
-import FeeRoutes from './ClientSpaceFeeRoutes';
+import ClientSpaceFeeRoutes from './ClientSpaceFeeRoutes';
 import Introduction from 'Components/ReviewComponents/Introduction';
 import PolicyValuations from 'Components/ReviewComponents/PolicyValuations';
 import ProfileRoutes from './ClientSpaceProfileRoutes';
@@ -27,7 +27,7 @@ const ClientSpaceReviewRoutes = () => {
                             <Route path={`${basePath}/introduction`}      component={Introduction} />
                             <Route path={`${basePath}/profile`}           component={ProfileRoutes} />
                             <Route path={`${basePath}/policy-valuations`} component={PolicyValuations} />
-                            <Route path={`${basePath}/fees`}              component={FeeRoutes} />
+                            <Route path={`${basePath}/fees`}              component={ClientSpaceFeeRoutes} />
                             <Route path={`${basePath}/assessments`}       component={ConclusionRoutes} />
                         </Switch>
                     </ClientSpaceReviewTabs>

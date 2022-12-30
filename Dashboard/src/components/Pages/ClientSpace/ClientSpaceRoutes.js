@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import ClientSpaceWrapper from './ClientSpaceWrapper';
+import ClientSpaceWrapper            from './ClientSpaceWrapper';
 import ClientSpaceReviewRoutes       from './ClientSpaceReviewRoutes';
 import ClientSpaceReviewList         from './ClientSpaceReviewList';
 
