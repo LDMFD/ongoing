@@ -75,7 +75,7 @@ func (s *ApiServer) addNetworkConfig(r *gin.Engine) {
 			"http://localhost.ongoing.tp1.org:3000",
 		},
 		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
-		AllowedHeaders: []string{"Authentication", "Content-Type", "X-ViewAs"},
+		AllowedHeaders: []string{"Authentication", "Content-Type", "Cache-Control", "Content-Disposition", "X-ViewAs"},
 
 		AllowCredentials:   true,
 		OptionsPassthrough: false,
