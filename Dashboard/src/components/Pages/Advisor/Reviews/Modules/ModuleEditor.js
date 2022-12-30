@@ -19,7 +19,7 @@ import { DefaultModule } from './DefaultModule';
 
 export const ModuleEditor = () => {
     let history = useHistory();
-    let goBack = GoBack(history);
+    let goBack = GoBack(history, 3);
 
     let checkGoBack = () => {
         if (moduleState.editCount < 1 || window.confirm('Discard unsaved changes?')) {

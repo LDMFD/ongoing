@@ -1,11 +1,17 @@
 import { matchPath } from 'react-router-dom';
 
-export const GoBack = history => e => {
+export const GoBack = (history, depth) => (e) => {
     if (e) {
         e.stopPropagation();
     }
+    if (!depth) {
+        depth = 1;
+    }
     let url = window.location.pathname;
-    history.push(url.substring(0, url.lastIndexOf('/')));
+    while (depth-- > 0) {
+        url = url.substring(0, url.lastIndexOf('/'));
+    }
+    history.push(url);
 };
 
 export const RouteMatch = (pathname, patterns) => {

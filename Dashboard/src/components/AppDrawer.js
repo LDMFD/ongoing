@@ -200,6 +200,7 @@ export default function PermanentDrawerLeft() {
 
                 <Toolbar />
 
+                {/* The app... */}
                 <InitialState>
                     <Routes />
                 </InitialState>
