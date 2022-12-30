@@ -12,7 +12,7 @@ release-api:
 
 # Usage: make release-dashboard RELEASE=1.2.3
 release-dashboard:
-	make _release SERVICE=dashboard IMAGE=ongoing_dashboard-server
+	make _release SERVICE=dashboard IMAGE=ongoing-dashboard-server
 
 # Usage: make deploy-api RELEASE=1.2.3
 deploy-api:

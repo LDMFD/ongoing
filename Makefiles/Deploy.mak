@@ -62,7 +62,7 @@ _deploy-dashboard: import-env
 	gcloud run deploy ${SERVICE} \
 		--project=ongoing-${ENV} \
 		--service-account=ongoing-${ENV}-cloud-run@ongoing-${ENV}.iam.gserviceaccount.com \
-		--image=${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing_dashboard-server:${TAG} \
+		--image=${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-dashboard-server:${TAG} \
 		--region=${REGION} \
 		--platform=managed \
 		--allow-unauthenticated \
