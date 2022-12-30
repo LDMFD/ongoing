@@ -89,10 +89,14 @@ const staffItem = [
     },
 ];
 
-const orgsItem = [
+const superuserItems = [
     {
         label: 'Organisations',
         link: '/admin/organisations',
+    },
+    {
+        label: 'Export',
+        link: '/admin/export',
     },
 ];
 
@@ -104,7 +108,7 @@ const clientSpaceItem = [
 ]
 
 const Sidebars = {
-    [ UserType.Superuser ]: orgsItem,
+    [ UserType.Superuser ]: superuserItems,
     [ UserType.OrgOwner ]:  [].concat( clientsItem, tier1Items, tier2Items, staffItem ),  // Can manage admins
     [ UserType.OrgAdmin ]:  [].concat( clientsItem, tier1Items, tier2Items, staffItem ),  // Can manage advisors
     [ UserType.Advisor ]:   [].concat( clientsItem, tier2Items ),

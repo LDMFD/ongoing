@@ -3,6 +3,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import AdminSpaceWrapper from './SuperuserSpaceWrapper';
 import OrgRoutes from './Organisations/OrgRoutes';
+import Export from './Export/Export';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();
@@ -18,6 +19,7 @@ const ClientRoutes = () => {
                 <Route path={`${path}`}>
                     <AdminSpaceWrapper>
                         <Route path={`${path}/organisations`} component={OrgRoutes} />
+                        <Route path={`${path}/export`} component={Export} />
                     </AdminSpaceWrapper>
                 </Route>
             </Switch>
