@@ -14,6 +14,7 @@ import { GoBack } from 'Utils/Routing';
 
 import { Context, Api } from 'State'
 import Table from 'Components/Library/Table/Table';
+import { CurrencyFormatter } from 'Utils/Strings';
 
 const ProviderChargeList = () => {
     let history = useHistory();
@@ -36,12 +37,12 @@ const ProviderChargeList = () => {
     const columns = [
         {
             accessor: 'boundary',
-            Header: 'Range (£)',
+            Header: 'Range',
             width: 200,
         }, {
             accessor: 'charge',
-            Header: 'Annual Fee (%)',
-            width: 100,
+            Header: 'Annual Fee',
+            width: 150,
         }, {
             accessor: 'actions',
             Header: '',
@@ -61,16 +62,20 @@ const ProviderChargeList = () => {
     
     let charges = state.Resources.ProviderCharges;
 
-    let providerCharges = charges
-        .filter(pc => pc.ProviderId === policyProviderId)
-        .map((m, ix) => {
-            let upper = ix < charges.length-1 ? (charges[ix+1].Boundary-1) : '';
-            return {
-                id:       m.Id,
-                charge:   m.Charge,
-                boundary: upper ? `${m.Boundary} - ${upper}` : `> ${m.Boundary}`,
-            };
-        });
+    charges = charges
+        .filter(pc => pc.ProviderId === policyProviderId);
+
+    charges = charges.map((m, ix) => {
+        let lower = CurrencyFormatter.format(m.Boundary);
+        let upper = ix < charges.length-1
+            ? CurrencyFormatter.format(charges[ix+1].Boundary-1)
+            : '';
+        return {
+            id:       m.Id,
+            charge:   `${m.Charge}%`,
+            boundary: upper ? `${lower} - ${upper}` : `> ${lower}`,
+        };
+    });
 
     return (
         <Dialog open={true} onClose={goBack}>
@@ -84,7 +89,7 @@ const ProviderChargeList = () => {
                     </Toolbar>
 
                     <Table columns   = {columns}
-                           data      = {providerCharges} />
+                           data      = {charges} />
 
                 </DialogContent>
                 <DialogActions>
