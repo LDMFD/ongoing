@@ -75,7 +75,7 @@ func DeleteReview(c *gin.Context) {
 			if fund.File == nil {
 				continue
 			}
-			if err := auth.RemoveFileFromClientOnly(client.Uid, fund.File.Uid); err != nil {
+			if err := auth.RemoveFileFromClient(client.Uid, fund.File.Uid); err != nil {
 				panic(err)
 			}
 		}
@@ -83,7 +83,7 @@ func DeleteReview(c *gin.Context) {
 			if model.File == nil {
 				continue
 			}
-			if err := auth.RemoveFileFromClientOnly(client.Uid, model.File.Uid); err != nil {
+			if err := auth.RemoveFileFromClient(client.Uid, model.File.Uid); err != nil {
 				panic(err)
 			}
 		}

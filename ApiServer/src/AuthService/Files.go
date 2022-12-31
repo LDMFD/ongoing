@@ -34,8 +34,15 @@ func (c *Client) CreateFile(clientId, orgId *string, fileId string) error {
 	return nil
 }
 
-func (c *Client) RemoveFileFromClientOnly(clientId, fileId string) error {
+func (c *Client) RemoveFileFromClient(clientId, fileId string) error {
 	if err := c.removeRelationship("file", fileId, "client", "client", clientId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) RemoveFileFromOrg(orgId string, fileId string) error {
+	if err := c.removeRelationship("file", fileId, "org", "organisation", orgId); err != nil {
 		return err
 	}
 	return nil
@@ -45,13 +52,6 @@ func (c *Client) RemoveFileFromClientAndOrg(clientId, orgId string, fileId strin
 	if err := c.removeRelationship("file", fileId, "client", "client", clientId); err != nil {
 		return err
 	}
-	if err := c.removeRelationship("file", fileId, "org", "organisation", orgId); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) RemoveFileFromOrg(orgId string, fileId string) error {
 	if err := c.removeRelationship("file", fileId, "org", "organisation", orgId); err != nil {
 		return err
 	}

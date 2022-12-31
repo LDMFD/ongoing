@@ -45,6 +45,7 @@ _deploy-api: import-env
 		--update-env-vars=FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-env-vars=ONGOING_API_HOST=${DOMAIN_${ENV}} \
 		--update-env-vars=ONGOING_API_PORT=8000 \
+		--update-env-vars=ONGOING_ENV=${ENV} \
 		--update-env-vars=ONGOING_SPICEDB_HOST=${URI}:443 \
 		--update-env-vars=ONGOING_SPICEDB_DB=spicedb-${ENV} \
 		--update-env-vars=ONGOING_STORAGE_BUCKET=ongoing-${ENV}-docs \
@@ -116,7 +117,7 @@ up-api:
 	@echo "*** DEPLOYING API SERVER ${UUID}"
 	make build-image SERVICE=api RELEASE=${UUID}
 	make release-api RELEASE=${UUID}
-	make cloudrun-deploy-api
+	make cloudrun-deploy-api TAG=${UUID}
 	@echo "*** DEPLOYED API SERVER ${UUID}"
 
 up-dashboard:
