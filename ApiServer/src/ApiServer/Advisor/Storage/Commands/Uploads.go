@@ -72,7 +72,7 @@ func SignalUpload(c *gin.Context) {
 			panic(err.Error())
 		}
 		if resp.StatusCode != http.StatusOK {
-			c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("file not found (status=%v)", resp.StatusCode)})
+			c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("file %v (\"%v\") not found (status=%v)", req.Uid, req.Filename, resp.StatusCode)})
 			panic(err.Error())
 		}
 

@@ -12,15 +12,9 @@ type GetClientRequestPath struct {
 	ClientId string `binding:"required"`
 }
 
-type Draft struct {
-	Id        string
-	StartDate string
-	EndDate   string
-}
-
 type GetClientResponse struct {
 	Metadata Entities.ClientReport
-	Draft    *Draft
+	Draft    *Entities.Draft
 	Report   Entities.ReportDetail
 	Reviews  []Entities.ReportReview
 }

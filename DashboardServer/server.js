@@ -8,6 +8,8 @@ const app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 
 let content = fs.readFileSync(path.join(__dirname, 'index.html')).toString();
+
+// Live config (any cloud env) - see App.js for dev version
 let config = JSON.stringify({
   ApiHost: process.env.ONGOING_API_HOST,
   DashboardHost: process.env.ONGOING_DASHBOARD_HOST,
@@ -15,6 +17,7 @@ let config = JSON.stringify({
   FirebaseConfig: JSON5.parse(fs.readFileSync('/app/Config/Firebase/key.json').toString()),  // move string to env var
   SentryDsn: process.env.ONGOING_SENTRY_DSN.trim(),
   Release: process.env.RELEASE,
+  Env: process.env.ONGOING_ENV,
 });
 let indexResponse = content.replace("\"__CONFIG_EMBED__\"", config);
 

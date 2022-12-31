@@ -3,7 +3,7 @@ package Importer
 import (
 	"encoding/json"
 	"log"
-	"ongoing/ApiServer/Superuser/Commands/Export"
+	"ongoing/Entities"
 	"os"
 )
 
@@ -21,20 +21,21 @@ func Import(path string) {
 
 	CheckReady()
 
-	export := &Export.Export{}
-	fileBytes, _ := os.ReadFile(importPath)
-	if err := json.Unmarshal(fileBytes, export); err != nil {
+	export := &Entities.Export{}
+	if fileBytes, err := os.ReadFile(importPath); err != nil {
+		panic(err)
+	} else if err := json.Unmarshal(fileBytes, export); err != nil {
 		panic(err)
 	}
 
-	if err := runImport(export); err != nil {
+	if err := RunImport(export); err != nil {
 		log.Fatal(err)
 	}
 
 	os.Exit(0)
 }
 
-func runImport(export *Export.Export) error {
+func RunImport(export *Entities.Export) error {
 	for _, org := range export.Orgs {
 		if err := createOrg(org, export.Users); err != nil {
 			return err

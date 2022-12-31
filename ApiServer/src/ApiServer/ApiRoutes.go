@@ -50,6 +50,7 @@ func addUserInfoRoute(r *gin.Engine) {
 func addStorageRoutes(r *gin.Engine) {
 	routes := r.Group("/api/storage")
 	routes.Use(AuthMiddleware(&[]string{
+		Entities.UserTypeSuperuser,
 		Entities.UserTypeOrgOwner,
 		Entities.UserTypeOrgAdmin,
 		Entities.UserTypeAdvisor,

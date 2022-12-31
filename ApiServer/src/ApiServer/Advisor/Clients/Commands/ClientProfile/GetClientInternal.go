@@ -9,11 +9,11 @@ import (
 	"ongoing/Utils/Date"
 )
 
-func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientResponse {
+func GetClientInternal(c *gin.Context, client *Entities.Client) *Entities.ExportClient {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
 
-	var draft *Draft
+	var draft *Entities.Draft
 	var draftReviews []Entities.Review
 	if count, err := db.NewSelect().
 		Model(&draftReviews).
@@ -35,7 +35,7 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientRespon
 				endDate = Date.ToCanonical(draftReviews[0].EndDate)
 			}
 
-			draft = &Draft{
+			draft = &Entities.Draft{
 				Id:        draftReviews[0].Uid,
 				StartDate: startDate,
 				EndDate:   endDate,
@@ -47,7 +47,7 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *GetClientRespon
 
 	report := GenerateReport(c, client.Id, false)
 
-	resp := &GetClientResponse{
+	resp := &Entities.ExportClient{
 		Metadata: client.ToReport(),
 		Draft:    draft,
 		Report:   *report,

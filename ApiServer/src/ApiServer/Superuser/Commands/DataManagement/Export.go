@@ -1,4 +1,4 @@
-package Export
+package DataManagement
 
 import (
 	"github.com/gin-gonic/gin"
@@ -13,36 +13,24 @@ import (
 	"sort"
 )
 
-type Org struct {
-	Metadata  Entities.ReportOrganisation
-	Resources OrgResources.OrgResources
-	Clients   []ClientProfile.GetClientResponse
-	Files     []Entities.ReportFile
-}
-
-type Export struct {
-	Users []Entities.ReportUser
-	Orgs  []Org
-}
-
-func GetExport(c *gin.Context) {
+func Export(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	entities := *Commands.GetAdminEntitiesInternal(c)
 
-	export := Export{
+	export := Entities.Export{
 		Users: entities.Users,
-		Orgs:  []Org{},
+		Orgs:  []Entities.Org{},
 	}
 
 	for _, org := range entities.Organisations {
 		clients := ClientProfile.GetClientsInternal(c, org.Id)
 
-		org := Org{
+		org := Entities.Org{
 			Metadata:  org,
 			Resources: OrgResources.GetOrgResourcesInternal(c, &org.Id).Resources,
-			Clients:   []ClientProfile.GetClientResponse{},
+			Clients:   []Entities.ExportClient{},
 			Files:     []Entities.ReportFile{},
 		}
 

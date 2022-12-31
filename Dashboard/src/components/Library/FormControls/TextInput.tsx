@@ -5,6 +5,7 @@ import { FormInputProps } from './FormInputProps';
 
 interface TextInputProps extends FormInputProps {
     type?: 'text' | 'email' | 'numeric',
+    pattern?: object,
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -29,6 +30,9 @@ export const TextInput = (props: TextInputProps) => {
             }
             break;
     }
+    if (props.pattern) {
+        rules.pattern = props.pattern;
+    }
 
     return (
         <Controller
@@ -40,17 +44,19 @@ export const TextInput = (props: TextInputProps) => {
                 fieldState: { error },
                 formState,
             }) => (
-                <TextField helperText = {error ? error.message : null}
-                           size       = 'small'
-                           error      = {!!error}
-                           onChange   = {onChange}
-                           type       = 'text'
-                           value      = {value}
-                           label      = {props.label}
-                           variant    = 'outlined'
-                           inputProps = { props.type === 'numeric' ? { inputMode: 'numeric' } : {}}
-                           fullWidth
-                />
+                <>
+                    <TextField helperText = {error ? error.message : null}
+                            size       = 'small'
+                            error      = {!!error}
+                            onChange   = {onChange}
+                            type       = 'text'
+                            value      = {value}
+                            label      = {props.label}
+                            variant    = 'outlined'
+                            inputProps = { props.type === 'numeric' ? { inputMode: 'numeric' } : {}}
+                            fullWidth
+                    />
+                </>
             )}
         />
     );

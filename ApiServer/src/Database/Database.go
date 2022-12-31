@@ -26,10 +26,10 @@ func New() (*bun.DB, error) {
 		if strings.Contains(dbname, "prod") {
 			panic("Refusing to wipe production database!")
 		}
-		wipeDatabases(db)
+		Truncate(db)
 	}
 
-	seedUserTable(db)
+	SeedUserTable(db)
 
 	log.Println("DB: Connected.")
 
@@ -59,7 +59,7 @@ func connect(dsn, dbname string) *bun.DB {
 	return db
 }
 
-func wipeDatabases(appdb *bun.DB) {
+func Truncate(appdb *bun.DB) {
 	log.Println("DB: Truncating...")
 
 	appdb.Exec(`
@@ -87,7 +87,7 @@ func wipeDatabases(appdb *bun.DB) {
 	spicedb.Exec("DELETE FROM relation_tuple_transaction WHERE id > 2;")
 }
 
-func seedUserTable(db *bun.DB) {
+func SeedUserTable(db *bun.DB) {
 	for _, su := range GetSuperusers() {
 		if len(su) > 0 {
 			insertSuperuser(db, su)

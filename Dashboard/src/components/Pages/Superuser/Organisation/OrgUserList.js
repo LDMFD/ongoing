@@ -50,7 +50,13 @@ export const OrgUserList = () => {
             email: `${u.Forenames} ${u.Surname} <${u.Email}>`,
             role: m.Role,
         };
-    }).sort((p,q) => (p.email < q.email) ? -1 : ((p.email > q.email) ? 1 : 0));
+    }).sort((p,q) =>
+        (p.role === 'owner') ? -1 : 
+        (q.role === 'owner') ? 1 : 
+        (p.role === 'advisor') ? -1 : 
+        (q.role === 'advisor') ? 1 : 
+        (p.email < q.email) ? -1 : ((p.email > q.email) ? 1 : 0)
+    );
 
     return (
         <Dialog open={true} onClose={goBack} fullWidth={true} >

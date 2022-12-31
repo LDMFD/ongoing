@@ -6,12 +6,11 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
-	"ongoing/ApiServer/Superuser/Commands/Export"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
 	"ongoing/Entities"
 )
 
-func createOrg(org Export.Org, allUsers []Entities.ReportUser) error {
+func createOrg(org Entities.Org, allUsers []Entities.ReportUser) error {
 	var advisorId string
 
 	for _, user := range org.Metadata.Members {
@@ -85,7 +84,7 @@ func importOrganisation(mp Organisation.CreateOrganisationRequestBody, ownerId s
 	return nil
 }
 
-func importFiles(owner Entities.ReportUser, org Export.Org) {
+func importFiles(owner Entities.ReportUser, org Entities.Org) {
 	for _, file := range org.Files {
 		createFile(&file, owner.Id)
 	}

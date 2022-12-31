@@ -4,14 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"ongoing/ApiServer/Superuser/Commands"
-	"ongoing/ApiServer/Superuser/Commands/Export"
+	"ongoing/ApiServer/Superuser/Commands/DataManagement"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
 	"ongoing/Database"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
 	r.GET("", Commands.GetAdminEntities)
-	r.GET("/export", Export.GetExport)
+	r.GET("/export", DataManagement.Export)
+	r.POST("/import", DataManagement.Import)
+	r.POST("/truncate", DataManagement.Truncate)
 	r.GET("/stats", GetStats)
 	AddOrganisationRoutes(r.Group("/organisations"))
 }

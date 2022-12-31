@@ -95,8 +95,8 @@ const superuserItems = [
         link: '/admin/organisations',
     },
     {
-        label: 'Export',
-        link: '/admin/export',
+        label: 'Data Transfer',
+        link: '/admin/transfer',
     },
 ];
 

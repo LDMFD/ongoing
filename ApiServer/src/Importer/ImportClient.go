@@ -17,7 +17,7 @@ type ClientEntitiesContainer struct {
 	Reviews  []Entities.ReportReview
 }
 
-func importClients(clients *[]ClientProfile.GetClientResponse, owner Entities.ReportUser, allUsers []Entities.ReportUser) error {
+func importClients(clients *[]Entities.ExportClient, owner Entities.ReportUser, allUsers []Entities.ReportUser) error {
 	for _, c := range *clients {
 		var userId string
 		for _, user := range allUsers {

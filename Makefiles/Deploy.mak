@@ -74,6 +74,7 @@ _deploy-dashboard: import-env
 		--port=8080 \
 		--update-env-vars=ONGOING_API_HOST=https://${DOMAIN_${ENV}}/api \
 		--update-env-vars=ONGOING_DASHBOARD_HOST=https://${DOMAIN_${ENV}} \
+		--update-env-vars=ONGOING_ENV=${ENV} \
 		--update-env-vars=ONGOING_REACT_FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-secrets=/app/Config/Firebase/key.json=firebase-client-key:${SECRET_FIREBASE_CLIENT_KEY_${ENV}} \
 		--update-secrets=ONGOING_REACT_FIREBASE_CLIENT_ID=firebase-client-id:${SECRET_FIREBASE_CLIENT_ID_${ENV}} \

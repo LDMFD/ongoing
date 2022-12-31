@@ -25,7 +25,7 @@ Sentry.init({
     tracesSampleRate: 1.0,
 });
   
-// Dev mode
+// Dev mode - see DashboardServer/server.js for live/cloud version
 if (window.Config === '__CONFIG_EMBED__') {
     let firebaseConfigB64 = atob(process.env.REACT_APP_ONGOING_REACT_FIREBASE_CONFIG);
     window.Config = {
@@ -35,6 +35,7 @@ if (window.Config === '__CONFIG_EMBED__') {
         FirebaseClientId: process.env.REACT_APP_ONGOING_REACT_FIREBASE_CLIENT_ID,
         FirebaseConfig: json5.parse(firebaseConfigB64),
         Release: 'dev',
+        Env: 'dev',
     };
 }
 

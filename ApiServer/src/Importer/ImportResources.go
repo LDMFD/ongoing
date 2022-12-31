@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"ongoing/ApiServer/Advisor/OrgResources"
 	"ongoing/Entities"
 )
 
-func importOrgResources(entities *OrgResources.OrgResources, advisorId string) error {
+func importOrgResources(entities *Entities.OrgResources, advisorId string) error {
 	for _, mp := range entities.ModulePresets {
 		importModulePreset(mp, advisorId)
 	}

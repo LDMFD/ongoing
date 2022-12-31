@@ -10,6 +10,7 @@ export const Export = () => {
         let date = Day(new Date()).format();
         let filename = `Amplifa-export-${date}.json`;
 
+        // @ts-ignore
         window.ApiClient({
             url: 'admin/export',
             method: 'GET',
@@ -18,7 +19,7 @@ export const Export = () => {
                 'Cache-Control': 'no-cache,max-age=0',
                 'Content-Disposition': `attachment; filename=${filename}`,
             },
-        }).then((response) => {
+        }).then((response: any) => {
             // https://stackoverflow.com/a/53230807
             const href = URL.createObjectURL(response.data);
             const link = document.createElement('a');

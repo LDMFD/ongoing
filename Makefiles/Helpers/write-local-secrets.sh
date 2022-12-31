@@ -6,6 +6,8 @@ SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn-dashboard latest`
 SENTRY_CLIRC=`gcloud secrets versions access --secret=sentry-clirc latest`
 
 cat << EOF > .env
+ONGOING_ENV=dev
+
 ONGOING_API_HOST=ongoing-api
 ONGOING_API_PORT=8000
 
@@ -35,6 +37,8 @@ cat << EOF > env.goland
 BUNDEBUG=true
 FIREBASE_CONFIG=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/firebase/key.json
 GOPATH=\$PROJECT_DIR\$
+
+ONGOING_ENV=dev
 
 ONGOING_API_HOST=ongoing-api
 ONGOING_API_PORT=8000

@@ -9,7 +9,7 @@ export function ShowLogin(callback) {
     if (OFFLINE_AUTH) {
         let email = localStorage.getItem('email');
         if (!email) {
-            email = prompt('Enter email for auth bypass');
+            email = prompt('Enter email for auth bypass', 'darren@amplifa.co.uk');
             localStorage.setItem('email', email);
         }
         callback(email, email, 'Darren', null);

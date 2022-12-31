@@ -6,11 +6,10 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
-	"ongoing/ApiServer/Superuser/Commands/Export"
 	"ongoing/Entities"
 )
 
-func importAdvisors(owner Entities.ReportUser, org Export.Org, allUsers []Entities.ReportUser) error {
+func importAdvisors(owner Entities.ReportUser, org Entities.Org, allUsers []Entities.ReportUser) error {
 	for _, member := range org.Metadata.Members {
 		if member.Role == "advisor" || member.Role == "administrator" {
 			for _, user := range allUsers {

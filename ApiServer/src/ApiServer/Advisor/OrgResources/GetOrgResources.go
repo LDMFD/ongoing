@@ -7,20 +7,8 @@ import (
 	"ongoing/Entities"
 )
 
-type OrgResources struct {
-	Funds           []Entities.ReportFund
-	Models          []Entities.ReportModel
-	ModulePresets   []Entities.ReportModulePreset
-	Operators       []Entities.ReportOperator
-	PolicyProviders []Entities.ReportPolicyProvider
-	PolicyTypes     []Entities.ReportPolicyType
-	ProviderCharges []Entities.ReportProviderCharge
-	RiskProviders   []Entities.ReportRiskProvider
-	RiskLevels      []Entities.ReportRiskLevel
-}
-
 type OrgResourcesResponse struct {
-	Resources OrgResources
+	Resources Entities.OrgResources
 }
 
 func GetOrgResources(c *gin.Context) {
@@ -32,7 +20,7 @@ func GetOrgResources(c *gin.Context) {
 func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesResponse {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
-	entities := OrgResources{
+	entities := Entities.OrgResources{
 		Funds:           make([]Entities.ReportFund, 0),
 		Models:          make([]Entities.ReportModel, 0),
 		ModulePresets:   make([]Entities.ReportModulePreset, 0),
