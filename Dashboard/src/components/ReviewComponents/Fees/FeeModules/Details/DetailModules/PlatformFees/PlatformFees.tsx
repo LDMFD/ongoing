@@ -4,7 +4,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
+import { CurrencyFormatter, CurrencyFormatterPence, PercentageFormatter } from 'Utils/Strings';
 import PoliciesTable from './PoliciesTable';
 import { ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import CalculatedChargesTable from './CalculatedCharges';
@@ -33,7 +33,7 @@ const PlatformFees = () => {
     );
 }
 
-const PlatformFeesSummary = (params: {
+const PlatformFeesSummary = (props: {
     blocks: ProviderBlockView[],
     total: number,
     weightedAvgFee: number,
@@ -43,19 +43,19 @@ const PlatformFeesSummary = (params: {
         <b>Platform Summary:</b>
         <ul>
             <li>
-                Total invested: {CurrencyFormatter.format(params.total)}
+                Total invested: {CurrencyFormatter.format(props.total)}
             </li>
             <li>
-                Weighted average fee: {(params.weightedAvgFee).toPrecision(2)}%
+                Weighted average fee: {(props.weightedAvgFee).toPrecision(2)}%
             </li>
             <li>
-                Total charges: {CurrencyFormatterPence.format(params.totalCharges)}
+                Total charges: {CurrencyFormatterPence.format(props.totalCharges)}
             </li>
         </ul>
     </div>
 )
 
-const Block = (params: {
+const Block = (props: {
     block: ProviderBlockView,
     total: number,
 }) => {
@@ -69,17 +69,17 @@ const Block = (params: {
         PlatformFeePercent: platformFeePercent,
         TotalPercent: totalPercent,
         // WeightedFee: weightedFee,
-        AdditionalFees: additionalFees } = params.block;
+        AdditionalFees: additionalFees } = props.block;
 
     let chargesMarkup = ReactDOMServer.renderToStaticMarkup(
         <CalculatedChargesTable charges={charges} />
     );
 
-    let pricing = params.block.Discount
-        ? customPricing.replace('{{ charge }}', `${params.block.Discount.Discount}`)
-        : params.block.Pricing.replace('{{ table }}', chargesMarkup);
+    let pricing = props.block.Discount
+        ? customPricing.replace('{{ charge }}', `${props.block.Discount.Discount}`)
+        : props.block.Pricing.replace('{{ table }}', chargesMarkup);
 
-return (
+    return (
         <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>
             <h3>
                 Platform: {provider}
@@ -89,11 +89,11 @@ return (
             <ul>
                 <li>
                     You are holding a total of {CurrencyFormatter.format(total)} on the {provider} platform,
-                    which is {(totalPercent).toPrecision(4)}% of your total holdings.
+                    which is {PercentageFormatter.format(totalPercent)}% of your total holdings.
                 </li>
                 <li>
-                    {provider} charge an annual amount of {CurrencyFormatterPence.format(totalCharge)},
-                    or {(platformFeePercent).toPrecision(2)}% of your holdings with them.
+                    {provider} charge an annual fee, which currently comes to {CurrencyFormatterPence.format(totalCharge)},
+                    or {PercentageFormatter.format(platformFeePercent)}% of your holdings with them.
                 </li>
                 {/* <li>
                     (Weighted fee: {weightedFee})
@@ -114,10 +114,14 @@ return (
 
             <br />
             <b>Policies:</b>
+
+            <p>
+                The table below shows the portion of the total platform charge which arises from each policy held on the platform.
+            </p>
             
             <PoliciesTable policies         = {policies}
                            totalMoneyCharge = {totalCharge}
-                           providerTotal    = {params.block.ProviderTotal} />
+                           providerTotal    = {props.block.ProviderTotal} />
         </div>
     );
 };

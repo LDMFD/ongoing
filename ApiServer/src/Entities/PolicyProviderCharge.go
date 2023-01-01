@@ -24,7 +24,6 @@ type ReportProviderCharge struct {
 	ProviderId string
 	Boundary   float64
 	Charge     float64
-	Sequence   int64
 }
 
 func (p *ProviderCharge) ToReport() ReportProviderCharge {

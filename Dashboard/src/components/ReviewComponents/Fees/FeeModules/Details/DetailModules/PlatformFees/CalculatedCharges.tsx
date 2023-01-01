@@ -8,7 +8,7 @@ export type Row = {
     original: any,
 }
 
-const CalculatedChargesTable = (params: {
+const CalculatedChargesTable = (props: {
     charges: ProviderCharge[],
 }) => {
     let columns = [{
@@ -39,7 +39,7 @@ const CalculatedChargesTable = (params: {
 
     return (
         <>
-            <Table columns={columns} data={params.charges} renderRowSubComponent={null} />
+            <Table columns={columns} data={props.charges} renderRowSubComponent={null} />
         </>
     );
 }

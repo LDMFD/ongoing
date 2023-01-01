@@ -13,3 +13,8 @@ export const CurrencyFormatterPence = new Intl.NumberFormat('en-UK', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
 });
+
+export const PercentageFormatter = new Intl.NumberFormat('en-UK', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3,
+});

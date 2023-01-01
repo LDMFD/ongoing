@@ -43,7 +43,7 @@ const OrgList = () => {
         },
         {
             accessor: 'actions',
-            Header: '',
+            Header: 'Edit name',
             width: 0.2,
             Cell: ({ row }) => (
                 <>

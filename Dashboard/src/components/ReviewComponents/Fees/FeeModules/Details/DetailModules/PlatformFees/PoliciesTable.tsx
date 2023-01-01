@@ -4,7 +4,7 @@ import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
 import { ProviderChargesPropType, Row } from './CalculatedCharges';
 import { Policy } from 'Types/Client';
 
-const PoliciesTable = (params: {
+const PoliciesTable = (props: {
     policies: Policy[],
     providerTotal: number,
     totalMoneyCharge: number,
@@ -24,13 +24,13 @@ const PoliciesTable = (params: {
         Cell: ({ row }: { row: Row }) => CurrencyFormatterPence.format(row.original.PlatformFee),
     }];
 
-    let data = params.policies.map(p => {
-        let proportion = p.EndValue / params.providerTotal;
+    let data = props.policies.map(p => {
+        let proportion = p.EndValue / props.providerTotal;
         return {
             ...p,
             EndValue: CurrencyFormatter.format(p.EndValue),
             Percentage: `${(proportion * 100).toPrecision(4)}%`,
-            PlatformFee: params.totalMoneyCharge * proportion,
+            PlatformFee: props.totalMoneyCharge * proportion,
         };
     });
 

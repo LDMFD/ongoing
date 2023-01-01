@@ -28,7 +28,7 @@ const FeeTotals = () => {
     </>
 }
 
-const FeeTotalsProviderSummary = (params: {
+const FeeTotalsProviderSummary = (props: {
     blocks: ProviderBlockView[],
     total: number,
     weightedAvgFee: number,
@@ -38,16 +38,16 @@ const FeeTotalsProviderSummary = (params: {
         <b>Platform Summary:</b>
         <ul>
             <li>
-                Total invested: {CurrencyFormatter.format(params.total)}
+                Total invested: {CurrencyFormatter.format(props.total)}
             </li>
             <li>
-                Total charges: {CurrencyFormatterPence.format(params.totalCharges)}
+                Total charges: {CurrencyFormatterPence.format(props.totalCharges)}
             </li>
         </ul>
     </div>
 )
 
-const ProviderBlock = (params: {
+const ProviderBlock = (props: {
     key: any,
     block: ProviderBlockView,
     total: number,
@@ -58,9 +58,9 @@ const ProviderBlock = (params: {
         ProviderTotal: total,
         Provider: provider,
         TotalPercent: totalPercent,
-        TotalCharge: totalCharge } = params.block;
+        TotalCharge: totalCharge } = props.block;
 
-        let feeGBP = CurrencyFormatter.format(params.fee / 100 * total);
+        let feeGBP = CurrencyFormatter.format(props.fee / 100 * total);
 
         return (
         <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>
@@ -76,7 +76,7 @@ const ProviderBlock = (params: {
                     ({(totalPercent).toPrecision(4)}%)
                 </li>
                 <li>
-                    Advice (client fee): {params.fee}% ({feeGBP})
+                    Advice (client fee): {props.fee}% ({feeGBP})
                 </li>
                 <li>
                     Estimated annual charges: {CurrencyFormatterPence.format(totalCharge)} ({(platformFeePercent).toPrecision(2)}% of your holdings).
