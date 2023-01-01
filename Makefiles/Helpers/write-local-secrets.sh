@@ -4,6 +4,7 @@ CLIENT_ID=`gcloud secrets versions access --secret=firebase-client-key latest|ba
 CLIENT_KEY=`gcloud secrets versions access --secret=firebase-client-id latest`
 SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn-dashboard latest`
 SENTRY_CLIRC=`gcloud secrets versions access --secret=sentry-clirc latest`
+API_KEY=`gcloud secrets versions access --secret=ongoing-api-key latest`
 
 cat << EOF > .env
 ONGOING_ENV=dev
@@ -54,7 +55,8 @@ ONGOING_STORAGE_BUCKET=ongoing-$ENV-docs
 ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/credential.pem
 ONGOING_STORAGE_SA=storage@ongoing-$ENV.iam.gserviceaccount.com
 
-OFFLINE_AUTH=true
+ONGOING_API_KEY=$API_KEY
+ONGOING_OFFLINE_AUTH=true
 EOF
 
 

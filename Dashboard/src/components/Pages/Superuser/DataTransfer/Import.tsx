@@ -43,7 +43,7 @@ const ImportDialog = () => {
     return (
         <div className   = 'import-dialog'>
             <Dialog
-                title       = 'Import new database'
+                title       = 'Import new database from JSON'
                 submitLabel = 'Import'
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
@@ -61,6 +61,10 @@ const ImportDialog = () => {
                                 submitRef    = {submitRef}
                                 required
                             />
+                            <br />
+
+                            Type the current environment ({env}) to confirm:
+                            <br />
                             <br />
 
                             <TextInput

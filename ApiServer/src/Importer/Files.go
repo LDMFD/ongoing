@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -14,6 +15,7 @@ func createFile(file *Entities.ReportFile, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 	request.Header.Set("X-Ongoing-EntityId-file", file.Uid)
 

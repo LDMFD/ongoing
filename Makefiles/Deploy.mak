@@ -54,6 +54,7 @@ _deploy-api: import-env
 		--update-env-vars=POSTGRES_DB=ongoing-${ENV} \
 		--update-secrets=/app/Config/Firebase/config.json=firebase-sa-key:${SECRET_FIREBASE_SA_KEY_${ENV}} \
 		--update-secrets=/app/Config/Storage/Storage.pem=storage-credential:${SECRET_STORAGE_CREDENTIAL_${ENV}} \
+		--update-secrets=ONGOING_API_KEY=ongoing-api-key:${SECRET_API_KEY_${ENV}} \
 		--update-secrets=ONGOING_SENTRY_DSN=sentry-dsn-api:${SECRET_SENTRY_DSN_${ENV}} \
 		--update-secrets=ONGOING_SPICEDB_PSK=spicedb-key:${SECRET_SPICEDB_PSK_${ENV}} \
 		--update-secrets=ONGOING_SUPERUSERS=superusers:${SECRET_SUPERUSERS_${ENV}} \

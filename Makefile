@@ -3,6 +3,7 @@ SHELL := /bin/bash
 
 include Makefiles/Constants.mak
 
+include Makefiles/ApiKeys.mak
 include Makefiles/ArtifactRegistry.mak
 include Makefiles/Building.mak
 include Makefiles/Deploy.mak

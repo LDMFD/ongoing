@@ -48,6 +48,7 @@ type ServerSessionContext struct {
 	OrgId   *string
 	Org     *Organisation
 	Role    string
+	IsHuman bool
 }
 
 type ClientSessionContext struct {

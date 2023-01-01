@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -68,6 +69,7 @@ func importOrganisation(mp Organisation.CreateOrganisationRequestBody, ownerId s
 		panic(err)
 	}
 	request.Header.Set("Authentication", IMPORT_SUPERUSER)
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("X-Ongoing-EntityId", ownerId)
 
 	client := &http.Client{}

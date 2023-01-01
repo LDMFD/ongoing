@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -59,6 +60,7 @@ func importClient(clientRep Entities.ClientReport, userId string) error {
 	}
 	request.Header.Set("X-Ongoing-EntityId-user", userId)
 	request.Header.Set("X-Ongoing-EntityId-client", clientRep.Id)
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", clientRep.AdvisorId)
 
 	client := &http.Client{}

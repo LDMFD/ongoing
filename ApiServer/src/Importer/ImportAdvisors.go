@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -39,6 +40,7 @@ func importAdvisor(owner Entities.ReportUser, user Entities.OrganisationMember, 
 	}
 	request.Header.Set("X-Ongoing-EntityId-user", identity.Id)
 	request.Header.Set("X-Ongoing-EntityId-advisor", user.UserId)
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", owner.Id)
 
 	client := &http.Client{}

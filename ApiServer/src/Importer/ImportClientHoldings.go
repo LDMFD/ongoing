@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -26,6 +27,7 @@ func importModules(clientId string, report Entities.ReportDetail, advisorId stri
 			panic(err)
 		}
 		request.Header.Set("Authentication", advisorId)
+		request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -50,6 +52,7 @@ func importPolicies(clientId string, report Entities.ReportDetail, advisorId str
 		}
 		request.Header.Set("X-Ongoing-EntityId", pol.Id)
 		request.Header.Set("Authentication", advisorId)
+		request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -74,6 +77,7 @@ func importProviderDiscounts(clientId string, report Entities.ReportDetail, advi
 		}
 		request.Header.Set("X-Ongoing-EntityId", pd.Id)
 		request.Header.Set("Authentication", advisorId)
+		request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -98,6 +102,7 @@ func importPolicyFunds(clientId string, report Entities.ReportDetail, advisorId 
 		}
 		request.Header.Set("X-Ongoing-EntityId", pd.Id)
 		request.Header.Set("Authentication", advisorId)
+		request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)
@@ -122,6 +127,7 @@ func importPortfolios(clientId string, report Entities.ReportDetail, advisorId s
 		}
 		request.Header.Set("X-Ongoing-EntityId", pd.Id)
 		request.Header.Set("Authentication", advisorId)
+		request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 
 		client := &http.Client{}
 		resp, err := client.Do(request)

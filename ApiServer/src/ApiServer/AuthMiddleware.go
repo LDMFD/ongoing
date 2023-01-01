@@ -35,11 +35,14 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		db := c.MustGet("DATABASE").(*bun.DB)
 		authClient := c.MustGet("AUTH").(*AuthService.Client)
 
+		apiKey := c.GetHeader(Config.ApiKeyHeaderName)
+		authBypass := isValidApiKey(apiKey)
+
 		jwt := c.GetHeader("Authentication")
 
 		// Validate it's a real identity (has gone through Firebase login)
 		var email string
-		if Config.OFFLINE_AUTH {
+		if Config.OFFLINE_AUTH || authBypass {
 			if strings.Contains(jwt, "@") {
 				email = jwt
 			} else {
@@ -171,6 +174,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			Email:   user.Email,
 			OrgId:   orgId,
 			Role:    role,
+			IsHuman: !authBypass,
 		}
 
 		if orgId != nil { // no org if superuser
@@ -199,4 +203,8 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		c.Set("SESSION", sessionContext)
 		c.Next()
 	}
+}
+
+func isValidApiKey(key string) bool {
+	return strings.TrimSpace(key) == Config.API_KEY
 }

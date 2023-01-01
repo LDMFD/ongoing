@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -23,6 +24,7 @@ func importReview(clientId string, review Entities.ReportReview, advisorId strin
 		panic(err)
 	}
 	request.Header.Set("Authentication", advisorId)
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 
 	client := &http.Client{}
 	resp, err := client.Do(request)

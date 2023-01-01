@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"ongoing/Config"
 	"ongoing/Entities"
 )
 
@@ -45,6 +46,7 @@ func importModulePreset(mp Entities.ReportModulePreset, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 	request.Header.Set("X-Ongoing-EntityId", mp.Id)
 
@@ -67,6 +69,7 @@ func importFund(fund Entities.ReportFund, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -88,6 +91,7 @@ func importOperator(operator Entities.ReportOperator, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -109,6 +113,7 @@ func importModel(model Entities.ReportModel, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -130,6 +135,7 @@ func importPolicyType(policyType Entities.ReportPolicyType, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -151,6 +157,7 @@ func importPolicyProvider(policyProvider Entities.ReportPolicyProvider, advisorI
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -172,6 +179,7 @@ func importPolicyProviderCharge(charge Entities.ReportProviderCharge, advisorId 
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -193,6 +201,7 @@ func importRiskProvider(rp Entities.ReportRiskProvider, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
@@ -214,6 +223,7 @@ func importRiskLevel(rl Entities.ReportRiskLevel, advisorId string) {
 	if err != nil {
 		panic(err)
 	}
+	request.Header.Set(Config.ApiKeyHeaderName, Config.API_KEY)
 	request.Header.Set("Authentication", advisorId)
 
 	client := &http.Client{}
