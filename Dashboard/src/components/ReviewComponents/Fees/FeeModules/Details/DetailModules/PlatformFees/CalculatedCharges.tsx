@@ -24,15 +24,15 @@ const CalculatedChargesTable = (props: {
         ),
     }, {
         accessor: 'Amount',
-        Header: 'Amount',
+        Header: 'Amount held in tier',
         Cell: ({ row }: { row: Row }) => CurrencyFormatter.format(row.original.Amount),
     }, {
         accessor: 'Charge',
-        Header: 'Discounted charge',
+        Header: 'Charge (%)',
         Cell: ({ row }: { row: Row }) => `${(row.original.Charge)}%`,
     }, {
         accessor: 'MoneyCharge',
-        Header: 'Money Charge',
+        Header: 'Charge (£)',
         Cell: ({ row }: { row: Row }) => CurrencyFormatterPence.format(row.original.MoneyCharge),
     }];
 

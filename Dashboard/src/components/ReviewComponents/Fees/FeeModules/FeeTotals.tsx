@@ -41,7 +41,7 @@ const FeeTotalsProviderSummary = (props: {
                 Total invested: {CurrencyFormatter.format(props.total)}
             </li>
             <li>
-                Total charges: {CurrencyFormatterPence.format(props.totalCharges)}
+                Total advice charges: {CurrencyFormatterPence.format(props.totalCharges)}
             </li>
         </ul>
     </div>

@@ -49,7 +49,7 @@ const PlatformFeesSummary = (props: {
                 Weighted average fee: {(props.weightedAvgFee).toPrecision(2)}%
             </li>
             <li>
-                Total charges: {CurrencyFormatterPence.format(props.totalCharges)}
+                Total advice charges: {CurrencyFormatterPence.format(props.totalCharges)}
             </li>
         </ul>
     </div>

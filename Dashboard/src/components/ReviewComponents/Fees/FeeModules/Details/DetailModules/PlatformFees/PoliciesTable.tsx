@@ -17,7 +17,7 @@ const PoliciesTable = (props: {
         Header: 'End value',
     }, {
         accessor: 'Percentage',
-        Header: '% of platform holdings'
+        Header: '% of holdings on this platform'
     }, {
         accessor: 'PlatformFee',
         Header: 'Platform Fee',
