@@ -14,7 +14,7 @@ import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import { CurrencyFormatter } from 'Utils/Strings';
+import { FormatCurrencyPence } from 'Utils/Strings';
 import Table from 'Components/Library/Table/Table';
 
 const PolicyList = () => {
@@ -63,7 +63,7 @@ const PolicyList = () => {
     }, {
         accessor: 'monthlies',
         Header: 'Monthly Contributions',
-        width: 1,
+        width: 1.5,
     }, {
         accessor: 'startValue',
         Header: 'Start Value',
@@ -127,7 +127,7 @@ const PolicyList = () => {
                 contributions = `No regular contributions`;
                 break;
             default:
-                contributions = `Monthly regular (£${policy.MonthlyContributions})`;
+                contributions = `Monthly regular (${FormatCurrencyPence(policy.MonthlyContributions)})`;
                 break;
         }
 
@@ -136,8 +136,8 @@ const PolicyList = () => {
             policyNumber:     policy.ExternalId,
             platformDiscount: providerDiscount ? `${providerDiscount.Discount}%` : '-',
             monthlies:        contributions,
-            startValue:       CurrencyFormatter.format(policy.StartValue),
-            endValue:         CurrencyFormatter.format(policy.EndValue),
+            startValue:       FormatCurrencyPence(policy.StartValue),
+            endValue:         FormatCurrencyPence(policy.EndValue),
             notes:            policy.Notes,
             fileUid:          policy.File?.Uid,
             type,

@@ -14,7 +14,7 @@ import { GoBack } from 'Utils/Routing';
 
 import { Context, Api } from 'State'
 import Table from 'Components/Library/Table/Table';
-import { CurrencyFormatter } from 'Utils/Strings';
+import { FormatCurrencyPence } from 'Utils/Strings';
 
 const ProviderChargeList = () => {
     let history = useHistory();
@@ -38,7 +38,7 @@ const ProviderChargeList = () => {
         {
             accessor: 'boundary',
             Header: 'Range',
-            width: 200,
+            width: 300,
         }, {
             accessor: 'charge',
             Header: 'Annual Fee',
@@ -66,9 +66,9 @@ const ProviderChargeList = () => {
         .filter(pc => pc.ProviderId === policyProviderId);
 
     charges = charges.map((m, ix) => {
-        let lower = CurrencyFormatter.format(m.Boundary);
+        let lower = FormatCurrencyPence(m.Boundary);
         let upper = ix < charges.length-1
-            ? CurrencyFormatter.format(charges[ix+1].Boundary-1)
+            ? FormatCurrencyPence(charges[ix+1].Boundary-1)
             : '';
         return {
             id:       m.Id,

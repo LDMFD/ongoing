@@ -1,9 +1,9 @@
 export const DefaultPolicy = {
     ExternalId: '',
     PlatformDiscount: '',
-    MonthlyContributions: '',
-    StartValue: '',
-    EndValue: '',
+    MonthlyContributions: '0',
+    StartValue: '0',
+    EndValue: '0',
     PolicyTypeId: '',
     PolicyProviderId: '',
 };

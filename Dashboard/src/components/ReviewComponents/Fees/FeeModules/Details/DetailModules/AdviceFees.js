@@ -3,7 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Day from 'dayjs';
 
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
-import { CurrencyFormatter } from 'Utils/Strings';
+import { FormatCurrency } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
@@ -22,7 +22,7 @@ const AdviceFees = () => {
             policies.push({
                 id:               p.Id,
                 policyNumber:     p.ExternalId,
-                fee:              CurrencyFormatter.format(client.Fee * p.EndValue / 100),
+                fee:              FormatCurrency(client.Fee * p.EndValue / 100),
                 fileUid:          p.File?.Uid,
             });
         }

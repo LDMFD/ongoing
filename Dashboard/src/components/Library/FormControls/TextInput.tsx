@@ -4,7 +4,7 @@ import { TextField } from '@mui/material';
 import { FormInputProps } from './FormInputProps';
 
 interface TextInputProps extends FormInputProps {
-    type?: 'text' | 'email' | 'numeric',
+    type?: 'text' | 'email' | 'numeric' | 'currency',
     pattern?: object,
 }
 
@@ -29,7 +29,14 @@ export const TextInput = (props: TextInputProps) => {
                 message: 'Enter a number',
             }
             break;
-    }
+
+        case 'currency':
+            rules.pattern = {
+                value: /^-?\d*(\.\d\d)?$/,
+                message: 'Enter a monetary value (pounds and optional pence)',
+            }
+            break;
+        }
     if (props.pattern) {
         rules.pattern = props.pattern;
     }

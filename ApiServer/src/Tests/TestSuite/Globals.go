@@ -59,9 +59,9 @@ var (
 	policyProviderName1    = "Aviva"
 	policyProviderName2    = "Aegon"
 	policyTypeId           string
-	policy1EndValue        int64 = 534000
-	policy2EndValue        int64 = 325000
-	policy3EndValue        int64 = 645318
+	policy1EndValue        int64 = 53400000
+	policy2EndValue        int64 = 32500000
+	policy3EndValue        int64 = 64531800
 
 	providerCharges []string
 

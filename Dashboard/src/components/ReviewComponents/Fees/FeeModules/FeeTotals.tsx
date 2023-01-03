@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
+import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { CalculatePlatformModel } from '../Model/FeeModel';
 import { ProviderBlockView } from '../Model/FeeTypes';
@@ -38,10 +38,10 @@ const FeeTotalsProviderSummary = (props: {
         <b>Platform Summary:</b>
         <ul>
             <li>
-                Total invested: {CurrencyFormatter.format(props.total)}
+                Total invested: {FormatCurrency(props.total)}
             </li>
             <li>
-                Total advice charges: {CurrencyFormatterPence.format(props.totalCharges)}
+                Total advice charges: {FormatCurrencyPence(props.totalCharges)}
             </li>
         </ul>
     </div>
@@ -60,7 +60,7 @@ const ProviderBlock = (props: {
         TotalPercent: totalPercent,
         TotalCharge: totalCharge } = props.block;
 
-        let feeGBP = CurrencyFormatter.format(props.fee / 100 * total);
+        let feeGBP = FormatCurrency(props.fee / 100 * total);
 
         return (
         <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>
@@ -71,7 +71,7 @@ const ProviderBlock = (props: {
             <b>Summary:</b>
             <ul>
                 <li>
-                    Total on platform: {CurrencyFormatter.format(total)}
+                    Total on platform: {FormatCurrency(total)}
                     &nbsp;
                     ({(totalPercent).toPrecision(4)}%)
                 </li>
@@ -79,7 +79,7 @@ const ProviderBlock = (props: {
                     Advice (client fee): {props.fee}% ({feeGBP})
                 </li>
                 <li>
-                    Estimated annual charges: {CurrencyFormatterPence.format(totalCharge)} ({(platformFeePercent).toPrecision(2)}% of your holdings).
+                    Estimated annual charges: {FormatCurrencyPence(totalCharge)} ({(platformFeePercent).toPrecision(2)}% of your holdings).
                 </li>
             </ul>
         </div>

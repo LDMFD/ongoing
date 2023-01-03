@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import Table from 'Components/Library/Table/Table';
-import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
+import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
 import { ProviderChargesPropType, Row } from './CalculatedCharges';
 import { Policy } from 'Types/Client';
 
@@ -21,14 +21,14 @@ const PoliciesTable = (props: {
     }, {
         accessor: 'PlatformFee',
         Header: 'Platform Fee',
-        Cell: ({ row }: { row: Row }) => CurrencyFormatterPence.format(row.original.PlatformFee),
+        Cell: ({ row }: { row: Row }) => FormatCurrencyPence(row.original.PlatformFee),
     }];
 
     let data = props.policies.map(p => {
         let proportion = p.EndValue / props.providerTotal;
         return {
             ...p,
-            EndValue: CurrencyFormatter.format(p.EndValue),
+            EndValue: FormatCurrency(p.EndValue),
             Percentage: `${(proportion * 100).toPrecision(4)}%`,
             PlatformFee: props.totalMoneyCharge * proportion,
         };

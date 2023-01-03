@@ -2,7 +2,7 @@ import React from 'react';
 
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { ModuleTypeIntroduction } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
-import { CurrencyFormatter } from 'Utils/Strings';
+import { FormatCurrency } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
 import { FromCanonical } from 'Utils/DateTime';
 
@@ -24,8 +24,8 @@ const Introduction = () => {
             <p>This review covers the period from {startDate} to {endDate}.</p>
 
             <p>
-                Total start value: {CurrencyFormatter.format(totalStarting)}<br />
-                Total end value: {CurrencyFormatter.format(totalEnding)}
+                Total start value: {FormatCurrency(totalStarting)}<br />
+                Total end value: {FormatCurrency(totalEnding)}
             </p>
         </div>
     );

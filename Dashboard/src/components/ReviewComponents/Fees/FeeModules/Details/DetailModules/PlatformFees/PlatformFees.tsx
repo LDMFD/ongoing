@@ -4,7 +4,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { CurrencyFormatter, CurrencyFormatterPence, PercentageFormatter } from 'Utils/Strings';
+import { FormatCurrency, FormatCurrencyPence, PercentageFormatter } from 'Utils/Strings';
 import PoliciesTable from './PoliciesTable';
 import { ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import CalculatedChargesTable from './CalculatedCharges';
@@ -43,13 +43,13 @@ const PlatformFeesSummary = (props: {
         <b>Platform Summary:</b>
         <ul>
             <li>
-                Total invested: {CurrencyFormatter.format(props.total)}
+                Total invested: {FormatCurrency(props.total)}
             </li>
             <li>
                 Weighted average fee: {(props.weightedAvgFee).toPrecision(2)}%
             </li>
             <li>
-                Total advice charges: {CurrencyFormatterPence.format(props.totalCharges)}
+                Total advice charges: {FormatCurrencyPence(props.totalCharges)}
             </li>
         </ul>
     </div>
@@ -88,11 +88,11 @@ const Block = (props: {
             <b>Summary:</b>
             <ul>
                 <li>
-                    You are holding a total of {CurrencyFormatter.format(total)} on the {provider} platform,
+                    You are holding a total of {FormatCurrency(total)} on the {provider} platform,
                     which is {PercentageFormatter.format(totalPercent)}% of your total holdings.
                 </li>
                 <li>
-                    {provider} charge an annual fee, which currently comes to {CurrencyFormatterPence.format(totalCharge)},
+                    {provider} charge an annual fee, which currently comes to {FormatCurrencyPence(totalCharge)},
                     or {PercentageFormatter.format(platformFeePercent)}% of your holdings with them.
                 </li>
                 {/* <li>

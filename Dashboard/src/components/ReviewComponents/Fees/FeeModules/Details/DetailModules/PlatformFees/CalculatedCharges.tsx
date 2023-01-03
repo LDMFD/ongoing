@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'Components/Library/Table/Table';
-import { CurrencyFormatter, CurrencyFormatterPence } from 'Utils/Strings';
+import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
 import { ProviderCharge } from 'Types/OrgResources';
 
 export type Row = {
@@ -16,16 +16,16 @@ const CalculatedChargesTable = (props: {
         Header: 'Tier',
         Cell: ({ row }: { row: Row }) => (
             <>  
-                {CurrencyFormatter.format(row.original.Boundary)}
+                {FormatCurrency(row.original.Boundary)}
                 {row.original.UpperBoundary === Number.MAX_VALUE
                     ? '+'
-                    : ` - ${CurrencyFormatter.format(row.original.UpperBoundary)}`}
+                    : ` - ${FormatCurrency(row.original.UpperBoundary)}`}
             </>
         ),
     }, {
         accessor: 'Amount',
         Header: 'Amount held in tier',
-        Cell: ({ row }: { row: Row }) => CurrencyFormatter.format(row.original.Amount),
+        Cell: ({ row }: { row: Row }) => FormatCurrency(row.original.Amount),
     }, {
         accessor: 'Charge',
         Header: 'Charge (%)',
@@ -33,7 +33,7 @@ const CalculatedChargesTable = (props: {
     }, {
         accessor: 'MoneyCharge',
         Header: 'Charge (£)',
-        Cell: ({ row }: { row: Row }) => CurrencyFormatterPence.format(row.original.MoneyCharge),
+        Cell: ({ row }: { row: Row }) => FormatCurrencyPence(row.original.MoneyCharge),
     }];
 
 

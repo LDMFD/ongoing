@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import React, { useContext } from 'react';
+import { useParams, useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
 import { DefaultProviderCharge } from './DefaultProviderCharge';
@@ -11,24 +11,20 @@ const AddProviderCharge = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [ , dispatch] = useContext(Context);
-
-    let [ providerCharge, setProviderCharge ] = useState(DefaultProviderCharge);
+    const [ state, dispatch] = useContext(Context);
 
     let { policyProviderId } = useParams();
-    providerCharge.ProviderId = policyProviderId;
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    
+    const submitHandler = async (providerCharge) => {
+        providerCharge.ProviderId = policyProviderId;
         await Api.OrgResources.ProviderCharges.Create(providerCharge);
         await Api.OrgResources.Entities.Read(dispatch);
         goBack();
-        return false;
     };
 
     return (
-        <ProviderChargeDialog providerCharge    = {providerCharge}
-                              setProviderCharge = {setProviderCharge}
+        <ProviderChargeDialog state             = {state}
+                              providerCharge    = {DefaultProviderCharge}
                               submitLabel       = 'Add'
                               submitHandler     = {submitHandler}  />
     );

@@ -14,20 +14,21 @@ import { TextInput } from 'Components/Library/FormControls/TextInput';
 import { File, State } from 'Types/Types';
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { PolicyProvider, PolicyType } from 'Types/OrgResources';
+import { CurrencyFromString, CurrencyToString } from 'Utils/Strings';
 
 interface FormFile extends File {
     Uploading: boolean,
 }
 
 interface PolicyFormInput {
-    EndValue: number,
+    EndValue: string,
     ExternalId: string,
     File?: FormFile,
-    MonthlyContributions: number,
+    MonthlyContributions: string,
     Notes: string,
     PolicyProviderId: string,
     PolicyTypeId: string,
-    StartValue: number,
+    StartValue: string,
 }
 
 const PolicyDialog = (props: {
@@ -36,16 +37,29 @@ const PolicyDialog = (props: {
     submitLabel: string,
     submitHandler: (policy: PolicyFormInput) => void,
 }) => {
+    let monthlyContributions = CurrencyToString(props.policy.MonthlyContributions);
+    let startValue           = CurrencyToString(props.policy.StartValue);
+    let endValue             = CurrencyToString(props.policy.EndValue);
+
+    if (/\.\d$/.test(monthlyContributions)) { monthlyContributions += '0'; }
+    if (/\.\d$/.test(startValue))           { startValue += '0'; }
+    if (/\.\d$/.test(endValue))             { endValue += '0'; }
+
     const { handleSubmit, control } = useForm<PolicyFormInput>({
-        defaultValues: props.policy
+        defaultValues: {
+            ...props.policy,
+            MonthlyContributions: monthlyContributions,
+            StartValue:           startValue,
+            EndValue:             endValue,
+        },
     });
 
     const onSubmit = (policy: PolicyFormInput) => {
         props.submitHandler({
             ...policy,
-            MonthlyContributions: parseInt(policy.MonthlyContributions as unknown as string),
-            StartValue: parseInt(policy.StartValue as unknown as string),
-            EndValue: parseInt(policy.EndValue as unknown as string),
+            MonthlyContributions: CurrencyFromString(policy.MonthlyContributions) as unknown as string,
+            StartValue:           CurrencyFromString(policy.StartValue) as unknown as string,
+            EndValue:             CurrencyFromString(policy.EndValue) as unknown as string,
         });
     };
 
@@ -63,7 +77,7 @@ const PolicyDialog = (props: {
 
     return (
         <Dialog
-            title       = {`${props.submitLabel} Policy`}
+            title       = {props.submitLabel + ' Policy'}
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
@@ -75,21 +89,21 @@ const PolicyDialog = (props: {
 
                     <Box>
                         <TextInput name='ExternalId'           label='Policy number'            control={control} required />
-                        <TextInput name='MonthlyContributions' label='Monthly Contribution (£)' control={control} required type='numeric' />
-                        <TextInput name='StartValue'           label='Start Value (£)'          control={control} required type='numeric' />
-                        <TextInput name='EndValue'             label='End Value (£)'            control={control} required type='numeric' />
+                        <TextInput name='MonthlyContributions' label='Monthly Contribution (£)' control={control} required type='currency' />
+                        <TextInput name='StartValue'           label='Start Value (£)'          control={control} required type='currency' />
+                        <TextInput name='EndValue'             label='End Value (£)'            control={control} required type='currency' />
 
                         <SelectControl name='PolicyTypeId'     options={policyTypes}     label='Policy Type'     control={control} required />
                         <SelectControl name='PolicyProviderId' options={policyProviders} label='Policy Provider' control={control} required />
 
                         <RichTextEditor2 name    = 'Notes'
-                                        label   = 'Notes'
-                                        control = {control} />
+                                         label   = 'Notes'
+                                         control = {control} />
 
                         <FileUploader2 label        = 'Policy file'
-                                      name         = 'File'
-                                      control      = {control}
-                                      submitRef    = {submitRef} />
+                                       name         = 'File'
+                                       control      = {control}
+                                       submitRef    = {submitRef} />
                     </Box>
 
                 </DialogContent>

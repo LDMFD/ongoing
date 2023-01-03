@@ -231,7 +231,7 @@ func validateClient1(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object)
 
 	policy := report.Value("Policies").Array().Last().Object()
 	policy.ValueEqual("ExternalId", policyNumber3)
-	policy.ValueEqual("MonthlyContributions", 10)
+	policy.ValueEqual("MonthlyContributions", 1000)
 	policy.ValueEqual("StartValue", 0)
 	policy.ValueEqual("EndValue", policy3EndValue)
 	policy.ValueEqual("PolicyTypeId", policyTypeId)

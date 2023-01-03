@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { Context } from 'State/StateProvider'
@@ -10,28 +10,21 @@ const EditProviderCharge = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [ state, dispatch] = useContext(Context);
-    let [ providerCharge, setProviderCharge ] = useState(null);
+    const [ state, dispatch ] = useContext(Context);
+
+    const submitHandler = async (pc) => {
+        await Api.OrgResources.ProviderCharges.Update(pc);
+        await Api.OrgResources.Entities.Read(dispatch);
+        goBack();
+    };
 
     let { chargeId } = useParams();
 
-    if (!providerCharge) {
-        let p = state.Resources.ProviderCharges.find(p => p.Id === chargeId);
-        setProviderCharge(p)
-        return;
-    }
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.OrgResources.ProviderCharges.Update(providerCharge);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
-        return false;
-    };
+    let providerCharge = state.Resources.ProviderCharges.find(p => p.Id === chargeId);
 
     return (
-        <ProviderChargeDialog providerCharge    = {providerCharge}
-                              setProviderCharge = {setProviderCharge}
+        <ProviderChargeDialog state             = {state}
+                              providerCharge    = {providerCharge}
                               submitLabel       = 'Update'
                               submitHandler     = {submitHandler} />
     );

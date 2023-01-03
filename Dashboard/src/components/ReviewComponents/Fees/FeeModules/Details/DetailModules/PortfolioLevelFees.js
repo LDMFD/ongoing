@@ -6,7 +6,7 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
-import { CurrencyFormatter } from 'Utils/Strings';
+import { FormatCurrency } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
@@ -82,7 +82,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             <h3>{provider.Name} ({policy.ExternalId})</h3>
 
             <p>
-                Value at end of period: {CurrencyFormatter.format(policy.EndValue)} <br />
+                Value at end of period: {FormatCurrency(policy.EndValue)} <br />
             </p>
 
             <Table columns={columns} data={portfolios} />
@@ -95,8 +95,8 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             {portfolios.length > 1 &&
                 <>
                     Total of estimated annual charges in pounds, based on values at end of period:<br />
-                    <b>OCF:</b> {CurrencyFormatter.format(ocfPounds)}<br />
-                    <b>Ex Ante:</b> {CurrencyFormatter.format(exAntePounds)}<br />
+                    <b>OCF:</b> {FormatCurrency(ocfPounds)}<br />
+                    <b>Ex Ante:</b> {FormatCurrency(exAntePounds)}<br />
                 </>
             }
 
@@ -123,8 +123,8 @@ const PortfolioLevelFees = () => {
         let ocfSterling    = model.WeightedOcfFee * policy.EndValue / 100;
         let exAnteSterling = model.WeightedExAnteFee * policy.EndValue / 100;
 
-        let ocfStr    = `${ocfPercent}% (${CurrencyFormatter.format(ocfSterling)})`;
-        let exAnteStr = `${exAntePercent}% (${CurrencyFormatter.format(exAnteSterling)})`;
+        let ocfStr    = `${ocfPercent}% (${FormatCurrency(ocfSterling)})`;
+        let exAnteStr = `${exAntePercent}% (${FormatCurrency(exAnteSterling)})`;
 
         return {
             id:                portfolio.Id,

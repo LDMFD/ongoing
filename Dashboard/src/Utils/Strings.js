@@ -1,4 +1,33 @@
-export const CurrencyFormatter = new Intl.NumberFormat('en-UK', {
+export const CurrencyFromString = (n) => {
+    let point = n.indexOf('.');
+    let pence = 0;
+    if (point !== -1) {
+        let n2 = n.substring(0, point) + n.substring(n.length-2);
+        pence = parseInt(n2);
+    } else {
+        pence = parseInt(n);
+        pence *= 100;
+    }
+    return pence;
+}
+
+export const CurrencyToString = (n) => (
+    `${parseInt(n) / 100}`
+);
+
+export const FormatCurrency = (n) => (
+    CurrencyFormatter.format(n / 100)
+)
+
+export const FormatCurrencyPence = (n) => {
+    let s = CurrencyFormatterPence.format(n / 100);
+    if (s.match(/\.00/)) {
+        return s.substring(0, s.length - 3);
+    }
+    return s;
+};
+
+const CurrencyFormatter = new Intl.NumberFormat('en-UK', {
     style: 'currency',
     currency: 'GBP',
   
@@ -6,7 +35,7 @@ export const CurrencyFormatter = new Intl.NumberFormat('en-UK', {
     maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-export const CurrencyFormatterPence = new Intl.NumberFormat('en-UK', {
+const CurrencyFormatterPence = new Intl.NumberFormat('en-UK', {
     style: 'currency',
     currency: 'GBP',
   

@@ -67,18 +67,18 @@ func testCreatePolicy(t *testing.T, e *httpexpect.Expect) {
 
 func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
 	// Aviva
-	policyId1 = createPolicy(e, policyNumber1, 10, 0, policy1EndValue, policyTypeId, policyProviderId1Aviva, nil)
+	policyId1 = createPolicy(e, policyNumber1, 1000, 0, policy1EndValue, policyTypeId, policyProviderId1Aviva, nil)
 
 	// Aegon
 	policyId2 = createPolicy2(t, e)
-	policyId3 = createPolicy(e, policyNumber3, 10, 0, policy3EndValue, policyTypeId, policyProviderId2Aegon, nil)
+	policyId3 = createPolicy(e, policyNumber3, 1000, 0, policy3EndValue, policyTypeId, policyProviderId2Aegon, nil)
 
 }
 
 func createPolicy2(t *testing.T, e *httpexpect.Expect) string {
 	fileId := TestUpload(t, e, ORG1_ADVISOR, "policy.png")
 
-	policyId := createPolicy(e, policyNumber2, 10, 200, 200, policyTypeId, policyProviderId2Aegon, &Entities.RequestFile{
+	policyId := createPolicy(e, policyNumber2, 1000, 20000, 20000, policyTypeId, policyProviderId2Aegon, &Entities.RequestFile{
 		Uid:      fileId,
 		Filename: "sample.png",
 	})
@@ -93,9 +93,9 @@ func createPolicy2(t *testing.T, e *httpexpect.Expect) string {
 	// Remove the file
 	request := Policies.CreateOrUpdatePolicyRequestBody{
 		ExternalId:           policyNumber2,
-		MonthlyContributions: 10,
-		StartValue:           100,
-		EndValue:             200,
+		MonthlyContributions: 1000,
+		StartValue:           10000,
+		EndValue:             20000,
 		PolicyTypeId:         policyTypeId,
 		PolicyProviderId:     policyProviderId2Aegon,
 		Notes:                "Policy notes",
@@ -115,8 +115,8 @@ func createPolicy2(t *testing.T, e *httpexpect.Expect) string {
 
 	request = Policies.CreateOrUpdatePolicyRequestBody{
 		ExternalId:           policyNumber2,
-		MonthlyContributions: 10,
-		StartValue:           100,
+		MonthlyContributions: 1000,
+		StartValue:           10000,
 		EndValue:             policy2EndValue,
 		PolicyTypeId:         policyTypeId,
 		PolicyProviderId:     policyProviderId2Aegon,
@@ -161,9 +161,9 @@ func createPolicy(e *httpexpect.Expect, policyNumber string, contributions int64
 func testCreatePolicySecurity(t *testing.T, e *httpexpect.Expect) {
 	request := Policies.CreateOrUpdatePolicyRequestBody{
 		ExternalId:           "hacked",
-		MonthlyContributions: 10,
-		StartValue:           100,
-		EndValue:             200,
+		MonthlyContributions: 1000,
+		StartValue:           10000,
+		EndValue:             20000,
 		PolicyTypeId:         policyTypeId,
 		PolicyProviderId:     policyProviderId2Aegon,
 		Notes:                "hacked",

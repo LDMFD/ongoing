@@ -3,7 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePolicyValuations } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { CurrencyFormatter } from 'Utils/Strings';
+import { FormatCurrencyPence } from 'Utils/Strings';
 import { GetReport } from './GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
@@ -64,7 +64,7 @@ const PolicyValuations = () => {
                 contributions = `No regular contributions`;
                 break;
             default:
-                contributions = `Monthly regular (£${p.MonthlyContributions})`;
+                contributions = `Monthly regular (${FormatCurrencyPence(p.MonthlyContributions)})`;
                 break;
         }
 
@@ -83,8 +83,8 @@ const PolicyValuations = () => {
             id:            p.Id,
             externalId:    p.ExternalId,
             policy:        policyCell,
-            startValue:    CurrencyFormatter.format(p.StartValue),
-            endValue:      CurrencyFormatter.format(p.EndValue),
+            startValue:    FormatCurrencyPence(p.StartValue),
+            endValue:      FormatCurrencyPence(p.EndValue),
             contributions: `${contributions}`,
             fileUid:       p.File?.Uid,
         };
