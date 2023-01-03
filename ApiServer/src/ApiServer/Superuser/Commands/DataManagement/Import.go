@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
+	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Storage/Commands"
 	"ongoing/Database"
@@ -25,7 +26,11 @@ func Import(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	log.Println("DB: Import starting...")
+
 	Database.Truncate(db)
+
+	log.Println("DB: Seeding...")
 
 	Database.SeedUserTable(db)
 
@@ -45,10 +50,14 @@ func Import(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	log.Println("DB: Importing...")
+
 	if err := Importer.RunImport(export); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	log.Println("DB: Import complete!")
 
 	c.Status(200)
 }

@@ -117,7 +117,7 @@ up-api:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
 	@echo "*** DEPLOYING API SERVER ${UUID}"
 	make build-image SERVICE=api RELEASE=${UUID}
-	make release-api RELEASE=${UUID}
+	make docker-push-api RELEASE=${UUID}
 	make cloudrun-deploy-api TAG=${UUID}
 	@echo "*** DEPLOYED API SERVER ${UUID}"
 
@@ -125,7 +125,7 @@ up-dashboard:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
 	@echo "*** DEPLOYING DASHBOARD ${UUID}"
 	make build-dashboard RELEASE=${UUID}
-	make release-dashboard RELEASE=${UUID}
+	make docker-push-dashboard RELEASE=${UUID}
 	make cloudrun-deploy-dashboard TAG=${UUID}
 	@echo "*** DEPLOYED DASHBOARD ${UUID}"
 

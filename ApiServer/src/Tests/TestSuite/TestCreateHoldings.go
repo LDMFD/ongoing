@@ -66,9 +66,19 @@ func testCreatePolicy(t *testing.T, e *httpexpect.Expect) {
 }
 
 func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
+	// Aviva
+	policyId1 = createPolicy(e, policyNumber1, 10, 0, policy1EndValue, policyTypeId, policyProviderId1Aviva, nil)
+
+	// Aegon
+	policyId2 = createPolicy2(t, e)
+	policyId3 = createPolicy(e, policyNumber3, 10, 0, policy3EndValue, policyTypeId, policyProviderId2Aegon, nil)
+
+}
+
+func createPolicy2(t *testing.T, e *httpexpect.Expect) string {
 	fileId := TestUpload(t, e, ORG1_ADVISOR, "policy.png")
 
-	policyId2 = createPolicy(e, policyNumber2, 10, 200, 200, policyTypeId, policyProviderId2Aegon, &Entities.RequestFile{
+	policyId := createPolicy(e, policyNumber2, 10, 200, 200, policyTypeId, policyProviderId2Aegon, &Entities.RequestFile{
 		Uid:      fileId,
 		Filename: "sample.png",
 	})
@@ -90,7 +100,7 @@ func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
 		PolicyProviderId:     policyProviderId2Aegon,
 		Notes:                "Policy notes",
 	}
-	e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId2).
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -116,7 +126,7 @@ func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
 			Filename: "sample.png",
 		},
 	}
-	e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId2).
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -127,10 +137,7 @@ func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG2_OWNER, policyFileId, false)
 	TestDownload(t, e, ORG1_CLIENT, policyFileId, true)
 
-	policyId3 = createPolicy(e, policyNumber3, 10, 0, policy3EndValue, policyTypeId, policyProviderId2Aegon, nil)
-
-	// Aviva
-	policyId1 = createPolicy(e, policyNumber1, 10, 0, policy1EndValue, policyTypeId, policyProviderId1Aviva, nil)
+	return policyId
 }
 
 func createPolicy(e *httpexpect.Expect, policyNumber string, contributions int64, startValue int64, endValue int64, typeId string, providerId2 string, file *Entities.RequestFile) string {
