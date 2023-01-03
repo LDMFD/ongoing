@@ -102,7 +102,7 @@ func (gen *ReportGenerator) runQuery() {
 
 func (gen *ReportGenerator) generateModulePresets() {
 	gen.report.ModulePresets = make([]Entities.ReportModulePreset, 0)
-	for _, preset := range Commands.GetModulePresetsInternal(gen.context, gen.db) {
+	for _, preset := range Commands.GetModulePresetsInternal(gen.context, gen.db, gen.client.Organisation.Uid) {
 		gen.report.ModulePresets = append(gen.report.ModulePresets, preset.ToReport())
 	}
 	sort.Slice(gen.report.ModulePresets, func(i, j int) bool {

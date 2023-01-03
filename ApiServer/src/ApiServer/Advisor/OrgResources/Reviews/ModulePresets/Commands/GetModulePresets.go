@@ -11,23 +11,22 @@ import (
 
 func GetModulePresets(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	modulePresets := GetModulePresetsInternal(c, db)
+	modulePresets := GetModulePresetsInternal(c, db, *session.OrgId)
 
 	c.JSON(200, gin.H{
 		"ModulePresets": modulePresets,
 	})
 }
 
-func GetModulePresetsInternal(c *gin.Context, db *bun.DB) []Entities.ModulePreset {
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-
+func GetModulePresetsInternal(c *gin.Context, db *bun.DB, orgId string) []Entities.ModulePreset {
 	var modulePresets []Entities.ModulePreset
 	if err := db.NewSelect().
 		Model(&modulePresets).
 		OrderExpr("module_type ASC").
 		Relation("Org").
-		Where("Org.Uid = ?", session.OrgId).
+		Where("Org.Uid = ?", orgId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

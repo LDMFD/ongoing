@@ -199,7 +199,8 @@ func validateClient1(t *testing.T, e *httpexpect.Expect, obj *httpexpect.Object)
 	review.ValueEqual("Id", review1Id)
 
 	report := review.Value("Report").Object()
-	report.Value("ModulePresets").Array().Length().Equal(1)
+	// "Current state" report doesn't need module presets
+	report.Value("ModulePresets").Array().Length().Equal(0)
 
 	modules := report.Value("Modules").Array()
 	modules.First().Object().ValueEqual("Type", "introduction")
