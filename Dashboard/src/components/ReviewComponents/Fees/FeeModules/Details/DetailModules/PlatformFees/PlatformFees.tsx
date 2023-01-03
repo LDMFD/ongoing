@@ -76,8 +76,8 @@ const Block = (props: {
     );
 
     let pricing = props.block.Discount
-        ? customPricing.replace('{{ charge }}', `${props.block.Discount.Discount}`)
-        : props.block.Pricing.replace('{{ table }}', chargesMarkup);
+        ? customPricing.replace(/{(\s)*charge(\s)*}/, `${props.block.Discount.Discount}`)
+        : props.block.Pricing.replace(/{(\s)*table(\s)*}/, chargesMarkup);
 
     return (
         <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>

@@ -47,13 +47,13 @@ export const PolicyProviderDialog = ({ policyProvider, setPolicyProvider, submit
                         <RichTextEditor label        = 'Pricing'
                                         initialValue = {policyProvider.Pricing}
                                         onChange     = {handlers.SetPricing} />
-                        <small>Use <code>{'{{ table }}'}</code> to embed the charges table.</small>
+                        <small>Use <code>{'{ table }'}</code> to embed the charges table.</small>
                         <br /><br />
 
                         <RichTextEditor label        = 'Custom Pricing'
                                         initialValue = {policyProvider.CustomPricing}
                                         onChange     = {handlers.SetCustomPricing} />
-                        <small>Use <code>{'{{ charge }}'}</code> to embed the discount.</small>
+                        <small>Use <code>{'{ charge }'}</code> to embed the discount.</small>
 
                         {submitLabel === 'Add' ?
                             <p>Create provider first to edit charges</p>
