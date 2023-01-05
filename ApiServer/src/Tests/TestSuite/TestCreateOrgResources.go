@@ -92,7 +92,7 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 
 	request2 := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          policyProviderName2,
-		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{{ table }}</p>",
+		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{ table }</p>",
 		CustomPricing: "Custom pricing description",
 	}
 	e.PUT("/api/advisor/policy-providers/"+policyProviderId2Aegon).
@@ -104,7 +104,7 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 	request = PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
 		Name:          policyProviderName1,
 		Pricing:       "Aviva levy a platform fee for their pensions, on a tiered basis",
-		CustomPricing: "In your case, a single of {{ charge }}% per year is levied.",
+		CustomPricing: "In your case, a single fee of { charge }% per year is levied.",
 	}
 	resp = e.POST("/api/advisor/policy-providers").
 		WithHeader("Authentication", ORG1_ADVISOR).
