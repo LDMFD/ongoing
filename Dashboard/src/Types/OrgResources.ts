@@ -45,6 +45,12 @@ export interface Fund {
 	File?: File,
 }
 
+export interface Operator {
+    Name: string,
+    Type: string,
+    Fee: number,
+}
+
 export interface Model {
     Id: string,
     Name: string,

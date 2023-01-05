@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -12,26 +12,19 @@ const EditOperator = () => {
 
     const [ state, dispatch] = useContext(Context);
 
-    let [ operator, setOperator ] = useState(null);
-
     let { operatorId } = useParams();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (operator) => {
         await Api.OrgResources.Operators.Update(operator);
         await Api.OrgResources.Entities.Read(dispatch);
         goBack();
-        return false;
     };
 
-    if (!operator) {
-        setOperator(state.Resources.Operators.find(o => o.Id === operatorId))
-        return;
-    }
+    let operator = state.Resources.Operators.find(o => o.Id === operatorId);
 
     return (
         <OperatorDialog operator      = {operator}
-                        setOperator   = {setOperator}
+                        state         = {state}
                         submitLabel   = 'Update'
                         submitHandler = {submitHandler} />
     );

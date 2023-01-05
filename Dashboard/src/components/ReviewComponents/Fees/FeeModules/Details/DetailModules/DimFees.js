@@ -15,7 +15,7 @@ const DimFees = () => {
             operators.push({
                 id:   op.Id,
                 name: op.Name,
-                fee:  `${(op.Fee * 100).toPrecision(2)}%`,
+                fee:  `${(op.Fee)}%`,
             });
         }
     });

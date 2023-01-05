@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import {
     Button,
     Toolbar,
@@ -9,6 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
+import Table from 'Components/Library/Table/Table';
 import { OPERATOR_TYPES } from './OperatorTypes';
 
 const OperatorList = () => {
@@ -23,32 +23,49 @@ const OperatorList = () => {
         getOperators();
     }, [ getOperators ]);
     
-    const onDelete = useCallback(params => () => {
+    const onDelete = useCallback(id => () => {
         if (window.confirm(`Delete operator?`)) {
-            window.ApiClient.delete(`advisor/operators/${params.row.id}`)
+            window.ApiClient.delete(`advisor/operators/${id}`)
             .then(async () => {
                 await Api.OrgResources.Entities.Read(dispatch);
             });
         }        
     }, [ dispatch ]);
 
-    const onEdit = useCallback(params => () => {
-        let id = params.row.id;
+    const onEdit = useCallback(id => () => {
         history.push(`/operators/id/${id}/edit`);
     }, [ history ]);
 
     const columns = [
-        { field: 'name', headerName: 'Name', flex: 0.1, },
-        { field: 'type', headerName: 'Type', flex: 0.1, },
-        { field: 'fee',  headerName: 'Fee',  flex: 0.1, },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .05,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            accessor: 'name',
+            Header: 'Name',
+            width: 1,
+        },
+        {
+            accessor: 'type',
+            Header: 'Type',
+            width: 1,
+        },
+        {
+            accessor: 'fee',
+            Header: 'Fee',
+            width: 1,
+        },
+        {
+            accessor: 'actions',
+            Header: '',
+            width: .5,
+            Cell: ({ row }) => (
+                <>
+                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
+                        <EditIcon />
+                    </button>
+                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                        <DeleteIcon />
+                    </button>
+                </>
+            ),
         },
     ];
 
@@ -57,14 +74,9 @@ const OperatorList = () => {
             id:       p.Id,
             name:     p.Name,
             type:     OPERATOR_TYPES[p.Type],
-            fee:      p.Fee,
+            fee:      `${p.Fee}%`,
         };
     });
-
-    let data = {
-        rows: operators,
-        columns: columns,
-    }
 
     return (
         <>
@@ -72,7 +84,7 @@ const OperatorList = () => {
                 <Link to={{ pathname: '/operators/add' }}><Button>Add new operator</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <Table columns={columns} data={operators} />
         </>
     );
 }

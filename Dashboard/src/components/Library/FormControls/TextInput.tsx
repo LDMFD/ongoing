@@ -52,16 +52,17 @@ export const TextInput = (props: TextInputProps) => {
                 formState,
             }) => (
                 <>
-                    <TextField helperText = {error ? error.message : null}
-                            size       = 'small'
-                            error      = {!!error}
-                            onChange   = {onChange}
-                            type       = 'text'
-                            value      = {value}
-                            label      = {props.label}
-                            variant    = 'outlined'
-                            inputProps = { props.type === 'numeric' ? { inputMode: 'numeric' } : {}}
-                            fullWidth
+                    <TextField
+                        helperText = {error ? error.message : null}
+                        size       = 'small'
+                        error      = {!!error}
+                        onChange   = {onChange}
+                        type       = 'text'
+                        value      = {value}
+                        label      = {props.label}
+                        variant    = 'outlined'
+                        inputProps = { props.type === 'numeric' ? { inputMode: 'numeric' } : {}}
+                        fullWidth
                     />
                 </>
             )}
