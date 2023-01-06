@@ -150,10 +150,10 @@ func testCreateProviderChargeBasic(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 
 	// Create the remainder
-	providerCharges[1] = createProviderCharge(e, policyProviderId2Aegon, 30000, 0.39)
-	providerCharges[2] = createProviderCharge(e, policyProviderId2Aegon, 50000, 0.35)
-	providerCharges[3] = createProviderCharge(e, policyProviderId2Aegon, 100000, 0.32)
-	providerCharges[4] = createProviderCharge(e, policyProviderId2Aegon, 250000, 0)
+	providerCharges[1] = createProviderCharge(e, policyProviderId2Aegon, 3000000, 0.39)
+	providerCharges[2] = createProviderCharge(e, policyProviderId2Aegon, 5000000, 0.35)
+	providerCharges[3] = createProviderCharge(e, policyProviderId2Aegon, 10000000, 0.32)
+	providerCharges[4] = createProviderCharge(e, policyProviderId2Aegon, 25000000, 0)
 }
 
 func createProviderCharge(e *httpexpect.Expect, providerId string, boundary float64, charge float64) string {

@@ -43,7 +43,7 @@ const PlatformFeesSummary = (props: {
         <b>Platform Summary:</b>
         <ul>
             <li>
-                Total invested: {FormatCurrency(props.total)}
+                Total invested: {FormatCurrencyPence(props.total)}
             </li>
             <li>
                 Weighted average fee: {(props.weightedAvgFee).toPrecision(2)}%
@@ -88,12 +88,12 @@ const Block = (props: {
             <b>Summary:</b>
             <ul>
                 <li>
-                    You are holding a total of {FormatCurrency(total)} on the {provider} platform,
-                    which is {PercentageFormatter.format(totalPercent)}% of your total holdings.
+                    You are holding a total of {FormatCurrencyPence(total)} on the {provider} platform,
+                    which is {PercentageFormatter.format(totalPercent)} of your total holdings.
                 </li>
                 <li>
                     {provider} charge an annual fee, which currently comes to {FormatCurrencyPence(totalCharge)},
-                    or {PercentageFormatter.format(platformFeePercent)}% of your holdings with them.
+                    or {PercentageFormatter.format(platformFeePercent)} of your holdings with them.
                 </li>
                 {/* <li>
                     (Weighted fee: {weightedFee})

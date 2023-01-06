@@ -16,16 +16,16 @@ const CalculatedChargesTable = (props: {
         Header: 'Tier',
         Cell: ({ row }: { row: Row }) => (
             <>  
-                {FormatCurrency(row.original.Boundary)}
+                {FormatCurrencyPence(row.original.Boundary)}
                 {row.original.UpperBoundary === Number.MAX_VALUE
                     ? '+'
-                    : ` - ${FormatCurrency(row.original.UpperBoundary)}`}
+                    : ` - ${FormatCurrencyPence(row.original.UpperBoundary)}`}
             </>
         ),
     }, {
         accessor: 'Amount',
         Header: 'Amount held in tier',
-        Cell: ({ row }: { row: Row }) => FormatCurrency(row.original.Amount),
+        Cell: ({ row }: { row: Row }) => FormatCurrencyPence(row.original.Amount),
     }, {
         accessor: 'Charge',
         Header: 'Charge (%)',

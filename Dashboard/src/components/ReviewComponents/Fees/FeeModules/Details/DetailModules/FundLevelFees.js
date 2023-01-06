@@ -6,7 +6,7 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { FormatCurrency } from 'Utils/Strings';
+import { FormatCurrencyPence } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
@@ -84,7 +84,7 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
             <h3>{provider.Name} ({policy.ExternalId})</h3>
 
             <p>
-                Value at end of period: {FormatCurrency(policy.EndValue)} <br />
+                Value at end of period: {FormatCurrencyPence(policy.EndValue)} <br />
             </p>
 
             <Table columns={columns} data={policyFunds} />
@@ -96,8 +96,8 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
       
             Estimated annual charges in pounds, based on values at end of period:
             <br /> <br />
-            <b>OCF:</b> {FormatCurrency(ocfPounds)}<br />
-            <b>Ex Ante:</b> {FormatCurrency(exAntePounds)}<br />
+            <b>OCF:</b> {FormatCurrencyPence(ocfPounds)}<br />
+            <b>Ex Ante:</b> {FormatCurrencyPence(exAntePounds)}<br />
 
             {policy.File &&
                 <p>

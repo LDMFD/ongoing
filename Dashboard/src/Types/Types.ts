@@ -1,9 +1,23 @@
-import { Report } from "./Client";
+import { ClientIdentity, Report } from "./Client";
 import { OrgResources } from "./OrgResources";
 
 export interface State {
-    Resources: OrgResources,
+    // Clients
+    // Draft
+    Metadata: Metadata,
     Report: Report,
+    Resources: OrgResources,
+    // Reviews
+    // Session
+}
+
+export interface Metadata {
+    Id: string,
+	UserId: string,
+	Identity: ClientIdentity,
+	Fee: number, // TODO refactor floats to ints?
+	AdvisorId: string,
+
 }
 
 export interface Org {

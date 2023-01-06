@@ -27,6 +27,10 @@ export const FormatCurrencyPence = (n) => {
     return s;
 };
 
+export const FormatPercent = (n) => (
+    `${PercentageFormatter.format(n)}%`
+);
+
 const CurrencyFormatter = new Intl.NumberFormat('en-UK', {
     style: 'currency',
     currency: 'GBP',
