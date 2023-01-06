@@ -201,6 +201,15 @@ func testCreateFundBasic(t *testing.T, e *httpexpect.Expect) (fileId1 string) {
 	fundId4 = createFund(e, fundName4, 0.69, 0.08, nil)
 	fundId5 = createFund(e, fundName5, 0.2, 0.12, nil)
 
+	fundId6 = createFund(e, fundName6, 0.76, 0.16, nil)
+	fundId7 = createFund(e, fundName7, 0.57, 0.17, nil)
+	fundId8 = createFund(e, fundName8, 0.66, 0.12, nil)
+	fundId9 = createFund(e, fundName9, 0.10, 0.40, nil)
+
+	fundId10 = createFund(e, fundName10, 0.68, 0.14, nil)
+	fundId11 = createFund(e, fundName11, 0.11, 0.15, nil)
+	fundId12 = createFund(e, fundName12, 0.80, 0.11, nil)
+
 	// Test fund 1 file download with different user types
 	TestDownload(t, e, ORG1_OWNER, fileId1, true)
 	TestDownload(t, e, ORG1_ADVISOR, fileId1, true)
@@ -616,7 +625,7 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 	fund.Value("OcfFee").Number().Equal(0.69)
 	fund.Value("ExAnteFee").Number().Equal(0.08)
 	fund.Value("Modified").String().NotEmpty()
-	resp.Value("Funds").Array().Length().Equal(5)
+	resp.Value("Funds").Array().Length().Equal(12)
 
 	resp.Value("Models").Array().First().Object().Value("Name").String().Equal(modelName1)
 	resp.Value("Models").Array().Length().Equal(3)

@@ -59,6 +59,13 @@ func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 	deleteFund(e, fundId3)
 	deleteFund(e, fundId4)
 	deleteFund(e, fundId5)
+	deleteFund(e, fundId6)
+	deleteFund(e, fundId7)
+	deleteFund(e, fundId8)
+	deleteFund(e, fundId9)
+	deleteFund(e, fundId10)
+	deleteFund(e, fundId11)
+	deleteFund(e, fundId12)
 
 	//// Owner can still read the file due to the client review
 	//TestDownload(t, e, ORG1_OWNER, fundFileId, true)

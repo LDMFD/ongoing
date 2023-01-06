@@ -68,6 +68,7 @@ func testCreatePolicy(t *testing.T, e *httpexpect.Expect) {
 func testCreatePolicyBasic(t *testing.T, e *httpexpect.Expect) {
 	// Aviva
 	policyId1 = createPolicy(e, policyNumber1, 1000, 0, policy1EndValue, policyTypeId, policyProviderId1Aviva, nil)
+	policyId4 = createPolicy(e, policyNumber4, 1000, 0, policy4EndValue, policyTypeId, policyProviderId1Aviva, nil)
 
 	// Aegon
 	policyId2 = createPolicy2(t, e)
@@ -215,7 +216,18 @@ func testCreatePolicyFundsBasic(e *httpexpect.Expect) {
 	//policy1FundId6 = resp.Value("Id").String().Raw()
 
 	// Aegon
-	policy2FundId = createPolicyFund(e, fundId1, policyId2, 1)
+	policy2FundId1 = createPolicyFund(e, fundId6, policyId2, 0.35)
+	policy2FundId2 = createPolicyFund(e, fundId7, policyId2, 0.15)
+	policy2FundId3 = createPolicyFund(e, fundId8, policyId2, 0.37)
+	policy2FundId4 = createPolicyFund(e, fundId9, policyId2, 0.13)
+
+	policy3FundId1 = createPolicyFund(e, fundId6, policyId3, 0.4)
+	policy3FundId2 = createPolicyFund(e, fundId7, policyId3, 0.5)
+	policy3FundId3 = createPolicyFund(e, fundId8, policyId3, 0.1)
+
+	policy4FundId1 = createPolicyFund(e, fundId10, policyId4, 0.21)
+	policy4FundId2 = createPolicyFund(e, fundId11, policyId4, 0.74)
+	policy4FundId3 = createPolicyFund(e, fundId12, policyId4, 0.5)
 }
 
 func createPolicyFund(e *httpexpect.Expect, fundId string, policyId string, proportion float64) string {

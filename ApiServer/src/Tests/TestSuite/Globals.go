@@ -17,24 +17,41 @@ var (
 	review1Id     string
 	review2Id     string
 
-	fundName1      = "Jupiter Balanced"
-	fundName2      = "Invesco High Income"
-	fundName3      = "Fundsmith Equity"
-	fundName4      = "Baillie Gifford Japan"
-	fundName5      = "Threadneedle US Equity Tracker"
-	fundId1        string
-	fundId2        string
-	fundId3        string
-	fundId4        string
-	fundId5        string
+	fundName4  = "Baillie Gifford Japan"
+	fundName10 = "BlackRock UK Equity"
+	fundName3  = "Fundsmith Equity"
+	fundName2  = "Invesco High Income"
+	fundName1  = "Jupiter Balanced"
+	fundName6  = "Jupiter UK Alpha"
+	fundName7  = "Liontrust European Dynamic"
+	fundName8  = "Schroder Recovery"
+	fundName12 = "Schroder Tokyo"
+	fundName5  = "Threadneedle US Equity Tracker"
+	fundName9  = "Vanguard Emerging Markets Stock Index"
+	fundName11 = "Vanguard European"
+
+	fundId1, fundId2, fundId3, fundId4, fundId5, fundId6    string
+	fundId7, fundId8, fundId9, fundId10, fundId11, fundId12 string
+
 	fundFileId     string
 	policy1FundId1 string
 	policy1FundId2 string
 	policy1FundId3 string
 	policy1FundId4 string
 	policy1FundId5 string
-	//policy1FundId6 string
-	policy2FundId string
+
+	policy2FundId1 string
+	policy2FundId2 string
+	policy2FundId3 string
+	policy2FundId4 string
+
+	policy3FundId1 string
+	policy3FundId2 string
+	policy3FundId3 string
+
+	policy4FundId1 string
+	policy4FundId2 string
+	policy4FundId3 string
 
 	modelId1    string
 	modelId2    string
@@ -50,16 +67,19 @@ var (
 	policyNumber1          = "pol_a"
 	policyNumber2          = "pol_b"
 	policyNumber3          = "pol_c"
+	policyNumber4          = "pol_d"
 	policyId1              string
 	policyId2              string
 	policyId3              string
+	policyId4              string
 	policyFileId           string
 	policyProviderId1Aviva string
 	policyProviderId2Aegon string
 	policyProviderName1    = "Aviva"
 	policyProviderName2    = "Aegon"
 	policyTypeId           string
-	policy1EndValue        int64 = 53400000
+	policy1EndValue        int64 = 1 //53400000
+	policy4EndValue        int64 = 1 //87500000
 	policy2EndValue        int64 = 32500000
 	policy3EndValue        int64 = 64531800
 

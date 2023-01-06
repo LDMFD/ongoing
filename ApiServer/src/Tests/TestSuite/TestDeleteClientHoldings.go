@@ -105,8 +105,16 @@ func TestDeletePolicyFunds(t *testing.T, e *httpexpect.Expect) {
 	deletePolicyFund(e, policy1FundId3)
 	deletePolicyFund(e, policy1FundId4)
 	deletePolicyFund(e, policy1FundId5)
-	//deletePolicyFund(e, policy1FundId6)
-	deletePolicyFund(e, policy2FundId)
+	deletePolicyFund(e, policy2FundId1)
+	deletePolicyFund(e, policy2FundId2)
+	deletePolicyFund(e, policy2FundId3)
+	deletePolicyFund(e, policy2FundId4)
+	deletePolicyFund(e, policy3FundId1)
+	deletePolicyFund(e, policy3FundId2)
+	deletePolicyFund(e, policy3FundId3)
+	deletePolicyFund(e, policy4FundId1)
+	deletePolicyFund(e, policy4FundId2)
+	deletePolicyFund(e, policy4FundId3)
 }
 
 func deletePolicyFund(e *httpexpect.Expect, policyFundId string) {
@@ -116,23 +124,22 @@ func deletePolicyFund(e *httpexpect.Expect, policyFundId string) {
 }
 
 func TestDeletePolicies(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId1).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId2).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId3).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
+	deletePolicy(e, policyId1)
+	deletePolicy(e, policyId2)
+	deletePolicy(e, policyId3)
+	deletePolicy(e, policyId4)
 
 	TestDownload(t, e, ORG1_OWNER, policyFileId, false)
 	TestDownload(t, e, ORG1_ADMIN, policyFileId, false)
 	TestDownload(t, e, ORG1_ADVISOR, policyFileId, false)
 	TestDownload(t, e, ORG2_OWNER, policyFileId, false)
 	TestDownload(t, e, ORG1_CLIENT, policyFileId, false)
+}
+
+func deletePolicy(e *httpexpect.Expect, policyId string) {
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
 }
 
 func TestDeleteProviderDiscounts(t *testing.T, e *httpexpect.Expect) {
