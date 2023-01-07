@@ -758,6 +758,10 @@ namespace Ongoing.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("fund_id");
 
+                    b.Property<bool>("IncludeInFee")
+                        .HasColumnType("boolean")
+                        .HasColumnName("include_in_fee");
+
                     b.Property<int>("PolicyId")
                         .HasColumnType("integer")
                         .HasColumnName("policy_id");
@@ -910,6 +914,10 @@ namespace Ongoing.Migrations
                     b.Property<int>("ClientId")
                         .HasColumnType("integer")
                         .HasColumnName("client_id");
+
+                    b.Property<bool>("IncludeInFee")
+                        .HasColumnType("boolean")
+                        .HasColumnName("include_in_fee");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("integer")

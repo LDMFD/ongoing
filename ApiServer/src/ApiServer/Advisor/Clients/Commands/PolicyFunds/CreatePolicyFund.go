@@ -56,11 +56,12 @@ func CreatePolicyFund(c *gin.Context) {
 	uid := UUID.GenerateUID(c)
 
 	var policyFund = Entities.PolicyFund{
-		Uid:        uid,
-		ClientId:   client.Id,
-		FundId:     fund.Id,
-		PolicyId:   policy.Id,
-		Proportion: body.Proportion,
+		Uid:          uid,
+		ClientId:     client.Id,
+		FundId:       fund.Id,
+		PolicyId:     policy.Id,
+		Proportion:   body.Proportion,
+		IncludeInFee: body.IncludeInFee,
 	}
 	if _, err := db.NewInsert().Model(&policyFund).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

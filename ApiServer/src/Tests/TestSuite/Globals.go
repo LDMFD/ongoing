@@ -56,10 +56,20 @@ var (
 	modelId1    string
 	modelId2    string
 	modelId3    string
+	modelId4    string
+	modelId5    string
+	modelId6    string
+	modelId7    string
+	modelId8    string
 	modelFileId string
+	modelName4  = "AJ Bell Active 3"
+	modelName5  = "AJ Bell Active 32"
+	modelName6  = "Brewin Dolphin Cautious"
+	modelName7  = "Brewin Dolphin Passive Plus Growth"
 	modelName1  = "LGT Vestra Adventurous"
 	modelName2  = "LGT Vestra Balanced"
 	modelName3  = "Tatton Core Active"
+	modelName8  = "Tatton Ethical Balanced"
 
 	operatorName = "LGT WM"
 	operatorId   string
@@ -88,6 +98,12 @@ var (
 	portfolioId1 string
 	portfolioId2 string
 	portfolioId3 string
+	portfolioId4 string
+	portfolioId5 string
+	portfolioId6 string
+	portfolioId7 string
+	portfolioId8 string
+	portfolioId9 string
 
 	riskProviderId   string
 	riskLevelId      string

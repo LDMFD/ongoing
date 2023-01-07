@@ -22,17 +22,14 @@ func testDeleteOrgResources(t *testing.T, e *httpexpect.Expect) {
 func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
 
-	e.DELETE("/api/advisor/models/"+modelId1).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/models/"+modelId2).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/models/"+modelId3).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
+	deleteModel(e, modelId1)
+	deleteModel(e, modelId2)
+	deleteModel(e, modelId3)
+	deleteModel(e, modelId4)
+	deleteModel(e, modelId5)
+	deleteModel(e, modelId6)
+	deleteModel(e, modelId7)
+	deleteModel(e, modelId8)
 
 	// TODO
 	//// Owner can still read the file due to the client review
@@ -43,6 +40,12 @@ func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
 
 	// Advisors (not of that client) cannot read the file anymore
 	TestDownload(t, e, ORG1_ADVISOR, modelFileId, false)
+}
+
+func deleteModel(e *httpexpect.Expect, modelId string) {
+	e.DELETE("/api/advisor/models/"+modelId).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		Expect().Status(http.StatusOK)
 }
 
 func TestDeleteOperators(t *testing.T, e *httpexpect.Expect) {

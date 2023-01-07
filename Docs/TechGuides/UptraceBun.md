@@ -11,3 +11,16 @@ To make joins, `Relation()` should be camelCase but `Where()` should be snake_ca
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			panic(err.Error())
 		}
+
+### Updates
+
+Use original table names in Column(string).
+
+	if _, err := db.NewUpdate().
+		Model(&policyFund).
+		WherePK().
+		Column("fund_id").
+		Exec(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}

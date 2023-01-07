@@ -17,9 +17,10 @@ type UpdatePortfolioRequestPath struct {
 }
 
 type CreateOrUpdatePortfolioRequestBody struct {
-	PolicyId   string  `binding:"required"`
-	ModelId    string  `binding:"required"`
-	Proportion float64 `binding:"required"`
+	PolicyId     string  `binding:"required"`
+	ModelId      string  `binding:"required"`
+	Proportion   float64 `binding:"required"`
+	IncludeInFee bool
 }
 
 func UpdatePortfolio(c *gin.Context) {
@@ -81,6 +82,7 @@ func UpdatePortfolio(c *gin.Context) {
 	portfolio.PolicyId = policy.Id
 	portfolio.ModelId = model.Id
 	portfolio.Proportion = body.Proportion
+	portfolio.IncludeInFee = body.IncludeInFee
 
 	if _, err := db.NewUpdate().
 		Model(&portfolio).
@@ -88,6 +90,7 @@ func UpdatePortfolio(c *gin.Context) {
 		Column("policy_id").
 		Column("model_id").
 		Column("proportion").
+		Column("include_in_fee").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

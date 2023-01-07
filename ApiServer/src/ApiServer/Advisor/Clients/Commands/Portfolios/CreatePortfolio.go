@@ -59,11 +59,12 @@ func CreatePortfolio(c *gin.Context) {
 	uid := UUID.GenerateUID(c)
 
 	var portfolio = Entities.Portfolio{
-		Uid:        uid,
-		ClientId:   client.Id,
-		PolicyId:   policy.Id,
-		ModelId:    model.Id,
-		Proportion: body.Proportion,
+		Uid:          uid,
+		ClientId:     client.Id,
+		PolicyId:     policy.Id,
+		ModelId:      model.Id,
+		Proportion:   body.Proportion,
+		IncludeInFee: body.IncludeInFee,
 	}
 	if _, err := db.NewInsert().Model(&portfolio).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

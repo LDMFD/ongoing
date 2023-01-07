@@ -12,6 +12,7 @@ import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
 
 const PortfolioList = () => {
     let history = useHistory();
@@ -42,7 +43,7 @@ const PortfolioList = () => {
         accessor: 'policy',
         Header: 'Policy',
         type: 'actions',
-        width: 100,
+        width: 30,
         Cell: ({ row }) => (
             <>
                 {row.original.policy.ExternalId}
@@ -57,7 +58,7 @@ const PortfolioList = () => {
         accessor: 'model',
         Header: 'Model',
         type: 'actions',
-        width: 100,
+        width: 30,
         Cell: ({ row }) => (
             <>
                 {row.original.model.Name}
@@ -71,11 +72,15 @@ const PortfolioList = () => {
     }, {
         accessor: 'proportion',
         Header: 'Proportion',
-        width: 100,
+        width: 10,
+    }, {
+        accessor: 'includeInFee',
+        Header: 'Include in fee?',
+        width: 10,
     }, {
         accessor: 'actions',
         Header: '',
-        width: 20,
+        width: 10,
         Cell: ({ row }) => (
             <>
                 <button onClick={editPortfolio(row.original.id)} className='ong-openFileIcon'>
@@ -92,11 +97,12 @@ const PortfolioList = () => {
         let policy = report.Policies.find(p => p.Id === portfolio.PolicyId);
         let model = report.Models.find(p => p.Id === portfolio.ModelId);
         return {
-            id:         portfolio.Id,
-            idLabel:    `#${portfolio.Id}`,
-            model:      model,
-            policy:     policy,
-            proportion: `${portfolio.Proportion * 100}%`,
+            id:           portfolio.Id,
+            idLabel:      `#${portfolio.Id}`,
+            model:        model,
+            policy:       policy,
+            proportion:   `${portfolio.Proportion * 100}%`,
+            includeInFee: portfolio.IncludeInFee ? 'Y' : 'N',
         };
     });
 
@@ -107,6 +113,8 @@ const PortfolioList = () => {
             </Toolbar>
 
             <Table columns={columns} data={portfolios} />
+
+            <ProportionWarning data={report.Portfolios} property='Proportion' />
         </div>
     );
 }

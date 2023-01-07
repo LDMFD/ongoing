@@ -12,6 +12,7 @@ import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
 
 const PolicyFundList = () => {
     let history = useHistory();
@@ -41,11 +42,11 @@ const PolicyFundList = () => {
     const columns = [{
         accessor: 'policy',
         Header: 'Policy',
-        width: 100,
+        width: 30,
     }, {
         accessor: 'fund',
         Header: 'Fund',
-        width: 100,
+        width: 30,
         Cell: ({ row }) => (
             <>
                 {row.original.fund}
@@ -59,10 +60,14 @@ const PolicyFundList = () => {
     }, {
         accessor: 'proportion',
         Header: 'Proportion',
-        width: 100,
+        width: 10,
+    }, {
+        accessor: 'includeInFee',
+        Header: 'Include in fee?',
+        width: 10,
     }, {
         accessor: 'actions',
-        width: 20,
+        width: 10,
         Cell: ({ row }) => (
             <>
                 <button onClick={editPolicyFund(row.original.id)} className='ong-openFileIcon'>
@@ -79,12 +84,13 @@ const PolicyFundList = () => {
         let policy = report.Policies.find(p => p.Id === policyFund.PolicyId).ExternalId;
         let fund = report.Funds.find(p => p.Id === policyFund.FundId);
         return {
-            id:         policyFund.Id,
-            idLabel:    `#${policyFund.Id}`,
+            id:           policyFund.Id,
+            idLabel:      `#${policyFund.Id}`,
             policy,
-            fund:       fund.Name,
-            proportion: `${policyFund.Proportion * 100}%`,
-            fileUid:    fund.File?.Uid,
+            fund:         fund.Name,
+            proportion:   `${policyFund.Proportion * 100}%`,
+            includeInFee: policyFund.IncludeInFee ? 'Y' : 'N',
+            fileUid:      fund.File?.Uid,
         };
     });
 
@@ -95,6 +101,8 @@ const PolicyFundList = () => {
             </Toolbar>
 
             <Table columns={columns} data={policyFunds} />
+
+            <ProportionWarning data={report.PolicyFunds} property='Proportion' />
         </>
     );
 }

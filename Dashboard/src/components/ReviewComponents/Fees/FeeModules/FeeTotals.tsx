@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { FormatCurrency, FormatCurrencyPence, FormatPercent, PercentageFormatter } from 'Utils/Strings';
+import { FormatCurrency, FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { CalculatePlatformModel } from '../Model/FeeModel';
 import { PlatformView, ProviderBlockView } from '../Model/FeeTypes';
@@ -139,22 +139,24 @@ const SummaryTable = (props: {
         policyTypes,
         clientFees,
         endValues,
-        portfolioPercents,
-        providerPercents,
-        platformFeePercents,
-        platformFees,
-        discountedPlatformFeePercents,
-        discountedPlatformFees,
-        annualCharges,
+        // portfolioPercents,
+        // providerPercents,
+        // platformFeePercents,
+        // platformFees,
+        // discountedPlatformFeePercents,
+        // discountedPlatformFees,
+        // annualCharges,
         policyFeePercents,
         annualChargesWithDiscounts,
     ];
 
     let totalHoldings = props.total / 100;
 
+    let report = GetReport();
+
     props.view.Providers.forEach(prov => {
         prov.Policies.forEach((pol: Policy) => {
-            policyTypes[pol.Id]           = state.Resources.PolicyTypes.find((t: PolicyType) => t.Id === pol.PolicyTypeId).Name;
+            policyTypes[pol.Id]           = report.PolicyTypes.find((t: PolicyType) => t.Id === pol.PolicyTypeId).Name;
             clientFees[pol.Id]            = `${state.Metadata.Fee}% (${FormatCurrencyPence(state.Metadata.Fee / 100 * pol.EndValue)})`;
             endValues[pol.Id]             = FormatCurrencyPence(pol.EndValue);
             

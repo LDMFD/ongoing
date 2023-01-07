@@ -8,6 +8,7 @@ import {
 
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
+import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { State } from 'Types/Types';
@@ -17,6 +18,7 @@ interface PortfolioForm {
     PolicyId: string,
     ModelId: string,
     Proportion: number
+    IncludeInFee: boolean,
 }
 
 export const PortfolioDialog = (props: {
@@ -69,6 +71,8 @@ export const PortfolioDialog = (props: {
                         <SelectControl name='ModelId'  options={models}   label='Model'  control={control} required />
 
                         <TextInput name='Proportion' label='Proportion (%)' control={control} required type='numeric' />
+
+                        <CheckboxControl name='IncludeInFee' label='Include in fee calculation?' control={control} />
                     </Box>
 
                 </DialogContent>

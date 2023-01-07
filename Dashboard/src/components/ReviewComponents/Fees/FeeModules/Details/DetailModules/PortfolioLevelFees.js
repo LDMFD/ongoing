@@ -6,11 +6,12 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
-import { FormatCurrency } from 'Utils/Strings';
+import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
 
 const PolicyPortfolios = ({ report, policy, portfolios }) => {
     const downloadFile = useCallback(fileUid => () => {
@@ -32,15 +33,15 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             width: 1,
         }, {
             accessor: 'proportionStr',
-            Header: 'Proportion' ,
+            Header: 'Percentage of policy' ,
             width: 1,
-        // // {
+        // }, {
         //     accessor: 'weightedOcfFee',
-        //     headerName: 'Weighted OCF (%)',
+        //     Header: 'Weighted OCF (%)',
         //     width: 1,
-        // }, // {
+        // }, {
         //     accessor: 'weightedExAnteFee',
-        //     headerName: 'Weighted Ex Ante (%)',
+        //     Header: 'Weighted Ex Ante (%)',
         //     width: 1,
         }, {
             accessor: 'actions',
@@ -69,11 +70,24 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
         return null;
     }
 
-    let weightedOcf    = portfolios.map(p => p.ocf * p.proportion).reduce((p, q) => p + q, 0);
-    let weightedExAnte = portfolios.map(p => p.exAnte * p.proportion).reduce((p, q) => p + q, 0);
+    let ocfWeightedAvg    = portfolios.map(p => p.weightedOcfFee).reduce((p, q) => p + q, 0);
+    let exAnteWeightedAvg = portfolios.map(p => p.weightedExAnteFee).reduce((p, q) => p + q, 0);
 
-    let ocfPounds    = weightedOcf    / 100 * policy.EndValue;
-    let exAntePounds = weightedExAnte / 100 * policy.EndValue;
+    let ocfPounds    = ocfWeightedAvg    / 100 * policy.EndValue;
+    let exAntePounds = exAnteWeightedAvg / 100 * policy.EndValue;
+
+    portfolios.push({
+        id: 'avg',
+        model: <i>Weighted average</i>,
+        ocfFee: <i>{FormatPercent(ocfWeightedAvg)}</i>,
+        exAnteFee: <i>{FormatPercent(exAnteWeightedAvg)}</i>,
+    });
+    portfolios.push({
+        id: 'charges',
+        model: <i>Estimated charges</i>,
+        ocfFee: <i>{FormatCurrencyPence(ocfPounds)}</i>,
+        exAnteFee: <i>{FormatCurrencyPence(exAntePounds)}</i>,
+    });
 
     let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
 
@@ -82,23 +96,12 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             <h3>{provider.Name} ({policy.ExternalId})</h3>
 
             <p>
-                Value at end of period: {FormatCurrency(policy.EndValue)} <br />
+                Value at end of period: {FormatCurrencyPence(policy.EndValue)} <br />
             </p>
 
             <Table columns={columns} data={portfolios} />
 
-            <p>
-                <b>Weighted OCF:</b> {weightedOcf.toPrecision(2)}%<br />
-                <b>Weighted Ex Ante:</b> {weightedExAnte.toPrecision(2)}%<br />
-            </p>
-      
-            {portfolios.length > 1 &&
-                <>
-                    Total of estimated annual charges in pounds, based on values at end of period:<br />
-                    <b>OCF:</b> {FormatCurrency(ocfPounds)}<br />
-                    <b>Ex Ante:</b> {FormatCurrency(exAntePounds)}<br />
-                </>
-            }
+            <ProportionWarning data={portfolios} property='proportion' />
 
             {policy.File &&
                 <p>
@@ -113,7 +116,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
 const PortfolioLevelFees = () => {
     let report = GetReport();
 
-    let portfolios = report.Portfolios.map(portfolio => {
+    let portfolios = report.Portfolios.filter(p => p.IncludeInFee).map(portfolio => {
         let policy = report.Policies.find(p => p.Id === portfolio.PolicyId);
         let model = report.Models.find(m => m.Id === portfolio.ModelId);
 
@@ -123,22 +126,22 @@ const PortfolioLevelFees = () => {
         let ocfSterling    = model.WeightedOcfFee * policy.EndValue / 100;
         let exAnteSterling = model.WeightedExAnteFee * policy.EndValue / 100;
 
-        let ocfStr    = `${ocfPercent}% (${FormatCurrency(ocfSterling)})`;
-        let exAnteStr = `${exAntePercent}% (${FormatCurrency(exAnteSterling)})`;
+        let ocfStr    = `${ocfPercent}% (${FormatCurrencyPence(ocfSterling)})`;
+        let exAnteStr = `${exAntePercent}% (${FormatCurrencyPence(exAnteSterling)})`;
 
         return {
             id:                portfolio.Id,
             proportion:        portfolio.Proportion,
-            proportionStr:     `${portfolio.Proportion * 100}%`,
+            proportionStr:     FormatPercent(portfolio.Proportion),
             policyId:          policy.Id,
-            endValue:          `$${policy.EndValue}`,
+            endValue:          policy.EndValue,
             model:             model,
             ocfFee:            ocfStr,
             exAnteFee:         exAnteStr,
             ocf:               model.WeightedOcfFee,
             exAnte:            model.WeightedExAnteFee,
-            weightedOcfFee:    (model.WeightedOcfFee * portfolio.Proportion).toPrecision(2),
-            weightedExAnteFee: (model.WeightedExAnteFee * portfolio.Proportion).toPrecision(2),
+            weightedOcfFee:    model.WeightedOcfFee * portfolio.Proportion,
+            weightedExAnteFee: model.WeightedExAnteFee * portfolio.Proportion,
         };
     });
 

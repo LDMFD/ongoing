@@ -355,23 +355,11 @@ func testCreateModel(t *testing.T, e *httpexpect.Expect) {
 func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model.png")
 
-	request := ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              modelName1,
-		OperatorId:        operatorId,
-		WeightedOcfFee:    0, // Test zero allowed
-		WeightedExAnteFee: 0,
-		Modified:          "2006-01-02T15:04:05Z",
-		File: &Entities.RequestFile{
-			Uid:      modelFileId,
-			Filename: "sample.png",
-			//Size:
-		},
-	}
-	resp := e.POST("/api/advisor/models").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	modelId1 = resp.JSON().Object().Value("Id").String().Raw()
+	modelId1 = createModel(e, modelName1, operatorId, 0, 0, &Entities.RequestFile{
+		Uid:      modelFileId,
+		Filename: "sample.png",
+		//Size:
+	})
 
 	// Test model file download with different user types
 	TestDownload(t, e, ORG1_OWNER, modelFileId, true)
@@ -380,15 +368,15 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_CLIENT, modelFileId, false)
 
 	// Remove the file and re-add it, check it still works
-	request = ModelCommands.CreateOrUpdateModelRequestBody{
+	request := ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              modelName1,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.4,
-		WeightedExAnteFee: 0.06,
+		WeightedOcfFee:    0.1,
+		WeightedExAnteFee: 0.1,
 		Modified:          "2006-01-02T15:04:05Z",
 		File:              nil,
 	}
-	resp = e.PUT("/api/advisor/models/"+modelId1).
+	e.PUT("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -402,7 +390,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              modelName1,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.75,
+		WeightedOcfFee:    0.73,
 		WeightedExAnteFee: 0.15,
 		Modified:          "2006-01-02T15:04:05Z",
 		File: &Entities.RequestFile{
@@ -411,7 +399,7 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 			//Size:
 		},
 	}
-	resp = e.PUT("/api/advisor/models/"+modelId1).
+	e.PUT("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -421,32 +409,29 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADMIN, modelFileId, true)
 	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
 
-	// Models 2 & 3
-	request = ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              modelName2,
-		OperatorId:        operatorId,
-		WeightedOcfFee:    0.58,
-		WeightedExAnteFee: 0.14,
-		Modified:          "2006-01-02T15:04:05Z",
-	}
-	resp = e.POST("/api/advisor/models").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK)
-	modelId2 = resp.JSON().Object().Value("Id").String().Raw()
+	modelId2 = createModel(e, modelName2, operatorId, 0.58, 0.14, nil)
+	modelId3 = createModel(e, modelName3, operatorId, 0.55, 0.12, nil)
+	modelId4 = createModel(e, modelName4, operatorId, 0.54, 0.12, nil)
+	modelId5 = createModel(e, modelName5, operatorId, 0.52, 0.09, nil)
+	modelId6 = createModel(e, modelName6, operatorId, 0.54, 0.16, nil)
+	modelId7 = createModel(e, modelName7, operatorId, 0.11, 0.08, nil)
+	modelId8 = createModel(e, modelName8, operatorId, 0.65, 0.07, nil)
+}
 
-	request = ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              modelName3,
+func createModel(e *httpexpect.Expect, modelName string, operatorId string, ocf float64, exAnte float64, file *Entities.RequestFile) string {
+	request := ModelCommands.CreateOrUpdateModelRequestBody{
+		Name:              modelName,
 		OperatorId:        operatorId,
-		WeightedOcfFee:    0.55,
-		WeightedExAnteFee: 0.12,
+		WeightedOcfFee:    ocf,
+		WeightedExAnteFee: exAnte,
 		Modified:          "2006-01-02T15:04:05Z",
+		File:              file,
 	}
-	resp = e.POST("/api/advisor/models").
+	resp := e.POST("/api/advisor/models").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
-	modelId3 = resp.JSON().Object().Value("Id").String().Raw()
+	return resp.JSON().Object().Value("Id").String().Raw()
 }
 
 func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
@@ -627,8 +612,8 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 	fund.Value("Modified").String().NotEmpty()
 	resp.Value("Funds").Array().Length().Equal(12)
 
-	resp.Value("Models").Array().First().Object().Value("Name").String().Equal(modelName1)
-	resp.Value("Models").Array().Length().Equal(3)
+	resp.Value("Models").Array().First().Object().Value("Name").String().Equal(modelName4)
+	resp.Value("Models").Array().Length().Equal(8)
 
 	resp.Value("ModulePresets").Array().Length().Equal(1)
 

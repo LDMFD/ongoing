@@ -4,7 +4,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import { ModuleTypePolicyFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { FormatCurrency, FormatCurrencyPence, PercentageFormatter } from 'Utils/Strings';
+import { FormatCurrencyPence, PercentageFormatter } from 'Utils/Strings';
 import PoliciesTable from './PoliciesTable';
 import { ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import CalculatedChargesTable from './CalculatedCharges';
@@ -14,7 +14,6 @@ const PlatformFees = () => {
     let report = GetReport();
 
     let view = CalculatePlatformModel(report);
-    console.log(view)
 
     return (
         <div>

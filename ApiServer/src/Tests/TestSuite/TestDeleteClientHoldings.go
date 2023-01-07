@@ -86,15 +86,19 @@ func TestDeleteRiskAssessments(t *testing.T, e *httpexpect.Expect) {
 }
 
 func TestDeletePortfolios(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId1).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
+	deletePortfolio(e, portfolioId1)
+	deletePortfolio(e, portfolioId2)
+	deletePortfolio(e, portfolioId3)
+	deletePortfolio(e, portfolioId4)
+	deletePortfolio(e, portfolioId5)
+	deletePortfolio(e, portfolioId6)
+	deletePortfolio(e, portfolioId7)
+	deletePortfolio(e, portfolioId8)
+	deletePortfolio(e, portfolioId9)
+}
 
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId2).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		Expect().Status(http.StatusOK)
-
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId3).
+func deletePortfolio(e *httpexpect.Expect, portfolioId string) {
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }

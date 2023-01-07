@@ -30,6 +30,9 @@ namespace Ongoing.Entities
         [Column("proportion")]
         public decimal Proportion { get; set; }
         
+        [Column("include_in_fee")]
+        public bool IncludeInFee { get; set; }
+
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
 

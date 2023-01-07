@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'Components/Library/Table/Table';
-import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
+import { FormatCurrencyPence } from 'Utils/Strings';
 import { ProviderCharge } from 'Types/OrgResources';
 
 export type Row = {

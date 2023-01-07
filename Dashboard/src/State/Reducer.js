@@ -71,7 +71,6 @@ const Reducer = (state, action) => {
         }
 
         case APPLY: {
-            console.log(action.payload)
             return {
                 ...state,
                 ...action.payload,

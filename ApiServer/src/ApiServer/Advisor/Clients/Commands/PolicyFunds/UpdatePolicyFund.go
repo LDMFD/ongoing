@@ -18,9 +18,10 @@ type UpdatePolicyFundRequestPath struct {
 }
 
 type CreateOrUpdatePolicyFundRequestBody struct {
-	FundId     string  `binding:"required"`
-	PolicyId   string  `binding:"required"`
-	Proportion float64 `binding:"required"`
+	FundId       string  `binding:"required"`
+	PolicyId     string  `binding:"required"`
+	Proportion   float64 `binding:"required"`
+	IncludeInFee bool
 }
 
 func UpdatePolicyFund(c *gin.Context) {
@@ -82,6 +83,7 @@ func UpdatePolicyFund(c *gin.Context) {
 	policyFund.FundId = fund.Id
 	policyFund.PolicyId = policy.Id
 	policyFund.Proportion = body.Proportion
+	policyFund.IncludeInFee = body.IncludeInFee
 
 	if _, err := db.NewUpdate().
 		Model(&policyFund).
@@ -89,6 +91,7 @@ func UpdatePolicyFund(c *gin.Context) {
 		Column("fund_id").
 		Column("policy_id").
 		Column("proportion").
+		Column("include_in_fee").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

@@ -6,11 +6,12 @@ import {
 import DownloadIcon from '@mui/icons-material/Download';
 
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { FormatCurrencyPence } from 'Utils/Strings';
+import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
 
 const PolicyFunds = ({ report, policy, policyFunds }) => {
     const downloadFile = useCallback(fileUid => () => {
@@ -57,25 +58,39 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
         },
     ];
 
-    policyFunds = policyFunds.map(pf => {
+    policyFunds = policyFunds.filter(pf => pf.IncludeInFee).map(pf => {
         let fund = report.Funds.find(f => f.Id === pf.FundId);
         return {
             id:          pf.Id,
             fund:        fund.Name,
-            ocf:         fund.OcfFee,
-            exAnte:      fund.ExAnteFee,
-            percentage:  `${pf.Proportion * 100}%`,
-            wOcf:        fund.OcfFee * pf.Proportion,
+            ocf:         FormatPercent(fund.OcfFee),
+            exAnte:      FormatPercent(fund.ExAnteFee),
+            proportion:  pf.Proportion,
+            percentage:  FormatPercent(pf.Proportion * 100),
+            wOcf:        fund.OcfFee * pf.Proportion,  // used for calculations only
             wEx:         fund.ExAnteFee * pf.Proportion,
             fileUid:     fund.File?.Uid,
         };
-    });
+    }).sort((p,q) => (p.fund < q.fund) ? -1 : ((p.fund > q.fund) ? 1 : 0));
 
     let ocfWeightedAvg    = policyFunds.map(p => p.wOcf).reduce((p, q) => p + q, 0);
-    let exAnteweightedAvg = policyFunds.map(p => p.wEx).reduce((p, q) => p + q, 0);
+    let exAnteWeightedAvg = policyFunds.map(p => p.wEx).reduce((p, q) => p + q, 0);
 
     let ocfPounds    = ocfWeightedAvg    / 100 * policy.EndValue;
-    let exAntePounds = exAnteweightedAvg / 100 * policy.EndValue;
+    let exAntePounds = exAnteWeightedAvg / 100 * policy.EndValue;
+
+    policyFunds.push({
+        id: 'avg',
+        fund: <i>Weighted average</i>,
+        ocf: <i>{FormatPercent(ocfWeightedAvg)}</i>,
+        exAnte: <i>{FormatPercent(exAnteWeightedAvg)}</i>,
+    });
+    policyFunds.push({
+        id: 'charges',
+        fund: <i>Estimated charges</i>,
+        ocf: <i>{FormatCurrencyPence(ocfPounds)}</i>,
+        exAnte: <i>{FormatCurrencyPence(exAntePounds)}</i>,
+    });
 
     let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
 
@@ -89,15 +104,7 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
 
             <Table columns={columns} data={policyFunds} />
 
-            <p>
-                <b>Weighted OCF:</b> {ocfWeightedAvg.toPrecision(2)}%<br />
-                <b>Weighted Ex Ante:</b> {exAnteweightedAvg.toPrecision(2)}%<br />
-            </p>
-      
-            Estimated annual charges in pounds, based on values at end of period:
-            <br /> <br />
-            <b>OCF:</b> {FormatCurrencyPence(ocfPounds)}<br />
-            <b>Ex Ante:</b> {FormatCurrencyPence(exAntePounds)}<br />
+            <ProportionWarning data={policyFunds} property='proportion' />
 
             {policy.File &&
                 <p>

@@ -8,6 +8,7 @@ import {
 
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
+import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { State } from 'Types/Types';
@@ -16,7 +17,8 @@ import { Fund } from 'Types/OrgResources';
 interface PolicyFundForm {
     PolicyId: string,
     FundId: string,
-    Proportion: number
+    Proportion: number,
+    IncludeInFee: boolean,
 }
 
 const PolicyFund = (props: {
@@ -67,8 +69,10 @@ const PolicyFund = (props: {
                     <Box>
                         <SelectControl name='PolicyId' options={policies} label='Policy' control={control} required />
                         <SelectControl name='FundId'   options={funds}    label='Fund'   control={control} required />
-
+                        
                         <TextInput name='Proportion' label='Proportion (%)' control={control} required type='numeric' />
+
+                        <CheckboxControl name='IncludeInFee' label='Include in fee calculation?' control={control} />
                     </Box>
 
                 </DialogContent>

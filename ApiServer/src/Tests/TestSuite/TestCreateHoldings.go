@@ -188,16 +188,17 @@ func testCreatePolicyFunds(e *httpexpect.Expect) {
 
 func testCreatePolicyFundsBasic(e *httpexpect.Expect) {
 	// Aviva
-	policy1FundId1 = createPolicyFund(e, fundId1, policyId1, 0.0000001)
-	policy1FundId2 = createPolicyFund(e, fundId2, policyId1, 0.13)
-	policy1FundId3 = createPolicyFund(e, fundId3, policyId1, 0.25)
-	policy1FundId4 = createPolicyFund(e, fundId4, policyId1, 0.32)
-	policy1FundId5 = createPolicyFund(e, fundId5, policyId1, 0.15)
+	policy1FundId1 = createPolicyFund(e, fundId1, policyId1, 0.0000001, false) // Jupiter - will get mutated to true
+	policy1FundId2 = createPolicyFund(e, fundId2, policyId1, 0.13, false)
+	policy1FundId3 = createPolicyFund(e, fundId3, policyId1, 0.25, false)
+	policy1FundId4 = createPolicyFund(e, fundId4, policyId1, 0.32, false)
+	policy1FundId5 = createPolicyFund(e, fundId5, policyId1, 0.15, false)
 
 	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
-		FundId:     fundId1,
-		PolicyId:   policyId1,
-		Proportion: 0.15,
+		FundId:       fundId1,
+		PolicyId:     policyId1,
+		Proportion:   0.15,
+		IncludeInFee: true,
 	}
 	e.PUT("/api/advisor/clients/"+org1ClientId+"/policy-funds/"+policy1FundId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -216,25 +217,26 @@ func testCreatePolicyFundsBasic(e *httpexpect.Expect) {
 	//policy1FundId6 = resp.Value("Id").String().Raw()
 
 	// Aegon
-	policy2FundId1 = createPolicyFund(e, fundId6, policyId2, 0.35)
-	policy2FundId2 = createPolicyFund(e, fundId7, policyId2, 0.15)
-	policy2FundId3 = createPolicyFund(e, fundId8, policyId2, 0.37)
-	policy2FundId4 = createPolicyFund(e, fundId9, policyId2, 0.13)
+	policy2FundId1 = createPolicyFund(e, fundId6, policyId2, 0.35, true) // Jupiter
+	policy2FundId2 = createPolicyFund(e, fundId7, policyId2, 0.15, false)
+	policy2FundId3 = createPolicyFund(e, fundId8, policyId2, 0.37, false)
+	policy2FundId4 = createPolicyFund(e, fundId9, policyId2, 0.13, false)
 
-	policy3FundId1 = createPolicyFund(e, fundId6, policyId3, 0.4)
-	policy3FundId2 = createPolicyFund(e, fundId7, policyId3, 0.5)
-	policy3FundId3 = createPolicyFund(e, fundId8, policyId3, 0.1)
+	policy3FundId1 = createPolicyFund(e, fundId6, policyId3, 0.4, false)
+	policy3FundId2 = createPolicyFund(e, fundId7, policyId3, 0.5, false)
+	policy3FundId3 = createPolicyFund(e, fundId8, policyId3, 0.1, false)
 
-	policy4FundId1 = createPolicyFund(e, fundId10, policyId4, 0.21)
-	policy4FundId2 = createPolicyFund(e, fundId11, policyId4, 0.74)
-	policy4FundId3 = createPolicyFund(e, fundId12, policyId4, 0.5)
+	policy4FundId1 = createPolicyFund(e, fundId10, policyId4, 0.21, false)
+	policy4FundId2 = createPolicyFund(e, fundId11, policyId4, 0.74, false)
+	policy4FundId3 = createPolicyFund(e, fundId12, policyId4, 0.5, false)
 }
 
-func createPolicyFund(e *httpexpect.Expect, fundId string, policyId string, proportion float64) string {
+func createPolicyFund(e *httpexpect.Expect, fundId string, policyId string, proportion float64, includeInFee bool) string {
 	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
-		FundId:     fundId,
-		PolicyId:   policyId,
-		Proportion: proportion,
+		FundId:       fundId,
+		PolicyId:     policyId,
+		Proportion:   proportion,
+		IncludeInFee: includeInFee,
 	}
 	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/policy-funds").
 		WithHeader("Authentication", ORG1_ADVISOR).
@@ -268,54 +270,49 @@ func testCreatePortfolio(e *httpexpect.Expect) {
 }
 
 func testCreatePortfolioBasic(e *httpexpect.Expect) {
+	portfolioId1 = createPortfolio(e, policyId1, modelId1, 0.00000001, false) // will mutate to true
+
 	request := Portfolios.CreateOrUpdatePortfolioRequestBody{
-		PolicyId:   policyId1,
-		ModelId:    modelId1, // LGT Vestra Adventurous
-		Proportion: 0.00000001,
+		PolicyId:     policyId1,
+		ModelId:      modelId1, // LGT Vestra Adventurous
+		Proportion:   0.60,
+		IncludeInFee: true,
 	}
-	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/portfolios").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK).JSON().Object()
-	portfolioId1 = resp.Value("Id").String().Raw()
-
-	request.Proportion = 0.6
-
 	e.PUT("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId1).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
 
-	//
-	request = Portfolios.CreateOrUpdatePortfolioRequestBody{
-		PolicyId:   policyId1,
-		ModelId:    modelId3, // Tatton
-		Proportion: 0.4,
-	}
-	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/portfolios").
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK).JSON().Object()
-	portfolioId2 = resp.Value("Id").String().Raw()
+	portfolioId2 = createPortfolio(e, policyId1, modelId3, 0.40, true)
+	portfolioId3 = createPortfolio(e, policyId2, modelId2, 0.40, true)
+	portfolioId4 = createPortfolio(e, policyId2, modelId8, 0.34, false)
+	portfolioId5 = createPortfolio(e, policyId2, modelId7, 0.26, false)
+	portfolioId6 = createPortfolio(e, policyId3, modelId4, 0.47, true)
+	portfolioId7 = createPortfolio(e, policyId3, modelId7, 0.53, true)
+	portfolioId8 = createPortfolio(e, policyId4, modelId5, 0.47, true)
+	portfolioId9 = createPortfolio(e, policyId4, modelId6, 0.53, true)
+}
 
-	//
-	request = Portfolios.CreateOrUpdatePortfolioRequestBody{
-		PolicyId:   policyId2,
-		ModelId:    modelId2,
-		Proportion: 1,
+func createPortfolio(e *httpexpect.Expect, policyId string, modelId string, proportion float64, includeInFee bool) string {
+	request := Portfolios.CreateOrUpdatePortfolioRequestBody{
+		PolicyId:     policyId,
+		ModelId:      modelId,
+		Proportion:   proportion,
+		IncludeInFee: includeInFee,
 	}
-	resp = e.POST("/api/advisor/clients/"+org1ClientId+"/portfolios").
+	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/portfolios").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	portfolioId3 = resp.Value("Id").String().Raw()
+	return resp.Value("Id").String().Raw()
 }
 
 func testCreatePortfolioSecurity(e *httpexpect.Expect) {
 	request := Portfolios.CreateOrUpdatePortfolioRequestBody{
-		PolicyId:   policyId1,
-		ModelId:    modelId1,
-		Proportion: 0.0000000001,
+		PolicyId:     policyId1,
+		ModelId:      modelId1,
+		Proportion:   0.0000000001,
+		IncludeInFee: true,
 	}
 	e.PUT("/api/advisor/clients/"+org1ClientId+"/portfolios/"+portfolioId1).
 		WithHeader("Authentication", ORG2_OWNER).
