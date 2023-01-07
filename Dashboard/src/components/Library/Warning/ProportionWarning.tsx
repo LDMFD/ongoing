@@ -5,18 +5,21 @@ import { Alert } from '@mui/material';
 import { FormatPercent } from 'Utils/Strings';
 import { Context } from 'State';
 
- // EXPERIMENTAL - DISABLED BY DEFAULT
+ // EXPERIMENTAL
+ const DISABLED = true; 
 
 export const ProportionWarning = (props: {
     data: Array<any>,
     property: string,
 }) => {
-    return null;
-
     // @ts-ignore
     const [ state, ] = useContext(Context);
 
+    // @ts-ignore
     const { reviewId } = useParams();
+
+    if (DISABLED)
+        return null;
 
     if (state.Session.Role === 'client') {
         return null;
