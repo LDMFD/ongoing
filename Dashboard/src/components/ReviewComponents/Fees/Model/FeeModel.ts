@@ -1,91 +1,170 @@
 import { ProviderCharge, PolicyProvider, ProviderDiscount } from 'Types/OrgResources';
-import { Policy, Report } from "Types/Client";
-import { PlatformView, ProviderBlockView } from './FeeTypes';
+import { Policy, Report } from "Types/ClientResources";
+import { PlatformView, PolicyDimFees, ProviderBlockView } from './FeeTypes';
 
 interface ProviderBlock {
     CustomPricing: string,
     Discount: ProviderDiscount,
     Policies: Policy[],
     Pricing: string,
-    Provider: string,
-    ProviderId: string,
+    Provider: PolicyProvider,
     ProviderTotal: number,
 }
 
 export function CalculatePlatformModel(report: Report): PlatformView {
     let blocks: ProviderBlock[] = [];
 
-    let total = 0;
-    let weightedFees = 0;
-    let totalCharges = 0;
+    let sumTotal = 0;
 
+    // Group policies by provider, calculate provider total end value
     report.Policies.forEach((policy: Policy) => {
-        let block: ProviderBlock = blocks.find(r => r.ProviderId === policy.PolicyProviderId)!;
+        let block: ProviderBlock = blocks.find(r => r.Provider.Id === policy.PolicyProviderId)!;
         if (block) {
             if (!block.Policies.some((p: Policy): boolean => p.Id === policy.Id)) {
                 block.Policies.push(policy);
                 block.ProviderTotal += policy.EndValue;
             }
         } else {
+            // Assign these for convenience
             let provider = report.PolicyProviders.find((pp: PolicyProvider) => pp.Id === policy.PolicyProviderId)!;
             let discount = report.ProviderDiscounts.find((pd: ProviderDiscount) => pd.PolicyProviderId === policy.PolicyProviderId)!;
+
             blocks.push({
-                ProviderId:       provider.Id,
-                Provider:         provider.Name,
-                Policies:         [ policy ],
-                Discount:         discount,
-                Pricing:          provider.Pricing,
-                CustomPricing:    provider.CustomPricing,
-                ProviderTotal:    policy.EndValue,
+                Provider:             provider,
+                Policies:             [ policy ],
+                Discount:             discount,
+                Pricing:              provider.Pricing,
+                CustomPricing:        provider.CustomPricing,
+                ProviderTotal:        policy.EndValue,
             })
         }
-        total += policy.EndValue;
+        sumTotal += policy.EndValue;
     });
 
-    // Now we've got the total
+    let WeightedFees = 0;
+    let TotalCharges = 0;
+
     let ix = 0;
-    let blockViews: ProviderBlockView[] = blocks.map(block => {
-        let charges = report.ProviderCharges
-            .filter((pc: ProviderCharge) => pc.ProviderId === block.ProviderId);
+    let providerBlocks: ProviderBlockView[] = blocks.map(block => {
+        let baseCharges = addBaseCharges(report, block, sumTotal);
 
-        charges = CalculatePlatformCharges(charges, block.ProviderTotal);
+        WeightedFees += baseCharges.WeightedFee;
+        TotalCharges += baseCharges.TotalCharge;
 
-        let totalCharge = charges.map(p => p.MoneyCharge).reduce((p, q) => p + q, 0);
-
-        let platformFeePercent = totalCharge / block.ProviderTotal * 100;
-        let totalPercent = block.ProviderTotal / total * 100;
-        let weightedFee = totalPercent * platformFeePercent / 10000;
-        let additionalFees = 0;
-
-        weightedFees += weightedFee;
-        totalCharges += totalCharge;
-
-        return {
-            Id:                 `${ix++}`,
-            AdditionalFees:     additionalFees,
-            Charges:            charges,
-            CustomPricing:      block.CustomPricing,
-            Discount:           block.Discount,
-            PlatformFeePercent: platformFeePercent,
-            Policies:           block.Policies,
-            Pricing:            block.Pricing,
-            Provider:           block.Provider,
-            ProviderTotal:      block.ProviderTotal,
-            TotalCharge:        totalCharge,
-            TotalPercent:       totalPercent,
-            WeightedFee:        weightedFee,
-        }
+        let r = {
+            Id: `${ix++}`,
+            ...block,
+            ...baseCharges,
+            ...addPolicyLevel(report, block),
+            ...addPortfolioLevel(report, block),
+            ...addDimFees(report, block),
+            ...addAdditionalFees(report, block),
+        };
+        return r;
     });
 
     return {
-        Providers: blockViews,
-        Total: total,
-        WeightedFees: weightedFees,
-        TotalCharges: totalCharges,
+        Providers: providerBlocks,
+        Total: sumTotal,
+        WeightedFees,
+        TotalCharges,
     }
 }
 
-function CalculatePlatformCharges(charges: ProviderCharge[], value?: number): ProviderCharge[] {
+function addBaseCharges(report: Report, block: ProviderBlock, total: number) {
+    let Charges = report.ProviderCharges
+        .filter((pc: ProviderCharge) => pc.ProviderId === block.Provider.Id);
+
+    Charges = calculatePlatformCharges(Charges, block.ProviderTotal);
+
+    let TotalCharge = Charges.map(p => p.MoneyCharge).reduce((p, q) => p + q, 0);
+
+    let PlatformFeePercent = TotalCharge / block.ProviderTotal * 100;
+
+    let TotalPercent = block.ProviderTotal / total * 100;
+    let WeightedFee = TotalPercent * PlatformFeePercent / 10000;
+
+    return { PlatformFeePercent, TotalCharge, Charges, WeightedFee, TotalPercent };
+}
+
+function addPortfolioLevel(report: Report, block: ProviderBlock) {
+    let portfolios = report.Portfolios
+        .filter(p => p.PolicyId === block.Policies[0].Id && p.IncludeInFee);
+
+    let PortfolioLevelOcf = portfolios.map(p => {
+        let model = report.Models.find(m => m.Id === p.ModelId)!;
+        return model.WeightedOcfFee * p.Proportion;
+    }).reduce((p, q) => p + q, 0);
+
+    let PortfolioLevelExAnte = portfolios.map(p => {
+        let model = report.Models.find(m => m.Id === p.ModelId)!;
+        return model.WeightedExAnteFee * p.Proportion;
+    }).reduce((p, q) => p + q, 0);
+
+    return { PortfolioLevelOcf, PortfolioLevelExAnte };
+}
+
+function addPolicyLevel(report: Report, block: ProviderBlock) {
+    let PolicyFunds = report.PolicyFunds
+        .filter(pf => pf.PolicyId === block.Policies[0].Id && pf.IncludeInFee);
+
+    let FundLevelOcf = PolicyFunds.map(pf => {
+        let fund = report.Funds.find(f => f.Id === pf.FundId)!;
+        return fund.OcfFee * pf.Proportion;
+    }).reduce((p, q) => p + q, 0);
+
+    let FundLevelExAnte = PolicyFunds.map(pf => {
+        let fund = report.Funds.find(f => f.Id === pf.FundId)!;
+        return fund.ExAnteFee * pf.Proportion;
+    }).reduce((p, q) => p + q, 0);
+
+    return { PolicyFunds, FundLevelOcf, FundLevelExAnte };
+}
+
+function addDimFees(report: Report, block: ProviderBlock) {
+    let PolicyFees = new Map<string, PolicyDimFees>();    // policy -> models
+
+    report.Portfolios.forEach(port => {
+        let policy = report.Policies.find(pol => pol.Id === port.PolicyId)!;
+        if (policy.PolicyProviderId !== block.Provider.Id) {
+            return;
+        }
+        let pid = policy.Id;
+        if (!PolicyFees.has(pid)) {
+            PolicyFees.set(pid, {
+                DimFees: [],
+                WeightedAvgDimFee: 0,
+            });
+        }
+        let model = report.Models.find(m => m.Id === port.ModelId)!;
+        let operator = report.Operators.find(o => o.Id === model.OperatorId)!;
+        PolicyFees.get(pid)!.DimFees.push({
+            Operator: operator,
+            Proportion: port.Proportion,
+            WeightedFee: operator.Fee * port.Proportion,
+        });
+    });
+    
+    PolicyFees.forEach((pdf: PolicyDimFees, key: string) => {
+        pdf.DimFees.forEach(fee => {
+          pdf.WeightedAvgDimFee += fee.WeightedFee;
+        });
+    });
+    
+    let DimFees = {
+        PolicyFees,
+    }
+
+    return { DimFees };
+}
+
+function addAdditionalFees(report: Report, block: ProviderBlock) {
+    return {
+        AdditionalFees: 0,
+    }
+}
+
+function calculatePlatformCharges(charges: ProviderCharge[], value?: number): ProviderCharge[] {
     let res: ProviderCharge[] = [];
     if (charges.length === 0) {
         return [];

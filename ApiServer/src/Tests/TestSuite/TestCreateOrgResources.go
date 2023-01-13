@@ -91,7 +91,7 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 	policyProviderId2Aegon = resp.JSON().Object().Value("Id").String().Raw()
 
 	request2 := PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
-		Name:          policyProviderName2,
+		Name:          policyProviderNameAegon,
 		Pricing:       "<p>Aegon operates a tiered charging structure.</p><p>{ table }</p>",
 		CustomPricing: "Custom pricing description",
 	}
@@ -102,7 +102,7 @@ func testCreatePolicyProviderBasic(e *httpexpect.Expect) {
 
 	// Aviva
 	request = PolicyProviderCommands.CreateOrUpdatePolicyProviderRequest{
-		Name:          policyProviderName1,
+		Name:          policyProviderNameAviva,
 		Pricing:       "Aviva levy a platform fee for their pensions, on a tiered basis",
 		CustomPricing: "In your case, a single fee of { charge }% per year is levied.",
 	}
@@ -195,20 +195,20 @@ func testCreateFund(t *testing.T, e *httpexpect.Expect) {
 func testCreateFundBasic(t *testing.T, e *httpexpect.Expect) (fileId1 string) {
 	fileId1 = TestUpload(t, e, ORG1_ADVISOR, "fund.png")
 
-	fundId1 = createFund(e, fundName1, 0.76, 0.16, &fileId1)
-	fundId2 = createFund(e, fundName2, 0.67, 0.11, nil)
-	fundId3 = createFund(e, fundName3, 0.81, 0.09, nil)
-	fundId4 = createFund(e, fundName4, 0.69, 0.08, nil)
-	fundId5 = createFund(e, fundName5, 0.2, 0.12, nil)
+	fundIdJupiterBalanced = createFund(e, fundNameJupiterBalanced, 0.76, 0.16, &fileId1)
+	fundIdInvesco = createFund(e, fundNameInvesco, 0.67, 0.11, nil)
+	fundIdFundsmith = createFund(e, fundNameFundsmith, 0.81, 0.09, nil)
+	fundIdBaillie = createFund(e, fundNameBaillie, 0.69, 0.08, nil)
+	fundIdThreadneedle = createFund(e, fundNameThreadneedle, 0.2, 0.12, nil)
 
-	fundId6 = createFund(e, fundName6, 0.76, 0.16, nil)
-	fundId7 = createFund(e, fundName7, 0.57, 0.17, nil)
-	fundId8 = createFund(e, fundName8, 0.66, 0.12, nil)
-	fundId9 = createFund(e, fundName9, 0.10, 0.40, nil)
+	fundIdJupiterAlpha = createFund(e, fundNameJupiterUKAlpha, 0.76, 0.16, nil)
+	fundIdLionTrust = createFund(e, fundNameLiontrust, 0.57, 0.17, nil)
+	fundIdSchroderDiscovery = createFund(e, fundNameSchroderRecovery, 0.66, 0.12, nil)
+	fundIdVanguardEmerging = createFund(e, fundNameVanguardEmerging, 0.10, 0.40, nil)
 
-	fundId10 = createFund(e, fundName10, 0.68, 0.14, nil)
-	fundId11 = createFund(e, fundName11, 0.11, 0.15, nil)
-	fundId12 = createFund(e, fundName12, 0.80, 0.11, nil)
+	fundIdBlackrock = createFund(e, fundNameBlackrock, 0.68, 0.14, nil)
+	fundIdVanguardEuropean = createFund(e, fundNameVanguardEuropean, 0.11, 0.15, nil)
+	fundIdSchroderTokyo = createFund(e, fundNameSchroderTokyo, 0.80, 0.11, nil)
 
 	// Test fund 1 file download with different user types
 	TestDownload(t, e, ORG1_OWNER, fileId1, true)
@@ -216,7 +216,7 @@ func testCreateFundBasic(t *testing.T, e *httpexpect.Expect) (fileId1 string) {
 	TestDownload(t, e, ORG2_OWNER, fileId1, false)
 	TestDownload(t, e, ORG1_CLIENT, fileId1, false)
 
-	return fundId1
+	return fundIdJupiterBalanced
 }
 
 func createFund(e *httpexpect.Expect, fundName string, ocf float64, exAnte float64, fileId *string) string {
@@ -243,12 +243,12 @@ func createFund(e *httpexpect.Expect, fundName string, ocf float64, exAnte float
 func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 	// Remove the file and re-add it, check it still works
 	request := FundCommands.CreateOrUpdateFundRequestBody{
-		Name:      fundName1,
+		Name:      fundNameJupiterBalanced,
 		OcfFee:    0, // Test 0 allowed
 		ExAnteFee: 0,
 		Modified:  "2006-01-02T15:04:05Z",
 	}
-	e.PUT("/api/advisor/funds/"+fundId1).
+	e.PUT("/api/advisor/funds/"+fundIdJupiterBalanced).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -260,7 +260,7 @@ func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 
 	// Add a new file
 	request = FundCommands.CreateOrUpdateFundRequestBody{
-		Name:      fundName1,
+		Name:      fundNameJupiterBalanced,
 		OcfFee:    0.76,
 		ExAnteFee: 0.16,
 		Modified:  "2006-01-02T15:04:05Z",
@@ -270,7 +270,7 @@ func testCreateFundMutating(t *testing.T, e *httpexpect.Expect, fileId string) {
 			//Size:
 		},
 	}
-	e.PUT("/api/advisor/funds/"+fundId1).
+	e.PUT("/api/advisor/funds/"+fundIdJupiterBalanced).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -289,13 +289,13 @@ func testCreateFundSecurity(t *testing.T, e *httpexpect.Expect) {
 		Modified:  "2006-01-02T12:34:05Z",
 		File:      nil, // optional file
 	}
-	e.PUT("/api/advisor/funds/"+fundId1).
+	e.PUT("/api/advisor/funds/"+fundIdJupiterBalanced).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/funds/"+fundId1).
+	e.DELETE("/api/advisor/funds/"+fundIdJupiterBalanced).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -307,26 +307,34 @@ func testCreateOperator(e *httpexpect.Expect) {
 }
 
 func testCreateOperatorBasic(e *httpexpect.Expect) {
+	operatorIdAJBell = createOperator(e, operatorNameAJBell, "firm", 0)
+
+	request := OperatorCommands.CreateOrUpdateOperatorRequestBody{
+		Name: operatorNameAJBell,
+		Type: "dim",
+		Fee:  operatorAJFee,
+	}
+	e.PUT("/api/advisor/operators/"+operatorIdAJBell).
+		WithHeader("Authentication", ORG1_ADVISOR).
+		WithJSON(request).
+		Expect().Status(http.StatusOK).JSON().Object()
+
+	operatorIdBrewin = createOperator(e, operatorNameBrewin, "dim", 0.3)
+	operatorIdLgtWM = createOperator(e, operatorNameLgtWM, "dim", 0.2)
+	operatorIdTattonCore = createOperator(e, operatorNameTattonCore, "dim", 0.15)
+}
+
+func createOperator(e *httpexpect.Expect, operatorName string, operatorType string, fee float64) string {
 	request := OperatorCommands.CreateOrUpdateOperatorRequestBody{
 		Name: operatorName,
-		Type: "firm",
-		Fee:  0, // Test zero allowed
+		Type: operatorType,
+		Fee:  fee,
 	}
 	resp := e.POST("/api/advisor/operators").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).JSON().Object()
-	operatorId = resp.Value("Id").String().Raw()
-
-	request = OperatorCommands.CreateOrUpdateOperatorRequestBody{
-		Name: operatorName,
-		Type: "dim",
-		Fee:  0.002,
-	}
-	resp = e.PUT("/api/advisor/operators/"+operatorId).
-		WithHeader("Authentication", ORG1_ADVISOR).
-		WithJSON(request).
-		Expect().Status(http.StatusOK).JSON().Object()
+	return resp.Value("Id").String().Raw()
 }
 
 func testCreateOperatorSecurity(e *httpexpect.Expect) {
@@ -335,13 +343,13 @@ func testCreateOperatorSecurity(e *httpexpect.Expect) {
 		Type: "dim",
 		Fee:  0.0023,
 	}
-	e.PUT("/api/advisor/operators/"+operatorId).
+	e.PUT("/api/advisor/operators/"+operatorIdAJBell).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/operators/"+operatorId).
+	e.DELETE("/api/advisor/operators/"+operatorIdAJBell).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)
@@ -355,7 +363,7 @@ func testCreateModel(t *testing.T, e *httpexpect.Expect) {
 func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	modelFileId = TestUpload(t, e, ORG1_ADVISOR, "model.png")
 
-	modelId1 = createModel(e, modelName1, operatorId, 0, 0, &Entities.RequestFile{
+	modelId1 = createModel(e, modelNameLgtVestraAdventurous, operatorIdAJBell, 0, 0, &Entities.RequestFile{
 		Uid:      modelFileId,
 		Filename: "sample.png",
 		//Size:
@@ -369,8 +377,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 
 	// Remove the file and re-add it, check it still works
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              modelName1,
-		OperatorId:        operatorId,
+		Name:              modelNameLgtVestraAdventurous,
+		OperatorId:        operatorIdAJBell,
 		WeightedOcfFee:    0.1,
 		WeightedExAnteFee: 0.1,
 		Modified:          "2006-01-02T15:04:05Z",
@@ -388,8 +396,8 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 
 	// Add a new file
 	request = ModelCommands.CreateOrUpdateModelRequestBody{
-		Name:              modelName1,
-		OperatorId:        operatorId,
+		Name:              modelNameLgtVestraAdventurous,
+		OperatorId:        operatorIdLgtWM,
 		WeightedOcfFee:    0.73,
 		WeightedExAnteFee: 0.15,
 		Modified:          "2006-01-02T15:04:05Z",
@@ -409,13 +417,13 @@ func testCreateModelBasic(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_ADMIN, modelFileId, true)
 	TestDownload(t, e, ORG1_ADVISOR, modelFileId, true)
 
-	modelId2 = createModel(e, modelName2, operatorId, 0.58, 0.14, nil)
-	modelId3 = createModel(e, modelName3, operatorId, 0.55, 0.12, nil)
-	modelId4 = createModel(e, modelName4, operatorId, 0.54, 0.12, nil)
-	modelId5 = createModel(e, modelName5, operatorId, 0.52, 0.09, nil)
-	modelId6 = createModel(e, modelName6, operatorId, 0.54, 0.16, nil)
-	modelId7 = createModel(e, modelName7, operatorId, 0.11, 0.08, nil)
-	modelId8 = createModel(e, modelName8, operatorId, 0.65, 0.07, nil)
+	modelId2 = createModel(e, modelNameLgtVestraBalanced, operatorIdLgtWM, 0.58, 0.14, nil)
+	modelId3 = createModel(e, modelNameTattonCoreActive, operatorIdTattonCore, 0.55, 0.12, nil)
+	modelId4 = createModel(e, modelNameAJBell3, operatorIdAJBell, 0.54, 0.12, nil)  // AJ Bell - which operator?
+	modelId5 = createModel(e, modelNameAJBell32, operatorIdAJBell, 0.52, 0.09, nil) // AJ Bell - which operator?
+	modelId6 = createModel(e, modelNameBrewinCautious, operatorIdBrewin, 0.54, 0.16, nil)
+	modelId7 = createModel(e, modelNameBrewinPassive, operatorIdBrewin, 0.11, 0.08, nil)
+	modelId8 = createModel(e, modelNameTattonEthicalBalanced, operatorIdTattonCore, 0.65, 0.07, nil)
 }
 
 func createModel(e *httpexpect.Expect, modelName string, operatorId string, ocf float64, exAnte float64, file *Entities.RequestFile) string {
@@ -437,7 +445,7 @@ func createModel(e *httpexpect.Expect, modelName string, operatorId string, ocf 
 func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
 	request := ModelCommands.CreateOrUpdateModelRequestBody{
 		Name:              "sir gamble lot",
-		OperatorId:        operatorId,
+		OperatorId:        operatorIdAJBell,
 		WeightedOcfFee:    0.4,
 		WeightedExAnteFee: 0.06,
 		Modified:          "2006-01-02T15:04:05Z",
@@ -605,23 +613,23 @@ func testGetOrgResourcesFromThisOrg(e *httpexpect.Expect) {
 		Value("Resources").Object()
 
 	fund := resp.Value("Funds").Array().First().Object()
-	fund.Value("Name").String().Equal(fundName4) // Baillie
+	fund.Value("Name").String().Equal(fundNameBaillie) // Baillie
 	fund.Value("Modified").String().NotEmpty()
 	fund.Value("OcfFee").Number().Equal(0.69)
 	fund.Value("ExAnteFee").Number().Equal(0.08)
 	fund.Value("Modified").String().NotEmpty()
 	resp.Value("Funds").Array().Length().Equal(12)
 
-	resp.Value("Models").Array().First().Object().Value("Name").String().Equal(modelName4)
+	resp.Value("Models").Array().First().Object().Value("Name").String().Equal(modelNameAJBell3)
 	resp.Value("Models").Array().Length().Equal(8)
 
 	resp.Value("ModulePresets").Array().Length().Equal(1)
 
 	operator := resp.Value("Operators").Array().First().Object()
-	operator.Value("Name").String().Equal(operatorName)
+	operator.Value("Name").String().Equal(operatorNameAJBell)
 	operator.Value("Type").String().Equal("dim")
-	operator.Value("Fee").Number().Equal(0.002)
-	resp.Value("Operators").Array().Length().Equal(1)
+	operator.Value("Fee").Number().Equal(operatorAJFee)
+	resp.Value("Operators").Array().Length().Equal(4)
 
 	policyProvider := resp.Value("PolicyProviders").Array().First().Object()
 	policyProvider.Value("Name").String().Equal("Aegon")

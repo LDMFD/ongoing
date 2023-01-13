@@ -13,7 +13,7 @@ import { State } from 'Types/Types';
 
 import './RiskAssessmentDialog.css';
 import { DateSelector2 } from 'Components/Library/DateSelector/DateSelector';
-import { RiskAssessment } from 'Types/Client';
+import { RiskAssessment } from 'Types/ClientResources';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 
 const RiskAssessmentDialog = (props: {

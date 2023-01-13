@@ -55,6 +55,11 @@ const PortfolioList = () => {
             </>
         ),
     }, {
+        accessor: 'operator',
+        Header: 'Operator',
+        type: 'actions',
+        width: 30,
+    }, {
         accessor: 'model',
         Header: 'Model',
         type: 'actions',
@@ -96,15 +101,17 @@ const PortfolioList = () => {
     let portfolios = report.Portfolios.map(portfolio => {
         let policy = report.Policies.find(p => p.Id === portfolio.PolicyId);
         let model = report.Models.find(p => p.Id === portfolio.ModelId);
+        let operator = report.Operators.find(o => o.Id === model.OperatorId);
         return {
             id:           portfolio.Id,
             idLabel:      `#${portfolio.Id}`,
             model:        model,
+            operator:     operator.Name,
             policy:       policy,
             proportion:   `${portfolio.Proportion * 100}%`,
             includeInFee: portfolio.IncludeInFee ? 'Y' : 'N',
         };
-    });
+    }).reverse();
 
     return (
         <div className='ongoing-portfolioList'>

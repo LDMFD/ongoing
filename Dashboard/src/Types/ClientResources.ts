@@ -1,4 +1,4 @@
-import { PolicyProvider, ProviderCharge, ProviderDiscount } from "./OrgResources";
+import { Fund, Operator, PolicyProvider, ProviderCharge, ProviderDiscount } from "./OrgResources";
 
 export interface ClientIdentity {
     Email: string,
@@ -14,6 +14,17 @@ export interface Client {
 	AdvisorId: string,
 }
 
+export interface Model {
+    Id: string,
+	Name: string,
+	OperatorId: string,
+	WeightedOcfFee: number,
+	WeightedExAnteFee: number,
+	Modified: string,
+	File: File,
+
+}
+
 export interface Policy {
     EndValue: number,
     ExternalId: string,
@@ -26,11 +37,35 @@ export interface Policy {
     StartValue: number,
 }
 
+export interface PolicyFund {
+    Id: string,
+	FundId: string,
+	PolicyId: string,
+	Proportion: number,
+	IncludeInFee: boolean,
+}
+
+export interface Portfolio {
+    Id: string,
+	ModelId: string,
+	PolicyId: string,
+	Proportion: number,
+	IncludeInFee: boolean,    
+}
+
 export interface Report {
-    Policies: Policy[],
+    // Org-level:
     PolicyProviders: PolicyProvider[],
     ProviderCharges: ProviderCharge[],
+    Funds: Fund[],
+    Models: Model[],
+    Operators: Operator[],
+
+    // Client-level:
     ProviderDiscounts: ProviderDiscount[],
+    Policies: Policy[],
+    PolicyFunds: PolicyFund[],
+    Portfolios: Portfolio[],
 }
 
 export interface RiskAssessment {

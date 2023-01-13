@@ -9,50 +9,7 @@ import PoliciesTable from './PoliciesTable';
 import { ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import CalculatedChargesTable from './CalculatedCharges';
 import { CalculatePlatformModel } from 'Components/ReviewComponents/Fees/Model/FeeModel';
-
-const PlatformFees = () => {
-    let report = GetReport();
-
-    let view = CalculatePlatformModel(report);
-
-    return (
-        <div>
-            <br />
-            <Module client={null} module={ModuleTypePolicyFees} />
-
-            <PlatformFeesSummary blocks         = {view.Providers}
-                                 total          = {view.Total}
-                                 weightedAvgFee = {view.WeightedFees * 100}
-                                 totalCharges   = {view.TotalCharges} />
-
-            {view.Providers.map((b: ProviderBlockView, ix: number) => (
-                <Block key={ix} block={b} total={view.Total} />
-            ))}
-        </div>
-    );
-}
-
-const PlatformFeesSummary = (props: {
-    blocks: ProviderBlockView[],
-    total: number,
-    weightedAvgFee: number,
-    totalCharges: number,
-}) => (
-    <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>
-        <b>Platform Summary:</b>
-        <ul>
-            <li>
-                Total invested: {FormatCurrencyPence(props.total)}
-            </li>
-            <li>
-                Weighted average fee: {(props.weightedAvgFee).toPrecision(2)}%
-            </li>
-            <li>
-                Total advice charges: {FormatCurrencyPence(props.totalCharges)}
-            </li>
-        </ul>
-    </div>
-)
+import Panel from 'Components/Library/Panel/Panel';
 
 const Block = (props: {
     block: ProviderBlockView,
@@ -79,19 +36,19 @@ const Block = (props: {
         : props.block.Pricing.replace(/{(\s)*table(\s)*}/, chargesMarkup);  // replace { table } with provider charges table.
 
     return (
-        <div style={{ background: 'rgb(249 218 218 / 40%)', padding: '0.5rem 1rem 1rem', margin: '1rem 0', borderRadius: '10px' }}>
+        <Panel>
             <h3>
-                Platform: {provider}
+                Platform: {provider.Name}
             </h3>
 
             <b>Summary:</b>
             <ul>
                 <li>
-                    You are holding a total of {FormatCurrencyPence(total)} on the {provider} platform,
+                    You are holding a total of {FormatCurrencyPence(total)} on the {provider.Name} platform,
                     which is {PercentageFormatter.format(totalPercent)} of your total holdings.
                 </li>
                 <li>
-                    {provider} charge an annual fee, which currently comes to {FormatCurrencyPence(totalCharge)},
+                    {provider.Name} charge an annual fee, which currently comes to {FormatCurrencyPence(totalCharge)},
                     or {PercentageFormatter.format(platformFeePercent)} of your holdings with them.
                 </li>
                 {/* <li>
@@ -99,7 +56,7 @@ const Block = (props: {
                 </li> */}
                 {additionalFees ?
                     <li>
-                        Additional {provider} fees: £{additionalFees}
+                        Additional {provider.Name} fees: £{additionalFees}
                     </li>
                 : null}
             </ul>
@@ -121,8 +78,52 @@ const Block = (props: {
             <PoliciesTable policies         = {policies}
                            totalMoneyCharge = {totalCharge}
                            providerTotal    = {props.block.ProviderTotal} />
-        </div>
+        </Panel>
     );
 };
+
+const PlatformFeesSummary = (props: {
+    blocks: ProviderBlockView[],
+    total: number,
+    weightedAvgFee: number,
+    totalCharges: number,
+}) => (
+    <Panel>
+        <b>Platform Summary:</b>
+        <ul>
+            <li>
+                Total invested: {FormatCurrencyPence(props.total)}
+            </li>
+            <li>
+                Weighted average fee: {(props.weightedAvgFee).toPrecision(2)}%
+            </li>
+            <li>
+                Total advice charges: {FormatCurrencyPence(props.totalCharges)}
+            </li>
+        </ul>
+    </Panel>
+)
+
+const PlatformFees = () => {
+    let report = GetReport();
+
+    let view = CalculatePlatformModel(report);
+
+    return (
+        <div>
+            <br />
+            <Module client={null} module={ModuleTypePolicyFees} />
+
+            <PlatformFeesSummary blocks         = {view.Providers}
+                                 total          = {view.Total}
+                                 weightedAvgFee = {view.WeightedFees * 100}
+                                 totalCharges   = {view.TotalCharges} />
+
+            {view.Providers.map((b: ProviderBlockView, ix: number) => (
+                <Block key={ix} block={b} total={view.Total} />
+            ))}
+        </div>
+    );
+}
 
 export default PlatformFees;

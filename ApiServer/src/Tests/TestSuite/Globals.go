@@ -17,21 +17,21 @@ var (
 	review1Id     string
 	review2Id     string
 
-	fundName4  = "Baillie Gifford Japan"
-	fundName10 = "BlackRock UK Equity"
-	fundName3  = "Fundsmith Equity"
-	fundName2  = "Invesco High Income"
-	fundName1  = "Jupiter Balanced"
-	fundName6  = "Jupiter UK Alpha"
-	fundName7  = "Liontrust European Dynamic"
-	fundName8  = "Schroder Recovery"
-	fundName12 = "Schroder Tokyo"
-	fundName5  = "Threadneedle US Equity Tracker"
-	fundName9  = "Vanguard Emerging Markets Stock Index"
-	fundName11 = "Vanguard European"
+	fundNameBaillie          = "Baillie Gifford Japan"
+	fundNameBlackrock        = "BlackRock UK Equity"
+	fundNameFundsmith        = "Fundsmith Equity"
+	fundNameInvesco          = "Invesco High Income"
+	fundNameJupiterBalanced  = "Jupiter Balanced"
+	fundNameJupiterUKAlpha   = "Jupiter UK Alpha"
+	fundNameLiontrust        = "Liontrust European Dynamic"
+	fundNameSchroderRecovery = "Schroder Recovery"
+	fundNameSchroderTokyo    = "Schroder Tokyo"
+	fundNameThreadneedle     = "Threadneedle US Equity Tracker"
+	fundNameVanguardEmerging = "Vanguard Emerging Markets Stock Index"
+	fundNameVanguardEuropean = "Vanguard European"
 
-	fundId1, fundId2, fundId3, fundId4, fundId5, fundId6    string
-	fundId7, fundId8, fundId9, fundId10, fundId11, fundId12 string
+	fundIdJupiterBalanced, fundIdInvesco, fundIdFundsmith, fundIdBaillie, fundIdThreadneedle, fundIdJupiterAlpha                   string
+	fundIdLionTrust, fundIdSchroderDiscovery, fundIdVanguardEmerging, fundIdBlackrock, fundIdVanguardEuropean, fundIdSchroderTokyo string
 
 	fundFileId     string
 	policy1FundId1 string
@@ -53,45 +53,53 @@ var (
 	policy4FundId2 string
 	policy4FundId3 string
 
-	modelId1    string
-	modelId2    string
-	modelId3    string
-	modelId4    string
-	modelId5    string
-	modelId6    string
-	modelId7    string
-	modelId8    string
-	modelFileId string
-	modelName4  = "AJ Bell Active 3"
-	modelName5  = "AJ Bell Active 32"
-	modelName6  = "Brewin Dolphin Cautious"
-	modelName7  = "Brewin Dolphin Passive Plus Growth"
-	modelName1  = "LGT Vestra Adventurous"
-	modelName2  = "LGT Vestra Balanced"
-	modelName3  = "Tatton Core Active"
-	modelName8  = "Tatton Ethical Balanced"
+	modelId1                       string
+	modelId2                       string
+	modelId3                       string
+	modelId4                       string
+	modelId5                       string
+	modelId6                       string
+	modelId7                       string
+	modelId8                       string
+	modelFileId                    string
+	modelNameAJBell3               = "AJ Bell Active 3"
+	modelNameAJBell32              = "AJ Bell Active 32"
+	modelNameBrewinCautious        = "Brewin Dolphin Cautious"
+	modelNameBrewinPassive         = "Brewin Dolphin Passive Plus Growth"
+	modelNameLgtVestraAdventurous  = "LGT Vestra Adventurous"
+	modelNameLgtVestraBalanced     = "LGT Vestra Balanced"
+	modelNameTattonCoreActive      = "Tatton Core Active"
+	modelNameTattonEthicalBalanced = "Tatton Ethical Balanced"
 
-	operatorName = "LGT WM"
-	operatorId   string
+	operatorNameAJBell     = "AJ Bell"
+	operatorNameBrewin     = "Brewin Dolphin"
+	operatorNameLgtWM      = "LGT WM"
+	operatorNameTattonCore = "Tatton Core"
+	operatorIdAJBell       string
+	operatorIdBrewin       string
+	operatorIdLgtWM        string
+	operatorIdTattonCore   string
 
-	policyNumber1          = "pol_a"
-	policyNumber2          = "pol_b"
-	policyNumber3          = "pol_c"
-	policyNumber4          = "pol_d"
-	policyId1              string
-	policyId2              string
-	policyId3              string
-	policyId4              string
-	policyFileId           string
-	policyProviderId1Aviva string
-	policyProviderId2Aegon string
-	policyProviderName1    = "Aviva"
-	policyProviderName2    = "Aegon"
-	policyTypeId           string
-	policy1EndValue        int64 = 1 //53400000
-	policy4EndValue        int64 = 1 //87500000
-	policy2EndValue        int64 = 32500000
-	policy3EndValue        int64 = 64531800
+	operatorAJFee = 0.15
+
+	policyNumber1           = "pol_a"
+	policyNumber2           = "pol_b"
+	policyNumber3           = "pol_c"
+	policyNumber4           = "pol_d"
+	policyId1               string
+	policyId2               string
+	policyId3               string
+	policyId4               string
+	policyFileId            string
+	policyProviderId1Aviva  string
+	policyProviderId2Aegon  string
+	policyProviderNameAviva = "Aviva"
+	policyProviderNameAegon = "Aegon"
+	policyTypeId            string
+	policy1EndValue         int64 = 1 //53400000
+	policy4EndValue         int64 = 1 //87500000
+	policy2EndValue         int64 = 32500000
+	policy3EndValue         int64 = 64531800
 
 	providerCharges []string
 
@@ -154,12 +162,12 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 	report := review.Value("Report").Object()
 	policyProviderId1Aviva = report.Value("PolicyProviders").Array().First().Object().Value("Id").String().Raw()
 	policyTypeId = report.Value("PolicyTypes").Array().Element(0).Object().Value("Id").String().Raw()
-	fundId1 = report.Value("Funds").Array().Element(0).Object().Value("Id").String().Raw()
-	fundId2 = report.Value("Funds").Array().Element(1).Object().Value("Id").String().Raw()
+	fundIdJupiterBalanced = report.Value("Funds").Array().Element(0).Object().Value("Id").String().Raw()
+	fundIdInvesco = report.Value("Funds").Array().Element(1).Object().Value("Id").String().Raw()
 	fundFileId = report.Value("Funds").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
 	policyId1 = report.Value("Policies").Array().Element(0).Object().Value("Id").String().Raw()
 	policyFileId = report.Value("Policies").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
-	operatorId = report.Value("Operators").Array().Element(0).Object().Value("Id").String().Raw()
+	operatorIdAJBell = report.Value("Operators").Array().Element(0).Object().Value("Id").String().Raw()
 	modelId1 = report.Value("Models").Array().Element(0).Object().Value("Id").String().Raw()
 	modelFileId = report.Value("Models").Array().Element(0).Object().Value("File").Object().Value("Uid").String().Raw()
 	riskLevelId = report.Value("RiskLevels").Array().Element(0).Object().Value("Id").String().Raw()
@@ -173,12 +181,12 @@ func setupGlobals(t *testing.T, e *httpexpect.Expect) {
 		review1Id == "" ||
 		policyProviderId1Aviva == "" ||
 		policyTypeId == "" ||
-		fundId1 == "" ||
-		fundId2 == "" ||
+		fundIdJupiterBalanced == "" ||
+		fundIdInvesco == "" ||
 		fundFileId == "" ||
 		policyId1 == "" ||
 		policyFileId == "" ||
-		operatorId == "" ||
+		operatorIdAJBell == "" ||
 		modelId1 == "" ||
 		modelFileId == "" ||
 		riskLevelId == "" ||

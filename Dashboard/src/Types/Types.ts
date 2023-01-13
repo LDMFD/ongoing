@@ -1,4 +1,4 @@
-import { ClientIdentity, Report } from "./Client";
+import { ClientIdentity, Report } from "./ClientResources";
 import { OrgResources } from "./OrgResources";
 
 export interface State {

@@ -8,7 +8,7 @@ import {
 
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
-import { Client } from 'Types/Client';
+import { Client } from 'Types/ClientResources';
 import Dialog from 'Components/Library/Dialog/Dialog';
 
 interface ClientFormInput {

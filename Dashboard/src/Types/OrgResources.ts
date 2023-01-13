@@ -46,6 +46,7 @@ export interface Fund {
 }
 
 export interface Operator {
+    Id: string,
     Name: string,
     Type: string,
     Fee: number,

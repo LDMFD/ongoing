@@ -5,10 +5,10 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { CalculatePlatformModel } from '../Model/FeeModel';
 import { PlatformView, ProviderBlockView } from '../Model/FeeTypes';
 import { Context } from 'State';
-import { Policy } from 'Types/Client';
+import { Policy } from 'Types/ClientResources';
 import Table from 'Components/Library/Table/Table';
-import Panel from 'Components/Library/Panel/Panel';
 import { PolicyType } from 'Types/OrgResources';
+import Panel from 'Components/Library/Panel/Panel';
 
 const FeeTotals = () => {
     const [ state ]: any = useContext(Context);    
@@ -79,7 +79,7 @@ const ProviderBlock = (props: {
         return (
         <Panel>
             <h3>
-                {provider}
+                {provider.Name}
             </h3>
 
             <b>Summary:</b>
@@ -107,7 +107,7 @@ const SummaryTable = (props: {
     const [ state ]: any = useContext(Context);    
 
     let columns = props.view.Providers.map(prov => ({
-        Header: prov.Provider,
+        Header: prov.Provider.Name,
         columns: prov.Policies.map((pol: Policy) => ({
             accessor: pol.Id,
             Header: pol.ExternalId,
@@ -132,8 +132,12 @@ const SummaryTable = (props: {
     let discountedPlatformFees:         any = { header: 'Discounted Platform Fee (£)' };
     let annualCharges:                  any = { header: 'Estimated annual charges' };
     let policyFeePercents:              any = { header: 'Platform fee, as a percentage of policy, ignoring discounts' };
-    let annualChargesWithDiscounts:     any = { header: 'Estimated annual charges, with discounts' };
-
+    // let annualChargesWithDiscounts:     any = { header: 'Estimated annual charges, with discounts' };
+    let fundLevelOcfs:                  any = { header: 'Fund Level, OCF' }
+    let fundLevelExAntes:               any = { header: 'Fund Level, Ex-Ante' }
+    let portfolioLevelOcfs:             any = { header: 'Portfolio Level, OCF' }
+    let portfolioLevelExAntes:          any = { header: 'Portfolio Level, Ex-Ante' }
+    let dims:                           any = { header: 'DIM' }
 
     let data = [
         policyTypes,
@@ -147,7 +151,12 @@ const SummaryTable = (props: {
         // discountedPlatformFees,
         // annualCharges,
         policyFeePercents,
-        annualChargesWithDiscounts,
+        // annualChargesWithDiscounts,
+        fundLevelOcfs,
+        fundLevelExAntes,
+        portfolioLevelOcfs,
+        portfolioLevelExAntes,
+        dims,
     ];
 
     let totalHoldings = props.total / 100;
@@ -157,7 +166,7 @@ const SummaryTable = (props: {
     props.view.Providers.forEach(prov => {
         prov.Policies.forEach((pol: Policy) => {
             policyTypes[pol.Id]           = report.PolicyTypes.find((t: PolicyType) => t.Id === pol.PolicyTypeId).Name;
-            clientFees[pol.Id]            = `${state.Metadata.Fee}% (${FormatCurrencyPence(state.Metadata.Fee / 100 * pol.EndValue)})`;
+            clientFees[pol.Id]            = `${state.Metadata.Fee}% (${FormatCurrencyPence(state.Metadata.Fee / 10000 * pol.EndValue)})`;
             endValues[pol.Id]             = FormatCurrencyPence(pol.EndValue);
             
             let portfolioPercent          = pol.EndValue / totalHoldings;
@@ -175,8 +184,30 @@ const SummaryTable = (props: {
             discountedPlatformFeePercents[pol.Id]  = 0;
             discountedPlatformFees[pol.Id]         = 0;
             annualCharges[pol.Id]                  = FormatCurrencyPence(annualCharge); // + additional
-            policyFeePercents[pol.Id]              = FormatPercent(policyFeePercent);
-            annualChargesWithDiscounts[pol.Id]     = FormatCurrencyPence(annualChargesWithDiscount);
+            policyFeePercents[pol.Id]              = `${FormatPercent(policyFeePercent)} (${FormatCurrencyPence(annualChargesWithDiscount)})`;
+
+            let fundLevelOcfPercent = FormatPercent(prov.FundLevelOcf);
+            let fundLevelOcfCharge = FormatCurrencyPence(prov.FundLevelOcf / 100 * pol.EndValue);
+
+            let fundLevelExAntePercent = FormatPercent(prov.FundLevelExAnte);
+            let fundLevelExAnteCharge = FormatCurrencyPence(prov.FundLevelExAnte / 100 * pol.EndValue);
+
+            fundLevelOcfs[pol.Id] = `${fundLevelOcfPercent} (${fundLevelOcfCharge})`;
+            fundLevelExAntes[pol.Id] = `${fundLevelExAntePercent} (${fundLevelExAnteCharge})`;
+
+
+            let portfolioLevelOcfPercent = FormatPercent(prov.PortfolioLevelOcf);
+            let portfolioLevelOcfCharge = FormatCurrencyPence(prov.PortfolioLevelOcf / 100 * pol.EndValue);
+
+            let portfolioLevelExAntePercent = FormatPercent(prov.PortfolioLevelExAnte);
+            let portfolioLevelExAnteCharge = FormatCurrencyPence(prov.PortfolioLevelExAnte / 100 * pol.EndValue);
+
+            portfolioLevelOcfs[pol.Id] = `${portfolioLevelOcfPercent} (${portfolioLevelOcfCharge})`;
+            portfolioLevelExAntes[pol.Id] = `${portfolioLevelExAntePercent} (${portfolioLevelExAnteCharge})`;
+
+            let dimPercent = prov.DimFees.PolicyFees.get(pol.Id)!.WeightedAvgDimFee;
+            let dimPence = dimPercent / 100 * pol.EndValue;
+            dims[pol.Id] = `${FormatPercent(dimPercent)} (${FormatCurrencyPence(dimPence)})`;
         });
     });
 

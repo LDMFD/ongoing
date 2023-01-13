@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-    Button,
-    Paper,
-} from '@mui/material';
+import { Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
@@ -12,6 +9,7 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
+import Panel from 'Components/Library/Panel/Panel';
 
 const PolicyPortfolios = ({ report, policy, portfolios }) => {
     const downloadFile = useCallback(fileUid => () => {
@@ -92,7 +90,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
     let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
 
     return (
-       <Paper elevation={2} style={{ padding: '1rem', marginBottom: '2rem' }}>
+       <Panel>
             <h3>{provider.Name} ({policy.ExternalId})</h3>
 
             <p>
@@ -109,7 +107,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
                     <Button onClick={Download.bind(null, policy.File.Uid)}>Download</Button>
                 </p>
             }
-        </Paper>
+        </Panel>
     );
 }
 

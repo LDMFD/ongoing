@@ -49,6 +49,13 @@ func deleteModel(e *httpexpect.Expect, modelId string) {
 }
 
 func TestDeleteOperators(t *testing.T, e *httpexpect.Expect) {
+	deleteOperator(e, operatorIdAJBell)
+	deleteOperator(e, operatorIdBrewin)
+	deleteOperator(e, operatorIdLgtWM)
+	deleteOperator(e, operatorIdTattonCore)
+}
+
+func deleteOperator(e *httpexpect.Expect, operatorId string) {
 	e.DELETE("/api/advisor/operators/"+operatorId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
@@ -57,18 +64,18 @@ func TestDeleteOperators(t *testing.T, e *httpexpect.Expect) {
 func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 	TestDownload(t, e, ORG1_OWNER, fundFileId, true)
 
-	deleteFund(e, fundId1)
-	deleteFund(e, fundId2)
-	deleteFund(e, fundId3)
-	deleteFund(e, fundId4)
-	deleteFund(e, fundId5)
-	deleteFund(e, fundId6)
-	deleteFund(e, fundId7)
-	deleteFund(e, fundId8)
-	deleteFund(e, fundId9)
-	deleteFund(e, fundId10)
-	deleteFund(e, fundId11)
-	deleteFund(e, fundId12)
+	deleteFund(e, fundIdJupiterBalanced)
+	deleteFund(e, fundIdInvesco)
+	deleteFund(e, fundIdFundsmith)
+	deleteFund(e, fundIdBaillie)
+	deleteFund(e, fundIdThreadneedle)
+	deleteFund(e, fundIdJupiterAlpha)
+	deleteFund(e, fundIdLionTrust)
+	deleteFund(e, fundIdSchroderDiscovery)
+	deleteFund(e, fundIdVanguardEmerging)
+	deleteFund(e, fundIdBlackrock)
+	deleteFund(e, fundIdVanguardEuropean)
+	deleteFund(e, fundIdSchroderTokyo)
 
 	//// Owner can still read the file due to the client review
 	//TestDownload(t, e, ORG1_OWNER, fundFileId, true)

@@ -188,14 +188,14 @@ func testCreatePolicyFunds(e *httpexpect.Expect) {
 
 func testCreatePolicyFundsBasic(e *httpexpect.Expect) {
 	// Aviva
-	policy1FundId1 = createPolicyFund(e, fundId1, policyId1, 0.0000001, false) // Jupiter - will get mutated to true
-	policy1FundId2 = createPolicyFund(e, fundId2, policyId1, 0.13, false)
-	policy1FundId3 = createPolicyFund(e, fundId3, policyId1, 0.25, false)
-	policy1FundId4 = createPolicyFund(e, fundId4, policyId1, 0.32, false)
-	policy1FundId5 = createPolicyFund(e, fundId5, policyId1, 0.15, false)
+	policy1FundId1 = createPolicyFund(e, fundIdJupiterBalanced, policyId1, 0.0000001, false) // Jupiter - will get mutated to true
+	policy1FundId2 = createPolicyFund(e, fundIdInvesco, policyId1, 0.13, false)
+	policy1FundId3 = createPolicyFund(e, fundIdFundsmith, policyId1, 0.25, false)
+	policy1FundId4 = createPolicyFund(e, fundIdBaillie, policyId1, 0.32, false)
+	policy1FundId5 = createPolicyFund(e, fundIdThreadneedle, policyId1, 0.15, false)
 
 	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
-		FundId:       fundId1,
+		FundId:       fundIdJupiterBalanced,
 		PolicyId:     policyId1,
 		Proportion:   0.15,
 		IncludeInFee: true,
@@ -217,18 +217,18 @@ func testCreatePolicyFundsBasic(e *httpexpect.Expect) {
 	//policy1FundId6 = resp.Value("Id").String().Raw()
 
 	// Aegon
-	policy2FundId1 = createPolicyFund(e, fundId6, policyId2, 0.35, true) // Jupiter
-	policy2FundId2 = createPolicyFund(e, fundId7, policyId2, 0.15, false)
-	policy2FundId3 = createPolicyFund(e, fundId8, policyId2, 0.37, false)
-	policy2FundId4 = createPolicyFund(e, fundId9, policyId2, 0.13, false)
+	policy2FundId1 = createPolicyFund(e, fundIdJupiterAlpha, policyId2, 0.35, true) // Jupiter
+	policy2FundId2 = createPolicyFund(e, fundIdLionTrust, policyId2, 0.15, false)
+	policy2FundId3 = createPolicyFund(e, fundIdSchroderDiscovery, policyId2, 0.37, false)
+	policy2FundId4 = createPolicyFund(e, fundIdVanguardEmerging, policyId2, 0.13, false)
 
-	policy3FundId1 = createPolicyFund(e, fundId6, policyId3, 0.4, false)
-	policy3FundId2 = createPolicyFund(e, fundId7, policyId3, 0.5, false)
-	policy3FundId3 = createPolicyFund(e, fundId8, policyId3, 0.1, false)
+	policy3FundId1 = createPolicyFund(e, fundIdJupiterAlpha, policyId3, 0.4, false)
+	policy3FundId2 = createPolicyFund(e, fundIdLionTrust, policyId3, 0.5, false)
+	policy3FundId3 = createPolicyFund(e, fundIdSchroderDiscovery, policyId3, 0.1, false)
 
-	policy4FundId1 = createPolicyFund(e, fundId10, policyId4, 0.21, false)
-	policy4FundId2 = createPolicyFund(e, fundId11, policyId4, 0.74, false)
-	policy4FundId3 = createPolicyFund(e, fundId12, policyId4, 0.5, false)
+	policy4FundId1 = createPolicyFund(e, fundIdBlackrock, policyId4, 0.21, false)
+	policy4FundId2 = createPolicyFund(e, fundIdVanguardEuropean, policyId4, 0.74, false)
+	policy4FundId3 = createPolicyFund(e, fundIdSchroderTokyo, policyId4, 0.5, false)
 }
 
 func createPolicyFund(e *httpexpect.Expect, fundId string, policyId string, proportion float64, includeInFee bool) string {
@@ -247,7 +247,7 @@ func createPolicyFund(e *httpexpect.Expect, fundId string, policyId string, prop
 
 func testCreatePolicyFundsSecurity(e *httpexpect.Expect) {
 	request := PolicyFunds.CreateOrUpdatePolicyFundRequestBody{
-		FundId:     fundId1,
+		FundId:     fundIdJupiterBalanced,
 		PolicyId:   policyId1,
 		Proportion: 0.0000001,
 	}
