@@ -49,5 +49,5 @@ const CurrencyFormatterPence = new Intl.NumberFormat('en-UK', {
 
 export const PercentageFormatter = new Intl.NumberFormat('en-UK', {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 3,
+    maximumFractionDigits: 2,
 });

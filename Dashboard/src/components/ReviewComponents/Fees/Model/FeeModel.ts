@@ -51,7 +51,7 @@ export function CalculatePlatformModel(report: Report): PlatformView {
         WeightedFees += baseCharges.WeightedFee;
         TotalCharges += baseCharges.TotalCharge;
 
-        let r = {
+        let fees = {
             Id: `${ix++}`,
             ...block,
             ...baseCharges,
@@ -60,7 +60,8 @@ export function CalculatePlatformModel(report: Report): PlatformView {
             ...addDimFees(report, block),
             ...addAdditionalFees(report, block),
         };
-        return r;
+        // TODO Refactor - totals calculations should be moved here
+        return fees;
     });
 
     return {
