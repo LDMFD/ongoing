@@ -12,6 +12,7 @@ import RiskProviderRoutes   from './Pages/OrgResources/RiskProviders/RiskProvide
 import ModulePresetRoutes   from './Pages/OrgResources/Reviews/ModulePresets/ModulePresetRoutes';
 
 import ClientSpaceRoutes from "./Pages/ClientSpace/ClientSpaceRoutes";
+import NoMatch from "./Pages/404/404";
   
 const routes = () => (
     <Switch>
@@ -29,7 +30,10 @@ const routes = () => (
 
         <Route path="/client-space"                   component={ClientSpaceRoutes} />
         
-        <Route path="/" />
+        <Route path="*">
+            <NoMatch />
+        </Route>
     </Switch>
 );
+
 export default routes;
