@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,23 +11,21 @@ const AddPolicyType = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [ , dispatch] = useContext(Context);
+    const [ state, dispatch] = useContext(Context);
 
-    let [ policyType, setPolicyType ] = useState(DefaultPolicyType);
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (policyType) => {
         await Api.OrgResources.PolicyTypes.Create(policyType);
         await Api.OrgResources.Entities.Read(dispatch);
         goBack();
-        return false;
     };
 
     return (
-        <PolicyTypeDialog policyType      = {policyType}
-                          setPolicyType   = {setPolicyType}
-                          submitLabel     = 'Add'
-                          submitHandler   = {submitHandler} />
+        <PolicyTypeDialog
+            state         = {state}
+            policyType    = {DefaultPolicyType}
+            submitLabel   = 'Add'
+            submitHandler = {submitHandler}
+        />
     );
 }
 

@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
-import ConfirmationDialog from '../../../../Library/ConfirmationDialog';
+import ConfirmationDialog from '../../../../Library/Confirmation/ConfirmationDialog';
 
 const DeleteModulePreset = () => {
     let history = useHistory();

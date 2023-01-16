@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -11,28 +11,24 @@ const EditPolicyType = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ policyType, setPolicyType ] = useState(null);
 
     let { policyTypeId } = useParams();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const submitHandler = async (policyType) => {
         await Api.OrgResources.PolicyTypes.Update(policyType);
         await Api.OrgResources.Entities.Read(dispatch);
         goBack();
-        return false;
     };
 
-    if (!policyType) {
-        setPolicyType(state.Resources.PolicyTypes.find(o => o.Id === policyTypeId))
-        return;
-    }
+    let policyType = state.Resources.PolicyTypes.find(o => o.Id === policyTypeId);
 
     return (
-        <PolicyTypeDialog policyType      = {policyType}
-                          setPolicyType   = {setPolicyType}
-                          submitLabel     = 'Update'
-                          submitHandler   = {submitHandler} />
+        <PolicyTypeDialog
+            policyType    = {policyType}
+            state         = {state}
+            submitLabel   = 'Update'
+            submitHandler = {submitHandler}
+        />
     );
 }
 

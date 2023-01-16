@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import PolicyTypeList from './PolicyTypeList';
 import AddPolicyType from './AddPolicyType';
 import EditPolicyType from './EditPolicyType';
+import DeletePolicyType from './DeletePolicyType';
 
 const PolicyTypeRoutes = () => {
     let { path } = useRouteMatch();
@@ -25,6 +26,9 @@ const PolicyTypeRoutes = () => {
             </Route>
             <Route path={`${path}/id/:policyTypeId/edit`}>
                 <EditPolicyType />
+            </Route>
+            <Route path={`${path}/id/:policyTypeId/delete`}>
+                <DeletePolicyType />
             </Route>
         </div>
     );

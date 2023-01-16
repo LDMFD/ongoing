@@ -1,40 +1,38 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
-import { Context, Api } from 'State'
+import { Context } from 'State'
+import OgTable from 'Components/Library/Table/Table';
 
 const PolicyTypeList = () => {
-    let history = useHistory();
-    const [ state, dispatch] = useContext(Context);
-
-    const onDelete = useCallback(params => async () => {
-        if (window.confirm(`Delete policy type?`)) {
-            await Api.OrgResources.PolicyTypes.Delete(params.row.id)
-            await Api.OrgResources.Entities.Read(dispatch);
-        }        
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(params => () => {
-        history.push(`/policy-types/id/${params.row.id}/edit`);
-    }, [ history ]);
+    const [ state, ] = useContext(Context);
 
     const columns = [
-        { field: 'name', headerName: 'Name', flex: 0.1, },
+        { 
+            accessor: 'name',
+            Header: 'Name',
+            width: 1,
+        },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .01,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<EditIcon />}   onClick={onEdit(params)}   label="Edit" />,
-                <GridActionsCellItem icon={<DeleteIcon />} onClick={onDelete(params)} label="Delete" />,
-            ]
+            accessor: 'actions',
+            width: .2,
+            Cell: ({ row }) => (
+                <IconGroup>
+                    <Link to={`/policy-types/id/${row.original.id}/delete`}>
+                        <DeleteIcon />
+                    </Link>
+                    <Link to={`/policy-types/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
+            ),
         },
     ];
 
@@ -45,18 +43,13 @@ const PolicyTypeList = () => {
         };
     });
 
-    let data = {
-        rows: policyTypes,
-        columns: columns,
-    }
-
     return (
         <>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/policy-Types/add' }}><Button>Add new policy type</Button></Link>
+                <Link to={{ pathname: '/policy-types/add' }}><Button>Add new policy type</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <OgTable columns={columns} data={policyTypes} />
         </>
     );
 }
