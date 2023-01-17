@@ -1,3 +1,7 @@
+## 1.6.1 2023-01-17
+
+- Fix missing module presets
+
 ## 1.6.0 2023-01-16
 
 - Switch to numeric provider charge tiers

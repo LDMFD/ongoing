@@ -1,15 +1,15 @@
-## API
+Where `<service>` is one of:
 
-make work-on-staging
-make up-api RELEASE=1.2.3
+- dashboard
+- api
 
-make work-on-prod
-make cloudrun-deploy-api
+The release process is as follows:
 
-## Dashboard
+    make work-on-staging
+    make up-<service>
 
-make work-on-staging
-make up-dashboard RELEASE=1.2.3
+Test on Staging, then to deploy to Prod:
 
-make work-on-prod
-make cloudrun-deploy-dashboard
+    make release-<service> RELEASE=1.2.3
+    make work-on-prod
+    make cloudrun-deploy-<service> TAG=1.2.3

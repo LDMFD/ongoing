@@ -90,6 +90,7 @@ func (gen *ReportGenerator) runQuery() {
 		Relation("Portfolios.Model.Operator").
 		Relation("Portfolios.Policy").
 		Relation("Modules").
+		Relation("Organisation").
 		Relation("User").
 		WherePK().
 		Scan(gen.context); err != nil {
