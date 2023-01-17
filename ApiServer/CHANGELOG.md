@@ -1,3 +1,11 @@
+## 1.6.0 2023-01-16
+
+- Switch to numeric provider charge tiers
+- Change currency precision to pence throughout
+- Fix cross-org module preset leak
+- API key for live import
+- Update tests to match spreadsheet
+
 ## 1.5.3 2022-12-9
 
 - Allow 0-value OCF and Policy Charges

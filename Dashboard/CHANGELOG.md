@@ -1,3 +1,20 @@
+## 1.6.0 2023-01-16
+
+- Fees - totals, platform fees, DIM
+- Change currency precision to pence throughout
+- Standardize on percentages throughout
+- Export & import UI
+- Client form validation (first few dialogs)
+- Add 404 page
+- Prevent file upload dialog closure during upload
+- Rework clicking outside a dialog to close it
+- Expose version numbers
+- Update npm package versions
+
+## 1.5.1 2022-12-30
+
+- Export UI
+
 ## 1.4.15 2022-12-10
 
 - Fix error page styling.
