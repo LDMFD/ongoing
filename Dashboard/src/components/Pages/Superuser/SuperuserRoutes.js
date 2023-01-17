@@ -3,9 +3,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import AdminSpaceWrapper from './SuperuserSpaceWrapper';
 import OrgRoutes from './Organisations/OrgRoutes';
-import ImportDialog from './DataTransfer/Import';
-import { DataTransfer } from './DataTransfer/Transfer';
-import TruncateDialog from './DataTransfer/Truncate';
+import Export from './Export/Export';
 
 const ClientRoutes = () => {
     let { path } = useRouteMatch();
@@ -21,9 +19,7 @@ const ClientRoutes = () => {
                 <Route path={`${path}`}>
                     <AdminSpaceWrapper>
                         <Route path={`${path}/organisations`} component={OrgRoutes} />
-                        <Route path={`${path}/transfer`} component={DataTransfer} />
-                        <Route path={`${path}/transfer/import`} component={ImportDialog} />
-                        <Route path={`${path}/transfer/delete`} component={TruncateDialog} />
+                        <Route path={`${path}/export`} component={Export} />
                     </AdminSpaceWrapper>
                 </Route>
             </Switch>
