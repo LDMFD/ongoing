@@ -1,3 +1,7 @@
+## 1.6.1 2023-01-17
+
+- Fix version number and request spinner position
+
 ## 1.6.0 2023-01-16
 
 - Fees - totals, platform fees, DIM

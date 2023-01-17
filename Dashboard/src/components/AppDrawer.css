@@ -8,17 +8,17 @@
 }
 
 .request-spinner {
-    position: absolute;
+    position: fixed;
     bottom: 12px;
-    left: 1rem;
+    left: 96px;
     z-index: 10001;
 }
 
 .version {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    color: darkgray;
+    position: fixed;
+    bottom: 4px;
+    left: 6px;
+    color: lightgray;
     z-index: 10001;
     font-size: 8pt;
 }

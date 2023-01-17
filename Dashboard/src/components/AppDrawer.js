@@ -215,7 +215,7 @@ export default function PermanentDrawerLeft() {
             </div>
 
             <div className='version'>
-                {window.Config.Release}
+                version: {window.Config.Release.substring(0, 5)}
             </div>
         </Box>
     );
