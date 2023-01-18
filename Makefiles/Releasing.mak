@@ -34,4 +34,22 @@ deploy-api:
 deploy-dashboard:
 	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=${RELEASE}
 
-#	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
+# To correlate a release UUID to a numbered version:
+# Usage:
+# 	for API:        make check-version SERVICE=api RELEASE=6e9e4
+# 	for dashboard:  make check-version SERVICE=dashboard-server RELEASE=b0791
+check-version: import-env
+	gcloud artifacts docker images list \
+		${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-${SERVICE} \
+		--include-tags --format=yaml|grep ${RELEASE}
+
+check-latest: import-env
+	@echo -n API: 
+	@gcloud artifacts docker images list \
+		${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-api \
+		--include-tags --format=yaml 2>/dev/null|grep latest
+
+	@echo -n Dashboard: 
+	@gcloud artifacts docker images list \
+		${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-dashboard-server \
+		--include-tags --format=yaml 2>/dev/null|grep latest
