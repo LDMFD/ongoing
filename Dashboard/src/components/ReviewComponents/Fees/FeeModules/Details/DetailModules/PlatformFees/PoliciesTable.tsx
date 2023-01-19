@@ -3,6 +3,8 @@ import Table from 'Components/Library/Table/Table';
 import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
 import { ProviderChargesPropType, Row } from './CalculatedCharges';
 import { Policy } from 'Types/ClientResources';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { PolicyType } from 'Types/OrgResources';
 
 const PoliciesTable = (props: {
     policies: Policy[],
@@ -12,6 +14,9 @@ const PoliciesTable = (props: {
     let columns = [{
         accessor: 'ExternalId',
         Header: 'Policy number',
+    }, {
+        accessor: 'Type',
+        Header: 'Type',
     }, {
         accessor: 'EndValue',
         Header: 'End value',
@@ -24,11 +29,16 @@ const PoliciesTable = (props: {
         Cell: ({ row }: { row: Row }) => FormatCurrencyPence(row.original.PlatformFee),
     }];
 
+    let report = GetReport();
+
     let data = props.policies.map(p => {
+        let type = report.PolicyTypes.find((pt: PolicyType) => pt.Id === p.PolicyTypeId).Name;
         let proportion = p.EndValue / props.providerTotal;
+
         return {
             ...p,
             EndValue: FormatCurrency(p.EndValue),
+            Type: type,
             Percentage: `${(proportion * 100).toPrecision(4)}%`,
             PlatformFee: props.totalMoneyCharge * proportion,
         };

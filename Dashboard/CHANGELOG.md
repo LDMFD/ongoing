@@ -1,3 +1,7 @@
+## 1.6.3 2023-01-18
+
+- Add policy type to policies table
+
 ## 1.6.2 2023-01-18
 
 - Fix review ordering

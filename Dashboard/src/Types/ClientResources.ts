@@ -1,4 +1,4 @@
-import { Fund, Operator, PolicyProvider, ProviderCharge, ProviderDiscount } from "./OrgResources";
+import { Fund, Operator, PolicyProvider, PolicyType, ProviderCharge, ProviderDiscount } from "./OrgResources";
 
 export interface ClientIdentity {
     Email: string,
@@ -57,6 +57,7 @@ export interface Report {
     // Org-level:
     PolicyProviders: PolicyProvider[],
     ProviderCharges: ProviderCharge[],
+    PolicyTypes: PolicyType[],
     Funds: Fund[],
     Models: Model[],
     Operators: Operator[],
