@@ -39,17 +39,12 @@ deploy-dashboard:
 # 	for API:        make check-version SERVICE=api RELEASE=6e9e4
 # 	for dashboard:  make check-version SERVICE=dashboard-server RELEASE=b0791
 check-version: import-env
-	gcloud artifacts docker images list \
+	@gcloud artifacts docker images list \
 		${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-${SERVICE} \
-		--include-tags --format=yaml|grep ${RELEASE}
+		--include-tags --format=yaml 2>/dev/null | grep ${RELEASE}
 
 check-latest: import-env
-	@echo -n API: 
-	@gcloud artifacts docker images list \
-		${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-api \
-		--include-tags --format=yaml 2>/dev/null|grep latest
-
-	@echo -n Dashboard: 
-	@gcloud artifacts docker images list \
-		${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/ongoing-dashboard-server \
-		--include-tags --format=yaml 2>/dev/null|grep latest
+	@echo -n "API:       "
+	@make check-version SERVICE=api RELEASE=latest
+	@echo -n "Dashboard: "
+	@make check-version SERVICE=dashboard-server RELEASE=latest
