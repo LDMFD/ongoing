@@ -15,6 +15,7 @@ const ReviewList = () => {
     }, [ history ]);
 
     const columns = [
+        { field: 'ix',        headerName: '#',            flex: 0.1, },
         { field: 'startDate', headerName: 'Start date',   flex: 0.1, },
         { field: 'endDate',   headerName: 'End date',   flex: 0.1, },
         {
@@ -27,9 +28,11 @@ const ReviewList = () => {
         },
     ];
 
+    let ix = 1;
     let reviews = state.Reviews.map(review => {
         return {
             id:               review.Id,
+            ix:            ix++,
             idLabel:          `#${review.Id}`,
             date:             review.Meta.FinalizedDate,
             startDate:        FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
@@ -37,7 +40,7 @@ const ReviewList = () => {
             // no finalizedDate
             // state:      review.Meta.State,
         };
-    }).sort((p,q) => (p.date < q.date) ? 1 : ((p.date > q.date) ? -1 : 0));
+    }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));
 
     let data = {
         rows: reviews,

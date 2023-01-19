@@ -27,6 +27,7 @@ const AdvisorReviewList = () => {
     }, [ dispatch, client.Id ]);
 
     const columns = [
+        { field: 'ix',            headerName: '#',              flex: 0.1, },
         { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
         { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
         { field: 'finalizedDate', headerName: 'Finalised Date', flex: 0.1, },
@@ -41,9 +42,11 @@ const AdvisorReviewList = () => {
         },
     ];
 
+    let ix = 1;
     let reviews = state.Reviews.map(review => {
         return {
             id:            review.Id,
+            ix:            ix++,
             idLabel:       `#${review.Id}`,
             date:          review.Meta.FinalizedDate,
             startDate:     FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
@@ -51,7 +54,7 @@ const AdvisorReviewList = () => {
             finalizedDate: FromCanonical(review.Meta.FinalizedDate)?.toLocaleDateString('en-GB'),
             // state:         review.Meta.State,
         };
-    }).sort((p,q) => (p.startDate < q.startDate) ? 1 : ((p.startDate > q.startDate) ? -1 : 0));
+    }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));
 
     let data = {
         rows: reviews,

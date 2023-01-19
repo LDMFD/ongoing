@@ -1,3 +1,7 @@
+## 1.6.2 2023-01-18
+
+- Fix review ordering
+
 ## 1.6.1 2023-01-17
 
 - Fix version number and request spinner position
