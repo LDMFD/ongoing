@@ -20,6 +20,7 @@ db-truncate-staging:
 			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'create database \"spicedb-staging\";'"
 
 db-truncate-prod:
+	remove to use
 	$(eval PASSWORD := $(shell cat ~/.ongoing/envs/prod/secrets/cloud-sql/password))
 	docker run -i --platform linux/amd64 --network ongoing_default         ${LOCAL_POSTGRES_IMAGE} /bin/bash \
 			-c "PGPASSWORD=${PASSWORD} psql -U postgres -h db-proxy -c 'drop database \"ongoing-prod\" with (force);'"
