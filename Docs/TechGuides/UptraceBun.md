@@ -24,3 +24,20 @@ Use original table names in Column(string).
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+## Nested relationships
+
+		Where("risk_provider__org.Uid = ?", orgId).
+
+## Select if exists
+
+	var objs []Entities.Something
+	if count, err := db.NewSelect().
+		Model(&objs).
+		ScanAndCount(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		panic(err.Error())
+	} else if count == 0 {
+		return
+	}
+	obj := objs[0]

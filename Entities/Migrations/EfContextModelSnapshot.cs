@@ -389,16 +389,11 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasAlternateKey("Uid");
 
+                    b.HasAlternateKey("OrgId", "Name");
+
                     b.HasIndex("FilePtrId");
-
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex(new[] { "Name" }, "funds_name_key")
-                        .IsUnique();
 
                     b.HasIndex(new[] { "Uid" }, "funds_uid_key")
                         .IsUnique();
@@ -457,18 +452,13 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasAlternateKey("Uid");
+
+                    b.HasAlternateKey("OrgId", "Name");
 
                     b.HasIndex("FilePtrId");
 
                     b.HasIndex("OperatorId");
-
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex(new[] { "Name" }, "models_name_key")
-                        .IsUnique();
 
                     b.HasIndex(new[] { "Uid" }, "models_uid_key")
                         .IsUnique();
@@ -593,14 +583,9 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex(new[] { "Name" }, "operators_name_key")
-                        .IsUnique();
+                    b.HasAlternateKey("OrgId", "Name");
 
                     b.HasIndex(new[] { "Uid" }, "operators_uid_key")
                         .IsUnique();
@@ -720,9 +705,9 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ExternalId");
-
                     b.HasAlternateKey("Uid");
+
+                    b.HasAlternateKey("ExternalId", "PolicyProviderId");
 
                     b.HasIndex("ClientId");
 
@@ -731,9 +716,6 @@ namespace Ongoing.Migrations
                     b.HasIndex("PolicyProviderId");
 
                     b.HasIndex("PolicyTypeId");
-
-                    b.HasIndex(new[] { "ExternalId" }, "policies_external_id_key")
-                        .IsUnique();
 
                     b.HasIndex(new[] { "Uid" }, "policies_uid_key")
                         .IsUnique();
@@ -841,14 +823,9 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex(new[] { "Name" }, "policy_providers_name_key")
-                        .IsUnique();
+                    b.HasAlternateKey("OrgId", "Name");
 
                     b.HasIndex(new[] { "Uid" }, "policy_providers_uid_key")
                         .IsUnique();
@@ -887,14 +864,9 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex(new[] { "Name" }, "policy_types_name_key")
-                        .IsUnique();
+                    b.HasAlternateKey("OrgId", "Name");
 
                     b.HasIndex(new[] { "Uid" }, "policy_types_uid_key")
                         .IsUnique();
@@ -1235,14 +1207,9 @@ namespace Ongoing.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Name");
-
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex(new[] { "Name" }, "risk_providers_name_key")
-                        .IsUnique();
+                    b.HasAlternateKey("OrgId", "Name");
 
                     b.HasIndex(new[] { "Uid" }, "risk_providers_uid_key")
                         .IsUnique();

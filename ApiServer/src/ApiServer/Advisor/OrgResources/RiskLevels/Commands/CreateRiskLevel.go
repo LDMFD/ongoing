@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateRiskLevelRequest struct {
+type CreateRiskLevelRequestBody struct {
 	RiskProviderId string `binding:"required"`
 	Level          int64  `binding:"required"`
 	Label          string `binding:"required"`
@@ -17,13 +17,25 @@ type CreateRiskLevelRequest struct {
 }
 
 func CreateRiskLevel(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	var body CreateRiskLevelRequest
+	var body CreateRiskLevelRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	uid := CreateRiskLevelInternal(c, session.Org.Id, body)
+
+	c.JSON(200, gin.H{
+		"Id": uid,
+	})
+}
+
+func CreateRiskLevelInternal(c *gin.Context, orgId int64, body CreateRiskLevelRequestBody) string {
+	db := c.MustGet("DATABASE").(*bun.DB)
+
+	uid := UUID.GenerateUID(c)
 
 	var provider = Entities.RiskProvider{}
 	if err := db.NewSelect().
@@ -33,8 +45,6 @@ func CreateRiskLevel(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-
-	uid := UUID.GenerateUID(c)
 
 	var riskLevel = Entities.RiskLevel{
 		Uid:            uid,
@@ -47,7 +57,5 @@ func CreateRiskLevel(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-	c.JSON(200, gin.H{
-		"Id": uid,
-	})
+	return uid
 }

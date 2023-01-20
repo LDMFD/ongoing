@@ -9,32 +9,39 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type CreateOrUpdatePolicyTypeRequest struct {
+type CreateOrUpdatePolicyTypeRequestBody struct {
 	Name string `binding:"required"`
 }
 
 func CreatePolicyType(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	uid := UUID.GenerateUID(c)
-
-	var req CreateOrUpdatePolicyTypeRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var body CreateOrUpdatePolicyTypeRequestBody
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
+	uid := CreatePolicyTypeInternal(c, session.Org.Id, body)
+
+	c.JSON(200, gin.H{
+		"Id": uid,
+	})
+}
+
+func CreatePolicyTypeInternal(c *gin.Context, orgId int64, body CreateOrUpdatePolicyTypeRequestBody) string {
+	db := c.MustGet("DATABASE").(*bun.DB)
+
+	uid := UUID.GenerateUID(c)
+
 	var policyType = Entities.PolicyType{
 		Uid:   uid,
-		Name:  req.Name,
-		OrgId: session.Org.Id,
+		Name:  body.Name,
+		OrgId: orgId,
 	}
 	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-	c.JSON(200, gin.H{
-		"Id": uid,
-	})
+	return uid
 }

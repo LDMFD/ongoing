@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Ongoing.Entities
 {
     [Table("risk_providers")]
-    [Index("Name", Name = "risk_providers_name_key", IsUnique = true)]
     [Index("Uid", Name = "risk_providers_uid_key", IsUnique = true)]
     public class RiskProvider
     {
@@ -51,12 +50,12 @@ class RiskProviderConfig : IEntityTypeConfiguration<RiskProvider>
 
         builder.Property(e => e.Timestamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
         
-        builder.HasAlternateKey(e => e.Uid);
-        builder.HasAlternateKey(e => e.Name);
-        
         builder.HasMany(b => b.RiskLevels)
             .WithOne(p => p.RiskProvider)
             .HasForeignKey(p => p.RiskProviderId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => new { e.OrgId, e.Name });
     }
 }

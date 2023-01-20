@@ -1,3 +1,7 @@
+## 1.6.2 2023-01-20
+
+- Seed org data
+
 ## 1.6.1 2023-01-17
 
 - Fix missing module presets

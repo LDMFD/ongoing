@@ -15,7 +15,6 @@ namespace Ongoing.Entities
     }
     
     [Table("operators")]
-    [Index("Name", Name = "operators_name_key", IsUnique = true)]
     [Index("Uid", Name = "operators_uid_key", IsUnique = true)]
     public class Operator
     {
@@ -71,6 +70,6 @@ class OperatorConfig : IEntityTypeConfiguration<Operator>
             .HasConstraintName("fk_operator_org");
 
         builder.HasAlternateKey(e => e.Uid);
-        builder.HasAlternateKey(e => e.Name);
+        builder.HasAlternateKey(e => new { e.OrgId, e.Name });
     }
 }

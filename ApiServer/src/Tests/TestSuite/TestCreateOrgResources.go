@@ -38,7 +38,7 @@ func testCreatePolicyType(e *httpexpect.Expect) {
 
 func testCreatePolicyTypeBasic(e *httpexpect.Expect) {
 	// Create Policy Type as org 1 advisor
-	request := PolicyTypeCommands.CreateOrUpdatePolicyTypeRequest{
+	request := PolicyTypeCommands.CreateOrUpdatePolicyTypeRequestBody{
 		Name: "ISB",
 	}
 	resp := e.POST("/api/advisor/policy-types").
@@ -47,7 +47,7 @@ func testCreatePolicyTypeBasic(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 	policyTypeId = resp.JSON().Object().Value("Id").String().Raw()
 
-	request = PolicyTypeCommands.CreateOrUpdatePolicyTypeRequest{
+	request = PolicyTypeCommands.CreateOrUpdatePolicyTypeRequestBody{
 		Name: "ISA",
 	}
 	e.PUT("/api/advisor/policy-types/"+policyTypeId).
@@ -57,7 +57,7 @@ func testCreatePolicyTypeBasic(e *httpexpect.Expect) {
 }
 
 func testCreatePolicyTypeSecurity(e *httpexpect.Expect) {
-	request := PolicyTypeCommands.CreateOrUpdatePolicyTypeRequest{
+	request := PolicyTypeCommands.CreateOrUpdatePolicyTypeRequestBody{
 		Name: "ISNOT",
 	}
 	e.PUT("/api/advisor/policy-types/"+policyTypeId).
@@ -470,7 +470,7 @@ func testCreateRiskProvider(e *httpexpect.Expect) {
 
 func testCreateRiskProviderBasic(e *httpexpect.Expect) {
 	// Create risk provider
-	request := RiskProviderCommands.CreateRiskProviderRequest{
+	request := RiskProviderCommands.CreateRiskProviderRequestBody{
 		Name: "Dynamic Planner oops",
 	}
 	resp := e.POST("/api/advisor/risk-providers").
@@ -490,7 +490,7 @@ func testCreateRiskProviderBasic(e *httpexpect.Expect) {
 }
 
 func testCreateRiskProviderSecurity(e *httpexpect.Expect) {
-	request := RiskProviderCommands.CreateRiskProviderRequest{
+	request := RiskProviderCommands.CreateRiskProviderRequestBody{
 		Name: "no name",
 	}
 	e.PUT("/api/advisor/risk-providers/"+riskProviderId).
@@ -511,7 +511,7 @@ func testCreateRiskLevel(e *httpexpect.Expect) {
 }
 
 func testCreateRiskLevelBasic(e *httpexpect.Expect) {
-	request := RiskLevelCommands.CreateRiskLevelRequest{
+	request := RiskLevelCommands.CreateRiskLevelRequestBody{
 		RiskProviderId: riskProviderId,
 		Level:          5,
 		Label:          "Middling",

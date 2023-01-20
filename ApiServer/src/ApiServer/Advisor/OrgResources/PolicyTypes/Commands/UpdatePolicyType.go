@@ -42,7 +42,7 @@ func UpdatePolicyType(c *gin.Context) {
 		return
 	}
 
-	var req CreateOrUpdatePolicyTypeRequest
+	var req CreateOrUpdatePolicyTypeRequestBody
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

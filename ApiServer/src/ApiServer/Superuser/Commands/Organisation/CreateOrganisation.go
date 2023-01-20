@@ -5,6 +5,11 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/OrgResources"
+	PolicyTypes "ongoing/ApiServer/Advisor/OrgResources/PolicyTypes/Commands"
+	ModulePresets "ongoing/ApiServer/Advisor/OrgResources/Reviews/ModulePresets/Commands"
+	RiskLevels "ongoing/ApiServer/Advisor/OrgResources/RiskLevels/Commands"
+	RiskProviders "ongoing/ApiServer/Advisor/OrgResources/RiskProviders/Commands"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
@@ -137,8 +142,56 @@ func CreateOrganisation(c *gin.Context) {
 		return
 	}
 
+	seedOrg(c, org)
+
 	c.JSON(200, gin.H{
 		"Id":      orgUid,
 		"OwnerId": advisorUid,
 	})
+}
+
+func seedOrg(c *gin.Context, newOrg Entities.Organisation) {
+	db := c.MustGet("DATABASE").(*bun.DB)
+
+	var seedOrgs []Entities.Organisation
+	if count, err := db.NewSelect().
+		Model(&seedOrgs).
+		Where("name = ?", "Integral Advice").
+		ScanAndCount(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		panic(err.Error())
+	} else if count == 0 {
+		return
+	}
+	seedOrg := seedOrgs[0]
+
+	resources := OrgResources.GetOrgResourcesInternal(c, &seedOrg.Uid).Resources
+
+	for _, mp := range resources.ModulePresets {
+		ModulePresets.CreateModulePresetInternal(c, newOrg.Id, ModulePresets.CreateOrUpdateModulePresetRequestBody{
+			ModuleType: mp.ModuleType,
+			Text:       mp.Text,
+		})
+	}
+	for _, pt := range resources.PolicyTypes {
+		PolicyTypes.CreatePolicyTypeInternal(c, newOrg.Id, PolicyTypes.CreateOrUpdatePolicyTypeRequestBody{
+			Name: pt.Name,
+		})
+	}
+	for _, rp := range resources.RiskProviders {
+		uid := RiskProviders.CreateRiskProviderInternal(c, newOrg.Id, RiskProviders.CreateRiskProviderRequestBody{
+			Name: rp.Name,
+		})
+		for _, rl := range resources.RiskLevels {
+			if rl.RiskProviderId != rp.Id {
+				continue
+			}
+			RiskLevels.CreateRiskLevelInternal(c, newOrg.Id, RiskLevels.CreateRiskLevelRequestBody{
+				RiskProviderId: uid,
+				Level:          rl.Level,
+				Label:          rl.Label,
+				Desc:           rl.Desc,
+			})
+		}
+	}
 }

@@ -70,7 +70,5 @@ class ModuleConfig : IEntityTypeConfiguration<Module>
             .HasConstraintName("fk_client");
         
         builder.HasAlternateKey(p => new { p.ClientId, p.Type });
-        
-        builder.HasAlternateKey(p => new { p.ClientId, p.Type });
     }
 }

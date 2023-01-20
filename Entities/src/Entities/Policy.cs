@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Ongoing.Entities
 {
     [Table("policies")]
-    [Index("ExternalId", Name = "policies_external_id_key", IsUnique = true)]
     [Index("Uid", Name = "policies_uid_key", IsUnique = true)]
     public class Policy
     {
@@ -112,6 +111,6 @@ class PolicyConfig : IEntityTypeConfiguration<Policy>
             .HasConstraintName("fk_policy_type");
         
         builder.HasAlternateKey(p => p.Uid);
-        builder.HasAlternateKey(p => p.ExternalId);
+        builder.HasAlternateKey(e => new { e.ExternalId, e.PolicyProviderId });
     }
 }

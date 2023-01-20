@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Ongoing.Entities
 {
     [Table("models")]
-    [Index("Name", Name = "models_name_key", IsUnique = true)]
     [Index("Uid", Name = "models_uid_key", IsUnique = true)]
     public class Model
     {
@@ -92,6 +91,6 @@ class ModelConfig : IEntityTypeConfiguration<Model>
             .HasConstraintName("fk_model_org");
 
         builder.HasAlternateKey(e => e.Uid);
-        builder.HasAlternateKey(e => e.Name);
+        builder.HasAlternateKey(e => new { e.OrgId, e.Name });
     }
 }

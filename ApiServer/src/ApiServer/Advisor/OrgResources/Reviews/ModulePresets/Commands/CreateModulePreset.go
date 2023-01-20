@@ -15,7 +15,6 @@ type CreateOrUpdateModulePresetRequestBody struct {
 }
 
 func CreateModulePreset(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var body CreateOrUpdateModulePresetRequestBody
@@ -24,9 +23,17 @@ func CreateModulePreset(c *gin.Context) {
 		panic(err)
 	}
 
+	CreateModulePresetInternal(c, session.Org.Id, body)
+
+	c.JSON(200, gin.H{})
+}
+
+func CreateModulePresetInternal(c *gin.Context, orgId int64, body CreateOrUpdateModulePresetRequestBody) {
+	db := c.MustGet("DATABASE").(*bun.DB)
+
 	var modulePreset = Entities.ModulePreset{
 		Uid:        UUID.GenerateUID(c),
-		OrgId:      session.Org.Id,
+		OrgId:      orgId,
 		ModuleType: body.ModuleType,
 		Text:       body.Text,
 	}
@@ -37,6 +44,4 @@ func CreateModulePreset(c *gin.Context) {
 		}
 		panic(err)
 	}
-
-	c.JSON(200, gin.H{})
 }

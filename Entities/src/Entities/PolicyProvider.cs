@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace Ongoing.Entities
 {
     [Table("policy_providers")]
-    [Index("Name", Name = "policy_providers_name_key", IsUnique = true)]
     [Index("Uid", Name = "policy_providers_uid_key", IsUnique = true)]
     public class PolicyProvider
     {
@@ -71,6 +70,6 @@ class PolicyProviderConfig : IEntityTypeConfiguration<PolicyProvider>
             .HasConstraintName("fk_policyprovider_org");
 
         builder.HasAlternateKey(e => e.Uid);
-        builder.HasAlternateKey(e => e.Name);
+        builder.HasAlternateKey(e => new { e.OrgId, e.Name });
     }
 }
