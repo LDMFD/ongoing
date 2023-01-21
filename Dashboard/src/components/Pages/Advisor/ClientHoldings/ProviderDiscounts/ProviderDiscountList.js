@@ -47,7 +47,7 @@ const ProviderDiscountList = () => {
     columns.push({
         accessor: 'actions',
         Header: '',
-        width: 1,
+        width: .2,
         Cell: ({ row }) => (
             <>
                 <button onClick={editProviderDiscount(row.original.id)} className='ong-openFileIcon'>

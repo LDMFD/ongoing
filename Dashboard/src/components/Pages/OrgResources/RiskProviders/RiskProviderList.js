@@ -33,7 +33,7 @@ const RiskProviderList = () => {
         }, {
             accessor: 'actions',
             Header: '',
-            width: 1,
+            width: .1,
             Cell: ({ row }) => (
                 <>
                     <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>

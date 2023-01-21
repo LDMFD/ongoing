@@ -27,19 +27,19 @@ const ModulePresetList = () => {
         {
             accessor: 'label',
             Header: 'Module Type',
-            width: 2,
+            width: 1.2,
         },
         {
             accessor: 'text',
             Header: 'Module Preset',
-            width: 5,
+            width: 3,
             Cell: ({ row }) => (
                 <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.text }} />
             )
         },
         {
             accessor: 'actions',
-            width: 1,
+            width: .7,
             Cell: ({ row }) => (
                 <IconGroup>
                     <Link to={`/review-config/module-presets/id/${row.original.type}/delete`}>

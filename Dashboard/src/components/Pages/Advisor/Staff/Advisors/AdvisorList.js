@@ -52,7 +52,7 @@ const AdvisorList = () => {
         {
             accessor: 'actions',
             Header: '',
-            width: 0.2,
+            width: .4,
             Cell: ({ row }) => canEditRole(row) ? (
                 <>
                     <button onClick={editAdvisor(row.original.id)} className='ong-openFileIcon'>

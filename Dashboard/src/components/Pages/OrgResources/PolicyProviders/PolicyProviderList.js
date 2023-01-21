@@ -51,7 +51,7 @@ const PolicyProviderList = () => {
         }, {
             accessor: 'actions',
             Header: '',
-            width: 0.5,
+            width: 1,
             Cell: ({ row }) => (
                 <>
                     <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
