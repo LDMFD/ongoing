@@ -54,10 +54,10 @@ const ClientDialog = (props: {
                     </DialogContentText>
 
                     <Box>
-                        <TextInput name='Email'     label='Email'      control={control} required type='email' />
-                        <TextInput name='Surname'   label='Surname'    control={control} required />
-                        <TextInput name='Forenames' label='Forenames'  control={control} required />
-                        <TextInput name='Fee'       label='Advice Fee' control={control} required type='numeric' />
+                        <TextInput name='Email'     label='Email'          control={control} required type='email' />
+                        <TextInput name='Surname'   label='Surname'        control={control} required />
+                        <TextInput name='Forenames' label='Forenames'      control={control} required />
+                        <TextInput name='Fee'       label='Advice Fee (%)' control={control} required type='numeric' />
                     </Box>
 
                 </DialogContent>

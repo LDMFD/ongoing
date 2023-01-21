@@ -62,7 +62,7 @@ const ProviderDiscountDialog = (props: {
                         
                         <TextInput
                             name    = 'Discount'
-                            label   = 'Discounted platform fee'
+                            label   = 'Discounted platform fee (%)'
                             control = {control}
                             required
                             type    = 'numeric'

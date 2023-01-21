@@ -82,6 +82,13 @@ export const RichTextEditor2 = (props: FormInputProps) => {
         'link',
     ]
 
+    let rules: any = {
+        required: {
+            value: props.required,
+            message: 'Required field',
+        },
+    };
+
     return (
         <div className="ong-richtext">
             <label>{props.label}</label>
@@ -107,16 +114,27 @@ export const RichTextEditor2 = (props: FormInputProps) => {
             <Controller
                 name    = {props.name}
                 control = {props.control}
+                rules   = {rules}
                 render = {({
                     field: { onChange, value },
                     fieldState: { error },
                     formState,
                 }) => (
-                    <ReactQuill theme    = 'snow'
-                                modules  = {modules}
-                                formats  = {formats}
-                                value    = {value}
-                                onChange = {onChange} />
+                    <>
+                        <ReactQuill
+                            theme    = 'snow'
+                            modules  = {modules}
+                            formats  = {formats}
+                            value    = {value}
+                            onChange = {onChange}
+                        />
+
+                        {error?.type === 'required' &&
+                            <div className='ong-form-error'>
+                                {error.message}
+                            </div>
+                        }
+                    </>    
                 )}
             />
                                                  

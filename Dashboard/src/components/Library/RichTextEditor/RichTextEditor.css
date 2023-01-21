@@ -13,6 +13,11 @@
     left: 8px;
 }
 
+.ong-richtext .ong-form-error {
+    top: 4px;
+    left: 14px;
+}
+
 .ql-container.ql-snow {
     border-radius: 0 0 5px 5px;
     border-top: none;
