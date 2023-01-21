@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
@@ -44,23 +39,17 @@ const ClientDialog = (props: {
 
     return (
         <Dialog
-            submitLabel = {props.submitLabel}
             title       = {`${props.submitLabel} Client`}
+            intro       = 'Enter new client details:'
+            submitLabel = {props.submitLabel}
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
-                <DialogContent>
-                    <DialogContentText>
-                        Enter new client details:
-                    </DialogContentText>
-
-                    <Box>
-                        <TextInput name='Email'     label='Email'          control={control} required type='email' />
-                        <TextInput name='Surname'   label='Surname'        control={control} required />
-                        <TextInput name='Forenames' label='Forenames'      control={control} required />
-                        <TextInput name='Fee'       label='Advice Fee (%)' control={control} required type='numeric' />
-                    </Box>
-
-                </DialogContent>
+                <>
+                    <TextInput name='Email'     label='Email'          control={control} required type='email' />
+                    <TextInput name='Surname'   label='Surname'        control={control} required />
+                    <TextInput name='Forenames' label='Forenames'      control={control} required />
+                    <TextInput name='Fee'       label='Advice Fee (%)' control={control} required type='numeric' />
+                </>
             }
         />
     );

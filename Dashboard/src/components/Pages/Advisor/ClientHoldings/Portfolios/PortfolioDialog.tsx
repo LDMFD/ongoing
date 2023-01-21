@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
@@ -58,24 +53,18 @@ export const PortfolioDialog = (props: {
     return (
         <Dialog
             title       = {`${props.submitLabel} Portfolio`}
+            intro       = 'Enter portfolio details:'
             submitLabel = {props.submitLabel}
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
-                <DialogContent>
-                    <DialogContentText>
-                        Enter portfolio details:
-                    </DialogContentText>
+                <>
+                    <SelectControl name='PolicyId' options={policies} label='Policy' control={control} required />
+                    <SelectControl name='ModelId'  options={models}   label='Model'  control={control} required />
 
-                    <Box>
-                        <SelectControl name='PolicyId' options={policies} label='Policy' control={control} required />
-                        <SelectControl name='ModelId'  options={models}   label='Model'  control={control} required />
+                    <TextInput name='Proportion' label='Proportion (%)' control={control} required type='numeric' />
 
-                        <TextInput name='Proportion' label='Proportion (%)' control={control} required type='numeric' />
-
-                        <CheckboxControl name='IncludeInFee' label='Include in fee calculation?' control={control} />
-                    </Box>
-
-                </DialogContent>
+                    <CheckboxControl name='IncludeInFee' label='Include in fee calculation?' control={control} />
+                </>
             }
         />
     );

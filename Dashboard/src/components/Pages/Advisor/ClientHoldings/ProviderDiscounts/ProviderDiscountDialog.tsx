@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
@@ -42,34 +37,28 @@ const ProviderDiscountDialog = (props: {
 
     return (
         <Dialog
-            submitLabel = {props.submitLabel}
             title       = {`${props.submitLabel} Provider Discount`}
+            intro       = 'Enter provider discount:'
             onSubmit    = {handleSubmit(onSubmit)}
+            submitLabel = {props.submitLabel}
             content = {
-                <DialogContent>
-                    <DialogContentText>
-                        Enter provider discount:
-                    </DialogContentText>
-
-                    <Box>
-                        <SelectControl
-                            name    = 'PolicyProviderId'
-                            options = {policyProviders}
-                            label   = 'Provider'
-                            control = {control}
-                            required
-                        />
-                        
-                        <TextInput
-                            name    = 'Discount'
-                            label   = 'Discounted platform fee (%)'
-                            control = {control}
-                            required
-                            type    = 'numeric'
-                        />
-                    </Box>
-
-                </DialogContent>
+                <>
+                    <SelectControl
+                        name    = 'PolicyProviderId'
+                        options = {policyProviders}
+                        label   = 'Provider'
+                        control = {control}
+                        required
+                    />
+                    
+                    <TextInput
+                        name    = 'Discount'
+                        label   = 'Discounted platform fee (%)'
+                        control = {control}
+                        required
+                        type    = 'numeric'
+                    />
+                </>
             }
         />
     );

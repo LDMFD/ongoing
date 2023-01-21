@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 import { Api } from 'State';
@@ -44,42 +39,36 @@ const ImportDialog = () => {
         <div className   = 'import-dialog'>
             <Dialog
                 title       = 'Import new database from JSON'
+                intro       = 'Import database JSON:'
                 submitLabel = 'Import'
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
-                    <DialogContent>
-                        <DialogContentText>
-                            Import database JSON:
-                        </DialogContentText>
+                    <>
+                        <FileUploader2
+                            label        = 'JSON'
+                            name         = 'File'
+                            control      = {control}
+                            submitRef    = {submitRef}
+                            required
+                        />
+                        <br />
 
-                        <Box>
-                            <FileUploader2
-                                label        = 'JSON'
-                                name         = 'File'
-                                control      = {control}
-                                submitRef    = {submitRef}
-                                required
-                            />
-                            <br />
+                        Type the current environment ({env}) to confirm:
+                        <br />
+                        <br />
 
-                            Type the current environment ({env}) to confirm:
-                            <br />
-                            <br />
-
-                            <TextInput
-                                control = {control}
-                                name    = 'Env'
-                                label   = 'Environment name'
-                                type    = 'text'
-                                pattern = {{
-                                    value: new RegExp(`^${env}$`),
-                                    message: 'Type the current environment name to continue',
-                                }}
-                                required />
-                        </Box>
-
-                    </DialogContent>
+                        <TextInput
+                            control = {control}
+                            name    = 'Env'
+                            label   = 'Environment name'
+                            type    = 'text'
+                            pattern = {{
+                                value: new RegExp(`^${env}$`),
+                                message: 'Type the current environment name to continue',
+                            }}
+                            required />
+                    </>
                 }
             />
         </div>

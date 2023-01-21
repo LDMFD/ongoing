@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 
@@ -40,35 +35,29 @@ const ForecastDialog = (props: {
         <div className   = 'forecost-dialog'>
             <Dialog
                 title       = {`${props.submitLabel} Forecast`}
+                intro       = 'Upload forecast document:'
                 submitLabel = {props.submitLabel}
                 // ref         = {dialogRef}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
-                    <DialogContent>
-                        <DialogContentText>
-                            Upload forecast document:
-                        </DialogContentText>
+                    <>
+                        <DateSelector2
+                            name      = 'Submitted'
+                            label     = 'Submit date'
+                            control   = {control}
+                            // dialogRef = {dialogRef}
+                            required
+                        />
 
-                        <Box>
-                            <DateSelector2
-                                name      = 'Submitted'
-                                label     = 'Submit date'
-                                control   = {control}
-                                // dialogRef = {dialogRef}
-                                required
-                            />
-
-                            <FileUploader2
-                                label        = 'Forecast file'
-                                name         = 'File'
-                                control      = {control}
-                                submitRef    = {submitRef}
-                                required
-                            />
-                        </Box>
-
-                    </DialogContent>
+                        <FileUploader2
+                            label        = 'Forecast file'
+                            name         = 'File'
+                            control      = {control}
+                            submitRef    = {submitRef}
+                            required
+                        />
+                    </>
                 }
             />
         </div>

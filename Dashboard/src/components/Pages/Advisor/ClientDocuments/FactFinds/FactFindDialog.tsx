@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 
@@ -39,33 +34,27 @@ const FactFindDialog = (props: {
         <div className   = 'factfind-dialog'>
             <Dialog
                 title       = {`${props.submitLabel} Fact Find`}
+                intro       = 'Upload fact find document:'
                 submitLabel = {props.submitLabel}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
-                    <DialogContent>
-                        <DialogContentText>
-                            Upload fact find document:
-                        </DialogContentText>
+                    <>
+                        <DateSelector2
+                            name     = 'Submitted'
+                            label    = 'Submit date'
+                            control  = {control}
+                            required
+                        />
 
-                        <Box>
-                            <DateSelector2
-                                name     = 'Submitted'
-                                label    = 'Submit date'
-                                control  = {control}
-                                required
-                            />
-
-                            <FileUploader2
-                                label        = 'Fact find file'
-                                name         = 'File'
-                                control      = {control}
-                                submitRef    = {submitRef}
-                                required
-                            />
-                        </Box>
-
-                    </DialogContent>
+                        <FileUploader2
+                            label        = 'Fact find file'
+                            name         = 'File'
+                            control      = {control}
+                            submitRef    = {submitRef}
+                            required
+                        />
+                    </>
                 }
             />
         </div>

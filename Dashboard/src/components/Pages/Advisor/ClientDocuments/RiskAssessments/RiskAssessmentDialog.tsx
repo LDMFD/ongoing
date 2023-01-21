@@ -1,10 +1,5 @@
 import React, { useState} from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 
@@ -65,15 +60,12 @@ const RiskAssessmentDialog = (props: {
         <div className   = 'riskassessment-dialog'>
             <Dialog
                 title       = {`${props.submitLabel} Risk Assessment`}
+                intro       = 'Upload risk assessment document:'
                 submitLabel = {props.submitLabel}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
-                    <DialogContent>
-                        <DialogContentText>
-                            Upload risk assessment document:
-                        </DialogContentText>
-
+                    <>
                         <SelectControl
                             name     = 'RiskProviderId'
                             label    = 'Assessment Provider '
@@ -90,24 +82,21 @@ const RiskAssessmentDialog = (props: {
                             required
                         />
 
-                        <Box>
-                            <DateSelector2
-                                name     = 'Completed'
-                                label    = 'Submit date'
-                                control  = {control}
-                                required
-                            />
+                        <DateSelector2
+                            name     = 'Completed'
+                            label    = 'Submit date'
+                            control  = {control}
+                            required
+                        />
 
-                            <FileUploader2
-                                label        = 'Risk assessment file'
-                                name         = 'File'
-                                control      = {control}
-                                submitRef    = {submitRef}
-                                required
-                            />
-                        </Box>
-
-                    </DialogContent>
+                        <FileUploader2
+                            label        = 'Risk assessment file'
+                            name         = 'File'
+                            control      = {control}
+                            submitRef    = {submitRef}
+                            required
+                        />
+                    </>
                 }
             />
         </div>

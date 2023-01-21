@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { State } from 'Types/Types';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
@@ -47,41 +42,35 @@ export const OperatorDialog = (props: {
     return (
         <Dialog
             title       = {props.submitLabel + ' Model Operator'}
+            intro       = 'Enter model operator details:'
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
-                <DialogContent>
-                    <DialogContentText>
-                        Enter model operator details:
-                    </DialogContentText>
+                <>
+                    <TextInput
+                        name='Name'
+                        label='Name'
+                        control={control}
+                        required
+                    />
 
-                    <Box>
-                        <TextInput
-                            name='Name'
-                            label='Name'
-                            control={control}
-                            required
-                        />
+                    <SelectControl
+                        name='Type'
+                        options={types}
+                        label='Type'
+                        control={control}
+                        required
+                    />
 
-                        <SelectControl
-                            name='Type'
-                            options={types}
-                            label='Type'
-                            control={control}
-                            required
-                        />
-
-                        <TextInput
-                            type='numeric'
-                            name='Fee'
-                            label='Fee (%)'
-                            control={control}
-                            required
-                        />
-                    </Box>
-
-                </DialogContent>
+                    <TextInput
+                        type='numeric'
+                        name='Fee'
+                        label='Fee (%)'
+                        control={control}
+                        required
+                    />
+                </>
             }
         />
     );

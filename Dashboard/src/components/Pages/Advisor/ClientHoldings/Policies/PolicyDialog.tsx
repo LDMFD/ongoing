@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEditor2';
 import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
@@ -78,35 +73,29 @@ const PolicyDialog = (props: {
     return (
         <Dialog
             title       = {props.submitLabel + ' Policy'}
+            intro       = 'Enter policy details:'
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
-                <DialogContent>
-                    <DialogContentText>
-                        Enter policy details:
-                    </DialogContentText>
+                <>
+                    <TextInput name='ExternalId'           label='Policy number'            control={control} required />
+                    <TextInput name='MonthlyContributions' label='Monthly Contribution (£)' control={control} required type='currency' />
+                    <TextInput name='StartValue'           label='Start Value (£)'          control={control} required type='currency' />
+                    <TextInput name='EndValue'             label='End Value (£)'            control={control} required type='currency' />
 
-                    <Box>
-                        <TextInput name='ExternalId'           label='Policy number'            control={control} required />
-                        <TextInput name='MonthlyContributions' label='Monthly Contribution (£)' control={control} required type='currency' />
-                        <TextInput name='StartValue'           label='Start Value (£)'          control={control} required type='currency' />
-                        <TextInput name='EndValue'             label='End Value (£)'            control={control} required type='currency' />
+                    <SelectControl name='PolicyTypeId'     options={policyTypes}     label='Policy Type'     control={control} required />
+                    <SelectControl name='PolicyProviderId' options={policyProviders} label='Policy Provider' control={control} required />
 
-                        <SelectControl name='PolicyTypeId'     options={policyTypes}     label='Policy Type'     control={control} required />
-                        <SelectControl name='PolicyProviderId' options={policyProviders} label='Policy Provider' control={control} required />
+                    <RichTextEditor2 name    = 'Notes'
+                                        label   = 'Notes'
+                                        control = {control} />
 
-                        <RichTextEditor2 name    = 'Notes'
-                                         label   = 'Notes'
-                                         control = {control} />
-
-                        <FileUploader2 label        = 'Policy file'
-                                       name         = 'File'
-                                       control      = {control}
-                                       submitRef    = {submitRef} />
-                    </Box>
-
-                </DialogContent>
+                    <FileUploader2 label        = 'Policy file'
+                                    name         = 'File'
+                                    control      = {control}
+                                    submitRef    = {submitRef} />
+                </>
             }
         />
     );

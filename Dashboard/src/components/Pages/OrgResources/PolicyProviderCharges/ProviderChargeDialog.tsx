@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { State } from 'Types/Types';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
@@ -49,34 +44,28 @@ const ProviderChargeDialog = (props: {
     return (
         <Dialog
             title       = {`${props.submitLabel} Provider Charge`}
+            intro       = 'Enter provider charge details. Boundary is the lower side of the tier (the lesser amount):'
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
-                <DialogContent>
-                    <DialogContentText>
-                        Enter provider charge details. Boundary is the lower side of the tier (the lesser amount).
-                    </DialogContentText>
+                <>
+                    <TextInput
+                        required
+                        type='currency'
+                        name='Boundary'
+                        label='Lower tier boundary (£)'
+                        control={control}
+                    />
 
-                    <Box>
-                        <TextInput
-                            required
-                            type='currency'
-                            name='Boundary'
-                            label='Lower tier boundary (£)'
-                            control={control}
-                        />
-
-                        <TextInput
-                            required
-                            type='numeric'
-                            name='Charge'
-                            label='Annual Fee (%)'
-                            control={control}
-                        />
-                    </Box>
-
-                </DialogContent>
+                    <TextInput
+                        required
+                        type='numeric'
+                        name='Charge'
+                        label='Annual Fee (%)'
+                        control={control}
+                    />
+                </>
             }
         />
     );

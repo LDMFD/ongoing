@@ -1,10 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {
-    Box,
-    DialogContent,
-    DialogContentText,
-} from '@mui/material';
 
 import { Api } from 'State';
 import Dialog from 'Components/Library/Dialog/Dialog';
@@ -41,29 +36,23 @@ const TruncateDialog = () => {
         <div className   = 'truncate-dialog'>
             <Dialog
                 title       = 'Delete database contents'
+                intro       = 'Type the current environment ({env}) to confirm:'
                 submitLabel = 'Delete'
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
-                    <DialogContent>
-                        <DialogContentText>
-                            Type the current environment ({env}) to confirm:
-                        </DialogContentText>
-
-                        <Box>
-                            <TextInput
-                                control = {control}
-                                name    = 'Env'
-                                label   = 'Delete which environment?'
-                                type    = 'text'
-                                pattern = {{
-                                    value: new RegExp(`^${env}$`),
-                                    message: 'Type the current environment name to continue',
-                                }}
-                                required />
-                        </Box>
-
-                    </DialogContent>
+                    <>
+                        <TextInput
+                            control = {control}
+                            name    = 'Env'
+                            label   = 'Delete which environment?'
+                            type    = 'text'
+                            pattern = {{
+                                value: new RegExp(`^${env}$`),
+                                message: 'Type the current environment name to continue',
+                            }}
+                            required />
+                    </>
                 }
             />
         </div>
