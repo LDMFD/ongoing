@@ -1,17 +1,26 @@
-Where `<service>` is one of:
+# Staging & Release Process
 
-- dashboard
-- api
+## Test
 
-The release process is as follows:
+### Setup
 
     make work-on-staging
-    make up-<service>
+    make pull-secrets
 
-Test on Staging, then to deploy to Prod:
+### Build & deploy to Staging
 
-    make release-<service> RELEASE=1.2.3
+    # make up-<service> to build, push and deploy image
+
+    make up-dashboard
+    make up-api
+
+# Release
+
+### Version the current build (tags and pushes Git and Docker tags)
+
+    make release-{api|dashboard} RELEASE=1.2.3
+
+### Deploy to Prod
+
     make work-on-prod
-    make cloudrun-deploy-<service> TAG=1.2.3
-
-(note: RELEASE then TAG).
+    make deploy-{api|dashboard} RELEASE=1.2.3

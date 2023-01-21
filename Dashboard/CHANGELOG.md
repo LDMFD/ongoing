@@ -1,3 +1,7 @@
+## 1.6.4 2023-01-21
+
+- Module presets & dialog tidy
+
 ## 1.6.3 2023-01-18
 
 - Add policy type to policies table

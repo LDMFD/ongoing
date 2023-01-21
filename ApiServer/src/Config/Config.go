@@ -13,5 +13,5 @@ import (
 var OFFLINE_AUTH = os.Getenv("ONGOING_OFFLINE_AUTH") == "true"
 
 // API_KEY
-// API key for use in X-Ongoing-ApiKey header
+// API key for use in X-Ongoing-ApiKey header (for live imports)
 var API_KEY = strings.TrimSpace(os.Getenv("ONGOING_API_KEY"))

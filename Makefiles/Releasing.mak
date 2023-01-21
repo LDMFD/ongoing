@@ -29,6 +29,8 @@ docker-push-dashboard:
 # Usage: make deploy-api RELEASE=1.2.3
 deploy-api:
 	make _deploy-api SERVICE=ongoing-api TAG=${RELEASE}
+	make firebase-deploy
+
 
 # Usage: make deploy-dashboard RELEASE=1.2.3
 deploy-dashboard:

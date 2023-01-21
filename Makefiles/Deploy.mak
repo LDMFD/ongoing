@@ -88,25 +88,17 @@ cloudrun-update-traffic:
 		--region=${REGION} \
 		--to-latest
 
-cloudrun-deploy-api:
-	make _deploy-api SERVICE=ongoing-api TAG=${TAG}
-	make firebase-deploy
-
 cloudrun-deploy-dashboard:
 	make _deploy-dashboard SERVICE=ongoing-dashboard TAG=${TAG}
 	make firebase-deploy
 
+# For after SpiceDB is reset?
 redeploy-api:
-	make cloudrun-deploy-api TAG=latest
-	make firebase-deploy
-
-redeploy-dashboard:
-	make cloudrun-deploy-dashboard TAG=latest
+	make deploy-api RELEASE=latest
 	make firebase-deploy
 
 redeploy-all:
 	make redeploy-api
-	make redeploy-dashboard
 	make firebase-deploy
 
 up-spice:
@@ -118,7 +110,7 @@ up-api:
 	@echo "*** DEPLOYING API SERVER ${UUID}"
 	make build-image SERVICE=api RELEASE=${UUID}
 	make docker-push-api RELEASE=${UUID}
-	make cloudrun-deploy-api TAG=${UUID}
+	make deploy-api RELEASE=${UUID}
 	@echo "*** DEPLOYED API SERVER ${UUID}"
 
 up-dashboard:
@@ -126,7 +118,7 @@ up-dashboard:
 	@echo "*** DEPLOYING DASHBOARD ${UUID}"
 	make build-dashboard RELEASE=${UUID}
 	make docker-push-dashboard RELEASE=${UUID}
-	make cloudrun-deploy-dashboard TAG=${UUID}
+	make deploy-dashboard RELEASE=${UUID}
 	@echo "*** DEPLOYED DASHBOARD ${UUID}"
 
 up-all:

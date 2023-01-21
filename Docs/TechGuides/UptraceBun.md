@@ -1,4 +1,6 @@
-## A quick reference to uptrace/bun's postgres library
+# A quick reference to uptrace/bun's postgres library
+
+## Joins
 
 To make joins, `Relation()` should be camelCase but `Where()` should be snake_case.
 
@@ -12,7 +14,7 @@ To make joins, `Relation()` should be camelCase but `Where()` should be snake_ca
 			panic(err.Error())
 		}
 
-### Updates
+## Updates
 
 Use original table names in Column(string).
 
