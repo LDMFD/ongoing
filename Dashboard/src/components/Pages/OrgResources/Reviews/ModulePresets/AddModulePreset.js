@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Api } from 'State';
@@ -11,12 +11,17 @@ const AddModulePreset = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [ state, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
+    const [ error, setError ] = useState(null);
 
     const submitHandler = async (preset) => {
-        await Api.OrgResources.ModulePresets.Create(preset);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
+        let response = await Api.OrgResources.ModulePresets.Create(preset);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     return (
@@ -25,6 +30,7 @@ const AddModulePreset = () => {
             preset        = {DefaultModulePreset}
             submitLabel   = 'Add'
             submitHandler = {submitHandler}
+            error         = {error}
         />
     );
 }

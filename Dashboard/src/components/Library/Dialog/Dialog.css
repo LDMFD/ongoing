@@ -11,3 +11,7 @@
 .ong-dialog .MuiDialogActions-root {
     padding: 0 16px 6px;
 }
+
+.ong-dialog .ong-form-error {
+    left: 10px;
+}

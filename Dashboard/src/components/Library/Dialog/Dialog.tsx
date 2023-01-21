@@ -21,6 +21,7 @@ const Dialog = (props: {
     submitLabel: string,
     submitRef?: any,
     content: any,
+    error: string,
     sx?: any,
 }) => {
     let history = useHistory();
@@ -38,6 +39,11 @@ const Dialog = (props: {
                         <Box>
                             {props.content}
                         </Box>
+                        {props.error &&
+                            <div className='ong-form-error'>
+                                {props.error}
+                            </div>
+                        }
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={goBack}>Cancel</Button>

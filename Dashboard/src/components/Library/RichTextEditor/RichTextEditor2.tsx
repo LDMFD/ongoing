@@ -88,6 +88,12 @@ export const RichTextEditor2 = (props: FormInputProps) => {
             message: 'Required field',
         },
     };
+    if (props.required) {
+        rules.pattern = {
+            value: /^(?!<p>((<\/p><p><br>)|(<br>)|\s)+<\/p>$).*$/,   // prevent only spaces/newlines if required
+            message: 'Required field',
+        }
+    }
 
     return (
         <div className="ong-richtext">
@@ -129,7 +135,7 @@ export const RichTextEditor2 = (props: FormInputProps) => {
                             onChange = {onChange}
                         />
 
-                        {error?.type === 'required' &&
+                        {error &&
                             <div className='ong-form-error'>
                                 {error.message}
                             </div>

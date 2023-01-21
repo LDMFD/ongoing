@@ -7,6 +7,7 @@ import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEdito
 
 import { ModuleTypeSelectSpec } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
+import { UniqueViolation } from 'Errors';
 
 interface ModulePresetFormInput {
     ModuleType: string,
@@ -18,6 +19,7 @@ const ModulePresetDialog = (props: {
     preset: ModulePresetFormInput,
     submitLabel: string,
     submitHandler: (preset: ModulePresetFormInput) => void,
+    error: string,
 }) => {
     const { handleSubmit, control } = useForm<ModulePresetFormInput>({
         defaultValues: props.preset,
@@ -41,6 +43,7 @@ const ModulePresetDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
+            error       = {props.error == UniqueViolation && 'This module preset already exists.'}
             content = {
                 <>
                     {props.submitLabel.toLowerCase() === 'add' &&  // TODO submitLabel should be an enum

@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
-	"ongoing/Config"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
 )
@@ -38,10 +38,6 @@ func CreateModulePresetInternal(c *gin.Context, orgId int64, body CreateOrUpdate
 		Text:       body.Text,
 	}
 	if _, err := db.NewInsert().Model(&modulePreset).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true" {
-			return
-		}
-		panic(err)
+		Errors.HandleError(c, err)
 	}
 }

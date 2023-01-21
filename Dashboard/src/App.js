@@ -17,6 +17,7 @@ import StateProvider from 'State/StateProvider'
 
 import './App.css';
 import { ForceRefresh } from "Auth";
+import { UniqueViolation } from "Errors";
 
 Sentry.init({
     dsn: window.Config.SentryDsn,
@@ -143,7 +144,10 @@ window.ApiClient.interceptors.response.use((response) => {
     const responseError = err?.response?.data;
 
     if (typeof responseError == 'object') {  // explicit error returned from command handler
-        alert(responseError.error);
+        if (responseError.error !== UniqueViolation) {
+            alert(responseError.error)
+        }
+        return responseError;
     } else {
         alert(str);
         console.log(`response error: ${str}`);

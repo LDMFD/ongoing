@@ -15,6 +15,8 @@ import (
 	"time"
 )
 
+const PostgresUniqueViolation = "23505"
+
 var DB *bun.DB
 var hook *QueryHook
 
