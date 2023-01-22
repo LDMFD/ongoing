@@ -6,6 +6,7 @@ import { FormInputProps } from './FormInputProps';
 interface TextInputProps extends FormInputProps {
     type?: 'text' | 'email' | 'numeric' | 'currency',
     pattern?: object,
+    autofocus: boolean,
 }
 
 export const TextInput = (props: TextInputProps) => {
@@ -49,9 +50,9 @@ export const TextInput = (props: TextInputProps) => {
 
     return (
         <Controller
-            name    = {props.name}
-            control = {props.control}
-            rules   = {rules}
+            name      = {props.name}
+            control   = {props.control}
+            rules     = {rules}
             render = {({
                 field: { onChange, value },
                 fieldState: { error },
@@ -59,6 +60,7 @@ export const TextInput = (props: TextInputProps) => {
             }) => (
                 <>
                     <TextField
+                        autoFocus  = {props.autofocus} // TODO doesn't work
                         helperText = {error ? error.message : null}
                         size       = 'small'
                         error      = {!!error}

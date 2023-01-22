@@ -23,6 +23,7 @@ const Dialog = (props: {
     content: any,
     error: string,
     sx?: any,
+    fullWidth: boolean,
 }) => {
     let history = useHistory();
     let goBack = GoBack(history);
@@ -30,7 +31,13 @@ const Dialog = (props: {
     let ref = props.submitRef as any;
 
     return (
-        <MuiDialog open={true} onClose={goBack} sx={props.sx}>
+        <MuiDialog
+            open      = {true}
+            onClose   = {goBack}
+            sx        = {props.sx}
+            fullWidth = {props.fullWidth}
+            maxWidth  = 'md'
+        >
             <div className='ong-dialog'>
                 <form onSubmit={props.onSubmit}>
                     <DialogTitle>{props.title}</DialogTitle>

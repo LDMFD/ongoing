@@ -3,8 +3,10 @@ package Commands
 import (
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"strings"
 
 	"github.com/uptrace/bun"
 
@@ -16,7 +18,6 @@ type UpdatePolicyProviderPath struct {
 }
 
 func UpdatePolicyProvider(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var path UpdatePolicyProviderPath
@@ -25,21 +26,30 @@ func UpdatePolicyProvider(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	var req CreateOrUpdatePolicyProviderRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var body CreateOrUpdatePolicyProviderRequest
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
 
+	UpdatePolicyProviderInternal(c, session.Org.Id, path.PolicyProviderId, body)
+
+	c.Status(http.StatusOK)
+}
+
+func UpdatePolicyProviderInternal(c *gin.Context, orgId int64, providerId string, body CreateOrUpdatePolicyProviderRequest) {
+	db := c.MustGet("DATABASE").(*bun.DB)
+	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+
 	var policyProvider = Entities.PolicyProvider{}
 	if err := db.NewSelect().
 		Model(&policyProvider).
-		Where("uid = ?", path.PolicyProviderId).
+		Where("uid = ?", providerId).
 		Scan(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
-	if policyProvider.OrgId != session.Org.Id {
+	if policyProvider.OrgId != orgId {
 		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
 			log.Println("Unauthorized access attempt by:", session.Email)
 		}
@@ -47,22 +57,17 @@ func UpdatePolicyProvider(c *gin.Context) {
 		return
 	}
 
-	policyProvider.Name = req.Name
-	policyProvider.Pricing = req.Pricing
-	policyProvider.CustomPricing = req.CustomPricing
+	policyProvider.Name = strings.TrimSpace(body.Name)
+	policyProvider.Pricing = body.Pricing
+	policyProvider.CustomPricing = body.CustomPricing
 
 	if _, err := db.NewUpdate().Model(&policyProvider).
 		Where("org_id = ?", session.Org.Id).
-		Where("uid = ?", path.PolicyProviderId).
+		Where("uid = ?", providerId).
 		Column("name").
 		Column("pricing").
 		Column("custom_pricing").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
-
-	c.JSON(200, gin.H{
-		"PolicyProvider": policyProvider,
-	})
 }

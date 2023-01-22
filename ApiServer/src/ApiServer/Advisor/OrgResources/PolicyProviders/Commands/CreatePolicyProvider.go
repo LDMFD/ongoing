@@ -3,8 +3,10 @@ package Commands
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,29 +18,35 @@ type CreateOrUpdatePolicyProviderRequest struct {
 }
 
 func CreatePolicyProvider(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
-	var req CreateOrUpdatePolicyProviderRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
+	var body CreateOrUpdatePolicyProviderRequest
+	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	uid := CreatePolicyProviderInternal(c, session.Org.Id, body)
+
+	c.JSON(200, gin.H{
+		"Id": uid,
+	})
+}
+
+func CreatePolicyProviderInternal(c *gin.Context, orgId int64, body CreateOrUpdatePolicyProviderRequest) string {
+	db := c.MustGet("DATABASE").(*bun.DB)
 
 	uid := UUID.GenerateUID(c)
 
 	var policyProvider = Entities.PolicyProvider{
 		Uid:           uid,
-		Name:          req.Name,
-		Pricing:       req.Pricing,
-		CustomPricing: req.CustomPricing,
-		OrgId:         session.Org.Id,
+		Name:          strings.TrimSpace(body.Name),
+		Pricing:       body.Pricing,
+		CustomPricing: body.CustomPricing,
+		OrgId:         orgId,
 	}
 	if _, err := db.NewInsert().Model(&policyProvider).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
-	c.JSON(200, gin.H{
-		"Id": uid,
-	})
+	return uid
 }

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import PolicyProviderList from './PolicyProviderList';
 import AddPolicyProvider from './AddPolicyProvider';
+import DeletePolicyProvider from './DeletePolicyProvider';
 import EditPolicyProvider from './EditPolicyProvider';
+import PolicyProviderList from './PolicyProviderList';
 import ProviderChargeRoutes from '../PolicyProviderCharges/ProviderChargeRoutes';
 
 const PolicyProviderRoutes = () => {
@@ -24,11 +25,12 @@ const PolicyProviderRoutes = () => {
             <Route path={`${path}/add`}>
                 <AddPolicyProvider />
             </Route>
-
             <Route path={`${path}/id/:policyProviderId/edit`}>
                 <EditPolicyProvider />
             </Route>
-
+            <Route path={`${path}/id/:policyProviderId/delete`}>
+                <DeletePolicyProvider />
+            </Route>
             <Route path={`${path}/id/:policyProviderId/provider-charges`}>
                 <ProviderChargeRoutes/>
             </Route>

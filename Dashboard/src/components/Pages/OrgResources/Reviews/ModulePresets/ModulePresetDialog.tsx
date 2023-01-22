@@ -41,7 +41,7 @@ const ModulePresetDialog = (props: {
     return (
         <Dialog
             title       = {props.submitLabel + ' Module Preset' /* TODO refactor this with the enum */ }
-            intro       = 'Enter Module Preset details:'
+            intro       = 'Enter module preset details:'
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}

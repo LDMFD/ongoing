@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
@@ -7,23 +7,20 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Api } from 'State'
+import { Api, Context } from 'State'
 import Table from 'Components/Library/Table/Table';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
 const PolicyProviderList = () => {
-    let history = useHistory();
-    const [ state, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
-    const onDelete = useCallback(id => async () => {
-        if (window.confirm(`Delete policy provider?`)) {
-            await window.ApiClient.delete(`advisor/policy-providers/${id}`)
-            await Api.OrgResources.Entities.Read(dispatch);
-        }        
+    const sync = useCallback(() => {
+        Api.OrgResources.Entities.Read(dispatch)
     }, [ dispatch ]);
 
-    const onEdit = useCallback(id => () => {
-        history.push(`/policy-providers/id/${id}/edit`);
-    }, [ history ]);
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
 
     const columns = [
         {
@@ -53,14 +50,14 @@ const PolicyProviderList = () => {
             Header: '',
             width: 1,
             Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                <IconGroup>
+                    <Link to={`/policy-providers/id/${row.original.id}/delete`}>
                         <DeleteIcon />
-                    </button>
-                </>
+                    </Link>
+                    <Link to={`/policy-providers/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
             ),
         },
     ];
