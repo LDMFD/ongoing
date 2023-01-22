@@ -6,6 +6,7 @@ import { TextInput } from 'Components/Library/FormControls/TextInput';
 import Dialog from 'Components/Library/Dialog/Dialog';
 
 import { PolicyType } from 'Types/OrgResources';
+import { UniqueViolation } from 'Errors';
 
 interface PolicyTypeFormInput {
     Name: string,
@@ -16,6 +17,7 @@ export const PolicyTypeDialog = (props: {
     policyType: PolicyTypeFormInput,
     submitLabel: string,
     submitHandler: (policyType: PolicyType) => void,
+    error: string,
 }) => {
     const { handleSubmit, control } = useForm<PolicyTypeFormInput>({
         defaultValues: props.policyType
@@ -37,6 +39,7 @@ export const PolicyTypeDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
+            error       = {props.error === UniqueViolation && 'This policy type already exists.'}
             content = {
                 <>
                     <TextInput

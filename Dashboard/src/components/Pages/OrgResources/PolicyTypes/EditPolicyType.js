@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -14,10 +14,16 @@ const EditPolicyType = () => {
 
     let { policyTypeId } = useParams();
 
+    const [ error, setError ] = useState(null);
+
     const submitHandler = async (policyType) => {
-        await Api.OrgResources.PolicyTypes.Update(policyType);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
+        let response = await Api.OrgResources.PolicyTypes.Update(policyType);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     let policyType = state.Resources.PolicyTypes.find(o => o.Id === policyTypeId);
@@ -28,6 +34,7 @@ const EditPolicyType = () => {
             state         = {state}
             submitLabel   = 'Update'
             submitHandler = {submitHandler}
+            error         = {error}
         />
     );
 }

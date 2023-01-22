@@ -3,6 +3,7 @@ package Commands
 import (
 	"net/http"
 	"ongoing/Entities"
+	"strings"
 
 	"github.com/uptrace/bun"
 
@@ -31,7 +32,7 @@ func UpdateModulePreset(c *gin.Context) {
 
 	var modulePreset = Entities.ModulePreset{
 		ModuleType: body.ModuleType,
-		Text:       body.Text,
+		Text:       strings.TrimSpace(body.Text),
 	}
 	if _, err := db.NewUpdate().
 		Model(&modulePreset).

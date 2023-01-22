@@ -13,5 +13,6 @@
 }
 
 .ong-dialog .ong-form-error {
+    top: -5px;
     left: 10px;
 }

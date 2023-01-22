@@ -3,8 +3,10 @@ package Commands
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,12 +38,11 @@ func CreatePolicyTypeInternal(c *gin.Context, orgId int64, body CreateOrUpdatePo
 
 	var policyType = Entities.PolicyType{
 		Uid:   uid,
-		Name:  body.Name,
+		Name:  strings.TrimSpace(body.Name),
 		OrgId: orgId,
 	}
 	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
 	return uid
 }

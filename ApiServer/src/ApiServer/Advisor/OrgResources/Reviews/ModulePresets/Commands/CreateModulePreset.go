@@ -7,6 +7,7 @@ import (
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
+	"strings"
 )
 
 type CreateOrUpdateModulePresetRequestBody struct {
@@ -35,7 +36,7 @@ func CreateModulePresetInternal(c *gin.Context, orgId int64, body CreateOrUpdate
 		Uid:        UUID.GenerateUID(c),
 		OrgId:      orgId,
 		ModuleType: body.ModuleType,
-		Text:       body.Text,
+		Text:       strings.TrimSpace(body.Text),
 	}
 	if _, err := db.NewInsert().Model(&modulePreset).Exec(c); err != nil {
 		Errors.HandleError(c, err)

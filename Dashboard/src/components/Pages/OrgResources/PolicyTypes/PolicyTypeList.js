@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Button,
@@ -8,11 +8,19 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
-import { Context } from 'State'
+import { Context, Api } from 'State'
 import OgTable from 'Components/Library/Table/Table';
 
 const PolicyTypeList = () => {
-    const [ state, ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
+
+    const sync = useCallback(() => {
+        Api.OrgResources.Entities.Read(dispatch)
+    }, [ dispatch ]);
+
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
 
     const columns = [
         { 

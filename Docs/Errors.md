@@ -1,3 +1,5 @@
+	
+
 Handle invalid input as follows:
 
 	if err := doSomething(userInput); err != nil {
@@ -14,6 +16,10 @@ Handle unauthenticated as follows:
 		c.AbortWithStatus(http.StatusForbidden)
 		panic(err)
 	}
+
+New method: handle all errors through.
+
+	Errors.HandleError(c, err)
 
 Consider using "AbortWith()" in other places?
 

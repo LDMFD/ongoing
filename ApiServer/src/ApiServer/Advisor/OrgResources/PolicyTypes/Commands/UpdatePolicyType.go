@@ -3,8 +3,10 @@ package Commands
 import (
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"strings"
 
 	"github.com/uptrace/bun"
 
@@ -48,15 +50,14 @@ func UpdatePolicyType(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	policyType.Name = req.Name
+	policyType.Name = strings.TrimSpace(req.Name)
 
 	if _, err := db.NewUpdate().
 		Model(&policyType).
 		Where("uid = ?", path.PolicyTypeId).
 		Column("name").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
 
 	c.JSON(200, gin.H{

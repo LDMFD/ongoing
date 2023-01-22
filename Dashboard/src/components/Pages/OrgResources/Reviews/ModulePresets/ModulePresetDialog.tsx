@@ -35,6 +35,8 @@ const ModulePresetDialog = (props: {
     }));
 
     let submitRef = React.createRef();
+
+    let errorMsg = 'This module preset already exists. Choose another from the drop-down menu.'
     
     return (
         <Dialog
@@ -43,7 +45,7 @@ const ModulePresetDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error == UniqueViolation && 'This module preset already exists.'}
+            error       = {props.error === UniqueViolation && errorMsg}
             content = {
                 <>
                     {props.submitLabel.toLowerCase() === 'add' &&  // TODO submitLabel should be an enum

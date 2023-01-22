@@ -15,13 +15,13 @@ import IconGroup from 'Components/Library/IconGroup/IconGroup';
 const ModulePresetList = () => {
     const [ state, dispatch] = useContext(Context);
 
-    const getModulePresets = useCallback(() => {
+    const sync = useCallback(() => {
         Api.OrgResources.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
-        getModulePresets();
-    }, [ getModulePresets ]);
+        sync();
+    }, [ sync ]);
     
     const columns = [
         {
