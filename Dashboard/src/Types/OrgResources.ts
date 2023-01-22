@@ -1,6 +1,7 @@
 export interface OrgResources {
     Funds: Fund[],
     Models: Model[],
+    Operators: Operator[],
     PolicyProviders: PolicyProvider[],
     PolicyTypes: PolicyType[],
     RiskLevels: RiskLevel[],

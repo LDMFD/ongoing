@@ -5,11 +5,13 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
+	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -81,7 +83,7 @@ func UpdateModel(c *gin.Context) {
 		return
 	}
 
-	model.Name = body.Name
+	model.Name = strings.TrimSpace(body.Name)
 	model.OperatorId = operator.Id
 	model.WeightedOcfFee = body.WeightedOcfFee
 	model.WeightedExAnteFee = body.WeightedExAnteFee
@@ -116,8 +118,7 @@ func UpdateModel(c *gin.Context) {
 		Column("modified").
 		Column("file_ptr_id").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
 
 	if err := tx.Commit(); err != nil {

@@ -30,7 +30,7 @@ const EditPolicyProvider = () => {
 
     return (
         <PolicyProviderDialog
-            provider = {provider}
+            provider       = {provider}
             state          = {state}
             submitLabel    = 'Update'
             submitHandler  = {submitHandler}

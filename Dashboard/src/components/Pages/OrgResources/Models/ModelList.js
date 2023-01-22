@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
@@ -10,23 +10,20 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 import Table from 'Components/Library/Table/Table';
 import { FromCanonical } from 'Utils/DateTime';
 
 const ModelList = () => {
-    let history = useHistory();
-    const [ state, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
-    const onDelete = useCallback(id => async () => {
-        if (window.confirm(`Delete model?`)) {
-            await window.ApiClient.delete(`advisor/models/${id}`)
-            await Api.OrgResources.Entities.Read(dispatch);
-        }        
+    const sync = useCallback(() => {
+        Api.OrgResources.Entities.Read(dispatch)
     }, [ dispatch ]);
 
-    const onEdit = useCallback(id => () => {
-        history.push(`/models/id/${id}/edit`);
-    }, [ history ]);
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
 
     const downloadFile = useCallback(fileUid => () => {
         Download(fileUid);
@@ -68,14 +65,14 @@ const ModelList = () => {
             Header: '',
             width: 50,
             Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                <IconGroup>
+                    <Link to={`/models/id/${row.original.id}/delete`}>
                         <DeleteIcon />
-                    </button>
-                </>
+                    </Link>
+                    <Link to={`/models/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
             ),
         },
     ];

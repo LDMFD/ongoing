@@ -454,7 +454,7 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasAlternateKey("OrgId", "Name");
+                    b.HasAlternateKey("OrgId", "Name", "OperatorId");
 
                     b.HasIndex("FilePtrId");
 

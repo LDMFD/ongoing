@@ -84,7 +84,7 @@ const RiskAssessmentDialog = (props: {
 
                         <DateSelector2
                             name     = 'Completed'
-                            label    = 'Submit date'
+                            label    = 'Submit date (DD/MM/YYYY)'
                             control  = {control}
                             required
                         />

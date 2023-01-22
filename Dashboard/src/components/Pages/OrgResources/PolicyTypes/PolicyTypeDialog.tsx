@@ -41,14 +41,12 @@ export const PolicyTypeDialog = (props: {
             onSubmit    = {handleSubmit(onSubmit)}
             error       = {props.error === UniqueViolation && 'This policy type already exists.'}
             content = {
-                <>
-                    <TextInput
-                        name='Name'
-                        label='Name'
-                        control={control}
-                        required
-                    />
-                </>
+                <TextInput
+                    name    = 'Name'
+                    label   = 'Name'
+                    control = {control}
+                    required
+                />
             }
         />
     );

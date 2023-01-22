@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import ModelList from './ModelList';
 import AddModel from './AddModel';
 import EditModel from './EditModel';
+import DeleteModel from './DeleteModel';
 
 const ModelRoutes = () => {
     let { path } = useRouteMatch();
@@ -25,6 +26,9 @@ const ModelRoutes = () => {
             </Route>
             <Route path={`${path}/id/:modelId/edit`}>
                 <EditModel />
+            </Route>
+            <Route path={`${path}/id/:modelId/delete`}>
+                <DeleteModel />
             </Route>
         </div>
     );

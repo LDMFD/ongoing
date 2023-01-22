@@ -91,6 +91,6 @@ class ModelConfig : IEntityTypeConfiguration<Model>
             .HasConstraintName("fk_model_org");
 
         builder.HasAlternateKey(e => e.Uid);
-        builder.HasAlternateKey(e => new { e.OrgId, e.Name });
+        builder.HasAlternateKey(e => new { e.OrgId, e.Name, e.OperatorId });
     }
 }

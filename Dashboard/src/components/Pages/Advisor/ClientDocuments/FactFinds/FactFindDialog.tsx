@@ -42,7 +42,7 @@ const FactFindDialog = (props: {
                     <>
                         <DateSelector2
                             name     = 'Submitted'
-                            label    = 'Submit date'
+                            label    = 'Submit date (DD/MM/YYYY)'
                             control  = {control}
                             required
                         />

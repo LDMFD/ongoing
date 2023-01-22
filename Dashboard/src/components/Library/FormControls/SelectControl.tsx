@@ -12,6 +12,7 @@ interface SelectMenuItem {
 
 interface SelectControlProps extends FormInputProps {
     options: SelectMenuItem[],
+    required: boolean,
 }
 
 export const SelectControl = (props: SelectControlProps) => {
