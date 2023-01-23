@@ -5,6 +5,7 @@ import { TextInput } from 'Components/Library/FormControls/TextInput';
 
 import { Client } from 'Types/ClientResources';
 import Dialog from 'Components/Library/Dialog/Dialog';
+import { UniqueViolation } from 'Errors';
 
 interface ClientFormInput {
     Surname: string,
@@ -17,6 +18,7 @@ const ClientDialog = (props: {
     client: Client,
     submitLabel: string,
     submitHandler: (client: Client) => void,
+    error: string,
 }) => {
     const { handleSubmit, control } = useForm<ClientFormInput>({
         defaultValues: {
@@ -43,6 +45,7 @@ const ClientDialog = (props: {
             intro       = 'Enter new client details:'
             submitLabel = {props.submitLabel}
             onSubmit    = {handleSubmit(onSubmit)}
+            error       = {props.error === UniqueViolation && 'A client with this email address already exists in the system.'}
             content = {
                 <>
                     <TextInput name='Email'     label='Email'          control={control} required type='email' />

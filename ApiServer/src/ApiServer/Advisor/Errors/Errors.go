@@ -9,7 +9,7 @@ import (
 	"ongoing/Database"
 )
 
-const UniqueViolation = "unique_violation"
+const UniqueViolation = "duplicate_record"
 
 const PolicyNumberAlreadyExists = "A policy with this policy number already exists."
 const PolicyHasDependentPortfolios = "Unable to delete - policy has dependent portfolios"
@@ -39,11 +39,12 @@ func ModelHasDependentPortfolios(models string) string {
 }
 
 func HandleError(c *gin.Context, err error) {
-	f := err.(pgdriver.Error)
-	if f.Field('C') == Database.PostgresUniqueViolation {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "unique_violation",
-		})
+	if f, ok := err.(pgdriver.Error); ok {
+		if f.Field('C') == Database.PostgresUniqueViolation {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": UniqueViolation,
+			})
+		}
 	}
 	if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true" {
 		return

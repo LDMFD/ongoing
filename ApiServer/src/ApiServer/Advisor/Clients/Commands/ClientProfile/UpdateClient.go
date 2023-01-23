@@ -6,6 +6,7 @@ import (
 	"github.com/uptrace/bun"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
@@ -64,8 +65,8 @@ func UpdateClient(c *gin.Context) {
 	if _, err := tx.NewUpdate().Model(client).WherePK().
 		Column("fee").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		tx.Rollback()
+		Errors.HandleError(c, err)
 	}
 
 	if err := tx.NewSelect().
@@ -81,16 +82,16 @@ func UpdateClient(c *gin.Context) {
 	nameChange := body.Identity.Surname != client.User.Surname || body.Identity.Forenames != client.User.Forenames
 
 	if emailChange || nameChange {
-		client.User.Email = body.Identity.Email
-		client.User.Forenames = body.Identity.Forenames
-		client.User.Surname = body.Identity.Surname
+		client.User.Email = strings.TrimSpace(body.Identity.Email)
+		client.User.Forenames = strings.TrimSpace(body.Identity.Forenames)
+		client.User.Surname = strings.TrimSpace(body.Identity.Surname)
 		if _, err := db.NewUpdate().Model(&client.User).WherePK().
 			Column("email").
 			Column("forenames").
 			Column("surname").
 			Exec(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
+			tx.Rollback()
+			Errors.HandleError(c, err)
 		}
 	}
 

@@ -79,6 +79,7 @@ func CreateModel(c *gin.Context) {
 	}
 
 	if _, err := tx.NewInsert().Model(&model).Exec(c); err != nil {
+		_ = tx.Rollback()
 		Errors.HandleError(c, err)
 	}
 

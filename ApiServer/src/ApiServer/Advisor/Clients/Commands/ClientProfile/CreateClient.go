@@ -32,7 +32,7 @@ func CreateClient(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	} else if exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.UserAlreadyExists})
+		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.UniqueViolation})
 		return
 	}
 
@@ -49,17 +49,15 @@ func CreateClient(c *gin.Context) {
 
 	var user = Entities.User{
 		Uid:       userUid,
-		Email:     body.Identity.Email,
-		Forenames: body.Identity.Forenames,
-		Surname:   body.Identity.Surname,
+		Email:     strings.TrimSpace(body.Identity.Email),
+		Forenames: strings.TrimSpace(body.Identity.Forenames),
+		Surname:   strings.TrimSpace(body.Identity.Surname),
 	}
 	if _, err := tx.NewInsert().
 		Model(&user).
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
 		_ = tx.Rollback()
-		return
+		Errors.HandleError(c, err)
 	}
 
 	org := Entities.Organisation{}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -13,16 +13,25 @@ const AddClient = () => {
 
     const [, dispatch] = useContext(Context);
 
+    const [ error, setError ] = useState(null);
+
     const submitHandler = async (c) => {
-        await Api.Advisor.ClientDetail.Create(c);
-        await Api.Advisor.Clients.Read(dispatch);
-        goBack();
+        let response = await Api.Advisor.ClientDetail.Create(c);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.Advisor.Clients.Read(dispatch);
+            goBack();
+        }
     };
 
     return (
-        <ClientDialog client        = {DefaultClient}
-                      submitLabel   = 'Add'
-                      submitHandler = {submitHandler}  />
+        <ClientDialog
+            client        = {DefaultClient}
+            submitLabel   = 'Add'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

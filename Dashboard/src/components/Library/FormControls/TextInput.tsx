@@ -41,12 +41,13 @@ export const TextInput = (props: TextInputProps) => {
     if (props.pattern) {
         rules.pattern = props.pattern;
     }
-    if (props.required) {
-        rules.pattern = {
-            value: /^(?!\s+$).*$/,   // prevent only spaces if required
-            message: 'Required field',
-        }
-    }
+    // Doesn't work - wipes out existing required entry. How to combine?
+    // if (props.required) {
+    //     rules.pattern = {
+    //         value: /^(?!\s+$).*$/,   // prevent only spaces if required
+    //         message: 'Required field',
+    //     }
+    // }
 
     return (
         <Controller

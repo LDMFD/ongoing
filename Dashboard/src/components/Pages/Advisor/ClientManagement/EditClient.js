@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -14,19 +14,28 @@ const EditClient = () => {
 
     let { clientId } = useParams();
 
-    let client = state.Clients.find(c => c.Id === clientId);
+    const [ error, setError ] = useState(null);
 
     const submitHandler = async (c) => {
-        await Api.Advisor.ClientDetail.Update(c);
-        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
-        await Api.Advisor.Clients.Read(dispatch);  // TODO optimize this
-        goBack();
+        let response = await Api.Advisor.ClientDetail.Update(c);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.Advisor.ClientDetail.Read(dispatch, clientId);
+            await Api.Advisor.Clients.Read(dispatch);  // TODO optimize this
+            goBack();
+        }
     };
 
+    let client = state.Clients.find(c => c.Id === clientId);
+
     return (
-        <ClientDialog client        = {client}
-                      submitLabel   = 'Update'
-                      submitHandler = {submitHandler}  />
+        <ClientDialog
+            client        = {client}
+            submitLabel   = 'Update'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

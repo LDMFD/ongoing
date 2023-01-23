@@ -1,42 +1,51 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import React, { useContext, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
 import { Context, Api } from 'State'
+import OgTable from 'Components/Library/Table/Table';
 
 const ClientList = () => {
-    let history = useHistory();
     const [ state, dispatch ] = useContext(Context);
 
-    const onDelete = useCallback(params => async () => {
-        if (window.confirm(`Delete client?`)) {
-            await Api.Advisor.ClientDetail.Delete(params.row.id)
-            await Api.Advisor.Clients.Read(dispatch);
-        }        
+    const sync = useCallback(() => {
+        Api.Advisor.Clients.Read(dispatch)
     }, [ dispatch ]);
 
-    const onOpen = useCallback(params => () => {
-        history.push(`/clients/id/${params.row.id}`);
-    }, [ history ]);
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
 
     const columns = [
-        { field: 'name',  headerName: 'Name',  flex: 0.1, },
-        { field: 'email', headerName: 'Email', flex: 0.1, },
-        { field: 'fee',   headerName: 'Fee',   flex: 0.1, },
         {
-            field: 'actions',
-            type: 'actions',
-            flex: .01,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<MeetingRoomIcon />}   onClick={onOpen(params)}   label="Open" />,
-                <GridActionsCellItem icon={<DeleteIcon />}        onClick={onDelete(params)} label="Delete" />,
-            ]
+            accessor: 'name',
+            Header: 'Name',
+            width: .5,
+            Cell: ({ row }) => <Link to={`/clients/id/${row.original.id}`}>{row.original.name}</Link>
+        }, {
+            accessor: 'email',
+            Header: 'Email',
+            width: .5,
+        }, {
+            accessor: 'fee',
+            Header: 'Fee',
+            width: 0.3,
+        }, {
+            accessor: 'actions',
+            Header: '',
+            width: .1,
+            Cell: ({ row }) => (
+                <IconGroup>
+                    <Link to={`/clients/delete/id/${row.original.id}`}>
+                        <DeleteIcon />
+                    </Link>
+                </IconGroup>
+            ),
         },
     ];
 
@@ -50,18 +59,13 @@ const ClientList = () => {
         };
     });
 
-    let data = {
-        rows: clients,
-        columns: columns,
-    }
-
     return (
         <>
             <Toolbar className="breadcrumb-action">
                 <Link to={{ pathname: '/clients/add' }}><Button>Add new client</Button></Link>
             </Toolbar>
 
-            <DataGrid autoHeight {...data} />
+            <OgTable columns={columns} data={clients} />
         </>
     );
 }

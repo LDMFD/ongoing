@@ -2,15 +2,16 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import AddClient           from './ClientManagement/AddClient';
-import ClientAccountPage   from './ClientManagement/ClientAccountPage'
-import ClientList          from './ClientManagement/ClientList';
-import ClientWrapper       from './AdvisorSpaceWrapper';
-import EditClient          from './ClientManagement/EditClient';
-import HoldingsRoutes      from './ClientHoldings/HoldingsRoutes';
-import DocumentsRoutes     from './ClientDocuments/DocumentsRoutes';
 import AdvisorReportRoutes from './AdvisorReport/ReportRoutes';
 import AdvisorReviewList   from './Reviews/AdvisorReviewList';
 import AdvisorReviewRoutes from './Reviews/AdvisorReviewRoutes';
+import ClientAccountPage   from './ClientManagement/ClientAccountPage'
+import ClientList          from './ClientManagement/ClientList';
+import ClientWrapper       from './AdvisorSpaceWrapper';
+import DeleteClient        from './ClientManagement/DeleteClient';
+import DocumentsRoutes     from './ClientDocuments/DocumentsRoutes';
+import EditClient          from './ClientManagement/EditClient';
+import HoldingsRoutes      from './ClientHoldings/HoldingsRoutes';
 
 const AdvisorClientRoutes = () => {
     let { path } = useRouteMatch();
@@ -45,6 +46,7 @@ const AdvisorClientRoutes = () => {
             </Switch>
     
             <Route path={`${path}/add`} component={AddClient} />
+            <Route path={`${path}/delete/id/:clientId`} component={DeleteClient} />
         </div>
     );
 }

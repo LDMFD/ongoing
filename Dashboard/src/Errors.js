@@ -1,1 +1,1 @@
-export const UniqueViolation = 'unique_violation';
+export const UniqueViolation = 'duplicate_record';
