@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -13,19 +13,28 @@ const AddPolicy = () => {
 
     const [ state, dispatch] = useContext(Context);
 
+    const [ error, setError ] = useState(null);
+
     let { clientId } = useParams();
 
     const submitHandler = async (policy) => {
-        await Api.Advisor.Policies.Create(clientId, policy);
-        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
-        goBack();
+        let response = await Api.Advisor.Policies.Create(clientId, policy);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.Advisor.ClientDetail.Read(dispatch, clientId);
+            goBack();
+        }
     };
 
     return (
-        <PolicyDialog state         = {state}
-                      policy        = {DefaultPolicy}
-                      submitLabel   = 'Add'
-                      submitHandler = {submitHandler}  />
+        <PolicyDialog
+            state         = {state}
+            policy        = {DefaultPolicy}
+            submitLabel   = 'Add'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

@@ -58,6 +58,7 @@ func CreateClient(c *gin.Context) {
 		Exec(c); err != nil {
 		_ = tx.Rollback()
 		Errors.HandleError(c, err)
+		return
 	}
 
 	org := Entities.Organisation{}

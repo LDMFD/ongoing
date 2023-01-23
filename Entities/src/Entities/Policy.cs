@@ -111,6 +111,6 @@ class PolicyConfig : IEntityTypeConfiguration<Policy>
             .HasConstraintName("fk_policy_type");
         
         builder.HasAlternateKey(p => p.Uid);
-        builder.HasAlternateKey(e => new { e.ExternalId, e.PolicyProviderId });
+        builder.HasAlternateKey(e => new { e.ClientId, e.PolicyProviderId, e.ExternalId });
     }
 }

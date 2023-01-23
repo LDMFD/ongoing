@@ -2,7 +2,7 @@
 
 ## Joins
 
-To make joins, `Relation()` should be camelCase but `Where()` should be snake_case.
+To make joins, `Relation()` should be CamelCase but `Where()` should be snake_case.
 
 		var providerCharges []Entities.ProviderCharge
 		if err := db.NewSelect().

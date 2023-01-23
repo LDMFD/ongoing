@@ -11,6 +11,7 @@ import (
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -54,11 +55,16 @@ func CreatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if exists, err := db.NewSelect().Model((*Entities.Policy)(nil)).Where("external_id = ?", body.ExternalId).Exists(c); err != nil {
+	if exists, err := db.NewSelect().Model((*Entities.Policy)(nil)).
+		Where("external_id = ?", body.ExternalId).
+		Where("client_id = ?", client.Id).
+		Where("policy_provider.uid = ?", body.PolicyProviderId).
+		Relation("PolicyProvider").
+		Exists(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	} else if exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyNumberAlreadyExists})
+		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.UniqueViolation})
 		return
 	}
 
@@ -85,7 +91,7 @@ func CreatePolicy(c *gin.Context) {
 	var policy = Entities.Policy{
 		Uid:                  uid,
 		ClientId:             client.Id,
-		ExternalId:           body.ExternalId,
+		ExternalId:           strings.TrimSpace(body.ExternalId),
 		MonthlyContributions: body.MonthlyContributions,
 		StartValue:           body.StartValue,
 		EndValue:             body.EndValue,

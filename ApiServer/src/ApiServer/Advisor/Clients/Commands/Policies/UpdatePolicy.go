@@ -5,10 +5,12 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"strings"
 
 	"github.com/uptrace/bun"
 
@@ -109,7 +111,7 @@ func UpdatePolicy(c *gin.Context) {
 		policy.FilePtr = nil
 	}
 
-	policy.ExternalId = body.ExternalId
+	policy.ExternalId = strings.TrimSpace(body.ExternalId)
 	policy.MonthlyContributions = body.MonthlyContributions
 	policy.StartValue = body.StartValue
 	policy.EndValue = body.EndValue
@@ -129,8 +131,8 @@ func UpdatePolicy(c *gin.Context) {
 		Column("notes").
 		Column("file_ptr_id").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
+		return
 	}
 
 	if err := tx.Commit(); err != nil {

@@ -120,6 +120,7 @@ func UpdateModel(c *gin.Context) {
 		Exec(c); err != nil {
 		_ = tx.Rollback()
 		Errors.HandleError(c, err)
+		return
 	}
 
 	if err := tx.Commit(); err != nil {

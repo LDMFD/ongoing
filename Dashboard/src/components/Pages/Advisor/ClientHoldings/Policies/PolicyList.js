@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext, useCallback, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -15,28 +15,26 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import { FormatCurrencyPence } from 'Utils/Strings';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 import Table from 'Components/Library/Table/Table';
 
 const PolicyList = () => {
-    let history = useHistory();
-
     const [state, dispatch ] = useContext(Context);
     let {
         Metadata: client,
     } = state;
 
+    let { clientId } = useParams();
+
+    const sync = useCallback(() => {
+        Api.Advisor.ClientDetail.Read(dispatch, clientId);
+    }, [ dispatch, clientId ]);
+
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
+
     let report = GetReport();
-
-    const deletePolicy = useCallback(id => async () => {
-        if (window.confirm(`Delete policy?`)) {
-            await Api.Advisor.Policies.Delete(client.Id, id);
-            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
-        }
-    }, [ dispatch, client.Id ]);
-
-    const editPolicy = useCallback(id => () => {
-        history.push(`/clients/id/${client.Id}/holdings/policies/id/${id}/edit`);
-    }, [ history, client.Id ]);
 
     const downloadFile = useCallback(fileUid => () => {
         Download(fileUid);
@@ -99,16 +97,16 @@ const PolicyList = () => {
     columns.push({
         accessor: 'actions',
         Header: '',
-        width: 1,
+        width: 2,
         Cell: ({ row }) => (
-            <>
-                <button onClick={editPolicy(row.original.id)} className='ong-openFileIcon'>
-                    <EditIcon />
-                </button>
-                <button onClick={deletePolicy(row.original.id)} className='ong-openFileIcon'>
+            <IconGroup>
+                <Link to={`/clients/id/${client.Id}/holdings/policies/delete/${row.original.id}`}>
                     <DeleteIcon />
-                </button>
-            </>
+                </Link>
+                <Link to={`/clients/id/${client.Id}/holdings/policies/id/${row.original.id}/edit`}>
+                    <EditIcon />
+                </Link>
+            </IconGroup>
         ),
     });
 

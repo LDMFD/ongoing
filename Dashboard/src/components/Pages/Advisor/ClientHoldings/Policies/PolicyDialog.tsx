@@ -10,6 +10,7 @@ import { File, State } from 'Types/Types';
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { PolicyProvider, PolicyType } from 'Types/OrgResources';
 import { CurrencyFromString, CurrencyToString } from 'Utils/Strings';
+import { UniqueViolation } from 'Errors';
 
 interface FormFile extends File {
     Uploading: boolean,
@@ -31,6 +32,7 @@ const PolicyDialog = (props: {
     policy: PolicyFormInput,
     submitLabel: string,
     submitHandler: (policy: PolicyFormInput) => void,
+    error: string,
 }) => {
     let monthlyContributions = CurrencyToString(props.policy.MonthlyContributions);
     let startValue           = CurrencyToString(props.policy.StartValue);
@@ -77,6 +79,7 @@ const PolicyDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
+            error       = {props.error === UniqueViolation && 'Policy number already exists for this provider.'}
             content = {
                 <>
                     <TextInput name='ExternalId'           label='Policy number'            control={control} required />
@@ -95,6 +98,7 @@ const PolicyDialog = (props: {
                                     name         = 'File'
                                     control      = {control}
                                     submitRef    = {submitRef} />
+                    <br />
                 </>
             }
         />

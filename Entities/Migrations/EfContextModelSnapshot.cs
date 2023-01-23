@@ -707,9 +707,7 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasAlternateKey("ExternalId", "PolicyProviderId");
-
-                    b.HasIndex("ClientId");
+                    b.HasAlternateKey("ClientId", "PolicyProviderId", "ExternalId");
 
                     b.HasIndex("FilePtrId");
 
