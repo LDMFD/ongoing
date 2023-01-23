@@ -57,13 +57,17 @@ func CreateReview(c *gin.Context) {
 		ScanAndCount(c); err != nil {
 		panic(err)
 	} else {
-		if count == 1 {
+		if count >= 1 {
 			t1 = previous[0].EndDate.AddDate(0, 0, 1)
 		}
 	}
 
 	startDate := time.Date(t1.Year(), t1.Month(), t1.Day(), 0, 0, 0, 0, time.UTC)
 	endDate := time.Date(t2.Year(), t2.Month(), t2.Day(), 0, 0, 0, 0, time.UTC)
+
+	if startDate.After(endDate) {
+		startDate = endDate
+	}
 
 	uid := UUID.GenerateUID(c)
 

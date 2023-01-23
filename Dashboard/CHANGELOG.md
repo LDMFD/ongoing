@@ -1,3 +1,7 @@
+## 1.7.1 2023-01-22
+
+- Fix new review dates
+
 ## 1.7.0 2023-01-22
 
 - Form validations
