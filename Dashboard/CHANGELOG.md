@@ -1,3 +1,7 @@
+## 1.7.0 2023-01-22
+
+- Form validations
+
 ## 1.6.5 2023-01-21
 
 - Module presets server-side validation UX

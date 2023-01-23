@@ -1,3 +1,7 @@
+## 1.7.0 2023-01-22
+
+- Form validations
+
 ## 1.6.2 2023-01-20
 
 - Seed org data
