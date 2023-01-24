@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext, useCallback, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -12,28 +12,26 @@ import { Context, Api } from 'State'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
 
 const PortfolioList = () => {
-    let history = useHistory();
-
     const [state, dispatch ] = useContext(Context);
     let {
         Metadata: client,
     } = state;
 
+    let { clientId } = useParams();
+
+    const sync = useCallback(() => {
+        Api.Advisor.ClientDetail.Read(dispatch, clientId);
+    }, [ dispatch, clientId ]);
+
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
+
     let report = GetReport();
-
-    const deletePortfolio = useCallback(id => async () => {
-        if (window.confirm(`Delete portfolio?`)) {
-            await Api.Advisor.Portfolios.Delete(client.Id, id);
-            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
-        }        
-    }, [ dispatch, client.Id ]);
-
-    const editPortfolio = useCallback(id => () => {
-        history.push(`/clients/id/${client.Id}/holdings/portfolios/id/${id}/edit`);
-    }, [ history, client.Id ]);
 
     const downloadFile = useCallback(fileUid => () => {
         Download(fileUid);
@@ -43,7 +41,7 @@ const PortfolioList = () => {
         accessor: 'policy',
         Header: 'Policy',
         type: 'actions',
-        width: 30,
+        width: 15,
         Cell: ({ row }) => (
             <>
                 {row.original.policy.ExternalId}
@@ -58,12 +56,12 @@ const PortfolioList = () => {
         accessor: 'operator',
         Header: 'Operator',
         type: 'actions',
-        width: 30,
+        width: 15,
     }, {
         accessor: 'model',
         Header: 'Model',
         type: 'actions',
-        width: 30,
+        width: 15,
         Cell: ({ row }) => (
             <>
                 {row.original.model.Name}
@@ -81,20 +79,20 @@ const PortfolioList = () => {
     }, {
         accessor: 'includeInFee',
         Header: 'Include in fee?',
-        width: 10,
+        width: 5,
     }, {
         accessor: 'actions',
         Header: '',
         width: 10,
         Cell: ({ row }) => (
-            <>
-                <button onClick={editPortfolio(row.original.id)} className='ong-openFileIcon'>
-                    <EditIcon />
-                </button>
-                <button onClick={deletePortfolio(row.original.id)} className='ong-openFileIcon'>
+            <IconGroup>
+                <Link to={`/clients/id/${client.Id}/holdings/portfolios/id/${row.original.id}/delete`}>
                     <DeleteIcon />
-                </button>
-            </>
+                </Link>
+                <Link to={`/clients/id/${client.Id}/holdings/portfolios/id/${row.original.id}/edit`}>
+                    <EditIcon />
+                </Link>
+            </IconGroup>
         ),
     }];
 

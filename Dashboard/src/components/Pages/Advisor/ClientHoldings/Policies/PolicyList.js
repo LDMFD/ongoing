@@ -100,7 +100,7 @@ const PolicyList = () => {
         width: 2,
         Cell: ({ row }) => (
             <IconGroup>
-                <Link to={`/clients/id/${client.Id}/holdings/policies/delete/${row.original.id}`}>
+                <Link to={`/clients/id/${client.Id}/holdings/policies/id/${row.original.id}/delete`}>
                     <DeleteIcon />
                 </Link>
                 <Link to={`/clients/id/${client.Id}/holdings/policies/id/${row.original.id}/edit`}>

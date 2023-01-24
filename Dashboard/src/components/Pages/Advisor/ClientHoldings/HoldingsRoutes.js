@@ -15,6 +15,7 @@ import PolicyList from './Policies/PolicyList';
 import PortfolioList from './Portfolios/PortfolioList';
 import ProviderDiscountList from './ProviderDiscounts/ProviderDiscountList';
 import DeletePolicy from './Policies/DeletePolicy';
+import DeletePortfolio from './Portfolios/DeletePortfolio';
 
 const ReportRoutes = () => {
     let { path } = useRouteMatch();
@@ -42,10 +43,11 @@ const ReportRoutes = () => {
                     <Route path={`${basePath}/provider-discounts/id/:providerDiscountId/edit`} component={EditProviderDiscount} />
 
                     <Route path={`${basePath}/portfolios/add`}                     component={AddPortfolio} />
+                    <Route path={`${basePath}/portfolios/id/:portfolioId/delete`}  component={DeletePortfolio} />
                     <Route path={`${basePath}/portfolios/id/:portfolioId/edit`}    component={EditPortfolio} />
 
                     <Route path={`${basePath}/policies/add`}                       component={AddPolicy} />
-                    <Route path={`${basePath}/policies/delete/:policyId`}          component={DeletePolicy} />
+                    <Route path={`${basePath}/policies/id/:policyId/delete`}       component={DeletePolicy} />
                     <Route path={`${basePath}/policies/id/:policyId/edit`}         component={EditPolicy} />
                     
                     <Route path={`${basePath}/policy-funds/add`}                   component={AddPolicyFund} />
