@@ -207,8 +207,9 @@ const SummaryTable = (props: {
             portfolioLevelOcfs[pol.Id] = `${portfolioLevelOcfPercent} (${portfolioLevelOcfChargeFmt})`;
             portfolioLevelExAntes[pol.Id] = `${portfolioLevelExAntePercent} (${portfolioLevelExAnteChargeFmt})`;
 
-            let dimPercent = prov.DimFees.PolicyFees.get(pol.Id)!.WeightedAvgDimFee;
-            let dimCharge = dimPercent / 100 * pol.EndValue;
+            let pf = prov.DimFees.PolicyFees.get(pol.Id);
+            let dimPercent = pf ? pf.WeightedAvgDimFee : 0;  // not entirely sure when pf can be null but it has been seen
+            let dimCharge = pf ? dimPercent / 100 * pol.EndValue : 0;
             dims[pol.Id] = `${FormatPercent(dimPercent)} (${FormatCurrencyPence(dimCharge)})`;
 
             totalPercents[pol.Id] = FormatPercent(

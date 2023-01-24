@@ -74,7 +74,7 @@ const PortfolioList = () => {
         ),
     }, {
         accessor: 'proportion',
-        Header: 'Proportion',
+        Header: '% of policy',
         width: 10,
     }, {
         accessor: 'includeInFee',

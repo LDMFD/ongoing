@@ -1,3 +1,7 @@
+## 1.7.4 2023-01-24
+
+- Small fixes
+
 ## 1.7.3 2023-01-24
 
 - Form validations

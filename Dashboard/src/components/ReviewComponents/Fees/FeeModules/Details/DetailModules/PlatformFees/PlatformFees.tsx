@@ -45,7 +45,7 @@ const Block = (props: {
             <ul>
                 <li>
                     You are holding a total of {FormatCurrencyPence(total)} on the {provider.Name} platform,
-                    which is {PercentageFormatter.format(totalPercent)} of your total holdings.
+                    which is {PercentageFormatter.format(totalPercent)}% of your total holdings.
                 </li>
                 <li>
                     {provider.Name} charge an annual fee, which currently comes to {FormatCurrencyPence(totalCharge)},

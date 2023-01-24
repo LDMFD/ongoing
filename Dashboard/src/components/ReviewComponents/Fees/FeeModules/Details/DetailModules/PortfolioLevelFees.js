@@ -89,6 +89,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
 
     let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
 
+    console.log(portfolios)
     return (
        <Panel>
             <h3>{provider.Name} ({policy.ExternalId})</h3>
@@ -129,8 +130,8 @@ const PortfolioLevelFees = () => {
 
         return {
             id:                portfolio.Id,
-            proportion:        portfolio.Proportion,
-            proportionStr:     FormatPercent(portfolio.Proportion),
+            proportion:        portfolio.Proportion * 100,
+            proportionStr:     FormatPercent(portfolio.Proportion * 100),
             policyId:          policy.Id,
             endValue:          policy.EndValue,
             model:             model,
