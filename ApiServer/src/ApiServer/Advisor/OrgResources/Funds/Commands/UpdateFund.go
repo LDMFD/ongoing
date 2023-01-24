@@ -5,11 +5,13 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
+	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -72,7 +74,7 @@ func UpdateFund(c *gin.Context) {
 		return
 	}
 
-	fund.Name = body.Name
+	fund.Name = strings.TrimSpace(body.Name)
 	fund.OcfFee = body.OcfFee
 	fund.ExAnteFee = body.ExAnteFee
 	fund.Modified = &modified
@@ -105,8 +107,7 @@ func UpdateFund(c *gin.Context) {
 		Column("file_ptr_id").
 		Column("modified").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
 
 	if err := tx.Commit(); err != nil {

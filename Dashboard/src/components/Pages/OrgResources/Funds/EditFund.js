@@ -1,38 +1,41 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'State/StateProvider'
-import FundDialog from './FundDialog';
-import { GoBack } from 'Utils/Routing';
 import { Api } from 'State';
+import { Context } from 'State/StateProvider'
+import { GoBack } from 'Utils/Routing';
+import FundDialog from './FundDialog';
 
 const EditFund = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const [ state, dispatch ] = useContext(Context);
-    let [ fund, setFund ] = useState(null);
 
     let { fundId } = useParams();
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.OrgResources.Funds.Update(fund);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
-        return false;
+    const [ error, setError ] = useState(null);
+
+    const submitHandler = async (fund) => {
+        let response = await Api.OrgResources.Funds.Update(fund);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
-    if (!fund) {
-        let p = state.Resources.Funds.find(p => p.Id === fundId);
-        setFund(p)
-        return;
-    }
+    let fund = state.Resources.Funds.find(p => p.Id === fundId);
+    
     return (
-        <FundDialog fund          = {fund}
-                    setFund       = {setFund}
-                    submitLabel   = 'Update'
-                    submitHandler = {submitHandler}  />
+        <FundDialog
+            fund          = {fund}
+            state         = {state}
+            submitLabel   = 'Update'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

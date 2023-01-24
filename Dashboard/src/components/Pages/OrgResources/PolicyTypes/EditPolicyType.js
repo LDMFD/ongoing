@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'State/StateProvider'
 import { Api } from 'State';
+import { Context } from 'State/StateProvider'
 import { GoBack } from 'Utils/Routing';
 import PolicyTypeDialog from './PolicyTypeDialog';
 
@@ -10,7 +10,7 @@ const EditPolicyType = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [ state, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     let { policyTypeId } = useParams();
 

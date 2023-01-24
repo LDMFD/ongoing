@@ -5,7 +5,6 @@ import { State } from 'Types/Types';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 import Dialog from 'Components/Library/Dialog/Dialog';
 
-import { PolicyType } from 'Types/OrgResources';
 import { UniqueViolation } from 'Errors';
 
 interface PolicyTypeFormInput {
@@ -16,7 +15,7 @@ export const PolicyTypeDialog = (props: {
     state: State,
     policyType: PolicyTypeFormInput,
     submitLabel: string,
-    submitHandler: (policyType: PolicyType) => void,
+    submitHandler: (policyType: PolicyTypeFormInput) => void,
     error: string,
 }) => {
     const { handleSubmit, control } = useForm<PolicyTypeFormInput>({

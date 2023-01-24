@@ -5,11 +5,13 @@ import (
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
 	"ongoing/Entities"
 	"ongoing/Utils/Date"
 	"ongoing/Utils/UUID"
+	"strings"
 	"time"
 
 	"github.com/uptrace/bun"
@@ -51,7 +53,7 @@ func CreateFund(c *gin.Context) {
 
 	var fund = Entities.Fund{
 		Uid:       uid,
-		Name:      body.Name,
+		Name:      strings.TrimSpace(body.Name),
 		OcfFee:    body.OcfFee,
 		ExAnteFee: body.ExAnteFee,
 		Modified:  &modified,
@@ -70,8 +72,7 @@ func CreateFund(c *gin.Context) {
 	}
 
 	if _, err := tx.NewInsert().Model(&fund).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.HandleError(c, err)
 	}
 
 	if body.File != nil {

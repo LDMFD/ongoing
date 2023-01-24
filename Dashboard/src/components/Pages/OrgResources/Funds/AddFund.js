@@ -1,33 +1,38 @@
 import React, { useContext, useState } from 'react';
-import { useHistory,  } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import { Context } from 'State/StateProvider'
-import DefaultFund from './DefaultFund';
-import FundDialog from './FundDialog';
-import { GoBack } from 'Utils/Routing';
 import { Api } from 'State';
+import { Context } from 'State/StateProvider'
+import { GoBack } from 'Utils/Routing';
+import { DefaultFund } from './DefaultFund';
+import FundDialog from './FundDialog';
 
 const AddFund = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [, dispatch] = useContext(Context);
+    const [ state, dispatch] = useContext(Context);
 
-    let [ fund, setFund ] = useState(DefaultFund);
+    const [ error, setError ] = useState(null);
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.OrgResources.Funds.Create(fund);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
-        return false;
+    const submitHandler = async (fund) => {
+        let response = await Api.OrgResources.Funds.Create(fund);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     return (
-        <FundDialog fund          = {fund}
-                    setFund       = {setFund}
-                    submitLabel   = 'Add'
-                    submitHandler = {submitHandler}  />
+        <FundDialog
+            state         = {state}
+            fund          = {DefaultFund}
+            submitLabel   = 'Add'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

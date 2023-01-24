@@ -1,9 +1,10 @@
 import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
-import FundList from './FundList';
 import AddFund from './AddFund';
+import DeleteFund from './DeleteFund';
 import EditFund from './EditFund';
+import FundList from './FundList';
 
 const FundRoutes = () => {
     let { path } = useRouteMatch();
@@ -22,6 +23,9 @@ const FundRoutes = () => {
 
             <Route path={`${path}/add`}>
                 <AddFund />
+            </Route>
+            <Route path={`${path}/id/:fundId/delete`}>
+                <DeleteFund />
             </Route>
             <Route path={`${path}/id/:fundId/edit`}>
                 <EditFund />

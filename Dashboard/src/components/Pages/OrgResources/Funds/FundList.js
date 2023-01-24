@@ -10,32 +10,21 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import { Context, Api } from 'State'
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 import Table from 'Components/Library/Table/Table';
 import { FromCanonical } from 'Utils/DateTime';
 
 const FundList = () => {
-    let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
-    const getFunds = useCallback(() => {
+    const sync = useCallback(() => {
         Api.OrgResources.Entities.Read(dispatch)
     }, [ dispatch ]);
 
     useEffect(() => {
-        getFunds();
-    }, [ getFunds ]);
+        sync();
+    }, [ sync ]);
     
-    const onDelete = useCallback(id => async () => {
-        if (window.confirm(`Delete fund?`)) {
-            await window.ApiClient.delete(`advisor/funds/${id}`)
-            await Api.OrgResources.Entities.Read(dispatch);
-        }        
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(id => () => {
-        history.push(`/funds/id/${id}/edit`);
-    }, [ history ]);
-
     const downloadFile = useCallback(fileUid => () => {
         Download(fileUid);
     }, []);
@@ -60,7 +49,7 @@ const FundList = () => {
         }, {
             accessor: 'factsheet',
             Header: 'Fact sheet',
-            width: 100,
+            width: 80,
             Cell: ({ row }) => row.original.fileUid ? (
                 <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
                     {row.original.filename}
@@ -70,16 +59,16 @@ const FundList = () => {
         }, {
             accessor: 'actions',
             Header: '',
-            width: 50,
+            width: 80,
             Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                <IconGroup>
+                    <Link to={`/funds/id/${row.original.id}/delete`}>
                         <DeleteIcon />
-                    </button>
-                </>
+                    </Link>
+                    <Link to={`/funds/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
             ),
         },
     ];
