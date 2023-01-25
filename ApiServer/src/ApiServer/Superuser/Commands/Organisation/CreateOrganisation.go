@@ -25,6 +25,7 @@ type CreateOrganisationRequestBody struct {
 	Name      string `binding:"required"`
 	Forenames string `binding:"required"`
 	Surname   string `binding:"required"`
+	SkipSeed  bool
 }
 
 func CreateOrganisation(c *gin.Context) {
@@ -142,7 +143,9 @@ func CreateOrganisation(c *gin.Context) {
 		return
 	}
 
-	seedOrg(c, org)
+	if !body.SkipSeed {
+		seedOrg(c, org)
+	}
 
 	c.JSON(200, gin.H{
 		"Id":      orgUid,

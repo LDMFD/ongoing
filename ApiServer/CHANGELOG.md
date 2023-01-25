@@ -1,3 +1,7 @@
+# 1.7.2 2023-01-25
+
+- Fix import
+
 # 1.7.1 2023-01-24
 
 - More form validations

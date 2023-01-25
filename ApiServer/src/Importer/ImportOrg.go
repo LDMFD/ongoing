@@ -63,6 +63,7 @@ func createOrg(org Entities.Org, allUsers []Entities.ReportUser) error {
 }
 
 func importOrganisation(mp Organisation.CreateOrganisationRequestBody, ownerId string) error {
+	mp.SkipSeed = true
 	jsonData, _ := json.Marshal(mp)
 	request, err := http.NewRequest("POST", API+"/admin/organisations", bytes.NewBuffer(jsonData))
 	if err != nil {
