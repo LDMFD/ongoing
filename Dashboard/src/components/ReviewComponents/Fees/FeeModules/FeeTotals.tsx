@@ -48,13 +48,13 @@ const FeeTotalsProviderSummary = (props: {
     totalCharges: number,
 }) => (
     <Panel>
-        <b>Platform Summary:</b>
+        <b>Totals:</b>
         <ul>
             <li>
                 Total invested: {FormatCurrency(props.total)}
             </li>
             <li>
-                Total advice charges: {FormatCurrencyPence(props.totalCharges)}
+                Total platform charges: {FormatCurrencyPence(props.totalCharges)}
             </li>
         </ul>
     </Panel>

@@ -1,13 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useCallback, useEffect, useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import { FromCanonical } from 'Utils/DateTime';
 
 const Dates = () => {
     let { clientId } = useParams();
 
-    const [ state ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
+
+    const sync = useCallback(() => {
+        Api.Advisor.ClientDetail.Read(dispatch, clientId);
+    }, [ dispatch, clientId ]);
+
+    useEffect(() => {
+        sync();
+    }, [ sync ]);
 
     let draft = state.Draft;
 

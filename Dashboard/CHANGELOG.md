@@ -1,3 +1,7 @@
+## 1.7.6 2023-01-29
+
+- Sync review dates, update platform labels
+
 ## 1.7.5 2023-01-29
 
 - Fix date selectors (switch to MaterialUI DatePicker)
