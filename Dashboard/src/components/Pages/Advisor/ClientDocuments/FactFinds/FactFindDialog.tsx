@@ -7,7 +7,7 @@ import Dialog from 'Components/Library/Dialog/Dialog';
 import { File, State } from 'Types/Types';
 
 import './FactFindDialog.css';
-import { DateSelector2 } from 'Components/Library/DateSelector/DateSelector';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 interface FactFindForm {
     File: File,
@@ -18,7 +18,7 @@ const FactFindDialog = (props: {
     state: State,
     factFind: FactFindForm,
     submitLabel: string,
-    submitHandler: (policy: FactFindForm) => void,
+    submitHandler: (factFind: FactFindForm) => void,
 }) => {
     const { handleSubmit, control } = useForm<FactFindForm>({
         defaultValues: props.factFind },
@@ -40,9 +40,9 @@ const FactFindDialog = (props: {
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
                     <>
-                        <DateSelector2
+                        <DateSelector
                             name     = 'Submitted'
-                            label    = 'Submit date (DD/MM/YYYY)'
+                            label    = 'Date'
                             control  = {control}
                             required
                         />

@@ -7,7 +7,7 @@ import Dialog from 'Components/Library/Dialog/Dialog';
 import { File, State } from 'Types/Types';
 
 import './ForecastDialog.css';
-import { DateSelector2 } from 'Components/Library/DateSelector/DateSelector';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 interface ForecastForm {
     File: File,
@@ -42,9 +42,9 @@ const ForecastDialog = (props: {
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
                     <>
-                        <DateSelector2
+                        <DateSelector
                             name      = 'Submitted'
-                            label     = 'Submit date (DD/MM/YYYY)'
+                            label     = 'Date'
                             control   = {control}
                             // dialogRef = {dialogRef}
                             required

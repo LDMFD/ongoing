@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { DateSelector2 } from 'Components/Library/DateSelector/DateSelector';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 import Dialog from 'Components/Library/Dialog/Dialog';
 import FileUploader2 from 'Components/Library/FileHandling/FileUploader2';
 import { Operator } from 'Types/OrgResources';
@@ -86,7 +86,7 @@ const ModelDialog = (props: {
                         required
                     />
 
-                    <DateSelector2
+                    <DateSelector
                         name     = 'Modified'
                         label    = 'Modification date (DD/MM/YYYY)'
                         control  = {control}

@@ -7,7 +7,7 @@ import Dialog from 'Components/Library/Dialog/Dialog';
 import { File, State } from 'Types/Types';
 
 import './FeesReportDialog.css';
-import { DateSelector2 } from 'Components/Library/DateSelector/DateSelector';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 
 interface FeesReportForm {
     File: File,
@@ -40,9 +40,9 @@ const FeesReportDialog = (props: {
                 onSubmit    = {handleSubmit(onSubmit)}
                 content = {
                     <>
-                        <DateSelector2
+                        <DateSelector
                             name     = 'Submitted'
-                            label    = 'Submit date (DD/MM/YYYY)'
+                            label    = 'Date'
                             control  = {control}
                             required
                         />

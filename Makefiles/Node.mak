@@ -37,7 +37,7 @@ _node-install-package-dev:
 	docker cp ongoing-dash:/app/package-lock.json Dashboard/
 
 _node-generate-package-lock:
-	docker exec -ti ${IMAGE} npm i --package-lock-only
+	docker exec -ti ${IMAGE} npm install --package-lock-only
 	docker cp ${IMAGE}:/app/package-lock.json ${DEST}
 
 node-generate-package-lock-dashboard:
@@ -51,6 +51,11 @@ node-update-packages:
 	docker exec -ti ongoing-dash /app/npm-check-updates.sh
 	docker cp ongoing-dash:/app/package.json ${shell pwd}/Dashboard/package.json
 	docker cp ongoing-dash:/app/package-lock.json ${shell pwd}/Dashboard/package-lock.json
+
+_node-audit:
+
+node-audit-dashboard:
+	make _node-audit IMAGE=ongoing-dash
 
 node-shell:
 	docker exec -ti ongoing-dash sh

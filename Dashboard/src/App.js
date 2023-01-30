@@ -12,10 +12,14 @@ import json5 from 'json5';
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+
 import AppDrawer from 'Components/AppDrawer'
 import StateProvider from 'State/StateProvider'
 
 import './App.css';
+
 import { ForceRefresh } from "Auth";
 import { UniqueViolation } from "Errors";
 
@@ -172,13 +176,15 @@ const myFallback = <FallbackComponent />;
 function App() {
     return (
         <Sentry.ErrorBoundary fallback={myFallback} showDialog>
-            <StateProvider>
-                <Router>
-                    <AppDrawer />
-                </Router>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StateProvider>
+                    <Router>
+                        <AppDrawer />
+                    </Router>
 
-                <ForceRefresh />
-            </StateProvider>
+                    <ForceRefresh />
+                </StateProvider>
+            </LocalizationProvider>
         </Sentry.ErrorBoundary>
     );
 }

@@ -25,7 +25,7 @@ const AddFactFind = () => {
         <FactFindDialog factFind      = {DefaultFactFind}
                         state         = {state}
                         submitLabel   = 'Add'
-                        submitHandler = {submitHandler}  />
+                        submitHandler = {submitHandler} />
     );
 }
 

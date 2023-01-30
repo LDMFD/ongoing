@@ -26,3 +26,7 @@ export const ToCanonical = (datetime) => {
     }
     return r;
 }
+
+export const CanonicalNow = () => (
+    Day(Date.now()).utc(true).format()
+);

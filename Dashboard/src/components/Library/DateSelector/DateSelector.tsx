@@ -1,45 +1,24 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-
-// @ts-ignore
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { TextField } from '@mui/material';
 
 import { FromCanonical, ToCanonical } from 'Utils/DateTime';
 
 import './DateSelector.css';
 import { FormInputProps } from '../FormControls/FormInputProps';
 
-export const DateSelector = ({ selected, onChange, label='Date' }: any) => {
-    return (
-        <div>
-            <b>{label}:</b>
-            <DatePicker dateFormat       = {'dd/MM/yyyy'}
-                        calendarStartDay = {1}
-                        selected         = {FromCanonical(selected)}
-                        onChange         = {(date: string) => onChange(ToCanonical(date))} 
-                        fixedHeight 
-                        popperPlacement="bottom-start" />
-            <br />
-            <br />
-        </div>
-    );
-}
-
 interface DateControlProps extends FormInputProps {
-    // Scroll the dialog to keep the date selector in view
-    // dialogRef: any,
+    name: string,
 }
 
-export const DateSelector2 = (props: DateControlProps) => {
+export const DateSelector = (props: DateControlProps) => {
     let rules: any = {
         required: {
             value: props.required,
             message: 'Required field',
         },
     };
-
-    // console.log(props.dialogRef.getBoundingClientRect().bottom);
 
     return (
         <div className='ong-date'>
@@ -53,19 +32,16 @@ export const DateSelector2 = (props: DateControlProps) => {
                     formState,
                 }) => (
                     <>
-                        <div className='ong-date-label'>
-                            {props.label}
-                        </div>
-
-                        <DatePicker
-                            dateFormat       = {'dd/MM/yyyy'}
-                            calendarStartDay = {1}
-                            selected         = {value ? FromCanonical(value) : ''}
-                            onChange         = {(date: string) => onChange(ToCanonical(date))} 
-                            fixedHeight 
-                            popperPlacement  = "bottom-start"
+                        <DesktopDatePicker
+                            label       = {props.label}
+                            inputFormat = "DD-MM-YYYY"
+                            value       = {value ? FromCanonical(value) : ''}
+                            onChange    = {(date: string) => onChange(ToCanonical(date))}
+                            renderInput = {(params) =>
+                                <TextField {...params} fullWidth />
+                            }
                         />
-
+          
                         {error?.type === 'required' &&
                             <div className='ong-form-error'>
                                 {error.message}

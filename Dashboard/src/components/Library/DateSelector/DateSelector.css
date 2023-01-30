@@ -1,29 +1,4 @@
-.react-datepicker__triangle {
-    left: -208px !important;
-}
-
-.ong-date {
-    padding-bottom: 1rem;
-}
-
-.ong-date-label {
-    position: relative;
-    /* top: -10px; */
-    left: 8px;
-    font-size: 9pt;
-    padding: 0 5px;
-    color: rgba(0, 0, 0, 0.6);
-}
-
-.ong-date input {
-    height: 2rem;
-    padding: 0 1rem;
-    border-radius: 5px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    width: 100%;
-}
-
 .ong-date .ong-form-error {
-    top: 2px;
-    left: 10px;
+    top: -12px;
+    left: 14px;
 }

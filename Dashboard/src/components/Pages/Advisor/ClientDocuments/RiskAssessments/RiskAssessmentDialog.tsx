@@ -7,7 +7,7 @@ import Dialog from 'Components/Library/Dialog/Dialog';
 import { State } from 'Types/Types';
 
 import './RiskAssessmentDialog.css';
-import { DateSelector2 } from 'Components/Library/DateSelector/DateSelector';
+import { DateSelector } from 'Components/Library/DateSelector/DateSelector';
 import { RiskAssessment } from 'Types/ClientResources';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 
@@ -82,9 +82,9 @@ const RiskAssessmentDialog = (props: {
                             required
                         />
 
-                        <DateSelector2
+                        <DateSelector
                             name     = 'Completed'
-                            label    = 'Submit date (DD/MM/YYYY)'
+                            label    = 'Date'
                             control  = {control}
                             required
                         />
