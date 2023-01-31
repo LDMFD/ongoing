@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
+    Link as MuiLink,
 } from '@mui/material';
 
 import { Context } from 'State'
@@ -19,7 +20,14 @@ const ClientAccountPage = () => {
         <div>
             <h1>{client.Identity.Surname}, {client.Identity.Forenames}</h1>
             <p>
-                Email: <a href={`mailto:${client.Identity.Email}`} target='_blank' rel='noreferrer'>{client.Identity.Email}</a>
+                Email:&nbsp;
+                <MuiLink
+                    href   = {`mailto:${client.Identity.Email}`}
+                    target = '_blank'
+                    rel    = 'noreferrer'
+                >
+                    {client.Identity.Email}
+                </MuiLink>
                 <br /><br />
                 Fee: {client.Fee}%
             </p>

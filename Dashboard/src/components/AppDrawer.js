@@ -24,15 +24,19 @@ import InitialState from "State/InitialState";
 import { FromCanonical } from 'Utils/DateTime';
 
 const EnvironmentWarning = () => {
+    let style = {
+        color: '#882D60',
+        float: 'right'
+    };
     return (
         <>
             {window.location.href.includes('staging') && (
-                <span style={{ color: 'red' }}>
+                <span style={style}>
                     <b> [ STAGING ] </b>
                 </span>
             )}
             {window.location.href.includes('localhost') && (
-                <span style={{ color: 'red' }}>
+                <span style={style}>
                     <b> [ LOCAL ]</b>
                 </span>
             )}

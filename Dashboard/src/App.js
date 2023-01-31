@@ -18,6 +18,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AppDrawer from 'Components/AppDrawer'
 import StateProvider from 'State/StateProvider'
 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import './App.css';
 
 import { ForceRefresh } from "Auth";
@@ -173,13 +175,23 @@ function FallbackComponent() {
   
 const myFallback = <FallbackComponent />;
 
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#004400',
+        },
+    },
+});
+
 function App() {
     return (
         <Sentry.ErrorBoundary fallback={myFallback} showDialog>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <StateProvider>
                     <Router>
-                        <AppDrawer />
+                        <ThemeProvider theme={theme}>
+                            <AppDrawer />
+                        </ThemeProvider>
                     </Router>
 
                     <ForceRefresh />

@@ -43,3 +43,10 @@
   background-color: #000000d0;
   z-index: 10000;
 }
+
+a {
+  color: #004400;
+}
+a:hover {
+   color: #007000
+}

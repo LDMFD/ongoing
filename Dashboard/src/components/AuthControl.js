@@ -129,7 +129,7 @@ function AuthControl() {
                             <Avatar sx = {{
                                 width: 38,
                                 height: 38,
-                                bgcolor: 'darkred'
+                                bgcolor: '#882D60',
                             }}>
                                 <TheaterComedyIcon />
                             </Avatar>

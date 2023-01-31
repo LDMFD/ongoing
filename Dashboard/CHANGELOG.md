@@ -1,3 +1,7 @@
+## 1.7.7 2023-01-30
+
+- Green theme
+
 ## 1.7.6 2023-01-29
 
 - Sync review dates, update platform labels
