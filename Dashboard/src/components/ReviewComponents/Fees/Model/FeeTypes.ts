@@ -2,6 +2,7 @@ import { Operator, PolicyProvider, ProviderCharge, ProviderDiscount } from "Type
 import { Policy } from "Types/ClientResources";
 
 export interface DimFee {
+    Id?: string,
     Operator: Operator,
     Proportion: number,
     WeightedFee: number,

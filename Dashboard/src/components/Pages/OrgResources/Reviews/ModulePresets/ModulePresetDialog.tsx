@@ -45,7 +45,7 @@ const ModulePresetDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation && errorMsg}
+            error       = {props.error === UniqueViolation ? errorMsg : ''}
             content = {
                 <>
                     {props.submitLabel.toLowerCase() === 'add' &&  // TODO submitLabel should be an enum
@@ -62,7 +62,6 @@ const ModulePresetDialog = (props: {
                         name      = 'Text'
                         label     = 'Preset text'
                         control   = {control}
-                        submitRef = {submitRef}
                         required
                     />
                 </>

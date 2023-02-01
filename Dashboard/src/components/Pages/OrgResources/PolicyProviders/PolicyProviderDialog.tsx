@@ -9,6 +9,7 @@ import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEdito
 import { UniqueViolation } from 'Errors';
 
 import './PolicyProviderDialog.css';
+import { PolicyProvider } from 'Types/OrgResources';
 
 interface PolicyProviderFormInput {
     Name: string,
@@ -18,7 +19,7 @@ interface PolicyProviderFormInput {
 
 export const PolicyProviderDialog = (props: {
     state: State,
-    provider: PolicyProviderFormInput,
+    provider: PolicyProvider,
     submitLabel: string,
     submitHandler: (policyProvider: PolicyProviderFormInput) => void,
     error: string,
@@ -41,7 +42,7 @@ export const PolicyProviderDialog = (props: {
                 submitLabel = {props.submitLabel}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
-                error       = {props.error === UniqueViolation && 'A policy provider with this name already exists.'}
+                error       = {props.error === UniqueViolation ? 'A policy provider with this name already exists.' : ''}
                 fullWidth   = {true}
                 content = {
                     <>
@@ -56,7 +57,6 @@ export const PolicyProviderDialog = (props: {
                             name      = 'Pricing'
                             label     = 'Pricing'
                             control   = {control}
-                            submitRef = {submitRef}
                         />
                         <small>Use <code>{'{ table }'}</code> to embed the charges table.</small>
                         <br /><br />
@@ -65,7 +65,6 @@ export const PolicyProviderDialog = (props: {
                             name      = 'CustomPricing'
                             label     = 'Custom Pricing'
                             control   = {control}
-                            submitRef = {submitRef}
                         />
                         <small>Use <code>{'{ charge }'}</code> to embed the discount.</small>
 

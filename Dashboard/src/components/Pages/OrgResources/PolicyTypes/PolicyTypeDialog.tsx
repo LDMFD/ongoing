@@ -38,7 +38,7 @@ export const PolicyTypeDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation && 'This policy type already exists.'}
+            error       = {props.error === UniqueViolation ? 'This policy type already exists.' : ''}
             content = {
                 <TextInput
                     name    = 'Name'
