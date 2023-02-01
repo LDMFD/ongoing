@@ -9,10 +9,17 @@ import { CalculatePlatformModel } from 'Components/ReviewComponents/Fees/Model/F
 import { FormatPercent } from 'Utils/Strings';
 import { Policy } from 'Types/ClientResources';
 
+interface FeeTableRow {
+    id: string,
+    Name: string | JSX.Element,
+    Fee: string | JSX.Element,
+    Percentage?: string,
+    WeightedFee?: string,
+}
+
 const PolicyBlock = (props: {
     policy: string,
     fees: PolicyDimFees,
-    avg: number,
 }) => {
     const columns = [
         {
@@ -34,18 +41,20 @@ const PolicyBlock = (props: {
         }
     ];
 
-    let fees = props.fees.DimFees.map(f => ({
+    let fees: FeeTableRow[];
+    fees = props.fees.DimFees.map(f => ({
+        id: f.Id,
         Name: f.Operator.Name,
         Fee: FormatPercent(f.Operator.Fee),
         Percentage: FormatPercent(f.Proportion * 100),
         WeightedFee: FormatPercent(f.WeightedFee),
-    })).sort((p,q) => (p.Percentage > q.Percentage) ? -1 : ((p.Percentage < q.Percentage) ? 1 : 0));
+    } as FeeTableRow)).sort((p,q) => (p.Percentage! > q.Percentage!) ? -1 : ((p.Percentage! < q.Percentage!) ? 1 : 0));
 
     fees.push({
         id: 'avg',
         Name: <i>Weighted average</i>,
         Fee: <i>{FormatPercent(props.fees.WeightedAvgDimFee)}</i>,
-    });
+    } as FeeTableRow);
 
     return (
         <Panel>
@@ -53,7 +62,7 @@ const PolicyBlock = (props: {
                 Policy: {props.policy}
             </h4>
             
-            <Table columns={columns} data={fees} />
+            <Table columns={columns} data={fees} renderRowSubComponent={null} />
         </Panel>
     )
 };
@@ -88,7 +97,7 @@ const DimFees = () => {
 
     return (
         <div>
-            <Module module={ModuleTypeDimFee} />
+            <Module module={ModuleTypeDimFee} client={null} />
             <br />
 
             {view.Providers.map((b: ProviderBlockView, ix: number) => (

@@ -6,7 +6,7 @@ import { FormInputProps } from './FormInputProps';
 interface TextInputProps extends FormInputProps {
     type?: 'text' | 'email' | 'numeric' | 'currency',
     pattern?: object,
-    autofocus: boolean,
+    autofocus?: boolean,
 }
 
 export const TextInput = (props: TextInputProps) => {

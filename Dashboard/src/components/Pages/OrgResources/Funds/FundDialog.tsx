@@ -45,7 +45,7 @@ export const FundDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation && 'A fund with this name already exists.'}
+            error       = {props.error === UniqueViolation ? 'A fund with this name already exists.' : ''}
             content = {
                 <>
                     <TextInput

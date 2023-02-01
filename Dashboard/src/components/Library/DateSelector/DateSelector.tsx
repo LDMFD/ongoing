@@ -36,7 +36,7 @@ export const DateSelector = (props: DateControlProps) => {
                             label       = {props.label}
                             inputFormat = "DD-MM-YYYY"
                             value       = {value ? FromCanonical(value) : ''}
-                            onChange    = {(date: string) => onChange(ToCanonical(date))}
+                            onChange    = {(date: string | null) => onChange(ToCanonical(date))}
                             renderInput = {(params) =>
                                 <TextField {...params} fullWidth />
                             }

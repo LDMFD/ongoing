@@ -79,7 +79,7 @@ const PolicyDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation && 'Policy number already exists for this provider.'}
+            error       = {props.error === UniqueViolation ? 'Policy number already exists for this provider.' : ''}
             content = {
                 <>
                     <TextInput name='ExternalId'           label='Policy number'            control={control} required />

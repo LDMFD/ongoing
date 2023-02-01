@@ -52,7 +52,7 @@ const ModelDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation && 'A model with this name and operator already exists.'}
+            error       = {props.error === UniqueViolation ? 'A model with this name and operator already exists.' : ''}
             content = {
                 <>
                     <TextInput

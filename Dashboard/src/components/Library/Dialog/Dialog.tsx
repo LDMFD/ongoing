@@ -21,9 +21,9 @@ const Dialog = (props: {
     submitLabel: string,
     submitRef?: any,
     content: any,
-    error: string,
+    error?: string,
     sx?: any,
-    fullWidth: boolean,
+    fullWidth?: boolean,
 }) => {
     let history = useHistory();
     let goBack = GoBack(history);

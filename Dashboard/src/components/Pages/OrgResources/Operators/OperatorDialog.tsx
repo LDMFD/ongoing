@@ -7,19 +7,18 @@ import Dialog from 'Components/Library/Dialog/Dialog';
 
 import { OPERATOR_TYPES } from './OperatorTypes';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
-import { Operator } from 'Types/OrgResources';
 
 interface OperatorFormInput {
     Name: string,
     Type: string,
-    Fee: string,
+    Fee: string | number,
 }
 
 export const OperatorDialog = (props: {
     state: State,
     operator: OperatorFormInput,
     submitLabel: string,
-    submitHandler: (operator: Operator) => void,
+    submitHandler: (operator: OperatorFormInput) => void,
 }) => {
     const { handleSubmit, control } = useForm<OperatorFormInput>({
         defaultValues: props.operator
@@ -28,7 +27,7 @@ export const OperatorDialog = (props: {
     const onSubmit = (operator: OperatorFormInput) => {
         props.submitHandler({
             ...operator,
-            Fee: parseFloat(operator.Fee),
+            Fee: parseFloat(operator.Fee as string) as number,
         });
     };
 
