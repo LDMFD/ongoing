@@ -20,26 +20,26 @@ const FeeTotals = () => {
     return (
         <>
             <GrandTotals
-            blocks         = {view.Providers}
-            total          = {view.Total}
-            weightedAvgFee = {view.WeightedFees * 100}
-            totalCharges   = {view.TotalCharges}
-        />
-
-        {view.Providers.map((b: ProviderBlockView, ix: number) => (
-                <PlatformTotals
-                key    = {ix}
-                block  = {b}
-                total  = {view.Total}
-                fee    = {state.Metadata.Fee}
+                blocks         = {view.Providers}
+                total          = {view.Total}
+                weightedAvgFee = {view.WeightedFees * 100}
+                totalCharges   = {view.TotalCharges}
             />
-        ))}
+
+            {view.Providers.map((b: ProviderBlockView, ix: number) => (
+                <PlatformTotals
+                    key    = {ix}
+                    block  = {b}
+                    total  = {view.Total}
+                    fee    = {state.Metadata.Fee}
+                />
+            ))}
 
             <PolicyTotals
-            view  = {view}
-            total = {view.Total}
-        />
-    </>
+                view  = {view}
+                total = {view.Total}
+            />
+        </>
     );
 }
 
@@ -49,17 +49,19 @@ const GrandTotals = (props: {
     weightedAvgFee: number,
     totalCharges: number,
 }) => (
-    <Panel>
-        <b>Totals:</b>
-        <ul>
-            <li>
-                Total invested: {FormatCurrency(props.total)}
-            </li>
-            <li>
-                Total platform charges: {FormatCurrencyPence(props.totalCharges)}
-            </li>
-        </ul>
-    </Panel>
+        <Panel>
+            <b>Totals:</b>
+            <ul>
+                <li>
+                    Total invested: {FormatCurrency(props.total)}
+                </li>
+                <li>
+                    Total platform charges: {FormatCurrencyPence(props.totalCharges)}
+                    &nbsp;({FormatPercent(props.totalCharges / props.total * 100)})
+                </li>
+                </li>
+            </ul>
+        </Panel>
 )
 
 const ProviderBlock = (props: {

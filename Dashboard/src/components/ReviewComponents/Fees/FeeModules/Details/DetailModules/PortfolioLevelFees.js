@@ -31,8 +31,13 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             width: 1,
         }, {
             accessor: 'proportionStr',
-            Header: 'Percentage of policy' ,
+            Header: 'Percentage of policy',
             width: 1,
+        }, {
+            accessor: 'include',
+            Header: 'Subject to fee?' ,
+            width: 1,
+            Cell: ({ row }) => ( row.original.include ? 'Y' : 'N' ),
         // }, {
         //     accessor: 'weightedOcfFee',
         //     Header: 'Weighted OCF (%)',
@@ -68,8 +73,8 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
         return null;
     }
 
-    let ocfWeightedAvg    = portfolios.map(p => p.weightedOcfFee).reduce((p, q) => p + q, 0);
-    let exAnteWeightedAvg = portfolios.map(p => p.weightedExAnteFee).reduce((p, q) => p + q, 0);
+    let ocfWeightedAvg    = portfolios.map(p => p.include && p.weightedOcfFee).reduce((p, q) => p + q, 0) || 0;
+    let exAnteWeightedAvg = portfolios.map(p => p.include && p.weightedExAnteFee).reduce((p, q) => p + q, 0) || 0;
 
     let ocfPounds    = ocfWeightedAvg    / 100 * policy.EndValue;
     let exAntePounds = exAnteWeightedAvg / 100 * policy.EndValue;
@@ -89,7 +94,6 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
 
     let provider = report.PolicyProviders.find(p => p.Id === policy.PolicyProviderId);
 
-    console.log(portfolios)
     return (
        <Panel>
             <h3>{provider.Name} ({policy.ExternalId})</h3>
@@ -115,7 +119,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
 const PortfolioLevelFees = () => {
     let report = GetReport();
 
-    let portfolios = report.Portfolios.filter(p => p.IncludeInFee).map(portfolio => {
+    let portfolios = report.Portfolios.map(portfolio => {
         let policy = report.Policies.find(p => p.Id === portfolio.PolicyId);
         let model = report.Models.find(m => m.Id === portfolio.ModelId);
 
@@ -141,6 +145,7 @@ const PortfolioLevelFees = () => {
             exAnte:            model.WeightedExAnteFee,
             weightedOcfFee:    model.WeightedOcfFee * portfolio.Proportion,
             weightedExAnteFee: model.WeightedExAnteFee * portfolio.Proportion,
+            include:           portfolio.IncludeInFee,
         };
     });
 

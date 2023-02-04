@@ -58,7 +58,7 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
         },
     ];
 
-    policyFunds = policyFunds.filter(pf => pf.IncludeInFee).map(pf => {
+    policyFunds = policyFunds.map(pf => {
         let fund = report.Funds.find(f => f.Id === pf.FundId);
         return {
             id:          pf.Id,
@@ -70,11 +70,12 @@ const PolicyFunds = ({ report, policy, policyFunds }) => {
             wOcf:        fund.OcfFee * pf.Proportion,  // used for calculations only
             wEx:         fund.ExAnteFee * pf.Proportion,
             fileUid:     fund.File?.Uid,
+            include:     pf.IncludeInFee,
         };
     }).sort((p,q) => (p.fund < q.fund) ? -1 : ((p.fund > q.fund) ? 1 : 0));
 
-    let ocfWeightedAvg    = policyFunds.map(p => p.wOcf).reduce((p, q) => p + q, 0);
-    let exAnteWeightedAvg = policyFunds.map(p => p.wEx).reduce((p, q) => p + q, 0);
+    let ocfWeightedAvg    = policyFunds.map(p => p.include && p.wOcf).reduce((p, q) => p + q, 0);
+    let exAnteWeightedAvg = policyFunds.map(p => p.include && p.wEx).reduce((p, q) => p + q, 0);
 
     let ocfPounds    = ocfWeightedAvg    / 100 * policy.EndValue;
     let exAntePounds = exAnteWeightedAvg / 100 * policy.EndValue;
