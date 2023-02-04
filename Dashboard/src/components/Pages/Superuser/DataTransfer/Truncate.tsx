@@ -36,7 +36,7 @@ const TruncateDialog = () => {
         <div className   = 'truncate-dialog'>
             <Dialog
                 title       = 'Delete database contents'
-                intro       = 'Type the current environment ({env}) to confirm:'
+                intro       = {`Type the current environment (${env}) to confirm:`}
                 submitLabel = 'Delete'
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}

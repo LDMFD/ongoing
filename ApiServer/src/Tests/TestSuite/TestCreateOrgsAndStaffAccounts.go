@@ -22,7 +22,7 @@ func testCreateOrgs(e *httpexpect.Expect) {
 	// Create org 1
 	org1spec := map[string]interface{}{
 		"Email":     ORG1_OWNER,
-		"Name":      "org1",
+		"Name":      "ACME, Inc.",
 		"Surname":   OwnerOwenSurname,
 		"Forenames": OwnerOwenForename,
 	}
@@ -45,7 +45,7 @@ func testCreateOrgs(e *httpexpect.Expect) {
 	// Create org 2
 	org2spec := map[string]interface{}{
 		"Email":     ORG2_OWNER,
-		"Name":      "org2",
+		"Name":      "Boring & Co.",
 		"Forenames": OwnerPatrickForename,
 		"Surname":   OwnerPatrickSurname,
 	}

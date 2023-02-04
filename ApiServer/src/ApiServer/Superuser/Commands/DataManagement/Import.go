@@ -3,11 +3,9 @@ package DataManagement
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Storage/Commands"
-	"ongoing/Database"
 	"ongoing/Entities"
 	"ongoing/Importer"
 	"ongoing/Utils/Http"
@@ -18,8 +16,6 @@ type ImportRequestBody struct {
 }
 
 func Import(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-
 	var body ImportRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -27,12 +23,6 @@ func Import(c *gin.Context) {
 	}
 
 	log.Println("DB: Import starting...")
-
-	Database.Truncate(db)
-
-	log.Println("DB: Seeding...")
-
-	Database.SeedUserTable(db)
 
 	var bytes []byte
 	var err error
