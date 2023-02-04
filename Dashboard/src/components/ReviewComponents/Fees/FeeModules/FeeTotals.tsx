@@ -17,8 +17,9 @@ const FeeTotals = () => {
 
     let view = CalculatePlatformModel(report);
 
-    return <>
-        <FeeTotalsProviderSummary
+    return (
+        <>
+            <GrandTotals
             blocks         = {view.Providers}
             total          = {view.Total}
             weightedAvgFee = {view.WeightedFees * 100}
@@ -26,7 +27,7 @@ const FeeTotals = () => {
         />
 
         {view.Providers.map((b: ProviderBlockView, ix: number) => (
-            <ProviderBlock
+                <PlatformTotals
                 key    = {ix}
                 block  = {b}
                 total  = {view.Total}
@@ -34,14 +35,15 @@ const FeeTotals = () => {
             />
         ))}
 
-        <SummaryTable
+            <PolicyTotals
             view  = {view}
             total = {view.Total}
         />
     </>
+    );
 }
 
-const FeeTotalsProviderSummary = (props: {
+const GrandTotals = (props: {
     blocks: ProviderBlockView[],
     total: number,
     weightedAvgFee: number,
@@ -61,6 +63,7 @@ const FeeTotalsProviderSummary = (props: {
 )
 
 const ProviderBlock = (props: {
+const PlatformTotals = (props: {
     key: any,
     block: ProviderBlockView,
     total: number,
@@ -100,7 +103,7 @@ const ProviderBlock = (props: {
     );
 };
 
-const SummaryTable = (props: {
+const PolicyTotals = (props: {
     total: number,
     view: PlatformView,
 }) => {

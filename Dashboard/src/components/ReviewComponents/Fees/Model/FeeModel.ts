@@ -88,23 +88,6 @@ function addBaseCharges(report: Report, block: ProviderBlock, total: number) {
     return { PlatformFeePercent, TotalCharge, Charges, WeightedFee, TotalPercent };
 }
 
-function addPortfolioLevel(report: Report, block: ProviderBlock) {
-    let portfolios = report.Portfolios
-        .filter(p => p.PolicyId === block.Policies[0].Id && p.IncludeInFee);
-
-    let PortfolioLevelOcf = portfolios.map(p => {
-        let model = report.Models.find(m => m.Id === p.ModelId)!;
-        return model.WeightedOcfFee * p.Proportion;
-    }).reduce((p, q) => p + q, 0);
-
-    let PortfolioLevelExAnte = portfolios.map(p => {
-        let model = report.Models.find(m => m.Id === p.ModelId)!;
-        return model.WeightedExAnteFee * p.Proportion;
-    }).reduce((p, q) => p + q, 0);
-
-    return { PortfolioLevelOcf, PortfolioLevelExAnte };
-}
-
 function addPolicyLevel(report: Report, block: ProviderBlock) {
     let PolicyFunds = report.PolicyFunds
         .filter(pf => pf.PolicyId === block.Policies[0].Id && pf.IncludeInFee);
@@ -120,6 +103,23 @@ function addPolicyLevel(report: Report, block: ProviderBlock) {
     }).reduce((p, q) => p + q, 0);
 
     return { PolicyFunds, FundLevelOcf, FundLevelExAnte };
+}
+
+function addPortfolioLevel(report: Report, block: ProviderBlock) {
+    let portfolios = report.Portfolios
+        .filter(p => p.PolicyId === block.Policies[0].Id && p.IncludeInFee);
+
+    let PortfolioLevelOcf = portfolios.map(p => {
+        let model = report.Models.find(m => m.Id === p.ModelId)!;
+        return model.WeightedOcfFee * p.Proportion;
+    }).reduce((p, q) => p + q, 0);
+
+    let PortfolioLevelExAnte = portfolios.map(p => {
+        let model = report.Models.find(m => m.Id === p.ModelId)!;
+        return model.WeightedExAnteFee * p.Proportion;
+    }).reduce((p, q) => p + q, 0);
+
+    return { PortfolioLevelOcf, PortfolioLevelExAnte };
 }
 
 function addDimFees(report: Report, block: ProviderBlock) {
