@@ -22,7 +22,7 @@ func testCreateOrgs(e *httpexpect.Expect) {
 	// Create org 1
 	org1spec := map[string]interface{}{
 		"Email":     ORG1_OWNER,
-		"Name":      "ACME, Inc.",
+		"Name":      Org1Name,
 		"Surname":   OwnerOwenSurname,
 		"Forenames": OwnerOwenForename,
 	}
@@ -257,7 +257,7 @@ func testUpdateOrg(e *httpexpect.Expect) {
 		Expect().Status(http.StatusOK)
 
 	// Rename org (as the owner)
-	request = Organisation.UpdateOrganisationRequestBody{Name: "org1"}
+	request = Organisation.UpdateOrganisationRequestBody{Name: Org1Name}
 	e.PUT("/api/advisor/organisations/"+org1Id).
 		WithHeader("Authentication", ORG1_OWNER).
 		WithJSON(request).

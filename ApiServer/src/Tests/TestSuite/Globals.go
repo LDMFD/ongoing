@@ -17,6 +17,8 @@ var (
 	review1Id     string
 	review2Id     string
 
+	Org1Name = "Demo"
+
 	ClientAdamForename = "Adam"
 	ClientAdamSurname  = "Black"
 	ClientBobForename  = "Bob"
@@ -158,8 +160,8 @@ const (
 
 	ORG2_OWNER = "org2.owner@amplifa.co.uk"
 
-	ORG1_CLIENT = "adam.client@amplifa.co.uk"
-	ORG2_CLIENT = "bob.client@amplifa.co.uk"
+	ORG1_CLIENT = "adam.black@amplifa.co.uk"
+	ORG2_CLIENT = "bob.deacon@amplifa.co.uk"
 )
 
 func setupGlobals(t *testing.T, e *httpexpect.Expect) {
