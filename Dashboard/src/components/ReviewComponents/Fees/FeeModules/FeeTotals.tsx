@@ -49,22 +49,20 @@ const GrandTotals = (props: {
     weightedAvgFee: number,
     totalCharges: number,
 }) => (
-        <Panel>
-            <b>Totals:</b>
-            <ul>
-                <li>
-                    Total invested: {FormatCurrency(props.total)}
-                </li>
-                <li>
-                    Total platform charges: {FormatCurrencyPence(props.totalCharges)}
-                    &nbsp;({FormatPercent(props.totalCharges / props.total * 100)})
-                </li>
-                </li>
-            </ul>
-        </Panel>
-)
+    <Panel>
+        <b>Totals:</b>
+        <ul>
+            <li>
+                Total invested: {FormatCurrency(props.total)}
+            </li>
+            <li>
+                Total platform charges: {FormatCurrencyPence(props.totalCharges)}
+                &nbsp;({FormatPercent(props.totalCharges / props.total * 100)})
+            </li>
+        </ul>
+    </Panel>
+);
 
-const ProviderBlock = (props: {
 const PlatformTotals = (props: {
     key: any,
     block: ProviderBlockView,
@@ -79,9 +77,9 @@ const PlatformTotals = (props: {
         TotalCharge: totalCharge
     } = props.block;
 
-        let feeGBP = FormatCurrency(props.fee / 100 * total);
+    let feeGBP = FormatCurrency(props.fee / 100 * total);
 
-        return (
+    return (
         <Panel>
             <h3>
                 {provider.Name}

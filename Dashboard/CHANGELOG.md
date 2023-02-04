@@ -1,3 +1,7 @@
+## 1.7.9 2023-02-04
+
+- Fix fund and portfolio fees
+
 ## 1.7.8 2023-01-30
 
 - Green panels
