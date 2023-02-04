@@ -1,3 +1,7 @@
+# 1.7.3 2023-02-04
+
+- Don't truncate the DB when importing
+
 # 1.7.2 2023-01-25
 
 - Fix import
