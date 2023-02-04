@@ -23,8 +23,8 @@ func testCreateOrgs(e *httpexpect.Expect) {
 	org1spec := map[string]interface{}{
 		"Email":     ORG1_OWNER,
 		"Name":      "org1",
-		"Surname":   "Boss",
-		"Forenames": "Owen",
+		"Surname":   OwnerOwenSurname,
+		"Forenames": OwnerOwenForename,
 	}
 
 	org1 := e.POST("/api/admin/organisations").
@@ -46,8 +46,8 @@ func testCreateOrgs(e *httpexpect.Expect) {
 	org2spec := map[string]interface{}{
 		"Email":     ORG2_OWNER,
 		"Name":      "org2",
-		"Forenames": "Ty",
-		"Surname":   "Tyson",
+		"Forenames": OwnerPatrickForename,
+		"Surname":   OwnerPatrickSurname,
 	}
 	org2 := e.POST("/api/admin/organisations").
 		WithHeader("Authentication", SUPERUSER).
@@ -65,8 +65,8 @@ func testCreateAdvisorsBasic(e *httpexpect.Expect) {
 	// Create second advisor (first non-owner) in org 1
 	newAdvisorSpec := Commands.CreateAdvisorRequestBody{
 		Email:     ORG1_ADMIN,
-		Forenames: "Bob",
-		Surname:   "Admin",
+		Forenames: AdvisorCharlesForename,
+		Surname:   AdvisorCharlesSurname,
 		Role:      Entities.UserTypeOrgAdmin,
 	}
 	org1AdminId = e.POST("/api/staff").
@@ -77,8 +77,8 @@ func testCreateAdvisorsBasic(e *httpexpect.Expect) {
 	// Third advisor (non-admin) in org 1, using admin account
 	newAdvisorSpec = Commands.CreateAdvisorRequestBody{
 		Email:     ORG1_ADVISOR,
-		Forenames: "Charlie",
-		Surname:   "Advisor",
+		Forenames: AdvisorDavidForename,
+		Surname:   AdvisorDavidSurname,
 		Role:      Entities.UserTypeAdvisor,
 	}
 	org1AdvisorId = e.POST("/api/staff").
@@ -89,7 +89,7 @@ func testCreateAdvisorsBasic(e *httpexpect.Expect) {
 	// Staff account creation using regular advisor account shouldn't be allowed
 	newAdvisorSpec = Commands.CreateAdvisorRequestBody{
 		Email:     "irrelevant@tp1.org",
-		Forenames: "Dave",
+		Forenames: AdvisorEliotForename,
 		Surname:   "None",
 		Role:      Entities.UserTypeAdvisor,
 	}
@@ -103,8 +103,8 @@ func testCreateAdvisorsBasic(e *httpexpect.Expect) {
 func testCreateAdvisorsSecurity(e *httpexpect.Expect) {
 	newAdvisorSpec := Commands.UpdateAdvisorRequestBody{
 		Email:     ORG1_ADMIN,
-		Forenames: "Bob",
-		Surname:   "Admin",
+		Forenames: AdvisorCharlesForename,
+		Surname:   AdvisorCharlesSurname,
 		Role:      Entities.UserTypeOrgAdmin,
 	}
 	e.PUT("/api/staff/"+org1AdvisorId).
@@ -150,12 +150,12 @@ func testGetAdvisors(e *httpexpect.Expect) {
 }
 
 func testCreateClients(e *httpexpect.Expect) {
-	org1ClientId = createClient(e, ORG1_ADMIN, ORG1_CLIENT, "Adam", 0.75)
-	org2ClientId = createClient(e, ORG2_OWNER, ORG2_CLIENT, "Bob", 0) // Test zero fee
+	org1ClientId = createClient(e, ORG1_ADMIN, ORG1_CLIENT, ClientAdamForename, ClientAdamSurname, 0.75)
+	org2ClientId = createClient(e, ORG2_OWNER, ORG2_CLIENT, ClientBobForename, ClientBobSurname, 0) // Test zero fee
 	testUpdateClientSecurity(e)
 }
 
-func createClient(e *httpexpect.Expect, owner, email, forename string, fee float64) string {
+func createClient(e *httpexpect.Expect, owner, email, forename, surname string, fee float64) string {
 	client := ClientProfileCommands.CreateOrUpdateClientRequestBody{
 		Identity: struct {
 			Forenames string `binding:"required"`
@@ -163,7 +163,7 @@ func createClient(e *httpexpect.Expect, owner, email, forename string, fee float
 			Email     string `binding:"required"`
 		}{
 			Forenames: forename,
-			Surname:   "Clientele",
+			Surname:   "wrong",
 			Email:     email,
 		},
 		Fee: fee,
@@ -176,7 +176,7 @@ func createClient(e *httpexpect.Expect, owner, email, forename string, fee float
 
 	clientId := resp.Value("Id").String().Raw()
 
-	client.Identity.Surname = "Client"
+	client.Identity.Surname = surname
 
 	e.PUT("/api/advisor/clients/"+clientId).
 		WithHeader("Authentication", owner).

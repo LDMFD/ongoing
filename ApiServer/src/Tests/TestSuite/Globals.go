@@ -17,6 +17,25 @@ var (
 	review1Id     string
 	review2Id     string
 
+	ClientAdamForename = "Adam"
+	ClientAdamSurname  = "Black"
+	ClientBobForename  = "Bob"
+	ClientBobSurname   = "Deacon"
+
+	AdvisorCharlesForename = "Charles"
+	AdvisorCharlesSurname  = "Perkins"
+	AdvisorDavidForename   = "David"
+	AdvisorDavidSurname    = "Archer"
+	AdvisorEliotForename   = "Eliot"
+	AdvisorEliotSurname    = "Oakley"
+	AdvisorFredForename    = "Fred"
+	AdvisorFredSurname     = "Cook"
+
+	OwnerOwenForename    = "Owen"
+	OwnerOwenSurname     = "Eastwood"
+	OwnerPatrickForename = "Patrick"
+	OwnerPatrickSurname  = "Fitzroy"
+
 	fundNameBaillie          = "Baillie Gifford Japan"
 	fundNameBlackrock        = "BlackRock UK Equity"
 	fundNameFundsmith        = "Fundsmith Equity"
@@ -82,10 +101,10 @@ var (
 
 	operatorAJFee = 0.15
 
-	policyNumber1           = "pol_a"
-	policyNumber2           = "pol_b"
-	policyNumber3           = "pol_c"
-	policyNumber4           = "pol_d"
+	policyNumber1           = "AVP0L0A"
+	policyNumber2           = "AVP0L0B"
+	policyNumber3           = "AEGP0L1C"
+	policyNumber4           = "AEGP0L1D"
 	policyId1               string
 	policyId2               string
 	policyId3               string

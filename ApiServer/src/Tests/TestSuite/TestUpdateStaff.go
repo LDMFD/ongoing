@@ -36,8 +36,8 @@ func testUpdateStaffRolesBasic(t *testing.T, e *httpexpect.Expect) {
 	// Change org 1's advisor's name and email
 	request2 := Commands.UpdateAdvisorRequestBody{
 		Email:     "org1.advisor2@tp1.org",
-		Forenames: "Adele",
-		Surname:   "Advisor",
+		Forenames: AdvisorFredForename,
+		Surname:   AdvisorFredSurname,
 		Role:      "advisor",
 	}
 	e.PUT("/api/staff/"+org1AdvisorId).
@@ -48,8 +48,8 @@ func testUpdateStaffRolesBasic(t *testing.T, e *httpexpect.Expect) {
 	// Change it back again
 	request2 = Commands.UpdateAdvisorRequestBody{
 		Email:     ORG1_ADVISOR,
-		Forenames: "Adele",
-		Surname:   "Advisor",
+		Forenames: AdvisorFredForename,
+		Surname:   AdvisorFredSurname,
 		Role:      "advisor",
 	}
 	e.PUT("/api/staff/"+org1AdvisorId).
