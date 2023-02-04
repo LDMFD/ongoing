@@ -35,7 +35,7 @@ const PolicyPortfolios = ({ report, policy, portfolios }) => {
             width: 1,
         }, {
             accessor: 'include',
-            Header: 'Subject to fee?' ,
+            Header: 'Include in total?',
             width: 1,
             Cell: ({ row }) => ( row.original.include ? 'Y' : 'N' ),
         // }, {
