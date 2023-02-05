@@ -17,7 +17,7 @@ var (
 	review1Id     string
 	review2Id     string
 
-	Org1Name = "Demo"
+	Org1Name = "ACME, Inc."
 
 	ClientAdamForename = "Adam"
 	ClientAdamSurname  = "Black"
@@ -103,10 +103,10 @@ var (
 
 	operatorAJFee = 0.15
 
-	policyNumber1           = "AVP0L0A"
-	policyNumber2           = "AVP0L0B"
-	policyNumber3           = "AEGP0L1C"
-	policyNumber4           = "AEGP0L1D"
+	policyNumber1           = "P0L-A"
+	policyNumber2           = "P0L-B"
+	policyNumber3           = "P0L-C"
+	policyNumber4           = "P0L-D"
 	policyId1               string
 	policyId2               string
 	policyId3               string
