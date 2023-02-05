@@ -50,13 +50,6 @@ func DeleteClient(c *gin.Context) {
 		return
 	}
 
-	if err := auth.RemoveClient(*session.OrgId, advisor.User.Uid, path.ClientId, client.User.Uid, advisor.User.Uid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Printf("%+v", err)
-		_ = tx.Rollback()
-		return
-	}
-
 	if _, err := tx.NewDelete().
 		Model(client).
 		Where("id = ?", client.Id).
@@ -77,6 +70,13 @@ func DeleteClient(c *gin.Context) {
 	if err := tx.Commit(); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
+		return
+	}
+
+	if err := auth.RemoveClient(*session.OrgId, advisor.User.Uid, path.ClientId, client.User.Uid, advisor.User.Uid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
 		return
 	}
 

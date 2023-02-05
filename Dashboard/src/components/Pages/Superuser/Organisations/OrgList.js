@@ -1,5 +1,6 @@
 import React, { useContext, useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
     Button,
@@ -8,15 +9,23 @@ import {
 
 import { Context } from 'State/StateProvider'
 import Table from 'Components/Library/Table/Table';
+import { Api } from 'State';
 
 const OrgList = () => {
     let history = useHistory();
 
-    const [ state, ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     const editOrg = useCallback(id => () => {
         history.push(`/admin/organisations/id/${id}/edit`);
     }, [ history ]);
+
+    const deleteOrg = useCallback(id => async () => {
+        if (window.confirm(`Delete organisation?`)) {
+            await Api.Superuser.Organisations.Delete(id);
+            await Api.Superuser.Organisations.Read(dispatch);
+        }
+    }, [ dispatch ]);
 
     const columns = [
         {
@@ -43,12 +52,15 @@ const OrgList = () => {
         },
         {
             accessor: 'actions',
-            Header: 'Edit name',
+            Header: '',
             width: 0.2,
             Cell: ({ row }) => (
                 <>
                     <button onClick={editOrg(row.original.id)} className='ong-openFileIcon'>
                         <EditIcon />
+                    </button>
+                    <button onClick={deleteOrg(row.original.id)} className='ong-openFileIcon'>
+                        <DeleteIcon />
                     </button>
                 </>
             ),

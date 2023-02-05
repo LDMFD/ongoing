@@ -29,7 +29,7 @@ func DeleteOrganisation(c *gin.Context) {
 	var err error
 	var ownerUid *string
 	if ownerUid, err = auth.LookupOrganisationOwner(path.OrgId); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No such advisor exists."})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No such organisation exists."})
 		return
 	}
 
@@ -45,13 +45,6 @@ func DeleteOrganisation(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
-	}
-
-	if err := auth.RemoveMember(advisor.Organisation.Uid, *ownerUid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Printf("%+v", err)
-		_ = tx.Rollback()
-		return
 	}
 
 	if _, err := tx.NewDelete().
@@ -83,6 +76,13 @@ func DeleteOrganisation(c *gin.Context) {
 	if err := tx.Commit(); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err))
+		return
+	}
+
+	if err := auth.RemoveMember(advisor.Organisation.Uid, *ownerUid); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Printf("%+v", err)
+		_ = tx.Rollback()
 		return
 	}
 

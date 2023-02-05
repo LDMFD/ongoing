@@ -21,9 +21,14 @@ const Update = (org) => {
     })
 }
 
+const Delete = (id) => {
+    return window.ApiClient.delete(`admin/organisations/${id}`)
+}
+
 const defaults = {
     Create,
     Read,
     Update,
+    Delete,
 };
 export default defaults;

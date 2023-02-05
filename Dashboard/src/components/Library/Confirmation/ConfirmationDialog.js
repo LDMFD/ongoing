@@ -23,7 +23,7 @@ export const ConfirmationDialog = ({ label, okCallback }) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' onClick={okCallback}>Confirm</Button>
+                    <Button type='submit' onClick={okCallback} autoFocus>Confirm</Button>
                 </DialogActions>
             </form>
         </Dialog>
