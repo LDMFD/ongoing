@@ -1,3 +1,5 @@
+import { File } from './Types';
+
 export interface OrgResources {
     Funds: Fund[],
     Models: Model[],
@@ -23,11 +25,10 @@ export interface PolicyProvider {
 export interface ProviderCharge {
     ProviderId: string,
     Boundary: number,
-    Charge: number,  // Discounted Charge in spreadsheet
+    MoneyCharge: number,  // Discounted Charge in 'Fees - Platform charges' tab
 
-    // Filled in if `value` passed to CalculatePlatformCharges
-    Amount: number,
-    MoneyCharge: number,
+    Amount: number,  // amount held in this tier
+    Charge: number,  // 'charge' column; rate (0-1)
     UpperBoundary: number,
 }
 
@@ -55,11 +56,12 @@ export interface Operator {
 
 export interface Model {
     Id: string,
-    Name: string,
-    OperatorId: string,
-    WeightedOcfFee: number,
-    WeightedExAnteFee: number,
-    File?: File,
+	Name: string,
+	OperatorId: string,
+	WeightedOcfFee: number,
+	WeightedExAnteFee: number,
+	Modified: string,
+	File: File,
 }
 
 export interface RiskProvider {

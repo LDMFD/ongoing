@@ -1,4 +1,5 @@
-import { Fund, Operator, PolicyProvider, PolicyType, ProviderCharge, ProviderDiscount } from "./OrgResources";
+import { Fund, Model, Operator, PolicyProvider, PolicyType, ProviderCharge, ProviderDiscount } from "./OrgResources";
+import { File } from "./Types";
 
 export interface ClientIdentity {
     Email: string,
@@ -12,17 +13,6 @@ export interface Client {
 	Identity: ClientIdentity,
 	Fee: number,
 	AdvisorId: string,
-}
-
-export interface Model {
-    Id: string,
-	Name: string,
-	OperatorId: string,
-	WeightedOcfFee: number,
-	WeightedExAnteFee: number,
-	Modified: string,
-	File: File,
-
 }
 
 export interface Policy {

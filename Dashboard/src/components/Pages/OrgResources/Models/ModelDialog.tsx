@@ -81,7 +81,7 @@ const ModelDialog = (props: {
                     <TextInput
                         type    = 'numeric'
                         name    = 'WeightedExAnteFee'
-                        label   = 'Weighted Ex Ante Fee (%)'
+                        label   = 'Weighted Transactional Fee (%)'
                         control = {control}
                         required
                     />

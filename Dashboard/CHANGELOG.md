@@ -1,3 +1,7 @@
+## 1.8.0 2023-02-18
+
+- Improved Fee pages
+
 ## 1.7.10 2023-02-04
 
 - Delete org button

@@ -44,7 +44,7 @@ const ModelList = () => {
             width: 50,
         }, {
             accessor: 'weightedExAnteFee',
-            Header: 'Weighted Ex Ante Fee',
+            Header: 'Weighted Transactional Fee',
             width: 50,
         }, {
             accessor: 'modified',

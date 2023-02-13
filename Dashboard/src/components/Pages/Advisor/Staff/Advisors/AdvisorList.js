@@ -58,7 +58,7 @@ const AdvisorList = () => {
                     <button onClick={editAdvisor(row.original.id)} className='ong-openFileIcon'>
                         <EditIcon />
                     </button>
-                    {row.original.role != 'owner' &&
+                    {row.original.role !== 'owner' &&
                         <button onClick={deleteAdvisor(row.original.id)} className='ong-openFileIcon'>
                             <DeleteIcon />
                         </button>

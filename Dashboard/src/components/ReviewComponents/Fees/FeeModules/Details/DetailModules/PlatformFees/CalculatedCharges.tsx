@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Table from 'Components/Library/Table/Table';
-import { FormatCurrencyPence } from 'Utils/Strings';
+import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 import { ProviderCharge } from 'Types/OrgResources';
 
 export type Row = {
@@ -29,13 +29,12 @@ const CalculatedChargesTable = (props: {
     }, {
         accessor: 'Charge',
         Header: 'Charge (%)',
-        Cell: ({ row }: { row: Row }) => `${(row.original.Charge)}%`,
+        Cell: ({ row }: { row: Row }) => FormatPercent(row.original.Charge),
     }, {
         accessor: 'MoneyCharge',
         Header: 'Charge (£)',
         Cell: ({ row }: { row: Row }) => FormatCurrencyPence(row.original.MoneyCharge),
     }];
-
 
     return (
         <>
@@ -48,8 +47,8 @@ export const ProviderChargesPropType = PropTypes.arrayOf(PropTypes.shape({
     Amount: PropTypes.number,
     Boundary: PropTypes.number,
     UpperBoundary: PropTypes.number,
-    Charge: PropTypes.number,
     MoneyCharge: PropTypes.number,
+    Charge: PropTypes.number,
 }));
 
 CalculatedChargesTable.propTypes = {

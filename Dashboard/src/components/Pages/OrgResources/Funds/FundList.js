@@ -40,7 +40,7 @@ const FundList = () => {
             width: 50,
         }, {
             accessor: 'exAnteFee',
-            Header: 'Ex Ante Fee',
+            Header: 'Transactional Fee',
             width: 50,
         }, {
             accessor: 'modified',

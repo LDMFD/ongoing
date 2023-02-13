@@ -18,7 +18,7 @@ const Block = (props: {
     let {
         Charges: charges,
         CustomPricing: customPricing,
-        TotalCharge: totalCharge,
+        PlatformCharge: platformCharge,
         ProviderTotal: total,
         Provider: provider,
         Policies: policies,
@@ -48,7 +48,7 @@ const Block = (props: {
                     which is {PercentageFormatter.format(totalPercent)}% of your total holdings.
                 </li>
                 <li>
-                    {provider.Name} charge an annual fee, which currently comes to {FormatCurrencyPence(totalCharge)},
+                    {provider.Name} charge an annual fee, which currently comes to {FormatCurrencyPence(platformCharge)},
                     or {PercentageFormatter.format(platformFeePercent)} of your holdings with them.
                 </li>
                 {/* <li>
@@ -76,7 +76,7 @@ const Block = (props: {
             </p>
             
             <PoliciesTable policies         = {policies}
-                           totalMoneyCharge = {totalCharge}
+                           totalMoneyCharge = {platformCharge}
                            providerTotal    = {props.block.ProviderTotal} />
         </Panel>
     );
@@ -89,7 +89,7 @@ const PlatformFeesSummary = (props: {
     totalCharges: number,
 }) => (
     <Panel>
-        <b>Totals:</b>
+        <h3>Totals</h3>
         <ul>
             <li>
                 Total invested: {FormatCurrencyPence(props.total)}
@@ -111,13 +111,12 @@ const PlatformFees = () => {
 
     return (
         <div>
-            <br />
             <Module client={null} module={ModuleTypePolicyFees} />
 
             <PlatformFeesSummary blocks         = {view.Providers}
                                  total          = {view.Total}
                                  weightedAvgFee = {view.WeightedFees * 100}
-                                 totalCharges   = {view.TotalCharges} />
+                                 totalCharges   = {view.TotalPlatformCharge} />
 
             {view.Providers.map((b: ProviderBlockView, ix: number) => (
                 <Block key={ix} block={b} total={view.Total} />

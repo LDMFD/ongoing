@@ -31,6 +31,15 @@ export const FormatPercent = (n) => (
     `${PercentageFormatter.format(n)}%`
 );
 
+export const FormatCharge = (percent, charge) => {
+    let res = isNaN(charge) ? '-' : FormatCurrencyPence(charge);
+    let pct = isNaN(percent) ? null : FormatPercent(percent);
+    if (pct !== null && !isNaN(charge)) {
+        res += ` (${pct})`;
+    }
+    return res;
+}
+
 const CurrencyFormatter = new Intl.NumberFormat('en-UK', {
     style: 'currency',
     currency: 'GBP',

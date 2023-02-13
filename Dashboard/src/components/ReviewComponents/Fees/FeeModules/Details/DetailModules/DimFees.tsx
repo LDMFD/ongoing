@@ -6,7 +6,7 @@ import Table from 'Components/Library/Table/Table';
 import Panel from 'Components/Library/Panel/Panel';
 import { PolicyDimFees, ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import { CalculatePlatformModel } from 'Components/ReviewComponents/Fees/Model/FeeModel';
-import { FormatPercent } from 'Utils/Strings';
+import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 import { Policy } from 'Types/ClientResources';
 
 interface FeeTableRow {
@@ -25,7 +25,7 @@ const PolicyBlock = (props: {
         {
             accessor: 'Name',
             Header: 'Name',
-            width: 1,
+            width: .5,
         }, {
             accessor: 'Fee',
             Header: 'Fee',
@@ -34,10 +34,10 @@ const PolicyBlock = (props: {
             accessor: 'Percentage',
             Header: 'Percentage of policy',
             width: .5,
-        }, {
-            accessor: 'WeightedFee',
-            Header: 'Weighted DIM Fee',
-            width: 0.5,
+        // }, {
+        //     accessor: 'WeightedFee',
+        //     Header: 'Weighted DIM Fee',
+        //     width: 0.5,
         }
     ];
 
@@ -56,6 +56,12 @@ const PolicyBlock = (props: {
         Fee: <i>{FormatPercent(props.fees.WeightedAvgDimFee)}</i>,
     } as FeeTableRow);
 
+    fees.push({
+        id: 'charge',
+        Name: 'Estimated charge',
+        Fee: <u>{FormatCurrencyPence(props.fees.Charge)}</u>,
+    } as FeeTableRow);
+
     return (
         <Panel>
             <h4>
@@ -71,7 +77,7 @@ const ProviderBlock = (props: {
     block: ProviderBlockView,
     total: number,
 }) => {
-    let fees: Map<string, PolicyDimFees> = props.block.DimFees.PolicyFees;
+    let fees: Map<string, PolicyDimFees> = props.block.Fees.DimFees;
     let report = GetReport();
     let ix = 0;
     return (

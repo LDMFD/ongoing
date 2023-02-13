@@ -9,6 +9,7 @@ import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import Panel from 'Components/Library/Panel/Panel';
 
 const AdviceFees = () => {
     const [state,  ] = useContext(Context);
@@ -68,24 +69,28 @@ const AdviceFees = () => {
 
     return (
         <>
-            <br />
             <Module module={ModuleTypeAdviceFee} />
 
-            <p>
-                Advice fee: {client.Fee}%
+            <Panel>
+                <p>
+                    Your advice fee is: {client.Fee}%
+                    
+                    {feesReport && (
+                        <p>
+                            Fees report: <button onClick={downloadFile(feesReport.file.Uid)} className='ong-openFileIcon'>
+                                {feesReport.file.Filename}
+                                <DownloadIcon />
+                            </button>
+                        </p>
+                    )}
+                </p>
+            </Panel>
 
-                {feesReport && (
-                    <>
-                        <br />
-                        Fees report: <button onClick={downloadFile(feesReport.file.Uid)} className='ong-openFileIcon'>
-                            {feesReport.file.Filename}
-                            <DownloadIcon />
-                        </button>
-                    </>
-                )}
-            </p>
-
-            <Table columns={columns} data={policies} />
+            {policies.length > 0 &&
+                <Panel>
+                    <Table columns={columns} data={policies} />
+                </Panel>
+            }
         </>
     );
 }

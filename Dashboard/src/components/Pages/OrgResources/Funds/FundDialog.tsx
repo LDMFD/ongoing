@@ -66,7 +66,7 @@ export const FundDialog = (props: {
                     <TextInput
                         type    = 'numeric'
                         name    = 'ExAnteFee'
-                        label   = 'Ex Ante Fee'
+                        label   = 'Transactional Fee'
                         control = {control}
                         required
                     />
