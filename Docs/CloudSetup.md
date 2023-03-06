@@ -77,5 +77,7 @@ Then:
     https://console.cloud.google.com/apis/credentials/consent/edit?project=ongoing-prod
 - In APIs & Services -> Credentials https://console.cloud.google.com/apis/credentials?project=ongoing-prod
     - Edit `OAuth 2.0 Client IDs` -> `Web client (auto created by Google Service)`
+    - Add `Authorized JavaScript origins` -> `https://portal.amplifa.co.uk`
+      and possibly `http://localhost` or `http://localhost:5000`
     - Add `Authorized redirect URIs` -> `https://example.com/__/auth/handler`
 - Set up Prod -> Staging daily copying using Data Transfer service on Prod.
