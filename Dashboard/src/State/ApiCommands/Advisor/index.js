@@ -1,5 +1,6 @@
 import ClientDetail      from './ClientDetail';
 import Clients           from './Clients';
+import ClientOptions     from './ClientOptions';
 import FactFinds         from './FactFinds';
 import FeesReports       from './FeesReports';
 import Forecasts         from './Forecasts';
@@ -14,6 +15,7 @@ import RiskAssessments   from '../Advisor/RiskAssessments';
 const defaults = {
     ClientDetail,
     Clients,
+    ClientOptions,
     FactFinds,
     FeesReports,
     Forecasts,

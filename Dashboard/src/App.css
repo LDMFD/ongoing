@@ -50,3 +50,8 @@ a {
 a:hover {
    color: #007000
 }
+
+.ong-pageControls {
+  float: right;
+  margin-bottom: 1rem;
+}

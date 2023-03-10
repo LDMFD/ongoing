@@ -204,8 +204,13 @@ export default function PermanentDrawerLeft() {
             </Drawer>
 
             <Box component = "main"
-                 sx        = {{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
-
+                 sx        = {{
+                    flexGrow: 1,
+                    bgcolor: 'background.default',
+                    p: 3,
+                    maxWidth: 1000
+                }}
+            >
                 <Toolbar />
 
                 {/* The app... */}

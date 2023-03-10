@@ -4,4 +4,5 @@ export interface FormInputProps {
     label: string;
     setValue?: any;
     required?: boolean;
+    disabled?: boolean;
 }

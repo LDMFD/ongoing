@@ -1,13 +1,14 @@
 package Entities
 
 type ReportReview struct {
-	Id            string
-	Meta          ReportReviewMeta
-	Report        ReportDetail
+	Id     string
+	Meta   ReportReviewMeta
+	Report ReportDetail
 }
 
 type ReportDetail struct {
 	Id                string
+	ClientOptions     ReportClientOptions
 	ModulePresets     []ReportModulePreset
 	Modules           []ReportModule
 	PolicyTypes       []ReportPolicyType

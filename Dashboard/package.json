@@ -17,6 +17,7 @@
     "axios": "^0.27.2",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
+    "distinct-colors": "^3.0.0",
     "firebase": "^9.16.0",
     "firebaseui": "^6.0.2",
     "json5": "^2.2.3",
@@ -27,6 +28,7 @@
     "react-router-dom": "^5.3.4",
     "react-scripts": "5.0.1",
     "react-table": "^7.8.0",
+    "recharts": "^2.4.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

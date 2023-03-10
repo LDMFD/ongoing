@@ -117,6 +117,38 @@ namespace Ongoing.Migrations
                     b.ToTable("clients");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.ClientOptions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("integer")
+                        .HasColumnName("client_id");
+
+                    b.Property<string>("Options")
+                        .IsRequired()
+                        .HasColumnType("json")
+                        .HasColumnName("options");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .IsUnique();
+
+                    b.ToTable("client_options");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.FactFind", b =>
                 {
                     b.Property<int>("Id")
@@ -1313,6 +1345,18 @@ namespace Ongoing.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.ClientOptions", b =>
+                {
+                    b.HasOne("Ongoing.Entities.Client", "Client")
+                        .WithOne("Options")
+                        .HasForeignKey("Ongoing.Entities.ClientOptions", "ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_client");
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.FactFind", b =>
                 {
                     b.HasOne("Ongoing.Entities.Client", "Client")
@@ -1719,6 +1763,9 @@ namespace Ongoing.Migrations
                     b.Navigation("Forecasts");
 
                     b.Navigation("Modules");
+
+                    b.Navigation("Options")
+                        .IsRequired();
 
                     b.Navigation("Policies");
 

@@ -13,6 +13,7 @@ const FeeTabs = ({ basePath, baseTarget, children }) => {
         `${basePath}/intro`,
         `${basePath}/totals`,
         `${basePath}/details`,
+        `${basePath}/impact`,
     ]);
     let currentTab = routeMatch?.path;
 
@@ -22,6 +23,7 @@ const FeeTabs = ({ basePath, baseTarget, children }) => {
                 <Tab label="Fees intro" value={`${basePath}/intro`}   to={`${baseTarget}/intro`}          component={Link} />
                 <Tab label="Totals"     value={`${basePath}/totals`}  to={`${baseTarget}/totals`}         component={Link} />
                 <Tab label="Details"    value={`${basePath}/details`} to={`${baseTarget}/details/advice`} component={Link} />
+                <Tab label="Impact"     value={`${basePath}/impact`}  to={`${baseTarget}/impact`}         component={Link} />
             </Tabs>
 
             {children}

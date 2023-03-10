@@ -53,6 +53,9 @@ namespace Ongoing.Entities
         public Organisation Org { get; set; } = null!;
         
         [InverseProperty("Client")]
+        public ClientOptions Options { get; set; }
+
+        [InverseProperty("Client")]
         public ICollection<FactFind> FactFinds { get; set; }
         
         [InverseProperty("Client")]

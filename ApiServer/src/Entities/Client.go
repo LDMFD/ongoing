@@ -17,6 +17,7 @@ type Client struct {
 
 	User              User                `bun:"rel:has-one,join:user_id=id"`
 	Organisation      Organisation        `bun:"rel:has-one,join:org_id=id"`
+	Options           ClientOptions       `bun:"rel:has-one,join:id=client_id"`
 	FactFinds         []*FactFind         `bun:"rel:has-many,join:id=client_id"`
 	Forecasts         []*Forecast         `bun:"rel:has-many,join:id=client_id"`
 	RiskAssessments   []*RiskAssessment   `bun:"rel:has-many,join:id=client_id"`

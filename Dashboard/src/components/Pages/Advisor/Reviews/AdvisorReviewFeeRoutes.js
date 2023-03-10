@@ -3,10 +3,11 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import FeesIntroduction from 'Components/ReviewComponents/Fees/FeeModules/FeesIntroduction';
-import FeeTotals from 'Components/ReviewComponents/Fees/FeeModules/FeeTotals';
-import FeeTabs from 'Components/ReviewComponents/Fees/FeeTabs';
 import AdvisorReviewFeeDetailsRoutes from './AdvisorReviewFeeDetailsRoutes';
+import FeesIntroduction from 'Components/ReviewComponents/Fees/FeeModules/FeesIntroduction';
+import FeeTabs from 'Components/ReviewComponents/Fees/FeeTabs';
+import FeeTotals from 'Components/ReviewComponents/Fees/FeeModules/FeeTotals';
+import ImpactOfGrowthChart from 'Components/ReviewComponents/Fees/FeeModules/Impact/ImpactOfCharges';
 
 const AdvisorReviewFeeRoutes = () => {
     const [state,  ] = useContext(Context);
@@ -32,6 +33,7 @@ const AdvisorReviewFeeRoutes = () => {
                             <Route path={`${basePath}/intro`}            component={FeesIntroduction} />
                             <Route path={`${basePath}/totals`}           component={FeeTotals} />
                             <Route path={`${basePath}/details/:feepage`} component={AdvisorReviewFeeDetailsRoutes} />
+                            <Route path={`${basePath}/impact`}           component={ImpactOfGrowthChart} />
                         </Switch>
                     </FeeTabs>
                 </Route>

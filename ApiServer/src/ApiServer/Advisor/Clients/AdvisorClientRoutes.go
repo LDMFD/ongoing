@@ -1,6 +1,7 @@
 package Clients
 
 import (
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientOptions"
 	ClientProfile "ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/ApiServer/Advisor/Clients/Commands/FactFinds"
 	"ongoing/ApiServer/Advisor/Clients/Commands/FeesReports"
@@ -21,6 +22,9 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.GET("/:ClientId", ClientProfile.GetClient)
 	r.PUT("/:ClientId", ClientProfile.UpdateClient)
 	r.DELETE("/:ClientId", ClientProfile.DeleteClient)
+
+	optionsGroup := r.Group("/:ClientId/options")
+	optionsGroup.PUT("", ClientOptions.SetOptions)
 
 	providerDiscountGroup := r.Group("/:ClientId/provider-discounts")
 	providerDiscountGroup.POST("", ProviderDiscount.CreateProviderDiscount)

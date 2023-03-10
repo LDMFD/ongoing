@@ -71,6 +71,7 @@ namespace Ongoing
 
             builder.ApplyConfiguration(new AdvisorConfig());
             builder.ApplyConfiguration(new ClientConfig());
+            builder.ApplyConfiguration(new ClientOptionsConfig());
             builder.ApplyConfiguration(new FactFindConfig());
             builder.ApplyConfiguration(new FeesReportConfig());
             builder.ApplyConfiguration(new FileConfig());

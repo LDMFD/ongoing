@@ -6,6 +6,7 @@ import FeesIntroduction from 'Components/ReviewComponents/Fees/FeeModules/FeesIn
 import FeeTotals from 'Components/ReviewComponents/Fees/FeeModules/FeeTotals';
 import ClientSpaceFeeDetailsRoutes from './ClientSpaceFeeDetailsRoutes';
 import FeeTabs from 'Components/ReviewComponents/Fees/FeeTabs';
+import ImpactOfGrowthChart from 'Components/ReviewComponents/Fees/FeeModules/Impact/ImpactOfCharges';
 
 const ClientSpaceFeeRoutes = () => {
     let report = GetReport();
@@ -28,6 +29,7 @@ const ClientSpaceFeeRoutes = () => {
                             <Route path={`${basePath}/intro`}            component={FeesIntroduction} />
                             <Route path={`${basePath}/totals`}           component={FeeTotals} />
                             <Route path={`${basePath}/details/:feepage`} component={ClientSpaceFeeDetailsRoutes} />
+                            <Route path={`${basePath}/impact`}           component={ImpactOfGrowthChart} />
                         </Switch>
                     </FeeTabs>
                 </Route>

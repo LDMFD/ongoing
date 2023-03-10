@@ -5,7 +5,13 @@ import {  Checkbox, FormGroup, FormControlLabel } from '@mui/material';
 import './CheckboxControl.css';
 import { FormInputProps } from './FormInputProps';
 
-export const CheckboxControl = (props: FormInputProps) => {
+export interface CheckboxInputProps extends FormInputProps {
+        // set to true if you want to override the input value using the `value` prop
+        override?: boolean;
+        value?: any,
+}    
+
+export const CheckboxControl = (props: CheckboxInputProps) => {
     return (
         <Controller
             name    = {props.name}
@@ -21,8 +27,9 @@ export const CheckboxControl = (props: FormInputProps) => {
                             label = {props.label}
                             control = {
                                 <Checkbox
-                                    checked  = {value}
+                                    checked  = {value && (!props.override || props.value)}
                                     onChange = {onChange}
+                                    disabled = {props.disabled}
                                 />
                             }
                         />

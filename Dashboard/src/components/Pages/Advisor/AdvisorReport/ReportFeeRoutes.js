@@ -6,6 +6,7 @@ import ReportFeeDetailsRoutes from 'Components/Pages/Advisor/AdvisorReport/Repor
 import FeeTotals from 'Components/ReviewComponents/Fees/FeeModules/FeeTotals';
 import FeesIntroduction from 'Components/ReviewComponents/Fees/FeeModules/FeesIntroduction';
 import FeeTabs from 'Components/ReviewComponents/Fees/FeeTabs';
+import ImpactOfGrowthChart from 'Components/ReviewComponents/Fees/FeeModules/Impact/ImpactOfCharges';
 
 const ReportFeeRoutes = () => {
     const [state,  ] = useContext(Context);
@@ -29,6 +30,7 @@ const ReportFeeRoutes = () => {
                             <Route path={`${basePath}/intro`}            component={FeesIntroduction} />
                             <Route path={`${basePath}/totals`}           component={FeeTotals} />
                             <Route path={`${basePath}/details/:feepage`} component={ReportFeeDetailsRoutes} />
+                            <Route path={`${basePath}/impact`}           component={ImpactOfGrowthChart} />
                         </Switch>
                     </FeeTabs>
                 </Route>

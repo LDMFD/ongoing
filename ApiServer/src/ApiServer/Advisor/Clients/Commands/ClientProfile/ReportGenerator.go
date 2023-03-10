@@ -1,6 +1,8 @@
 package ClientProfile
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
@@ -34,6 +36,7 @@ func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool
 		clientId:          clientId,
 		grantClientAccess: createRelationships,
 		report: &Entities.ReportDetail{
+			ClientOptions:     Entities.ReportClientOptions{},
 			ModulePresets:     []Entities.ReportModulePreset{},
 			Modules:           []Entities.ReportModule{},
 			PolicyTypes:       []Entities.ReportPolicyType{},
@@ -59,6 +62,7 @@ func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool
 func (gen *ReportGenerator) generateReport() {
 	gen.runQuery()
 
+	gen.generateOptions()
 	gen.generateModulePresets()
 	gen.generateModules()
 	gen.generateRisk() // Risk Assessments, Risk Providers, Risk Levels
@@ -75,6 +79,7 @@ func (gen *ReportGenerator) runQuery() {
 
 	if err := gen.db.NewSelect().
 		Model(gen.client).
+		Relation("Options").
 		Relation("RiskAssessments.RiskLevel.RiskProvider").
 		Relation("RiskAssessments.FilePtr.File").
 		Relation("FactFinds.FilePtr.File").
@@ -100,6 +105,20 @@ func (gen *ReportGenerator) runQuery() {
 }
 
 // Some fields in this file are sorted - all could be if needed.
+
+func (gen *ReportGenerator) generateOptions() {
+	options := gen.client.Options.ToReport()
+	if options.Options == nil {
+		return
+	}
+	s := bytes.NewBufferString(options.Options.(string))
+	var rep Entities.ReportClientOptions
+	err := json.Unmarshal(s.Bytes(), &rep.Options)
+	if err != nil {
+		panic(err.Error())
+	}
+	gen.report.ClientOptions = rep
+}
 
 func (gen *ReportGenerator) generateModulePresets() {
 	gen.report.ModulePresets = make([]Entities.ReportModulePreset, 0)

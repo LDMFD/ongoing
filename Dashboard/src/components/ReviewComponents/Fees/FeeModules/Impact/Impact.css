@@ -1,0 +1,26 @@
+.chart-controls {
+    padding: 2rem 0 0 2rem;
+    max-width: 840px;
+}
+.chart-controls .MuiSlider-root {
+    max-width: 600px;
+}
+.chart-controls .MuiFormControlLabel-label {
+    width: 260px;
+    padding-left: 1rem;
+}
+
+.ong-slider {
+    height: 80px;
+}
+
+.chart-controls .ong-checkbox {
+    display: inline-block;
+}
+
+.impactChart-xAxisLabel {
+    position: relative;
+    left: 414px;
+    top: -10px;
+    color: rgb(102, 102, 102);
+}
