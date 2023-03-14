@@ -1,3 +1,7 @@
+# 1.9.0 2023-03-13
+
+- Impact of Growth chart
+
 # 1.7.3 2023-02-04
 
 - Don't truncate the DB when importing

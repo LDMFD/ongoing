@@ -1,3 +1,7 @@
+# 1.9.0 2023-03-13
+
+- Impact of Growth chart
+
 ## 1.8.0 2023-02-18
 
 - Improved Fee pages
