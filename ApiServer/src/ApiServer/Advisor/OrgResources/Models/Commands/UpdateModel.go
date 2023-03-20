@@ -119,7 +119,7 @@ func UpdateModel(c *gin.Context) {
 		Column("file_ptr_id").
 		Exec(c); err != nil {
 		_ = tx.Rollback()
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 

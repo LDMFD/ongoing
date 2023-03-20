@@ -9,6 +9,21 @@ import (
 	"ongoing/Database"
 )
 
+// TODO if msg is set, supress stdout errorlevel (example: "bad input")
+func Unexpected(c *gin.Context, err error) {
+	if f, ok := err.(pgdriver.Error); ok {
+		if f.Field('C') == Database.PostgresUniqueViolation {
+			c.JSON(http.StatusBadRequest, gin.H{
+				// TODO align with ErrorState
+				"error": UniqueViolation,
+			})
+		}
+	}
+	if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true" {
+		return
+	}
+	panic(err)
+}
 const UniqueViolation = "duplicate_record"
 
 const PolicyNumberAlreadyExists = "A policy with this policy number already exists."
@@ -36,18 +51,4 @@ func FundHasDependentModels(models string) string {
 
 func ModelHasDependentPortfolios(models string) string {
 	return fmt.Sprintf("Model has dependent portfolios: [ %s ]", models)
-}
-
-func HandleError(c *gin.Context, err error) {
-	if f, ok := err.(pgdriver.Error); ok {
-		if f.Field('C') == Database.PostgresUniqueViolation {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": UniqueViolation,
-			})
-		}
-	}
-	if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true" {
-		return
-	}
-	panic(err)
 }

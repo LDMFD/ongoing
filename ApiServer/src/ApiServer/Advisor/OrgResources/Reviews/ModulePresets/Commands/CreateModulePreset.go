@@ -39,6 +39,6 @@ func CreateModulePresetInternal(c *gin.Context, orgId int64, body CreateOrUpdate
 		Text:       strings.TrimSpace(body.Text),
 	}
 	if _, err := db.NewInsert().Model(&modulePreset).Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 	}
 }

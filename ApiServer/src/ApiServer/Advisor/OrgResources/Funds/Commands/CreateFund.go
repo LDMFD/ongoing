@@ -72,7 +72,8 @@ func CreateFund(c *gin.Context) {
 	}
 
 	if _, err := tx.NewInsert().Model(&fund).Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
+		return
 	}
 
 	if body.File != nil {

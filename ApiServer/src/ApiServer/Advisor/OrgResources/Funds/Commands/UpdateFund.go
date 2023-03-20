@@ -107,7 +107,8 @@ func UpdateFund(c *gin.Context) {
 		Column("file_ptr_id").
 		Column("modified").
 		Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
+		return
 	}
 
 	if err := tx.Commit(); err != nil {

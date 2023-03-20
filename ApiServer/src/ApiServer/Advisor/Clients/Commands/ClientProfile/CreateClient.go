@@ -57,7 +57,7 @@ func CreateClient(c *gin.Context) {
 		Model(&user).
 		Exec(c); err != nil {
 		_ = tx.Rollback()
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 

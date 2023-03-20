@@ -38,21 +38,22 @@ func CreatePolicy(c *gin.Context) {
 
 	var path CreatePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
+		return
 	}
 
 	var body CreateOrUpdatePolicyRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
+		return
 	}
 
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
+		return
 	}
 
 	if exists, err := db.NewSelect().Model((*Entities.Policy)(nil)).

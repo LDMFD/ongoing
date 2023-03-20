@@ -66,7 +66,7 @@ func UpdateClient(c *gin.Context) {
 		Column("fee").
 		Exec(c); err != nil {
 		tx.Rollback()
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 
@@ -92,7 +92,7 @@ func UpdateClient(c *gin.Context) {
 			Column("surname").
 			Exec(c); err != nil {
 			tx.Rollback()
-			Errors.HandleError(c, err)
+			Errors.Unexpected(c, err)
 			return
 		}
 	}

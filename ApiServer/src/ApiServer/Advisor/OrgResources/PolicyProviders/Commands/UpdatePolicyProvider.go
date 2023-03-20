@@ -68,6 +68,7 @@ func UpdatePolicyProviderInternal(c *gin.Context, orgId int64, providerId string
 		Column("pricing").
 		Column("custom_pricing").
 		Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
+		return
 	}
 }
