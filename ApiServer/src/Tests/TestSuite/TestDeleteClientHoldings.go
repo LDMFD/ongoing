@@ -142,6 +142,7 @@ func TestDeletePolicies(t *testing.T, e *httpexpect.Expect) {
 
 func deletePolicy(e *httpexpect.Expect, policyId string) {
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId).
+		WithQueryString("execute=true").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }

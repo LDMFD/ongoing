@@ -2,16 +2,10 @@ package Policies
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"log"
-	"net/http"
-	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,31 +15,41 @@ type DeletePolicyRequestPath struct {
 	PolicyId string `binding:"required"`
 }
 
+type DeletePolicyQuery struct {
+	Execute bool `form:"execute"`
+}
+
 func DeletePolicy(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	response := &context.Response
 
 	var path DeletePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		response.InvalidInput()
+		return
+	}
+
+	var query DeletePolicyQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		response.InvalidInput()
+		return
 	}
 
 	var policy = Entities.Policy{}
-	if err := db.NewSelect().
+	if err := context.Db.NewSelect().
 		Model(&policy).
-		Relation("Portfolios").
+		Relation("Portfolios.Model.Operator").
+		Relation("PolicyFunds.Fund").
 		Relation("FilePtr.File").
 		Where("policy.uid = ?", path.PolicyId).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response.NotFound()
 		panic(err.Error())
 	}
 
 	var client *Entities.Client
 	var err error
-	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+	if client, err = Helpers.ClientFromUID(c, context.Db, path.ClientId); err != nil {
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
 			panic(err)
 		}
@@ -53,45 +57,68 @@ func DeletePolicy(c *gin.Context) {
 	}
 
 	if policy.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy does not belong to client"})
-		panic(err.Error())
+		response.AccessViolation()
+		return
+	}
+
+	if len(policy.PolicyFunds) > 0 {
+		for _, fund := range policy.PolicyFunds {
+			response.AddResource("Fund " + fund.Fund.Name)
+		}
 	}
 
 	if len(policy.Portfolios) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyHasDependentPortfolios})
-		panic(err.Error())
+		for _, p := range policy.Portfolios {
+			response.AddResource("Portfolio " + p.Model.Operator.Name + " " + p.Model.Name)
+		}
 	}
 
-	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if !query.Execute {
+		response.CheckIntegrity()
+		return
+	}
+
+	for _, f := range policy.PolicyFunds {
+		if _, err := context.Db.NewDelete().
+			Model(f).
+			WherePK().
+			Exec(c); err != nil {
+			response.Panic(err)
+		}
+	}
+
+	for _, p := range policy.Portfolios {
+		if _, err := context.Db.NewDelete().
+			Model(p).
+			WherePK().
+			Exec(c); err != nil {
+			response.Panic(err)
+		}
+	}
+
+	tx, err := context.Db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		response.Panic(err)
 	}
 
 	if _, err := tx.NewDelete().
 		Model(&policy).
 		WherePK().
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		response.Panic(err)
 	}
 
 	if policy.FilePtr != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
+		if err := context.Auth.RemoveFileFromClientAndOrg(path.ClientId, context.Session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
 			_ = tx.Rollback()
-			return
+			response.Panic(err)
 		}
 		Helpers.DeleteFile(c, tx, *policy.FilePtr)
 	}
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	response.ReturnOK()
 }

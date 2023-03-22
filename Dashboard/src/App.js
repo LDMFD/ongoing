@@ -23,7 +23,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
 
 import { ForceRefresh } from "Auth";
-import { UniqueViolation } from "Errors";
+import { AccessViolation, IntegrityViolation, InternalError, InvalidInput, NotFound, UniqueViolation } from "Errors";
 
 Sentry.init({
     dsn: window.Config.SentryDsn,
@@ -150,10 +150,23 @@ window.ApiClient.interceptors.response.use((response) => {
     const responseError = err?.response?.data;
 
     if (typeof responseError == 'object') {  // explicit error returned from command handler
-        if (responseError.error !== UniqueViolation) {
-            alert(responseError.error)
+        switch (responseError.error) {
+            case NotFound:
+                alert("This resource was not found.");
+                break;
+            case AccessViolation:
+                alert("You do not have permission to access this resource.");
+                break;
+            case InternalError:
+                alert("An internal error has occurred (trace ID: " + responseError.trace + ").");
+                break;
+            case UniqueViolation:
+            case IntegrityViolation:
+            case InvalidInput:
+                return responseError;
+            default:
+                alert(`Error: ${responseError.error}`);
         }
-        return responseError;
     } else {
         alert(str);
         console.log(`response error: ${str}`);

@@ -15,6 +15,7 @@ import (
 	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 	"os"
 	"strings"
 )
@@ -200,7 +201,13 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			}
 		}
 
-		c.Set("SESSION", sessionContext)
+		c.Set("SESSION", sessionContext) // TODO remove
+
+		if context, exists := c.Get("CONTEXT"); !exists {
+			panic("Context not set")
+		} else {
+			context.(*ServiceContext.Context).Session = sessionContext
+		}
 		c.Next()
 	}
 }

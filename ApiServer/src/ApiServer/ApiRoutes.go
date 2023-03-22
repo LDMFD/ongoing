@@ -16,7 +16,7 @@ import (
 	"ongoing/Entities"
 )
 
-func AddApiRoutes(r *gin.Engine) {
+func AddRoutes(r *gin.Engine) {
 	addUnauthenticatedRoutes(r)
 	addUserInfoRoute(r)
 	addStorageRoutes(r)

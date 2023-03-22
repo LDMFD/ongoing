@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/AuthService"
+	"ongoing/Database"
 	"ongoing/Entities"
 
 	"github.com/gin-gonic/gin"
@@ -32,6 +33,11 @@ func DeleteClient(c *gin.Context) {
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		return
+	}
+
+	if Database.HasRelationships(db, "clients", "client_id", client.Id) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "cannot delete client with relationships"})
 		return
 	}
 

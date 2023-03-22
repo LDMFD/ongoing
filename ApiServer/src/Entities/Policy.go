@@ -23,7 +23,8 @@ type Policy struct {
 	FilePtrId            *int64    `bun:"file_ptr_id"`
 
 	Client         *Client         `bun:"rel:has-one,join:client_id=id"`
-	Portfolios     []*Portfolio    `bun:"rel:has-many,join:id=client_id"`
+	Portfolios     []*Portfolio    `bun:"rel:has-many,join:id=policy_id"`
+	PolicyFunds    []*PolicyFund   `bun:"rel:has-many,join:id=policy_id"`
 	PolicyType     *PolicyType     `bun:"rel:has-one,join:policy_type_id=id"`
 	PolicyProvider *PolicyProvider `bun:"rel:has-one,join:policy_provider_id=id"`
 	FilePtr        *FilePtr        `bun:"rel:has-one,join:file_ptr_id=id"`

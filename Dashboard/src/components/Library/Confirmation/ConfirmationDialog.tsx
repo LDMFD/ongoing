@@ -10,20 +10,24 @@ import {
 
 import { GoBack } from 'Utils/Routing';
 
-export const ConfirmationDialog = ({ label, okCallback }) => {
+export const ConfirmationDialog = (props: {
+    label: string,
+    okCallback: (e: any) => {},
+    content?: any
+}) => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     return (
         <Dialog open={true} onClose={goBack}>
-            <form onSubmit={okCallback}>
-                <DialogTitle>{label}</DialogTitle>
+            <form onSubmit={props.okCallback}>
+                <DialogTitle>{props.label}</DialogTitle>
                 <DialogContent>
-                    Confirmation is required for this destructive action.
+                    {props.content ?? 'Confirmation is required for this destructive action.'}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' onClick={okCallback} autoFocus>Confirm</Button>
+                    <Button type='submit' onClick={props.okCallback} autoFocus>Confirm</Button>
                 </DialogActions>
             </form>
         </Dialog>

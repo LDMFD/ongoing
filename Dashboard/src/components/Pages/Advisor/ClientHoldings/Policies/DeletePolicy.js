@@ -1,28 +1,20 @@
-import ConfirmationDialog from 'Components/Library/Confirmation/ConfirmationDialog';
+import { DeletionConfirmation } from 'Components/Library/Confirmation/DeletionConfirmation';
 import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils/Routing';
 
 const DeletePolicy = () => {
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const [ state, dispatch ] = useContext(Context);
     let [ policy, setPolicy ] = useState(null);
 
     let { clientId, policyId } = useParams();
 
-    const onDelete = async (e) => {
-        e.preventDefault();
-
-        await Api.Advisor.Policies.Delete(clientId, policyId);
+    const onDelete = async (execute) => {
+        let res = await Api.Advisor.Policies.Delete(clientId, policyId, execute);
         await Api.Advisor.ClientDetail.Read(dispatch, clientId);
-
-        goBack();
-        return false;
+        return res;
     };
 
     if (!policy) {
@@ -30,10 +22,14 @@ const DeletePolicy = () => {
         setPolicy(p)
         return;
     }
-
     return (
-        <ConfirmationDialog label      = 'Delete policy?'
-                            okCallback = {onDelete}  />
+        <DeletionConfirmation
+            handler    = {onDelete}
+            label      = 'Delete policy?'
+            warning    = 'This policy is currently in use by the following holdings, which will also be deleted if this policy is deleted:'
+            prompt     = 'Are you sure you want to delete this policy'
+            dependents = 'and all linked holdings'
+        />
     );
 }
 

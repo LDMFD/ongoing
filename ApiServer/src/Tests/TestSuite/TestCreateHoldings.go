@@ -176,6 +176,7 @@ func testCreatePolicySecurity(t *testing.T, e *httpexpect.Expect) {
 		Expect().Status(http.StatusForbidden)
 
 	e.DELETE("/api/advisor/clients/"+org1ClientId+"/policies/"+policyId2).
+		WithQueryString("execute=true").
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)

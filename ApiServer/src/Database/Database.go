@@ -33,6 +33,8 @@ func New() (*bun.DB, error) {
 
 	SeedUserTable(db)
 
+	GetRelationships(db)
+
 	log.Println("DB: Connected.")
 
 	DB = db
