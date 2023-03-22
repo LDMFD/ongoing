@@ -91,7 +91,12 @@ func Truncate(appdb *bun.DB) {
 		spicedb.Close()
 	}()
 	spicedb.Exec("DELETE FROM relation_tuple")
-	spicedb.Exec("DELETE FROM relation_tuple_transaction WHERE id > 2;")
+	spicedb.Exec(`
+		DELETE FROM relation_tuple_transaction
+		WHERE id NOT IN (
+			SELECT id
+			FROM relation_tuple_transaction ORDER BY id LIMIT 2
+	);`)
 }
 
 func SeedUserTable(db *bun.DB) {
