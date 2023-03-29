@@ -44,6 +44,7 @@ func CreateClient(c *gin.Context) {
 	if err != nil {
 		response.Panic(err)
 	}
+	defer tx.Rollback()
 
 	var user = Entities.User{
 		Uid:       userUid,
@@ -84,7 +85,8 @@ func CreateClient(c *gin.Context) {
 		response.Panic(err)
 	}
 
-	if err := auth.CreateClient(*session.OrgId, advisor.User.Uid, clientUid, userUid); err != nil {
+	ctx := c.Request.Context()
+	if err := auth.CreateClient(&ctx, &tx, *session.OrgId, advisor.User.Uid, clientUid, userUid); err != nil {
 		_ = tx.Rollback()
 		response.Panic(err)
 	}

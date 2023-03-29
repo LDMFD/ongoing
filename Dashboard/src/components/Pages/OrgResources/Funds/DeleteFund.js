@@ -1,28 +1,20 @@
-import ConfirmationDialog from 'Components/Library/Confirmation/ConfirmationDialog';
+import { DeletionConfirmation } from 'Components/Library/Confirmation/DeletionConfirmation';
 import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils/Routing';
 
 const DeleteFund = () => {
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const [ state, dispatch ] = useContext(Context);
     let [ fund, setFund ] = useState(null);
 
     let { fundId } = useParams();
 
-    const onDelete = async (e) => {
-        e.preventDefault();
-
-        await Api.OrgResources.Funds.Delete(fundId)
+    const onDelete = async (execute) => {
+        let res = await Api.OrgResources.Funds.Delete(fundId, execute)
         await Api.OrgResources.Entities.Read(dispatch);
-
-        goBack();
-        return false;
+        return res;
     };
 
     if (!fund) {
@@ -32,8 +24,13 @@ const DeleteFund = () => {
     }
 
     return (
-        <ConfirmationDialog label      = 'Delete fund?'
-                            okCallback = {onDelete}  />
+        <DeletionConfirmation
+            handler    = {onDelete}
+            label      = {`Delete fund ${fund.Name}?`}
+            warning    = 'This policy is currently in use by client holdings (policy funds), which will also be deleted if this fund is deleted. The clients are:'
+            prompt     = 'Are you sure you want to delete this fund'
+            dependents = 'and all linked holdings'
+        />
     );
 }
 

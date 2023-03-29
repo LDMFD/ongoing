@@ -1,18 +1,12 @@
 package ApiServer
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
-	"log"
-	"net/http"
 	"ongoing/ApiServer/Advisor"
 	"ongoing/ApiServer/Advisor/OrgAdmin"
 	"ongoing/ApiServer/Advisor/Storage"
-	"ongoing/ApiServer/Advisor/Storage/Commands"
 	"ongoing/ApiServer/ClientSpace"
 	"ongoing/ApiServer/Superuser"
-	"ongoing/AuthService"
 	"ongoing/Entities"
 )
 
@@ -92,43 +86,4 @@ func addClientSpaceRoutes(r *gin.Engine) {
 		Entities.UserTypeClient,
 	}))
 	ClientSpace.AddRoutes(routes)
-}
-
-func healthcheck(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
-
-	// Test DB connection
-	_, err := db.Exec("SELECT 1")
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "database connection"})
-		return
-	}
-
-	// Test storage key generation (doesn't test upload)
-	Commands.GenerateSignedGetUrl("test")
-
-	// Test SpiceDB
-	schema, err := auth.ReadSchema()
-	if err != nil {
-		log.Println(err)
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "auth server down"})
-		return
-	}
-	if schema == nil || len(*schema) == 0 {
-		log.Println("no schema")
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "auth server not initialized"})
-		return
-	}
-
-	c.String(200, fmt.Sprintf("version: %v\n", Release))
-}
-
-func errorcheck(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-
-	_, err := db.Exec("MISTAKE")
-	if err != nil {
-		panic(err)
-	}
 }

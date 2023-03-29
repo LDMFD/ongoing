@@ -2,16 +2,12 @@ package ClientProfile
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"github.com/uptrace/bun"
-	"log"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
-	"ongoing/Database"
 	"ongoing/Entities"
-
-	"github.com/gin-gonic/gin"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 )
 
 type DeleteClientRequestPath struct {
@@ -19,72 +15,60 @@ type DeleteClientRequestPath struct {
 }
 
 func DeleteClient(c *gin.Context) {
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	db := c.MustGet("DATABASE").(*bun.DB)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path DeleteClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var client *Entities.Client
-	var err error
-	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
+		context.Response.InvalidInput()
 		return
 	}
 
-	if Database.HasRelationships(db, "clients", "client_id", client.Id) {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "cannot delete client with relationships"})
+	var dtoClient *Entities.Client
+	var err error
+	if dtoClient, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+		context.Response.NotFound()
 		return
 	}
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		context.Panic(err)
 	}
+	defer tx.Rollback()
+
+	exportClient, dbClient := GetClientInternal(c, dtoClient)
+
+	ClientDeletion.DeleteClient(c, tx, dbClient, dtoClient, exportClient)
 
 	var advisor *Entities.Advisor
-	if advisor, err = Helpers.AdvisorFromUserUID(c, db, session.UserUid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Printf("%+v", err)
-		_ = tx.Rollback()
-		return
+	if advisor, err = Helpers.AdvisorFromUserUID(c, db, exportClient.Metadata.AdvisorId); err != nil {
+		context.Panic(err)
 	}
 
 	if _, err := tx.NewDelete().
-		Model(client).
-		Where("id = ?", client.Id).
+		Model(dtoClient).
+		Where("id = ?", dtoClient.Id).
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Panic(err)
 	}
 
 	var user Entities.User
 	if _, err := tx.NewDelete().
 		Model(&user).
-		Where("id = ?", client.UserId).
+		Where("id = ?", dtoClient.UserId).
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Panic(err)
+	}
+
+	ctx := c.Request.Context()
+	if err := context.Auth.RemoveClient(&ctx, &tx, *context.Session.OrgId, advisor.User.Uid, path.ClientId, dtoClient.User.Uid); err != nil {
+		context.Panic(err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		context.Panic(err)
 	}
 
-	if err := auth.RemoveClient(*session.OrgId, advisor.User.Uid, path.ClientId, client.User.Uid, advisor.User.Uid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Printf("%+v", err)
-		_ = tx.Rollback()
-		return
-	}
-
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

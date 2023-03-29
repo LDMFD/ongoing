@@ -1,4 +1,44 @@
+2022-03-28
+
+It's possible to send a particular code and also raise a local error as follows (Policies.go):
+
+		response.NotFound()
+		panic(err)
+
+
+2022-03-26
+
+	Every transaction is opened with a deferred rollback
+
+	TODO :- Ensure rollbacks only in deferred functions against begintx
 	
+	(from DeleteFactFind):
+
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Response.Panic(err)
+	}
+	defer tx.Rollback()
+
+---
+
+Handle unexpected errors as follows:
+
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+
+	if _, err := tx.NewDelete().Model(&something).WherePK().Exec(c); err != nil {
+		context.Panic(err)   # shortcut to context.Response.Panic(err)
+	}
+
+(see FactFinds.Go)
+
+---
+
+AdvisorLookup.go has a security check log
+
+---	
+
+## Legacy / to review:
 
 Handle invalid input as follows:
 

@@ -96,6 +96,7 @@ func CreateRiskAssessment(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	if body.File != nil {
 		assessment.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
@@ -107,7 +108,8 @@ func CreateRiskAssessment(c *gin.Context) {
 	}
 
 	if body.File != nil {
-		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
+		ctx := c.Request.Context()
+		if err := auth.CreateClientFile(&ctx, &tx, client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

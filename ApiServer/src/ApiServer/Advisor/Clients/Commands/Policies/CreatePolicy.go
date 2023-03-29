@@ -57,7 +57,6 @@ func CreatePolicy(c *gin.Context) {
 		Relation("PolicyProvider").
 		Exists(c); err != nil {
 		response.Panic(err)
-		panic(err.Error())
 	} else if exists {
 		response.UniqueViolation()
 		return
@@ -97,6 +96,7 @@ func CreatePolicy(c *gin.Context) {
 	if err != nil {
 		response.Panic(err)
 	}
+	defer tx.Rollback()
 
 	if body.File != nil {
 		policy.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
@@ -107,8 +107,8 @@ func CreatePolicy(c *gin.Context) {
 	}
 
 	if body.File != nil {
-		if err := context.Auth.CreateClientFile(client.Uid, context.Session.Org.Uid, body.File.Uid); err != nil {
-			_ = tx.Rollback()
+		ctx := c.Request.Context()
+		if err := context.Auth.CreateClientFile(&ctx, &tx, client.Uid, context.Session.Org.Uid, body.File.Uid); err != nil {
 			response.Panic(err)
 		}
 	}

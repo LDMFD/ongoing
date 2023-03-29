@@ -25,7 +25,7 @@ const DeletePolicy = () => {
     return (
         <DeletionConfirmation
             handler    = {onDelete}
-            label      = 'Delete policy?'
+            label      = {`Delete policy ${policy.ExternalId}?`}
             warning    = 'This policy is currently in use by the following holdings, which will also be deleted if this policy is deleted:'
             prompt     = 'Are you sure you want to delete this policy'
             dependents = 'and all linked holdings'

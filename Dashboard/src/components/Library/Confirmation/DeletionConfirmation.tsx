@@ -29,7 +29,7 @@ export const DeletionConfirmation = (props: {
     let dryRun = useCallback(async () => {
         let res = await handler(false);
         // @ts-ignore
-        setResponse(res.data);
+        setResponse(res.data ? res.data : true);  // res.data is a list of dependencies; true if no dependencies
     }, [ handler ] );
 
     useEffect(() => {
@@ -58,9 +58,9 @@ export const DeletionConfirmation = (props: {
                         ))}
                     </ul>
                 )}
-                {props.prompt}{props.dependents}?
+                {props.prompt} {props.dependents}?
             </>
-        ) : (
+        ) : (  // no dependencies
             <>
                 {props.prompt}?
             </>

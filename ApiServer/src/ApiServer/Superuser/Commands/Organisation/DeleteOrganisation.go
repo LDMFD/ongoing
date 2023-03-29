@@ -46,6 +46,7 @@ func DeleteOrganisation(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	if _, err := tx.NewDelete().
 		Model(advisor).
@@ -73,16 +74,17 @@ func DeleteOrganisation(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
-	}
-
-	if err := auth.RemoveMember(advisor.Organisation.Uid, *ownerUid); err != nil {
+	ctx := c.Request.Context()
+	if err := auth.RemoveMember(&ctx, &tx, advisor.Organisation.Uid, *ownerUid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()
+		return
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(errors.WithStack(err))
 		return
 	}
 

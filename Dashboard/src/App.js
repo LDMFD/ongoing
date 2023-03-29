@@ -152,7 +152,7 @@ window.ApiClient.interceptors.response.use((response) => {
     if (typeof responseError == 'object') {  // explicit error returned from command handler
         switch (responseError.error) {
             case NotFound:
-                alert("This resource was not found.");
+                alert("The resource was not found.");
                 break;
             case AccessViolation:
                 alert("You do not have permission to access this resource.");

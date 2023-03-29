@@ -9,7 +9,7 @@ import (
 	"ongoing/Utils/Date"
 )
 
-func GetClientInternal(c *gin.Context, client *Entities.Client) *Entities.ExportClient {
+func GetClientInternal(c *gin.Context, dbClient *Entities.Client) (*Entities.ExportClient, *Entities.Client) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
 
@@ -18,7 +18,7 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *Entities.Export
 	if count, err := db.NewSelect().
 		Model(&draftReviews).
 		Where("state = ?", Entities.ReviewStateDraft).
-		Where("client_id = ?", client.Id).
+		Where("client_id = ?", dbClient.Id).
 		ScanAndCount(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
@@ -45,19 +45,19 @@ func GetClientInternal(c *gin.Context, client *Entities.Client) *Entities.Export
 		}
 	}
 
-	report := GenerateReport(c, client.Id, false)
+	report, dbClient := GenerateReport(nil, c, dbClient.Id)
 
-	resp := &Entities.ExportClient{
-		Metadata: client.ToReport(),
+	exportClient := &Entities.ExportClient{
+		Metadata: dbClient.ToReport(),
 		Draft:    draft,
 		Report:   *report,
-		Reviews:  GetReviews(c, client),
+		Reviews:  GetReviews(c, dbClient),
 	}
-	if advisorId, err := auth.GetAdvisor(client.Uid, &client.User.Uid); err != nil {
+	if advisorId, err := auth.GetAdvisor(dbClient.Uid, &dbClient.User.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	} else {
-		resp.Metadata.AdvisorId = advisorId
+		exportClient.Metadata.AdvisorId = advisorId
 	}
-	return resp
+	return exportClient, dbClient
 }

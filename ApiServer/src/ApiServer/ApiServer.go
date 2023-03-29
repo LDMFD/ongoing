@@ -35,22 +35,25 @@ func New(db *bun.DB, authClient *AuthService.Client) *ApiServer {
 	return server
 }
 
-func AddContextMiddleware() gin.HandlerFunc {
+func AddContextMiddleware(db *bun.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		trace := UUID.GenerateUID(nil)[:6]
-		context := &ServiceContext.Context{}
-		context.Response = ServiceContext.Response{
-			FrameworkContext: c,
-			Trace:            &trace,
+		context := &ServiceContext.Context{
+			Db: db,
+			Response: ServiceContext.Response{
+				FrameworkContext: c,
+				Trace:            &trace,
+			},
 		}
 		c.Set("CONTEXT", context)
 		c.Next()
 	}
 }
 
+// TODO remove
 func AddDatabaseContext(db *bun.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("DATABASE", db) // TODO remove
+		c.Set("DATABASE", db)
 		if context, exists := c.Get("CONTEXT"); !exists {
 			panic("Context not set")
 		} else {
@@ -83,14 +86,17 @@ func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 
 	s.addServiceContext(r)
 
+	r.Use(AddAuthBackendContext(s.authClient))
+
 	AddRoutes(r)
 
 	return r, nil
 }
 
 func (s *ApiServer) addServiceContext(r *gin.Engine) {
-	r.Use(AddContextMiddleware())
+	r.Use(AddContextMiddleware(s.db))
 
+	// TODO remove
 	r.Use(AddDatabaseContext(s.db))
 
 	r.Use(AddAuthBackendContext(s.authClient))

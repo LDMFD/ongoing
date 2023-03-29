@@ -37,6 +37,8 @@ func runFullTestSuite(t *testing.T, e *httpexpect.Expect) {
 
 func runValidationTests(t *testing.T, e *httpexpect.Expect) {
 	testGetOrgResourcesFromThisOrg(e)
+
+	// These are otherwise found in testClientReviews() called from runFullTestSuite()
 	testGetClient(t, e)
 	testGetClientSpace(t, e)
 }

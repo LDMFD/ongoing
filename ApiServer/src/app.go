@@ -6,20 +6,24 @@ import (
 	"ongoing/ApiServer"
 	"ongoing/Exporter"
 	"ongoing/Importer"
+	"ongoing/Outbox"
 	"os"
 )
 
 type App struct {
 	apiServer *ApiServer.ApiServer
+	Outbox    *Outbox.Outbox
 }
 
-func newApp(apiServer *ApiServer.ApiServer) *App {
+func newApp(apiServer *ApiServer.ApiServer, outbox *Outbox.Outbox) *App {
 	return &App{
 		apiServer: apiServer,
+		Outbox:    outbox,
 	}
 }
 
 func (app *App) Run() error {
+	go app.Outbox.RunOutbox()
 	return app.runApiServer()
 }
 

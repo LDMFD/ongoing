@@ -45,6 +45,7 @@ func TestDeleteModels(t *testing.T, e *httpexpect.Expect) {
 func deleteModel(e *httpexpect.Expect, modelId string) {
 	e.DELETE("/api/advisor/models/"+modelId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQueryString("execute=true").
 		Expect().Status(http.StatusOK)
 }
 
@@ -58,6 +59,7 @@ func TestDeleteOperators(t *testing.T, e *httpexpect.Expect) {
 func deleteOperator(e *httpexpect.Expect, operatorId string) {
 	e.DELETE("/api/advisor/operators/"+operatorId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQueryString("execute=true").
 		Expect().Status(http.StatusOK)
 }
 
@@ -90,6 +92,7 @@ func TestDeleteFunds(t *testing.T, e *httpexpect.Expect) {
 func deleteFund(e *httpexpect.Expect, fundId string) {
 	e.DELETE("/api/advisor/funds/"+fundId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQueryString("execute=true").
 		Expect().Status(http.StatusOK)
 }
 
@@ -104,16 +107,19 @@ func TestDeleteProviderCharges(t *testing.T, e *httpexpect.Expect) {
 func TestDeletePolicyProviders(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1Aviva).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/advisor/policy-providers/"+policyProviderId2Aegon).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 }
 
 func TestDeletePolicyTypes(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/policy-types/"+policyTypeId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 }
 
@@ -126,6 +132,7 @@ func TestDeleteRiskLevels(t *testing.T, e *httpexpect.Expect) {
 func TestDeleteRiskProviders(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/risk-providers/"+riskProviderId).
 		WithHeader("Authentication", ORG1_ADVISOR).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 }
 

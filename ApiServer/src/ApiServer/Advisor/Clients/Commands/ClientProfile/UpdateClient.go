@@ -61,6 +61,7 @@ func UpdateClient(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	if _, err := tx.NewUpdate().Model(client).WherePK().
 		Column("fee").

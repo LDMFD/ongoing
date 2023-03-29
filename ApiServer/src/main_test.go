@@ -1,15 +1,14 @@
 package main
 
 import (
+	"github.com/gavv/httpexpect/v2"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"log"
 	"net/http"
 	"ongoing/Tests/TestSuite"
 	"os"
 	"testing"
-
-	"github.com/gavv/httpexpect/v2"
-	"github.com/gin-gonic/gin"
 )
 
 var router *gin.Engine
@@ -25,6 +24,8 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatalf("%+v\n", errors.WithStack(err))
 	}
+
+	go app.Outbox.RunOutbox()
 
 	//var router *gin.Engine
 	if router, err = app.GetRouter(); err != nil {

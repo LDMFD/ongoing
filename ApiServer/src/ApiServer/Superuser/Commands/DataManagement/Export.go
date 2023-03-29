@@ -1,6 +1,8 @@
 package DataManagement
 
 import (
+	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
@@ -24,6 +26,20 @@ func Export(c *gin.Context) {
 		Orgs:  []Entities.Org{},
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered: ", r)
+			tx.Rollback()
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	}()
+
 	for _, org := range entities.Organisations {
 		clients := ClientProfile.GetClientsInternal(c, org.Id)
 
@@ -46,7 +62,8 @@ func Export(c *gin.Context) {
 				panic(errors.WithStack(err))
 			}
 
-			org.Clients = append(org.Clients, *ClientProfile.GetClientInternal(c, &c2))
+			cx, _ := ClientProfile.GetClientInternal(c, &c2)
+			org.Clients = append(org.Clients, *cx)
 		}
 
 		if files, err := auth.GetOrgFiles(org.Metadata.Id); err != nil {
@@ -73,6 +90,11 @@ func Export(c *gin.Context) {
 		}
 
 		export.Orgs = append(export.Orgs, org)
+	}
+
+	if err := tx.Commit(); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.IndentedJSON(200, export)

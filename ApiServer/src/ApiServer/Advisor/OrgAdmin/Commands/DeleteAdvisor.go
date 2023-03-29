@@ -35,6 +35,7 @@ func DeleteAdvisor(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	var orgId string
 	if orgs, err := auth.LookupOrganisations(advisor.User.Uid); err != nil {
@@ -44,7 +45,8 @@ func DeleteAdvisor(c *gin.Context) {
 		orgId = orgs[0]
 	}
 
-	if err := auth.RemoveMember(orgId, advisor.User.Uid); err != nil {
+	ctx := c.Request.Context()
+	if err := auth.RemoveMember(&ctx, &tx, orgId, advisor.User.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

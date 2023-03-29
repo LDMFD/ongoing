@@ -2,15 +2,12 @@ package FeesReports
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,14 +18,13 @@ type DeleteFeesReportRequestPath struct {
 }
 
 func DeleteFeesReport(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path DeleteFeesReportRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var feesReport = Entities.FeesReport{}
@@ -37,8 +33,7 @@ func DeleteFeesReport(c *gin.Context) {
 		Relation("FilePtr.File").
 		Where("fees_report.uid = ?", path.FeesReportId).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
 
 	var client *Entities.Client
@@ -48,43 +43,22 @@ func DeleteFeesReport(c *gin.Context) {
 			panic(err)
 		}
 		return
-	}
-
-	if feesReport.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Fees report does not belong to client"})
-		panic(err.Error())
+	} else if feesReport.ClientId != client.Id {
+		context.Response.NotFound()
+		return
 	}
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
+	defer tx.Rollback()
 
-	if _, err := tx.NewDelete().
-		Model(&feesReport).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if feesReport.FilePtr != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
-			_ = tx.Rollback()
-			return
-		}
-		Helpers.DeleteFile(c, tx, *feesReport.FilePtr)
-	}
+	ClientDeletion.DeleteFeesReport(c, &tx, path.ClientId, &feesReport)
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		context.Response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

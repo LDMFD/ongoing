@@ -27,7 +27,7 @@ func (response *Response) AccessViolation() {
 }
 
 func (response *Response) IntegrityViolation() {
-	response.error(http.StatusBadRequest, Errors.IntegrityViolation)
+	response.error(http.StatusOK, Errors.IntegrityViolation)
 }
 
 func (response *Response) InvalidInput() {

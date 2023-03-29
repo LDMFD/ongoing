@@ -1,12 +1,15 @@
 package ReviewModules
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 )
 
 type DeleteReviewModulePath struct {
@@ -16,19 +19,20 @@ type DeleteReviewModulePath struct {
 }
 
 func DeleteReviewModule(c *gin.Context) {
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var path DeleteReviewModulePath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
-			panic(err)
+			context.Response.Panic(err)
 		}
 		return
 	}
@@ -38,8 +42,7 @@ func DeleteReviewModule(c *gin.Context) {
 		Model(module).
 		Where("client_id = ? AND type = ?", client.Id, path.Module).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
 	if path.Field == "intro" || path.Field == "all" {
 		module.Intro = ""
@@ -48,26 +51,28 @@ func DeleteReviewModule(c *gin.Context) {
 		module.Text = ""
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Response.Panic(err)
+	}
+	defer tx.Rollback()
+
 	if module.Intro == "" && module.Text == "" {
-		if _, err := db.NewDelete().
-			Model(module).
-			Where("client_id = ? AND type = ?", client.Id, path.Module).
-			Exec(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		}
+		ClientDeletion.DeleteModule(c, &tx, module)
 	} else {
-		if _, err := db.NewUpdate().
+		if _, err := tx.NewUpdate().
 			Model(module).
 			WherePK().
 			Column("intro").
 			Column("text").
 			Exec(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
+			context.Response.Panic(err)
 		}
-		c.JSON(200, gin.H{})
 	}
 
-	c.JSON(200, gin.H{})
+	if err := tx.Commit(); err != nil {
+		context.Response.Panic(err)
+	}
+
+	c.Status(http.StatusOK)
 }

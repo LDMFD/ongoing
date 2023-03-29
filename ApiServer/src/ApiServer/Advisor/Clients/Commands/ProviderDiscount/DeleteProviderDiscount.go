@@ -1,10 +1,13 @@
 package ProviderDiscount
 
 import (
+	"database/sql"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/uptrace/bun"
 
@@ -17,12 +20,13 @@ type DeleteProviderDiscountRequestPath struct {
 }
 
 func DeleteProviderDiscount(c *gin.Context) {
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 	db := c.MustGet("DATABASE").(*bun.DB)
 
 	var path DeleteProviderDiscountRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var providerDiscount = Entities.ProviderDiscount{}
@@ -30,31 +34,34 @@ func DeleteProviderDiscount(c *gin.Context) {
 		Model(&providerDiscount).
 		Where("uid = ?", path.ProviderDiscountId).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
 
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
-			panic(err)
+			context.Response.Panic(err)
 		}
 		return
 	}
 
 	if providerDiscount.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ProviderDiscount does not belong to client"})
+		context.Response.NotFound()
 		return
 	}
 
-	if _, err := db.NewDelete().
-		Model(&providerDiscount).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Response.Panic(err)
+	}
+	defer tx.Rollback()
+
+	ClientDeletion.DeleteProviderDiscount(c, &tx, &providerDiscount)
+
+	if err := tx.Commit(); err != nil {
+		context.Response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

@@ -433,6 +433,40 @@ namespace Ongoing.Migrations
                     b.ToTable("funds");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Jobspec")
+                        .HasColumnType("json")
+                        .HasColumnName("jobspec");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Uid")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("uid");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Uid");
+
+                    b.HasIndex(new[] { "Uid" }, "job_uid_key")
+                        .IsUnique();
+
+                    b.ToTable("jobs");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Model", b =>
                 {
                     b.Property<int>("Id")

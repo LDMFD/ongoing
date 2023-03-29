@@ -1,28 +1,20 @@
-import ConfirmationDialog from 'Components/Library/Confirmation/ConfirmationDialog';
+import { DeletionConfirmation } from 'Components/Library/Confirmation/DeletionConfirmation';
 import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils/Routing';
 
 const DeleteModel = () => {
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const [ state, dispatch ] = useContext(Context);
     let [ model, setModel ] = useState(null);
 
     let { modelId } = useParams();
 
-    const onDelete = async (e) => {
-        e.preventDefault();
-
-        await Api.OrgResources.Models.Delete(modelId)
+    const onDelete = async (execute) => {
+        let res = await Api.OrgResources.Models.Delete(modelId, execute);
         await Api.OrgResources.Entities.Read(dispatch);
-
-        goBack();
-        return false;
+        return res;
     };
 
     if (!model) {
@@ -32,8 +24,13 @@ const DeleteModel = () => {
     }
 
     return (
-        <ConfirmationDialog label      = 'Delete model?'
-                            okCallback = {onDelete}  />
+        <DeletionConfirmation
+            handler    = {onDelete}
+            label      = {`Delete model ${model.Name}?`}
+            warning    = 'This model is currently in use by client holdings (portfolios), which will also be deleted if this model is deleted. The clients are:'
+            prompt     = 'Are you sure you want to delete this model'
+            dependents = 'and all linked holdings'
+        />
     );
 }
 

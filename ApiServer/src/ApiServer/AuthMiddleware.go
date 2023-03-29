@@ -118,10 +118,10 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			var subject Entities.User
 			if err = db.NewSelect().Model(&subject).Where("uid = ?", viewAsId).Scan(c); err != nil {
 				//c.AbortWithStatus(http.StatusBadRequest)
-				log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
+				//log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
 			} else {
 				user = &subject
-				log.Println("Viewing as:", user.Email)
+				//log.Println("Viewing as:", user.Email)
 			}
 		}
 

@@ -2,16 +2,15 @@ package ClientProfile
 
 import (
 	"database/sql"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
-
-	"github.com/gin-gonic/gin"
+	"ongoing/Operators/ClientDeletion"
 )
 
 type DeleteReviewRequestPath struct {
@@ -21,7 +20,6 @@ type DeleteReviewRequestPath struct {
 
 func DeleteReview(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteReviewRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -35,6 +33,7 @@ func DeleteReview(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	var review = Entities.Review{}
 	if err := tx.NewSelect().
@@ -58,35 +57,12 @@ func DeleteReview(c *gin.Context) {
 		return
 	}
 
-	if _, err := tx.NewDelete().
-		Model(&review).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	clientSpec := GetClientInternal(c, client)
+	clientSpec, _ := GetClientInternal(c, client)
 	for _, review := range clientSpec.Reviews {
 		if review.Id != path.ReviewId {
 			continue
 		}
-		for _, fund := range review.Report.Funds {
-			if fund.File == nil {
-				continue
-			}
-			if err := auth.RemoveFileFromClient(client.Uid, fund.File.Uid); err != nil {
-				panic(err)
-			}
-		}
-		for _, model := range review.Report.Models {
-			if model.File == nil {
-				continue
-			}
-			if err := auth.RemoveFileFromClient(client.Uid, model.File.Uid); err != nil {
-				panic(err)
-			}
-		}
+		ClientDeletion.DeleteReview(c, &tx, client, &review)
 	}
 
 	if err := tx.Commit(); err != nil {

@@ -15,6 +15,7 @@ import (
 type ReportGenerator struct {
 	context           *gin.Context
 	db                *bun.DB
+	tx                *bun.Tx
 	authClient        *AuthService.Client
 	clientId          int64
 	grantClientAccess bool
@@ -22,19 +23,21 @@ type ReportGenerator struct {
 	report            *Entities.ReportDetail
 }
 
-func GenerateReport(c *gin.Context, clientId int64, createRelationships bool) *Entities.ReportDetail {
-	gen := newReportGenerator(c, clientId, createRelationships)
+// Set tx to false to not grant client access to the report
+func GenerateReport(tx *bun.Tx, c *gin.Context, clientId int64) (*Entities.ReportDetail, *Entities.Client) {
+	gen := newReportGenerator(tx, c, clientId)
 	gen.generateReport()
-	return gen.report
+	return gen.report, gen.client
 }
 
-func newReportGenerator(c *gin.Context, clientId int64, createRelationships bool) *ReportGenerator {
+func newReportGenerator(tx *bun.Tx, c *gin.Context, clientId int64) *ReportGenerator {
 	return &ReportGenerator{
 		context:           c,
+		tx:                tx,
 		db:                c.MustGet("DATABASE").(*bun.DB),
 		authClient:        c.MustGet("AUTH").(*AuthService.Client),
 		clientId:          clientId,
-		grantClientAccess: createRelationships,
+		grantClientAccess: tx != nil,
 		report: &Entities.ReportDetail{
 			ClientOptions:     Entities.ReportClientOptions{},
 			ModulePresets:     []Entities.ReportModulePreset{},
@@ -268,6 +271,7 @@ func (gen *ReportGenerator) generatePolicies() {
 }
 
 func (gen *ReportGenerator) generateFunds() {
+	ctx := gen.context.Request.Context()
 	gen.report.PolicyFunds = make([]Entities.ReportPolicyFund, 0)
 	var funds = map[int64]*Entities.Fund{}
 	for _, pf := range gen.client.PolicyFunds {
@@ -278,7 +282,7 @@ func (gen *ReportGenerator) generateFunds() {
 		report := f.ToReport()
 		gen.report.Funds = append(gen.report.Funds, report)
 		if report.File != nil && gen.grantClientAccess {
-			if err := gen.authClient.CreateFile(&gen.client.Uid, nil, report.File.Uid); err != nil {
+			if err := gen.authClient.CreateFile(&ctx, gen.tx, &gen.client.Uid, nil, report.File.Uid); err != nil { // TODO provide a db transaction
 				panic(err)
 			}
 		}
@@ -295,6 +299,8 @@ func (gen *ReportGenerator) generateFunds() {
 }
 
 func (gen *ReportGenerator) generateModels() {
+	ctx := gen.context.Request.Context()
+
 	gen.report.Portfolios = make([]Entities.ReportPortfolio, 0)
 	var models = map[int64]*Entities.Model{}
 	var operators = map[int64]*Entities.Operator{}
@@ -307,7 +313,7 @@ func (gen *ReportGenerator) generateModels() {
 		report := m.ToReport()
 		gen.report.Models = append(gen.report.Models, report)
 		if report.File != nil && gen.grantClientAccess {
-			if err := gen.authClient.CreateFile(&gen.client.Uid, nil, report.File.Uid); err != nil {
+			if err := gen.authClient.CreateFile(&ctx, gen.tx, &gen.client.Uid, nil, report.File.Uid); err != nil { // TODO provide a db transaction
 				panic(err)
 			}
 		}

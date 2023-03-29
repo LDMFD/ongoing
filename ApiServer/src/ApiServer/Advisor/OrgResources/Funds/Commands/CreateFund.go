@@ -66,6 +66,7 @@ func CreateFund(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	if body.File != nil {
 		fund.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
@@ -77,7 +78,8 @@ func CreateFund(c *gin.Context) {
 	}
 
 	if body.File != nil {
-		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
+		ctx := c.Request.Context()
+		if err := auth.CreateOrgFile(&ctx, &tx, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

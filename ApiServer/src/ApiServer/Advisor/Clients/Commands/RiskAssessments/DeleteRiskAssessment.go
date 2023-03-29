@@ -2,13 +2,12 @@ package RiskAssessments
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/uptrace/bun"
 
@@ -21,14 +20,13 @@ type DeleteRiskAssessmentRequestPath struct {
 }
 
 func DeleteRiskAssessment(c *gin.Context) {
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
 
 	var path DeleteRiskAssessmentRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var assessment = Entities.RiskAssessment{}
@@ -37,54 +35,34 @@ func DeleteRiskAssessment(c *gin.Context) {
 		Relation("FilePtr.File").
 		Where("risk_assessment.uid = ?", path.RiskAssessmentId).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
 
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
-			panic(err)
+			context.Response.Panic(err)
 		}
 		return
 	}
 
 	if assessment.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "RiskAssessment does not belong to client"})
+		context.Response.NotFound()
 		return
 	}
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
+	defer tx.Rollback()
 
-	if _, err := tx.NewDelete().
-		Model(&assessment).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if assessment.FilePtr != nil {
-		if err := auth.RemoveFileFromClientAndOrg(client.Uid, session.Org.Uid, assessment.FilePtr.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
-			_ = tx.Rollback()
-			return
-		}
-		Helpers.DeleteFile(c, tx, *assessment.FilePtr)
-	}
+	ClientDeletion.DeleteRiskAssessment(c, &tx, client.Uid, &assessment)
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		context.Response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

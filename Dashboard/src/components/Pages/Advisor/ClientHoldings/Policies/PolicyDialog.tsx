@@ -91,13 +91,13 @@ const PolicyDialog = (props: {
                     <SelectControl name='PolicyProviderId' options={policyProviders} label='Policy Provider' control={control} required />
 
                     <RichTextEditor2 name    = 'Notes'
-                                        label   = 'Notes'
-                                        control = {control} />
+                                     label   = 'Notes'
+                                     control = {control} />
 
-                    <FileUploader2 label        = 'Policy file'
-                                    name         = 'File'
-                                    control      = {control}
-                                    submitRef    = {submitRef} />
+                    <FileUploader2 label      = 'Policy file'
+                                    name      = 'File'
+                                    control   = {control}
+                                    submitRef = {submitRef} />
                     <br />
                 </>
             }

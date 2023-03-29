@@ -27,7 +27,14 @@ func AddOrganisationRoutes(r *gin.RouterGroup) {
 func GetStats(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 
+	app := Database.AppDbRows(db)
+	auth := Database.AuthDbRows()
+	txs := Database.OpenTransactions(db)
+
 	c.JSON(200, gin.H{
-		"Rows": Database.RowCount(db),
+		"Total": Database.RowCount(db),
+		"App":   app,
+		"Auth":  auth,
+		"Txs":   txs,
 	})
 }

@@ -10,8 +10,8 @@ const Update = (riskProvider) => {
     })
 }
 
-const Delete = (riskProviderId) => {
-    return window.ApiClient.delete(`advisor/risk-providers/${riskProviderId}`)
+const Delete = (riskProviderId, execute) => {
+    return window.ApiClient.delete(`advisor/risk-providers/${riskProviderId}?execute=${execute}`);
 }
 
 const defaults = {

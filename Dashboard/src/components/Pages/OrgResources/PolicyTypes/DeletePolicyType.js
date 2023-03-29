@@ -1,28 +1,20 @@
-import ConfirmationDialog from 'Components/Library/Confirmation/ConfirmationDialog';
+import { DeletionConfirmation } from 'Components/Library/Confirmation/DeletionConfirmation';
 import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils/Routing';
 
 const DeletePolicyType = () => {
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const [ state, dispatch ] = useContext(Context);
     let [ policyType, setPolicyType ] = useState(null);
 
     let { policyTypeId } = useParams();
 
-    const onDelete = async (e) => {
-        e.preventDefault();
-
-        await Api.OrgResources.PolicyTypes.Delete(policyTypeId)
+    const onDelete = async (execute) => {
+        let res = await Api.OrgResources.PolicyTypes.Delete(policyTypeId, execute)
         await Api.OrgResources.Entities.Read(dispatch);
-
-        goBack();
-        return false;
+        return res;
     };
 
     if (!policyType) {
@@ -32,8 +24,13 @@ const DeletePolicyType = () => {
     }
 
     return (
-        <ConfirmationDialog label      = 'Delete policy type?'
-                            okCallback = {onDelete}  />
+        <DeletionConfirmation
+            handler    = {onDelete}
+            label      = {`Delete policy type ${policyType.Name}?`}
+            warning    = 'This policy type is currently in use by the following clients:'
+            prompt     = 'The policies held by these clients will also be deleted if this policy type is deleted. Are you sure you want to delete this policy type'
+            dependents = 'and all linked holdings'
+        />
     );
 }
 

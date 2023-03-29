@@ -37,6 +37,7 @@ namespace Ongoing
         public virtual DbSet<ModulePreset> ModulePresets { get; set; } = null!;
         public virtual DbSet<Operator> Operators { get; set; } = null!;
         public virtual DbSet<Organisation> Organisation { get; set; } = null!;
+        public virtual DbSet<Job> Job { get; set; } = null!;
         public virtual DbSet<Policy> Policies { get; set; } = null!;
         public virtual DbSet<PolicyFund> PolicyFunds { get; set; } = null!;
         public virtual DbSet<PolicyProvider> PolicyProviders { get; set; } = null!;
@@ -83,6 +84,7 @@ namespace Ongoing
             builder.ApplyConfiguration(new ModulePresetConfig());
             builder.ApplyConfiguration(new OperatorConfig());
             builder.ApplyConfiguration(new OrganisationConfig());
+            builder.ApplyConfiguration(new JobConfig());
             builder.ApplyConfiguration(new PolicyConfig());
             builder.ApplyConfiguration(new PolicyFundConfig());
             builder.ApplyConfiguration(new PolicyProviderConfig());
