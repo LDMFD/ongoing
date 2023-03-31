@@ -1,3 +1,7 @@
+# 1.10.1 2023-03-30
+
+- Fix client deletion
+
 # 1.10.0 2023-03-29
 
 - Recursive deletion for all entities

@@ -35,4 +35,6 @@ func DeleteClient(c *gin.Context, tx bun.Tx, dbClient *Entities.Client, dtoClien
 		DeleteReview(c, &tx, dbClient, &review)
 	}
 	DeletePendingReview(c, &tx, dbClient.Id)
+
+	DeleteClientOptions(c, &tx, dbClient)
 }
