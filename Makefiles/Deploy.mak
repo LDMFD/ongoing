@@ -40,7 +40,7 @@ _deploy-api: import-env
 		--cpu=2 \
 		--memory=4Gi \
 		--min-instances=1 \
-		--max-instances=8 \
+		--max-instances=5 \
 		--port=8000 \
 		--update-env-vars=FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-env-vars=ONGOING_API_HOST=${DOMAIN_${ENV}} \
@@ -72,7 +72,7 @@ _deploy-dashboard: import-env
 		--add-cloudsql-instances=${DB_INSTANCE_${ENV}}:${REGION}:${DB_INSTANCE_${ENV}} \
 		--cpu=2 \
 		--memory=4Gi \
-		--max-instances=8 \
+		--max-instances=5 \
 		--port=8080 \
 		--update-env-vars=ONGOING_API_HOST=https://${DOMAIN_${ENV}}/api \
 		--update-env-vars=ONGOING_DASHBOARD_HOST=https://${DOMAIN_${ENV}} \

@@ -1,9 +1,5 @@
 package Permissions
 
-import (
-	"context"
-)
-
 type Jobspec struct {
 	Command     string `validate:"required"`
 	ObjectType  string `validate:"required"`
@@ -28,8 +24,4 @@ func NewRelationshipCommand(command, objectType string, objectId string, relatio
 		js.NewRelation = *newRelation
 	}
 	return js
-}
-
-type RequestHandler[TRequest any, TResponse any] interface {
-	Handle(ctx context.Context, request TRequest) (TResponse, error)
 }

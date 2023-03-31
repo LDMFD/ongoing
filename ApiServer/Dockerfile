@@ -1,4 +1,4 @@
-FROM golang:1.17-alpine AS deps
+FROM golang:1.20-alpine AS deps
 
 WORKDIR /go/src
 
