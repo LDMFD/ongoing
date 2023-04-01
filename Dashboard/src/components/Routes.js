@@ -24,7 +24,7 @@ const routes = () => (
         <Route path="/funds"                          component={FundRoutes} />
         <Route path="/models"                         component={ModelRoutes} />
         <Route path="/policy-types"                   component={PolicyTypeRoutes} />
-        <Route path="/policy-providers"               component={PolicyProviderRoutes} />
+        <Route path="/platforms"                      component={PolicyProviderRoutes} />
         <Route path="/risk-providers"                 component={RiskProviderRoutes} />
         <Route path="/review-config/module-presets"   component={ModulePresetRoutes} />
 

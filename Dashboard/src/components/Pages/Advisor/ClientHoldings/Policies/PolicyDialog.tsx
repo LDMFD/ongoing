@@ -87,8 +87,8 @@ const PolicyDialog = (props: {
                     <TextInput name='StartValue'           label='Start Value (£)'          control={control} required type='currency' />
                     <TextInput name='EndValue'             label='End Value (£)'            control={control} required type='currency' />
 
-                    <SelectControl name='PolicyTypeId'     options={policyTypes}     label='Policy Type'     control={control} required />
-                    <SelectControl name='PolicyProviderId' options={policyProviders} label='Policy Provider' control={control} required />
+                    <SelectControl name='PolicyTypeId'     options={policyTypes}     label='Policy Type' control={control} required />
+                    <SelectControl name='PolicyProviderId' options={policyProviders} label='Platform'    control={control} required />
 
                     <RichTextEditor2 name    = 'Notes'
                                      label   = 'Notes'
