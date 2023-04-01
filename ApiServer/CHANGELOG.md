@@ -1,3 +1,8 @@
+# 1.10.2 2023-03-31
+
+- Add Sentry trace
+- Rename Policy Provider -> Platform
+
 # 1.10.1 2023-03-30
 
 - Fix client deletion
