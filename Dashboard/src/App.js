@@ -25,13 +25,6 @@ import './App.css';
 import { ForceRefresh } from "Auth";
 import { AccessViolation, IntegrityViolation, InternalError, InvalidInput, NotFound, UniqueViolation } from "Errors";
 
-Sentry.init({
-    dsn: window.Config.SentryDsn,
-    release: window.Config.Release,
-    integrations: [new BrowserTracing()],
-    tracesSampleRate: 1.0,
-});
-  
 // Dev mode - see DashboardServer/server.js for live/cloud version
 if (window.Config === '__CONFIG_EMBED__') {
     let firebaseConfigB64 = atob(process.env.REACT_APP_ONGOING_REACT_FIREBASE_CONFIG);
@@ -46,6 +39,13 @@ if (window.Config === '__CONFIG_EMBED__') {
     };
 }
 
+Sentry.init({
+    dsn: window.Config.SentryDsn,
+    release: window.Config.Release,
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1.0,
+});
+  
 // Bypass Firebase
 export const OFFLINE_AUTH = process.env.REACT_APP_ONGOING_AUTH_BYPASS === 'true';
 
@@ -158,7 +158,9 @@ window.ApiClient.interceptors.response.use((response) => {
                 alert("You do not have permission to access this resource.");
                 break;
             case InternalError:
-                alert("An internal error has occurred (trace ID: " + responseError.trace + ").");
+                console.log("Internal error: " + responseError.trace);
+                Sentry.setTag('ongoing.trace', responseError.trace);
+                alert("An internal error has occurred (this has been reported - trace ID: " + responseError.trace + ").");
                 break;
             case UniqueViolation:
             case IntegrityViolation:

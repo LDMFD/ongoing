@@ -1,10 +1,12 @@
 package ServiceContext
 
 import (
+	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
+	"os"
 )
 
 func (response *Response) error(statuscode int, errcode string) {
@@ -39,6 +41,12 @@ func (response *Response) NotFound() {
 }
 
 func (response *Response) Panic(err error) {
+	if os.Getenv("ONGOING_SENTRY_DSN") != "" {
+		if hub := sentrygin.GetHubFromContext(response.FrameworkContext); hub != nil {
+			scope := hub.Scope()
+			scope.SetTag("ongoing.trace", *response.Trace)
+		}
+	}
 	response.error(http.StatusInternalServerError, Errors.InternalError)
 	log.Println("Trace ID:" + *response.Trace)
 	panic(err.Error())

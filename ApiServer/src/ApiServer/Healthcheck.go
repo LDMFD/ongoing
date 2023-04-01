@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Storage/Commands"
@@ -81,10 +80,11 @@ func healthcheck(c *gin.Context) {
 }
 
 func errorcheck(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	_, err := db.Exec("MISTAKE")
 	if err != nil {
-		panic(err)
+		context.Panic(err)
 	}
 }

@@ -7,7 +7,7 @@ export const SET_CLIENTS                  = 'SET_CLIENTS';
 export const SET_ORG_RESOURCES            = 'SET_ORG_RESOURCES';
 export const SET_ORGANISATIONS            = 'SET_ORGANISATIONS';
 
-// TODO figure out how to make this scale - can begin by merging a lot of these.
+// TODO merge most of these.
 
 const Reducer = (state, action) => {
     switch (action.type) {
