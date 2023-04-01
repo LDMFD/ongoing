@@ -1,46 +1,35 @@
-package ClientProfile
+package Reviews
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
-	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 	"ongoing/Utils/UUID"
 	"time"
 )
 
-type CreateReviewRequestPath struct {
-	ClientId string `binding:"required"`
-}
-
-func CreateReview(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-
-	var path CreateReviewRequestPath
-	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
+func CreateReview(c *gin.Context, tx bun.Tx, clientId string) {
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 
 	var client *Entities.Client
 	var err error
-	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
+	if client, err = Helpers.ClientFromUID(c, tx, clientId); err != nil {
 		// TODO implement levelled logging, so this stacktrace can be printed as a warning
 		//panic(err.Error())
 		return
 	}
 
 	// Only 1 review in draft state at once
-	if exists, err := db.NewSelect().
+	if exists, err := tx.NewSelect().
 		Model((*Entities.Review)(nil)).
 		Where("client_id = ?", client.Id).
 		Where("state = ?", Entities.ReviewStateDraft).
 		Exists(c); err != nil {
 		panic(err)
 	} else if exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Only 1 review can be in draft at a time"})
-		panic(err)
+		return
 	}
 
 	t1 := time.Now()
@@ -48,7 +37,7 @@ func CreateReview(c *gin.Context) {
 
 	// Set start date to end date of previous review, plus 1 day
 	var previous []Entities.Review
-	if count, err := db.NewSelect().
+	if count, err := tx.NewSelect().
 		Model(&previous).
 		Where("client_id = ?", client.Id).
 		Where("state = ?", Entities.ReviewStateFinal).
@@ -79,11 +68,7 @@ func CreateReview(c *gin.Context) {
 		EndDate:   &endDate,
 	}
 
-	if _, err := db.NewInsert().Model(review).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	if _, err := tx.NewInsert().Model(review).Exec(c); err != nil {
+		context.Panic(err)
 	}
-	c.JSON(200, gin.H{
-		"Id": uid,
-	})
 }

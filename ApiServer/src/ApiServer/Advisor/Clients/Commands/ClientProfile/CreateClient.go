@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
+	"ongoing/Operators/Reviews"
 	"ongoing/ServiceContext"
 	"ongoing/Utils/UUID"
 	"strings"
@@ -90,6 +91,8 @@ func CreateClient(c *gin.Context) {
 		_ = tx.Rollback()
 		response.Panic(err)
 	}
+
+	Reviews.CreateReview(c, tx, clientUid)
 
 	if err := tx.Commit(); err != nil {
 		response.Panic(err)

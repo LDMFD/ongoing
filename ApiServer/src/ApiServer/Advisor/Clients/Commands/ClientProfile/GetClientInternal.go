@@ -1,27 +1,35 @@
 package ClientProfile
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
-	"net/http"
-	"ongoing/AuthService"
+	"github.com/pkg/errors"
 	"ongoing/Entities"
+	"ongoing/Operators/Reviews"
+	"ongoing/ServiceContext"
 	"ongoing/Utils/Date"
 )
 
 func GetClientInternal(c *gin.Context, dbClient *Entities.Client) (*Entities.ExportClient, *Entities.Client) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+
+	tx, err := context.Db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Panic(err)
+	}
+	defer tx.Rollback()
+
+	Reviews.CreateReview(c, tx, dbClient.Uid)
 
 	var draft *Entities.Draft
 	var draftReviews []Entities.Review
-	if count, err := db.NewSelect().
+	if count, err := tx.NewSelect().
 		Model(&draftReviews).
 		Where("state = ?", Entities.ReviewStateDraft).
 		Where("client_id = ?", dbClient.Id).
+		OrderExpr("id").
 		ScanAndCount(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Panic(err)
 	} else {
 		if count == 1 {
 			var (
@@ -41,11 +49,11 @@ func GetClientInternal(c *gin.Context, dbClient *Entities.Client) (*Entities.Exp
 				EndDate:   endDate,
 			}
 		} else if count > 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Integrity error - multiple reviews in draft state"})
+			context.Panic(errors.New("Multiple drafts found for client"))
 		}
 	}
 
-	report, dbClient := GenerateReport(nil, c, dbClient.Id)
+	report, dbClient := GenerateReport(c, &tx, dbClient.Id, false)
 
 	exportClient := &Entities.ExportClient{
 		Metadata: dbClient.ToReport(),
@@ -53,11 +61,15 @@ func GetClientInternal(c *gin.Context, dbClient *Entities.Client) (*Entities.Exp
 		Report:   *report,
 		Reviews:  GetReviews(c, dbClient),
 	}
-	if advisorId, err := auth.GetAdvisor(dbClient.Uid, &dbClient.User.Uid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	if advisorId, err := context.Auth.GetAdvisor(dbClient.Uid, &dbClient.User.Uid); err != nil {
+		context.Panic(err)
 	} else {
 		exportClient.Metadata.AdvisorId = advisorId
 	}
+
+	if err := tx.Commit(); err != nil {
+		context.Panic(err)
+	}
+
 	return exportClient, dbClient
 }

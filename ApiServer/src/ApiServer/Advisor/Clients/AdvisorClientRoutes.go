@@ -51,7 +51,6 @@ func AddRoutes(r *gin.RouterGroup) {
 	moduleGroup.DELETE("/:Module/field/:Field", ReviewModules.DeleteReviewModule)
 
 	reviewGroup := r.Group("/:ClientId/reviews")
-	reviewGroup.POST("", ClientProfile.CreateReview)
 	reviewGroup.POST("/import", ClientProfile.ImportReview)
 	reviewGroup.PUT("/:ReviewId", ClientProfile.UpdateReview)
 	reviewGroup.POST("/:ReviewId/publish", ClientProfile.PublishReview)

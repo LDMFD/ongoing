@@ -16,11 +16,15 @@ import (
 	"time"
 )
 
+type ImportReviewRequestPath struct {
+	ClientId string `binding:"required"`
+}
+
 func ImportReview(c *gin.Context) {
 	db := c.MustGet("DATABASE").(*bun.DB)
 	auth := c.MustGet("AUTH").(*AuthService.Client)
 
-	var path CreateReviewRequestPath
+	var path ImportReviewRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())

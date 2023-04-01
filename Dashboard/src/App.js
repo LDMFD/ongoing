@@ -39,12 +39,14 @@ if (window.Config === '__CONFIG_EMBED__') {
     };
 }
 
-Sentry.init({
-    dsn: window.Config.SentryDsn,
-    release: window.Config.Release,
-    integrations: [new BrowserTracing()],
-    tracesSampleRate: 1.0,
-});
+if (window.Config.Env !== 'dev') {
+    Sentry.init({
+        dsn: window.Config.SentryDsn,
+        release: window.Config.Release,
+        integrations: [new BrowserTracing()],
+        tracesSampleRate: 1.0,
+    });
+}
   
 // Bypass Firebase
 export const OFFLINE_AUTH = process.env.REACT_APP_ONGOING_AUTH_BYPASS === 'true';

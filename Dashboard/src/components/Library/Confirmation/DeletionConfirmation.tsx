@@ -14,6 +14,7 @@ export const DeletionConfirmation = (props: {
         error: string,
         resources: null,
     },
+    dryRun?: boolean,
     label: string,
     warning: string,
     prompt: string,
@@ -22,15 +23,19 @@ export const DeletionConfirmation = (props: {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    let [ response, setResponse ] = useState(null as Response | null);
+    let [ response, setResponse ] = useState(null as Response | null | boolean);
 
     let { handler } = props;
 
     let dryRun = useCallback(async () => {
+        if (props.dryRun === false) {
+            setResponse(true);
+            return;
+        }
         let res = await handler(false);
         // @ts-ignore
         setResponse(res.data ? res.data : true);  // res.data is a list of dependencies; true if no dependencies
-    }, [ handler ] );
+    }, [ handler, props.dryRun ] );
 
     useEffect(() => {
         dryRun();
@@ -46,7 +51,7 @@ export const DeletionConfirmation = (props: {
 
     let ix = 0;
     let content = response ? (
-        response.resources ? (
+        typeof response !== 'boolean' && response.resources ? (  // response is false if no dependencies (no API request)
             <>
                 {props.warning}
                 {response.error && response.resources && (

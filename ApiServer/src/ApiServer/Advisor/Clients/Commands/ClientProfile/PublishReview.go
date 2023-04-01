@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
+	"ongoing/Operators/Reviews"
 	"time"
 )
 
@@ -65,7 +66,7 @@ func PublishReview(c *gin.Context) {
 		}
 	}()
 
-	report, _ := GenerateReport(&tx, c, client.Id)
+	report, _ := GenerateReport(c, &tx, client.Id, true)
 	if report == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
@@ -95,6 +96,8 @@ func PublishReview(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	}
+
+	Reviews.CreateReview(c, tx, client.Uid)
 
 	if err := tx.Commit(); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

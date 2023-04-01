@@ -1,7 +1,3 @@
-const Create = (clientId) => {
-    return window.ApiClient.post(`advisor/clients/${clientId}/reviews`);
-}
-
 const Update = (clientId, review) => {
     return window.ApiClient.put(`advisor/clients/${clientId}/reviews/${review.Id}`, {
         ...review
@@ -17,7 +13,6 @@ const Publish = (clientId, reviewId) => {
 }
 
 const defaults = {
-    Create,
     Update,
     Delete,
     Publish,

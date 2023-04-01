@@ -1,46 +1,55 @@
-import React, { useContext, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import React, { useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import {
+    Button,
+    Toolbar,
+} from '@mui/material';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { Context } from 'State/StateProvider'
 import { Api } from 'State';
+import { Context } from 'State/StateProvider'
 import { FromCanonical } from 'Utils/DateTime';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
+import Table from 'Components/Library/Table/Table';
 
 const AdvisorReviewList = () => {
-    let history = useHistory();
-    const [state, dispatch ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
     let {
         Metadata: client,
     } = state;
 
-    const onEdit = useCallback(params => () => {
-        history.push(`/clients/id/${client.Id}/reviews/id/${params.row.id}/modules/introduction`);
-    }, [ history, client.Id ]);
+    let { clientId } = useParams();
 
-    const onDelete = useCallback(params => async () => {
-        if (window.confirm(`Delete client review?`)) {
-            await Api.Advisor.Reviews.Delete(client.Id, params.row.id)
-            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
-        }        
-    }, [ dispatch, client.Id ]);
+    const publishReview = async () => {
+        await Api.Advisor.Reviews.Publish(clientId, state.Draft.Id);
+        await Api.Advisor.ClientDetail.Read(dispatch, clientId);
+    };
 
-    const columns = [
-        { field: 'ix',            headerName: '#',              flex: 0.1, },
-        { field: 'startDate',     headerName: 'Start Date',     flex: 0.1, },
-        { field: 'endDate',       headerName: 'End Date',       flex: 0.1, },
-        { field: 'finalizedDate', headerName: 'Finalised Date', flex: 0.1, },
-        {
-            field: 'actions',
-            type: 'actions',
-            flex: .05,
-            getActions: (params) => [
-                <GridActionsCellItem icon={<InventoryIcon />}   onClick={onEdit(params)}   label="Open" />,
-                <GridActionsCellItem icon={<DeleteIcon />}      onClick={onDelete(params)} label="Delete" />,
-            ]
-        },
-    ];
+    const columns = [{
+        accessor: 'startDate',
+        Header: 'Review period start', 
+    }, {
+        accessor: 'endDate',
+        Header: 'Review period end', 
+    }, {
+        accessor: 'finalizedDate',
+        Header: 'Time of publish', 
+    }, {
+        accessor: 'actions',
+        Header: '',
+        Cell: ({ row }) => (
+            <IconGroup>
+                <Link to={`/clients/id/${client.Id}/reviews/id/${row.original.id}/modules/introduction`}>
+                    <InventoryIcon />
+                </Link>
+                <Link to={`/clients/id/${client.Id}/reviews/delete/${row.original.id}`}>
+                    <DeleteIcon />
+                </Link>
+            </IconGroup>
+        ),
+    }];
 
     let ix = 1;
     let reviews = state.Reviews.map(review => {
@@ -51,20 +60,26 @@ const AdvisorReviewList = () => {
             date:          review.Meta.FinalizedDate,
             startDate:     FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
             endDate:       FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB'),
-            finalizedDate: FromCanonical(review.Meta.FinalizedDate)?.toLocaleDateString('en-GB'),
+            finalizedDate: FromCanonical(review.Meta.FinalizedDate)?.toLocaleString('en-GB'),
             // state:         review.Meta.State,
         };
     }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));
 
-    let data = {
-        rows: reviews,
-        columns: columns,
-    }
-
     return (
         <>
+            <Toolbar className="breadcrumb-action">
+                <Button onClick={publishReview}>Publish review</Button>
+            </Toolbar>
+
             <br />
-            <DataGrid autoHeight {...data} />
+
+            {reviews.length ?
+                <Table columns={columns} data={reviews} />
+            :
+                <p>
+                    No reviews - press publish to create a new review.
+                </p>
+            }
         </>
     );
 }

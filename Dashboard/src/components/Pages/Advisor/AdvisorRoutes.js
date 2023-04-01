@@ -9,6 +9,7 @@ import ClientAccountPage   from './ClientManagement/ClientAccountPage'
 import ClientList          from './ClientManagement/ClientList';
 import ClientWrapper       from './AdvisorSpaceWrapper';
 import DeleteClient        from './ClientManagement/DeleteClient';
+import DeleteReview        from './Reviews/DeleteReview';
 import DocumentsRoutes     from './ClientDocuments/DocumentsRoutes';
 import EditClient          from './ClientManagement/EditClient';
 import HoldingsRoutes      from './ClientHoldings/HoldingsRoutes';
@@ -41,6 +42,7 @@ const AdvisorClientRoutes = () => {
                         
                         <Route path={`${path}/id/:clientId/edit`} component={EditClient} />
                     </ClientWrapper>
+                    <Route path={`${path}/id/:clientId/reviews/delete/:reviewId`} component={DeleteReview} />
                 </Route>
                 <Route path={path} component={ClientList} />
             </Switch>

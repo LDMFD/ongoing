@@ -11,7 +11,7 @@ import (
 	"ongoing/Entities"
 )
 
-func ClientFromUID(c *gin.Context, db *bun.DB, uid string) (*Entities.Client, error) {
+func ClientFromUID(c *gin.Context, db bun.IDB, uid string) (*Entities.Client, error) {
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var client = Entities.Client{}

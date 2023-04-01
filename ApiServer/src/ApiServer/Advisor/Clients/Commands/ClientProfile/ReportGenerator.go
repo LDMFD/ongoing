@@ -23,21 +23,20 @@ type ReportGenerator struct {
 	report            *Entities.ReportDetail
 }
 
-// Set tx to false to not grant client access to the report
-func GenerateReport(tx *bun.Tx, c *gin.Context, clientId int64) (*Entities.ReportDetail, *Entities.Client) {
-	gen := newReportGenerator(tx, c, clientId)
+func GenerateReport(c *gin.Context, tx *bun.Tx, clientId int64, grantClientAccess bool) (*Entities.ReportDetail, *Entities.Client) {
+	gen := newReportGenerator(tx, c, clientId, grantClientAccess)
 	gen.generateReport()
 	return gen.report, gen.client
 }
 
-func newReportGenerator(tx *bun.Tx, c *gin.Context, clientId int64) *ReportGenerator {
+func newReportGenerator(tx *bun.Tx, c *gin.Context, clientId int64, grantClientAccess bool) *ReportGenerator {
 	return &ReportGenerator{
 		context:           c,
 		tx:                tx,
 		db:                c.MustGet("DATABASE").(*bun.DB),
 		authClient:        c.MustGet("AUTH").(*AuthService.Client),
 		clientId:          clientId,
-		grantClientAccess: tx != nil,
+		grantClientAccess: grantClientAccess,
 		report: &Entities.ReportDetail{
 			ClientOptions:     Entities.ReportClientOptions{},
 			ModulePresets:     []Entities.ReportModulePreset{},
