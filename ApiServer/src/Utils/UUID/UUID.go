@@ -10,11 +10,14 @@ import (
 )
 
 func GenerateUID(c *gin.Context) string {
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-
 	var entityId string
-	if (Config.OFFLINE_AUTH || !session.IsHuman) && c != nil {
-		entityId = c.GetHeader("X-Ongoing-EntityId")
+
+	if c != nil {
+		session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+
+		if (Config.OFFLINE_AUTH || !session.IsHuman) && c != nil {
+			entityId = c.GetHeader("X-Ongoing-EntityId")
+		}
 	}
 	if entityId == "" {
 		uid := uuid.NewString()

@@ -26,3 +26,7 @@ errorcheck-remote-staging-with-auth:
 
 errorcheck-remote-prod:
 	curl -v https://portal.amplifa.co.uk/api/errorcheck
+
+stats-local:
+	curl --header "Authentication: darren@amplifa.co.uk" -v localhost:8000/api/admin/stats
+	@echo

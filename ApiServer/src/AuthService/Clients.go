@@ -1,37 +1,38 @@
 package AuthService
 
-// Advisor is logged-in user; client and userId are both created fresh (1 client per advisor enforced by server)
-func (c *Client) CreateClient(orgId, advisorId, clientId, userId string) error {
-	//log.Printf("create client, org:%v \nadvisor:%v \nclient:%v \nclientUser:%v\n", orgId, advisorId, clientId, userId)
+import (
+	"context"
+	"github.com/uptrace/bun"
+)
 
-	if err := c.createRelationship("organisation", orgId, "client", "user", userId); err != nil {
+// Advisor is logged-in user; client and userId are both created fresh (1 client per advisor enforced by server)
+func (c *Client) CreateClient(ctx *context.Context, tx *bun.Tx, orgId, advisorId, clientId, userId string) error {
+	if err := c.createRelationship(ctx, tx, "organisation", orgId, "client", "user", userId); err != nil {
 		return err
 	}
-	if err := c.createRelationship("client", clientId, "org", "organisation", orgId); err != nil {
+	if err := c.createRelationship(ctx, tx, "client", clientId, "org", "organisation", orgId); err != nil {
 		return err
 	}
-	if err := c.createRelationship("client", clientId, "advisor", "user", advisorId); err != nil {
+	if err := c.createRelationship(ctx, tx, "client", clientId, "advisor", "user", advisorId); err != nil {
 		return err
 	}
-	if err := c.createRelationship("client", clientId, "subject", "user", userId); err != nil {
+	if err := c.createRelationship(ctx, tx, "client", clientId, "subject", "user", userId); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) RemoveClient(orgId, advisorId, clientId, clientUserId, advisorUserId string) error {
-	//log.Printf("Removing client, org:%v \nadvisor:%v \nclient:%v \nclientUser:%v\n", orgId, advisorId, clientId, clientUserId)
-
-	if err := c.removeRelationship("organisation", orgId, "client", "user", clientUserId); err != nil {
+func (c *Client) RemoveClient(ctx *context.Context, tx *bun.Tx, orgId, advisorId, clientId, clientUserId string) error {
+	if err := c.removeRelationship(ctx, tx, "organisation", orgId, "client", "user", clientUserId); err != nil {
 		return err
 	} // equivalent to c.RemoveMember(orgId, clientUserId);
-	if err := c.removeRelationship("client", clientId, "org", "organisation", orgId); err != nil {
+	if err := c.removeRelationship(ctx, tx, "client", clientId, "org", "organisation", orgId); err != nil {
 		return err
 	}
-	if err := c.removeRelationship("client", clientId, "advisor", "user", advisorId); err != nil {
+	if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", advisorId); err != nil {
 		return err
 	}
-	if err := c.removeRelationship("client", clientId, "subject", "user", clientUserId); err != nil {
+	if err := c.removeRelationship(ctx, tx, "client", clientId, "subject", "user", clientUserId); err != nil {
 		return err
 	}
 	return nil

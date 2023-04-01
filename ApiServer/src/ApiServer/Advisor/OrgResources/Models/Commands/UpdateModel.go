@@ -53,6 +53,7 @@ func UpdateModel(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	var operator = Entities.Operator{}
 	if err := db.NewSelect().
@@ -90,9 +91,11 @@ func UpdateModel(c *gin.Context) {
 	model.Modified = &modified
 	model.FilePtrId = nil
 
+	ctx := c.Request.Context()
+
 	// FilePtr has been removed or changed; remove old relationship
 	if (body.File != nil && model.FilePtr != nil && body.File.Uid != model.FilePtr.File.Uid) || (body.File == nil && model.FilePtr != nil) {
-		if err := auth.RemoveFileFromOrg(session.Org.Uid, model.FilePtr.File.Uid); err != nil {
+		if err := auth.RemoveFileFromOrg(&ctx, &tx, session.Org.Uid, model.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -101,7 +104,7 @@ func UpdateModel(c *gin.Context) {
 		Helpers.DeleteFile(c, tx, *model.FilePtr)
 	}
 	if body.File != nil {
-		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
+		if err := auth.CreateOrgFile(&ctx, &tx, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -119,7 +122,7 @@ func UpdateModel(c *gin.Context) {
 		Column("file_ptr_id").
 		Exec(c); err != nil {
 		_ = tx.Rollback()
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 

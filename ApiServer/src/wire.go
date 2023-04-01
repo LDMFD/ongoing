@@ -8,6 +8,7 @@ import (
 	"ongoing/ApiServer"
 	"ongoing/AuthService"
 	"ongoing/Database"
+	"ongoing/Outbox"
 )
 
 func buildApp() (*App, error) {
@@ -15,6 +16,7 @@ func buildApp() (*App, error) {
 		Database.New,
 		AuthService.New,
 		ApiServer.New,
+		Outbox.New,
 
 		newApp,
 	)

@@ -69,6 +69,7 @@ func CreateFeesReport(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	feesReport.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 
@@ -77,7 +78,8 @@ func CreateFeesReport(c *gin.Context) {
 		panic(err.Error())
 	}
 
-	if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
+	ctx := c.Request.Context()
+	if err := auth.CreateClientFile(&ctx, &tx, client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

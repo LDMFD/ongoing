@@ -15,6 +15,7 @@ import (
 	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 	"os"
 	"strings"
 )
@@ -117,10 +118,10 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			var subject Entities.User
 			if err = db.NewSelect().Model(&subject).Where("uid = ?", viewAsId).Scan(c); err != nil {
 				//c.AbortWithStatus(http.StatusBadRequest)
-				log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
+				//log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
 			} else {
 				user = &subject
-				log.Println("Viewing as:", user.Email)
+				//log.Println("Viewing as:", user.Email)
 			}
 		}
 
@@ -200,7 +201,13 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 			}
 		}
 
-		c.Set("SESSION", sessionContext)
+		c.Set("SESSION", sessionContext) // TODO remove
+
+		if context, exists := c.Get("CONTEXT"); !exists {
+			panic("Context not set")
+		} else {
+			context.(*ServiceContext.Context).Session = sessionContext
+		}
 		c.Next()
 	}
 }

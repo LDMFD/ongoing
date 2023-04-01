@@ -1,4 +1,4 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useContext } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import {
     Button,
@@ -12,26 +12,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { GoBack } from 'Utils/Routing';
 
-import { Context, Api } from 'State'
+import { Context } from 'State'
 import Table from 'Components/Library/Table/Table';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
 const RiskLevelList = () => {
     let history = useHistory();
     let goBack = GoBack(history);
-    const [ state, dispatch] = useContext(Context);
+    const [ state ] = useContext(Context);
 
     let { riskProviderId } = useParams();
-
-    const onDelete = useCallback(id => async () => {
-        if (window.confirm(`Delete risk level?`)) {
-            await Api.OrgResources.RiskLevels.Delete(id);
-            await Api.OrgResources.Entities.Read(dispatch);
-        }
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(id => () => {
-        history.push(`/risk-providers/id/${riskProviderId}/risk-levels/${id}/edit`);
-    }, [ history, riskProviderId ]);
 
     const columns = [
         {
@@ -54,14 +44,14 @@ const RiskLevelList = () => {
             Header: '',
             width: 100,
             Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                <IconGroup>
+                    <Link to={`/risk-providers/id/${riskProviderId}/risk-levels/${row.original.id}/delete`}>
                         <DeleteIcon />
-                    </button>
-                </>
+                    </Link>
+                    <Link to={`/risk-providers/id/${riskProviderId}/risk-levels/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
             ),
         },
     ];

@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import OperatorList from './OperatorList';
 import AddOperator from './AddOperator';
 import EditOperator from './EditOperator';
+import DeleteOperator from './DeleteOperator';
 
 const OperatorRoutes = () => {
     let { path } = useRouteMatch();
@@ -25,6 +26,9 @@ const OperatorRoutes = () => {
             </Route>
             <Route path={`${path}/id/:operatorId/edit`}>
                 <EditOperator />
+            </Route>
+            <Route path={`${path}/id/:operatorId/delete`}>
+                <DeleteOperator />
             </Route>
         </div>
     );

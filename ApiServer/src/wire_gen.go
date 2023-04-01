@@ -10,6 +10,7 @@ import (
 	"ongoing/ApiServer"
 	"ongoing/AuthService"
 	"ongoing/Database"
+	"ongoing/Outbox"
 )
 
 // Injectors from wire.go:
@@ -19,8 +20,9 @@ func buildApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	client := AuthService.New()
+	client := AuthService.New(db)
 	apiServer := ApiServer.New(db, client)
-	app := newApp(apiServer)
+	outbox := Outbox.New(db, client)
+	app := newApp(apiServer, outbox)
 	return app, nil
 }

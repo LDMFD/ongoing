@@ -2,15 +2,12 @@ package FactFinds
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
 	"ongoing/Config"
 	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,14 +18,13 @@ type DeleteFactFindRequestPath struct {
 }
 
 func DeleteFactFind(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path DeleteFactFindRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var factFind = Entities.FactFind{}
@@ -37,8 +33,7 @@ func DeleteFactFind(c *gin.Context) {
 		Relation("FilePtr.File").
 		Where("fact_find.uid = ?", path.FactFindId).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
 
 	if client, err := Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
@@ -47,40 +42,21 @@ func DeleteFactFind(c *gin.Context) {
 		}
 		return
 	} else if factFind.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "FactFind does not belong to client"})
-		panic(err.Error())
+		context.Response.NotFound()
+		return
 	}
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
+	defer tx.Rollback()
 
-	if _, err := tx.NewDelete().
-		Model(&factFind).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if factFind.FilePtr != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, factFind.FilePtr.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
-			_ = tx.Rollback()
-			return
-		}
-		Helpers.DeleteFile(c, tx, *factFind.FilePtr)
-	}
+	ClientDeletion.DeleteFactFind(c, &tx, path.ClientId, &factFind)
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		context.Response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

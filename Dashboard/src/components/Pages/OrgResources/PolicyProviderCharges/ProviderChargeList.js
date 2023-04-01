@@ -31,7 +31,7 @@ const ProviderChargeList = () => {
     }, [ dispatch ]);
 
     const onEdit = useCallback(id => () => {
-        history.push(`/policy-providers/id/${policyProviderId}/provider-charges/${id}/edit`);
+        history.push(`/platforms/id/${policyProviderId}/provider-charges/${id}/edit`);
     }, [ history, policyProviderId ]);
 
     const columns = [
@@ -85,7 +85,7 @@ const ProviderChargeList = () => {
                     {/* <DialogContentText> */}
                         
                     <Toolbar className="breadcrumb-action">
-                        <Link to={{ pathname: `/policy-providers/id/${policyProviderId}/provider-charges/add` }}><Button>Add new charge</Button></Link>
+                        <Link to={{ pathname: `/platforms/id/${policyProviderId}/provider-charges/add` }}><Button>Add new charge</Button></Link>
                     </Toolbar>
 
                     <Table columns   = {columns}

@@ -23,15 +23,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
 
 import { ForceRefresh } from "Auth";
-import { UniqueViolation } from "Errors";
+import { AccessViolation, IntegrityViolation, InternalError, InvalidInput, NotFound, UniqueViolation } from "Errors";
 
-Sentry.init({
-    dsn: window.Config.SentryDsn,
-    release: window.Config.Release,
-    integrations: [new BrowserTracing()],
-    tracesSampleRate: 1.0,
-});
-  
 // Dev mode - see DashboardServer/server.js for live/cloud version
 if (window.Config === '__CONFIG_EMBED__') {
     let firebaseConfigB64 = atob(process.env.REACT_APP_ONGOING_REACT_FIREBASE_CONFIG);
@@ -46,6 +39,13 @@ if (window.Config === '__CONFIG_EMBED__') {
     };
 }
 
+Sentry.init({
+    dsn: window.Config.SentryDsn,
+    release: window.Config.Release,
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1.0,
+});
+  
 // Bypass Firebase
 export const OFFLINE_AUTH = process.env.REACT_APP_ONGOING_AUTH_BYPASS === 'true';
 
@@ -150,10 +150,25 @@ window.ApiClient.interceptors.response.use((response) => {
     const responseError = err?.response?.data;
 
     if (typeof responseError == 'object') {  // explicit error returned from command handler
-        if (responseError.error !== UniqueViolation) {
-            alert(responseError.error)
+        switch (responseError.error) {
+            case NotFound:
+                alert("The resource was not found.");
+                break;
+            case AccessViolation:
+                alert("You do not have permission to access this resource.");
+                break;
+            case InternalError:
+                console.log("Internal error: " + responseError.trace);
+                Sentry.setTag('ongoing.trace', responseError.trace);
+                alert("An internal error has occurred (this has been reported - trace ID: " + responseError.trace + ").");
+                break;
+            case UniqueViolation:
+            case IntegrityViolation:
+            case InvalidInput:
+                return responseError;
+            default:
+                alert(`Error: ${responseError.error}`);
         }
-        return responseError;
     } else {
         alert(str);
         console.log(`response error: ${str}`);

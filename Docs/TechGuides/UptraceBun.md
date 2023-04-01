@@ -2,7 +2,7 @@
 
 ## Joins
 
-To make joins, `Relation()` should be CamelCase but `Where()` should be snake_case.
+To make joins, `Relation()` should be CamelCase (the Go field name) but `Where()` should be snake_case (the column name).
 
 		var providerCharges []Entities.ProviderCharge
 		if err := db.NewSelect().

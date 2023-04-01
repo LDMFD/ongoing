@@ -37,12 +37,12 @@ export const PolicyProviderDialog = (props: {
     return (
         <div className="modal">
             <Dialog
-                title       = {props.submitLabel + ' Policy Provider'}
-                intro       = 'Enter policy provider details:'
+                title       = {props.submitLabel + ' Platform'}
+                intro       = 'Enter platform details:'
                 submitLabel = {props.submitLabel}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
-                error       = {props.error === UniqueViolation ? 'A policy provider with this name already exists.' : ''}
+                error       = {props.error === UniqueViolation ? 'A platform with this name already exists.' : ''}
                 fullWidth   = {true}
                 content = {
                     <>
@@ -72,7 +72,7 @@ export const PolicyProviderDialog = (props: {
                             <p>Create provider first to edit charges</p>
                         :
                             <p>
-                                Switch to <Link to={{ pathname: `/policy-providers/id/${props.provider.Id}/provider-charges` }}>Charges table</Link>.
+                                Switch to <Link to={{ pathname: `/platforms/id/${props.provider.Id}/provider-charges` }}>Charges table</Link>.
                             </p>
                         }
                     </>

@@ -1,11 +1,13 @@
 package ClientOptions
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 )
 
 type SetOptionsRequestPath struct {
@@ -17,7 +19,8 @@ type SetOptionsRequestBody struct {
 }
 
 func SetOptions(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path SetOptionsRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -38,25 +41,29 @@ func SetOptions(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Panic(err)
+	}
+	defer tx.Rollback()
+
 	if body.Options == nil {
-		if _, err := db.NewDelete().Model((*Entities.ClientOptions)(nil)).
-			Where("client_id = ?", client.Id).
-			Exec(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
-		}
+		ClientDeletion.DeleteClientOptions(c, &tx, client)
 	} else {
 		options := &Entities.ClientOptions{
 			ClientId: client.Id,
 			Options:  body.Options,
 		}
-		if _, err := db.NewInsert().Model(options).
+		if _, err := tx.NewInsert().Model(options).
 			On("CONFLICT (client_id) DO UPDATE").
 			Set("\"options\" = EXCLUDED.options").
 			Exec(c); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			panic(err.Error())
+			context.Panic(err)
 		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		context.Panic(err)
 	}
 
 	c.Status(http.StatusOK)

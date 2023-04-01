@@ -1,5 +1,5 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
@@ -7,23 +7,12 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { Context, Api } from 'State'
+import { Context } from 'State'
 import Table from 'Components/Library/Table/Table';
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
 const RiskProviderList = () => {
-    let history = useHistory();
-    const [ state, dispatch] = useContext(Context);
-
-    const onDelete = useCallback(id => async () => {
-        if (window.confirm(`Delete risk provider?`)) {
-            await window.ApiClient.delete(`advisor/risk-providers/${id}`)
-            await Api.OrgResources.Entities.Read(dispatch);
-        }        
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(id => () => {
-        history.push(`/risk-providers/id/${id}/edit`);
-    }, [ history ]);
+    const [ state ] = useContext(Context);
 
     const columns = [
         {
@@ -35,14 +24,14 @@ const RiskProviderList = () => {
             Header: '',
             width: .1,
             Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                <IconGroup>
+                    <Link to={`/risk-providers/id/${row.original.id}/delete`}>
                         <DeleteIcon />
-                    </button>
-                </>
+                    </Link>
+                    <Link to={`/risk-providers/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
             ),
         },
     ];

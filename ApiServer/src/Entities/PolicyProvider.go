@@ -17,9 +17,10 @@ type PolicyProvider struct {
 	CustomPricing string    `bun:"custom_pricing,notnull"`
 	Timestamp     time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	Org      Organisation      `bun:"rel:has-one,join:org_id=id"`
-	Policies []*Policy         `bun:"rel:has-many,join:id=policy_provider_id"`
-	Charges  []*ProviderCharge `bun:"rel:has-many,join:id=policy_provider_id"`
+	Org       Organisation        `bun:"rel:has-one,join:org_id=id"`
+	Policies  []*Policy           `bun:"rel:has-many,join:id=policy_provider_id"`
+	Charges   []*ProviderCharge   `bun:"rel:has-many,join:id=policy_provider_id"`
+	Discounts []*ProviderDiscount `bun:"rel:has-many,join:id=policy_provider_id"`
 }
 
 type ReportPolicyProvider struct {

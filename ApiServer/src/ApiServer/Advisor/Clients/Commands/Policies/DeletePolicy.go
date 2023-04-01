@@ -2,16 +2,9 @@ package Policies
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"log"
-	"net/http"
-	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
-	"ongoing/Config"
-	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,76 +15,34 @@ type DeletePolicyRequestPath struct {
 }
 
 func DeletePolicy(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	response := &context.Response
 
 	var path DeletePolicyRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var policy = Entities.Policy{}
-	if err := db.NewSelect().
-		Model(&policy).
-		Relation("Portfolios").
-		Relation("FilePtr.File").
-		Where("policy.uid = ?", path.PolicyId).
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var client *Entities.Client
-	var err error
-	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
-			panic(err)
-		}
+		response.InvalidInput()
 		return
 	}
 
-	if policy.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy does not belong to client"})
-		panic(err.Error())
+	var query Helpers.ExecuteQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		response.InvalidInput()
+		return
 	}
 
-	if len(policy.Portfolios) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyHasDependentPortfolios})
-		panic(err.Error())
-	}
-
-	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	tx, err := context.Db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		response.Panic(err)
 	}
+	defer tx.Rollback()
 
-	if _, err := tx.NewDelete().
-		Model(&policy).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if policy.FilePtr != nil {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
-			_ = tx.Rollback()
-			return
-		}
-		Helpers.DeleteFile(c, tx, *policy.FilePtr)
-	}
+	ok := ClientDeletion.DeletePolicy(context, &tx, path.ClientId, path.PolicyId, query.Execute)
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	if ok {
+		response.ReturnOK()
+	}
 }

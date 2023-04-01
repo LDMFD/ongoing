@@ -57,7 +57,7 @@ func UpdatePolicyType(c *gin.Context) {
 		Where("uid = ?", path.PolicyTypeId).
 		Column("name").
 		Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 

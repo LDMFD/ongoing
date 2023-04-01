@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
     Button,
     Toolbar,
@@ -8,11 +8,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { Context, Api } from 'State'
+import IconGroup from 'Components/Library/IconGroup/IconGroup';
 import Table from 'Components/Library/Table/Table';
 import { OPERATOR_TYPES } from './OperatorTypes';
 
 const OperatorList = () => {
-    let history = useHistory();
     const [ state, dispatch] = useContext(Context);
 
     const getOperators = useCallback(() => {
@@ -23,19 +23,6 @@ const OperatorList = () => {
         getOperators();
     }, [ getOperators ]);
     
-    const onDelete = useCallback(id => () => {
-        if (window.confirm(`Delete operator?`)) {
-            window.ApiClient.delete(`advisor/operators/${id}`)
-            .then(async () => {
-                await Api.OrgResources.Entities.Read(dispatch);
-            });
-        }        
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(id => () => {
-        history.push(`/operators/id/${id}/edit`);
-    }, [ history ]);
-
     const columns = [
         {
             accessor: 'name',
@@ -57,14 +44,14 @@ const OperatorList = () => {
             Header: '',
             width: .5,
             Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
+                <IconGroup>
+                    <Link to={`/operators/id/${row.original.id}/delete`}>
                         <DeleteIcon />
-                    </button>
-                </>
+                    </Link>
+                    <Link to={`/operators/id/${row.original.id}/edit`}>
+                        <EditIcon />
+                    </Link>
+                </IconGroup>
             ),
         },
     ];

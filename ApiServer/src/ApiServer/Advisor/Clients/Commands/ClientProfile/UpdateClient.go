@@ -61,12 +61,13 @@ func UpdateClient(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	if _, err := tx.NewUpdate().Model(client).WherePK().
 		Column("fee").
 		Exec(c); err != nil {
 		tx.Rollback()
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 
@@ -92,7 +93,7 @@ func UpdateClient(c *gin.Context) {
 			Column("surname").
 			Exec(c); err != nil {
 			tx.Rollback()
-			Errors.HandleError(c, err)
+			Errors.Unexpected(c, err)
 			return
 		}
 	}

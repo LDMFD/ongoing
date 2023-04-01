@@ -4,12 +4,12 @@ import:
 	@./env-import.sh
 
 tidy: import
-	go get github.com/google/wire/cmd/wire
 	cd src && \
+	go get github.com/google/wire/cmd/wire && \
 	go mod tidy
 
 wire: import
-	cd src && ../bin/wire
+	cd src && wire
 
 install:
 	cd src && go install .

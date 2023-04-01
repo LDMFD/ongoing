@@ -80,9 +80,11 @@ func UpdateAdvisor(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	if body.Role != "" {
-		if err := auth.UpdateAdvisorRole(*session.OrgId, path.AdvisorId, body.Role); err != nil {
+		ctx := c.Request.Context()
+		if err := auth.UpdateAdvisorRole(&ctx, &tx, *session.OrgId, path.AdvisorId, body.Role); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			//log.Printf("%+v", err)
 			_ = tx.Rollback()

@@ -1,13 +1,13 @@
 package Commands
 
 import (
-	"log"
+	"database/sql"
 	"net/http"
-	"ongoing/Config"
-	"ongoing/Entities"
+	"ongoing/ApiServer/Helpers"
+	"ongoing/Operators/OrgResourceDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 )
 
 type DeleteRiskLevelRequestPath struct {
@@ -15,40 +15,33 @@ type DeleteRiskLevelRequestPath struct {
 }
 
 func DeleteRiskLevel(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 
 	var path DeleteRiskLevelRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var riskLevel = Entities.RiskLevel{}
-	if err := db.NewSelect().
-		Model(&riskLevel).
-		Relation("RiskProvider").
-		Where("risk_level.uid = ?", path.RiskLevelId).
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if riskLevel.RiskProvider.OrgId != session.Org.Id {
-		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
-			log.Println("Unauthorized access attempt by:", session.Email)
-		}
-		c.AbortWithStatus(http.StatusForbidden)
+		context.Response.InvalidInput()
 		return
 	}
 
-	if _, err := db.NewDelete().
-		Model(&riskLevel).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	var query Helpers.ExecuteQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		context.Response.InvalidInput()
+		return
 	}
 
-	c.JSON(200, gin.H{})
+	tx, err := context.Db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Panic(err)
+	}
+	defer tx.Rollback()
+
+	ok := OrgResourceDeletion.DeleteRiskLevel(context, &tx, path.RiskLevelId, query.Execute)
+
+	if err := tx.Commit(); err != nil {
+		context.Panic(err)
+	}
+
+	if ok {
+		c.Status(http.StatusOK)
+	}
 }

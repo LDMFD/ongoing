@@ -2,19 +2,13 @@ package Commands
 
 import (
 	"database/sql"
-	"github.com/pkg/errors"
-	"log"
 	"net/http"
-	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
-	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 	"ongoing/Utils/Date"
 	"strings"
 	"time"
-
-	"github.com/uptrace/bun"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,20 +18,19 @@ type UpdateFundRequestPath struct {
 }
 
 func UpdateFund(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path UpdateFundRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var body CreateOrUpdateFundRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var modified time.Time
@@ -49,10 +42,9 @@ func UpdateFund(c *gin.Context) {
 
 	tx, err := db.BeginTx(c, &sql.TxOptions{})
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		panic(err.Error())
+		context.Panic(err)
 	}
+	defer tx.Rollback()
 
 	var fund = Entities.Fund{}
 
@@ -60,17 +52,9 @@ func UpdateFund(c *gin.Context) {
 		Model(&fund).
 		Relation("FilePtr.File").
 		Where("fund.uid = ?", path.FundId).
+		Where("fund.org_id = ?", context.Session.Org.Id).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if fund.OrgId != session.Org.Id {
-		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
-			log.Println("Unauthorized access attempt by:", session.Email)
-		}
-		c.AbortWithStatus(http.StatusForbidden)
-		_ = tx.Rollback()
+		context.Response.NotFound()
 		return
 	}
 
@@ -82,20 +66,16 @@ func UpdateFund(c *gin.Context) {
 
 	// FilePtr has been removed or changed; remove old relationship
 	if (body.File != nil && fund.FilePtr != nil && body.File.Uid != fund.FilePtr.File.Uid) || (body.File == nil && fund.FilePtr != nil) {
-		if err := auth.RemoveFileFromOrg(session.Org.Uid, fund.FilePtr.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
-			_ = tx.Rollback()
-			return
+		ctx := c.Request.Context()
+		if err := context.Auth.RemoveFileFromOrg(&ctx, &tx, context.Session.Org.Uid, fund.FilePtr.File.Uid); err != nil {
+			context.Panic(err)
 		}
 		Helpers.DeleteFile(c, tx, *fund.FilePtr)
 	}
 	if body.File != nil {
-		if err := auth.CreateOrgFile(session.Org.Uid, body.File.Uid); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			log.Printf("%+v", err)
-			_ = tx.Rollback()
-			return
+		ctx := c.Request.Context()
+		if err := context.Auth.CreateOrgFile(&ctx, &tx, context.Session.Org.Uid, body.File.Uid); err != nil {
+			context.Panic(err)
 		}
 		fund.FilePtrId = Helpers.CreateFileRef(c, tx, body.File)
 	}
@@ -107,14 +87,12 @@ func UpdateFund(c *gin.Context) {
 		Column("file_ptr_id").
 		Column("modified").
 		Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		context.Panic(err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		context.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import RiskLevelList from './RiskLevelList';
 import AddRiskLevel from './AddRiskLevel';
 import EditRiskLevel from './EditRiskLevel';
+import DeleteRiskLevel from './DeleteRiskLevel';
 
 const RiskLevelRoutes = () => {
     let { path } = useRouteMatch();
@@ -25,6 +26,9 @@ const RiskLevelRoutes = () => {
             </Route>
             <Route path={`${path}/:levelId/edit`}>
                 <EditRiskLevel />
+            </Route>
+            <Route path={`${path}/:levelId/delete`}>
+                <DeleteRiskLevel />
             </Route>
         </div>
     );

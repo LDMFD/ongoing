@@ -11,9 +11,9 @@ import (
 
 type CreateRiskLevelRequestBody struct {
 	RiskProviderId string `binding:"required"`
-	Level          int64  `binding:"required"`
-	Label          string `binding:"required"`
-	Desc           string `binding:"required"`
+	Level          int64
+	Label          string
+	Desc           string
 }
 
 func CreateRiskLevel(c *gin.Context) {

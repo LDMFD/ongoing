@@ -46,6 +46,7 @@ func UpdatePolicy(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	var policy = Entities.Policy{}
 	if err := tx.NewSelect().
@@ -88,9 +89,11 @@ func UpdatePolicy(c *gin.Context) {
 		panic(err.Error())
 	}
 
+	ctx := c.Request.Context()
+
 	// FilePtr has been removed or changed; remove old relationship
 	if (body.File != nil && policy.FilePtr != nil && body.File.Uid != policy.FilePtr.File.Uid) || (body.File == nil && policy.FilePtr != nil) {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
+		if err := auth.RemoveFileFromClientAndOrg(&ctx, &tx, path.ClientId, session.Org.Uid, policy.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -99,7 +102,7 @@ func UpdatePolicy(c *gin.Context) {
 		Helpers.DeleteFile(c, tx, *policy.FilePtr)
 	}
 	if body.File != nil {
-		if err := auth.CreateClientFile(client.Uid, session.Org.Uid, body.File.Uid); err != nil {
+		if err := auth.CreateClientFile(&ctx, &tx, client.Uid, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -131,7 +134,7 @@ func UpdatePolicy(c *gin.Context) {
 		Column("notes").
 		Column("file_ptr_id").
 		Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
 		return
 	}
 

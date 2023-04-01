@@ -52,6 +52,7 @@ func CreateAdvisor(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		return
 	}
+	defer tx.Rollback()
 
 	var user = Entities.User{
 		Uid:       userUid,
@@ -91,7 +92,8 @@ func CreateAdvisor(c *gin.Context) {
 		return
 	}
 
-	if err := auth.CreateAdvisor(*session.OrgId, userUid, body.Role); err != nil {
+	ctx := c.Request.Context()
+	if err := auth.CreateAdvisor(&ctx, &tx, *session.OrgId, userUid, body.Role); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)
 		_ = tx.Rollback()

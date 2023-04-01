@@ -1,12 +1,13 @@
 package PolicyFunds
 
 import (
+	"database/sql"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	"ongoing/Operators/ClientDeletion"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,12 +18,13 @@ type DeletePolicyFundRequestPath struct {
 }
 
 func DeletePolicyFund(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path DeletePolicyFundRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var policyFund = Entities.PolicyFund{}
@@ -30,31 +32,34 @@ func DeletePolicyFund(c *gin.Context) {
 		Model(&policyFund).
 		Where("uid = ?", path.PolicyFundId).
 		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.Panic(err)
 	}
 
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
-			panic(err)
+			context.Response.Panic(err)
 		}
 		return
 	}
 
 	if policyFund.ClientId != client.Id {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Policy fund does not belong to client"})
-		panic(err.Error())
+		context.Response.NotFound()
+		return
 	}
 
-	if _, err := db.NewDelete().
-		Model(&policyFund).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Response.Panic(err)
+	}
+	defer tx.Rollback()
+
+	ClientDeletion.DeletePolicyFund(c, &tx, &policyFund)
+
+	if err := tx.Commit(); err != nil {
+		context.Response.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	c.Status(http.StatusOK)
 }

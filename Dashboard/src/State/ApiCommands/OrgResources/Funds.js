@@ -10,8 +10,8 @@ const Update = (fund) => {
     })
 }
 
-const Delete = (fundId) => {
-    return window.ApiClient.delete(`advisor/funds/${fundId}`)
+const Delete = (fundId, execute) => {
+    return window.ApiClient.delete(`advisor/funds/${fundId}?execute=${execute}`)
 }
 
 const defaults = {

@@ -5,6 +5,7 @@ import RiskProviderList from './RiskProviderList';
 import AddRiskProvider from './AddRiskProvider';
 import EditRiskProvider from './EditRiskProvider';
 import ProviderChargeRoutes from '../RiskLevels/RiskLevelRoutes';
+import DeleteRiskProvider from './DeleteRiskProvider';
 
 const RiskProviderRoutes = () => {
     let { path } = useRouteMatch();
@@ -27,6 +28,10 @@ const RiskProviderRoutes = () => {
 
             <Route path={`${path}/id/:riskProviderId/edit`}>
                 <EditRiskProvider />
+            </Route>
+
+            <Route path={`${path}/id/:riskProviderId/delete`}>
+                <DeleteRiskProvider />
             </Route>
 
             <Route path={`${path}/id/:riskProviderId/risk-levels`}>

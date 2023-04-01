@@ -54,8 +54,8 @@ const tier1Items = [
         link: '/policy-types',
     },
     {
-        label: 'Policy Providers',
-        link: '/policy-providers',
+        label: 'Platforms',
+        link: '/platforms',
     },
     {
         label: 'Risk Providers',

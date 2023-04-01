@@ -65,7 +65,7 @@ func PublishReview(c *gin.Context) {
 		}
 	}()
 
-	report := GenerateReport(c, client.Id, true)
+	report, _ := GenerateReport(&tx, c, client.Id)
 	if report == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)

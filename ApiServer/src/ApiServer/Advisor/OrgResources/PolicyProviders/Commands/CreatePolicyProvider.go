@@ -46,7 +46,8 @@ func CreatePolicyProviderInternal(c *gin.Context, orgId int64, body CreateOrUpda
 		OrgId:         orgId,
 	}
 	if _, err := db.NewInsert().Model(&policyProvider).Exec(c); err != nil {
-		Errors.HandleError(c, err)
+		Errors.Unexpected(c, err)
+		return ""
 	}
 	return uid
 }

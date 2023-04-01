@@ -73,11 +73,13 @@ func UpdateForecast(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	// FilePtr has been removed or changed; remove old relationship
 	var toDelete *Entities.FilePtr
 	if (body.File != nil && forecast.FilePtr != nil && body.File.Uid != forecast.FilePtr.File.Uid) || (body.File == nil && forecast.FilePtr != nil) {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, forecast.FilePtr.File.Uid); err != nil {
+		ctx := c.Request.Context()
+		if err := auth.RemoveFileFromClientAndOrg(&ctx, &tx, path.ClientId, session.Org.Uid, forecast.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -86,7 +88,8 @@ func UpdateForecast(c *gin.Context) {
 		toDelete = forecast.FilePtr
 	}
 	if body.File != nil {
-		if err := auth.CreateClientFile(path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
+		ctx := c.Request.Context()
+		if err := auth.CreateClientFile(&ctx, &tx, path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

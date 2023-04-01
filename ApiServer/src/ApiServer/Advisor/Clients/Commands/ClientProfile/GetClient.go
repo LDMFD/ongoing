@@ -37,5 +37,7 @@ func GetClient(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, GetClientInternal(c, client))
+	res, _ := GetClientInternal(c, client)
+
+	c.JSON(200, res)
 }

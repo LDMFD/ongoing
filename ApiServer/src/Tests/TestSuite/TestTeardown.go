@@ -48,7 +48,7 @@ func testDeleteAccounts(t *testing.T, e *httpexpect.Expect) {
 		Expect().Status(http.StatusForbidden)
 
 	e.DELETE("/api/advisor/clients/"+org1ClientId).
-		WithHeader("Authentication", ORG1_ADMIN).
+		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/staff/"+org1AdvisorId).
@@ -69,5 +69,5 @@ func testDeleteAccounts(t *testing.T, e *httpexpect.Expect) {
 
 	e.GET("/api/admin/stats").
 		WithHeader("Authentication", SUPERUSER).
-		Expect().Status(http.StatusOK).JSON().Object().ValueEqual("Rows", 2) // 2 superusers
+		Expect().Status(http.StatusOK).JSON().Object().ValueEqual("Total", 2) // 2 superusers
 }

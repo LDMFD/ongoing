@@ -69,7 +69,7 @@ func testCreatePolicyTypeSecurity(e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/policy-types/"+policyTypeId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreatePolicyProvider(e *httpexpect.Expect) {
@@ -126,7 +126,7 @@ func testCreatePolicyProviderSecurity(e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/policy-providers/"+policyProviderId1Aviva).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreateProviderCharge(e *httpexpect.Expect) {
@@ -183,7 +183,8 @@ func testCreateProviderChargeSecurity(e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/provider-charges/"+providerCharges[0]).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		WithQuery("execute", "true").
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreateFund(t *testing.T, e *httpexpect.Expect) {
@@ -293,12 +294,12 @@ func testCreateFundSecurity(t *testing.T, e *httpexpect.Expect) {
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 
 	e.DELETE("/api/advisor/funds/"+fundIdJupiterBalanced).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreateOperator(e *httpexpect.Expect) {
@@ -352,7 +353,7 @@ func testCreateOperatorSecurity(e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/operators/"+operatorIdAJBell).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreateModel(t *testing.T, e *httpexpect.Expect) {
@@ -460,7 +461,7 @@ func testCreateModelSecurity(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/models/"+modelId1).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreateRiskProvider(e *httpexpect.Expect) {
@@ -502,7 +503,7 @@ func testCreateRiskProviderSecurity(e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/risk-providers/"+riskProviderId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 func testCreateRiskLevel(e *httpexpect.Expect) {
@@ -549,7 +550,7 @@ func testCreateRiskLevelSecurity(e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/risk-levels/"+riskLevelId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 }
 
 var modulePresetText = "preset intro"

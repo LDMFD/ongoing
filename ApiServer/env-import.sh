@@ -1,2 +1,2 @@
-export $(cat ../.env|xargs)
+export $(cat ../env.goland|xargs)
 export GOPATH=`pwd`

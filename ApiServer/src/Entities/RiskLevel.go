@@ -17,7 +17,8 @@ type RiskLevel struct {
 	Desc           string    `bun:"desc,notnull"`
 	Timestamp      time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
-	RiskProvider *RiskProvider `bun:"rel:has-one,join:risk_provider_id=id"`
+	RiskProvider *RiskProvider     `bun:"rel:has-one,join:risk_provider_id=id"`
+	Assessments  []*RiskAssessment `bun:"rel:has-many,join:id=risk_level_id"`
 }
 
 type ReportRiskLevel struct {

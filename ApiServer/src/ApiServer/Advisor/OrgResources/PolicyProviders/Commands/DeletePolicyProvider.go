@@ -1,16 +1,12 @@
 package Commands
 
 import (
-	"fmt"
-	"github.com/uptrace/bun"
-	"log"
-	"net/http"
-	"ongoing/ApiServer/Advisor/Errors"
-	"ongoing/Config"
-	"ongoing/Entities"
-	"strings"
-
+	"database/sql"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"ongoing/ApiServer/Helpers"
+	"ongoing/Operators/OrgResourceDeletion"
+	"ongoing/ServiceContext"
 )
 
 type DeletePolicyProviderRequestPath struct {
@@ -18,57 +14,34 @@ type DeletePolicyProviderRequestPath struct {
 }
 
 func DeletePolicyProvider(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path DeletePolicyProviderRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var policyProvider = Entities.PolicyProvider{}
-	if err := db.NewSelect().
-		Model(&policyProvider).
-		Relation("Policies.Client.User").
-		Relation("Charges").
-		Where("uid = ?", path.PolicyProviderId).
-		Scan(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	if policyProvider.OrgId != session.Org.Id {
-		if Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") != "true" {
-			log.Println("Unauthorized access attempt by:", session.Email)
-		}
-		c.AbortWithStatus(http.StatusForbidden)
+		context.Response.InvalidInput()
 		return
 	}
 
-	if len(policyProvider.Policies) > 0 {
-		var names []string
-		for _, p := range policyProvider.Policies {
-			s := fmt.Sprintf("%v (in use by %v, %v)", p.ExternalId, p.Client.User.Forenames, p.Client.User.Surname)
-			names = append(names, s)
-		}
-		s := fmt.Sprintln(strings.Join(names[:], ", "))
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.PolicyProviderHasDependentPolicies(s)})
+	var query Helpers.ExecuteQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		context.Response.InvalidInput()
 		return
 	}
 
-	if len(policyProvider.Charges) > 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.ChargesExist})
-		return
+	tx, err := db.BeginTx(c, &sql.TxOptions{})
+	if err != nil {
+		context.Panic(err)
+	}
+	defer tx.Rollback()
+
+	ok := OrgResourceDeletion.DeletePlatform(context, &tx, path.PolicyProviderId, query.Execute)
+
+	if err := tx.Commit(); err != nil {
+		context.Panic(err)
 	}
 
-	if _, err := db.NewDelete().
-		Model(&policyProvider).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+	if ok {
+		c.Status(http.StatusOK)
 	}
-
-	c.JSON(200, gin.H{})
 }

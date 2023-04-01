@@ -10,8 +10,8 @@ const Update = (policyProvider) => {
     })
 }
 
-const Delete = (policyProviderId) => {
-    return window.ApiClient.delete(`advisor/policy-providers/${policyProviderId}`)
+const Delete = (policyProviderId, execute) => {
+    return window.ApiClient.delete(`advisor/policy-providers/${policyProviderId}?execute=${execute}`)
 }
 
 const defaults = {

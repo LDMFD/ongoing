@@ -48,6 +48,7 @@ func CreateOrganisation(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		return
 	}
+	defer tx.Rollback()
 
 	owner := Entities.User{}
 	if count, err := tx.NewSelect().Model(&owner).Where("email = ?", body.Email).
@@ -116,7 +117,8 @@ func CreateOrganisation(c *gin.Context) {
 		return
 	}
 
-	if err := auth.CreateOrganisation(owner.Uid, orgUid); err != nil {
+	ctx := c.Request.Context()
+	if err := auth.CreateOrganisation(&ctx, &tx, owner.Uid, orgUid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Println(errors.WithStack(err).Error())
 		tx.Rollback()

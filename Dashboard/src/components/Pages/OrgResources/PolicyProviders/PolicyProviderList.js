@@ -51,10 +51,10 @@ const PolicyProviderList = () => {
             width: 1,
             Cell: ({ row }) => (
                 <IconGroup>
-                    <Link to={`/policy-providers/id/${row.original.id}/delete`}>
+                    <Link to={`/platforms/id/${row.original.id}/delete`}>
                         <DeleteIcon />
                     </Link>
-                    <Link to={`/policy-providers/id/${row.original.id}/edit`}>
+                    <Link to={`/platforms/id/${row.original.id}/edit`}>
                         <EditIcon />
                     </Link>
                 </IconGroup>
@@ -74,7 +74,7 @@ const PolicyProviderList = () => {
     return (
         <>
             <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/policy-providers/add' }}><Button>Add new policy provider</Button></Link>
+                <Link to={{ pathname: '/platforms/add' }}><Button>Add new platform</Button></Link>
             </Toolbar>
 
             <Table columns={columns} data={policyProviders} />

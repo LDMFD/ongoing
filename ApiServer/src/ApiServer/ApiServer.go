@@ -4,6 +4,8 @@ import (
 	sentrygin "github.com/getsentry/sentry-go/gin"
 	"net/http"
 	"ongoing/AuthService"
+	"ongoing/ServiceContext"
+	"ongoing/Utils/UUID"
 	"os"
 	"time"
 
@@ -33,16 +35,42 @@ func New(db *bun.DB, authClient *AuthService.Client) *ApiServer {
 	return server
 }
 
-func AddDatabaseMiddleware(db *bun.DB) gin.HandlerFunc {
+func AddContextMiddleware(db *bun.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("DATABASE", db)
+		trace := UUID.GenerateUID(nil)[:6]
+		context := &ServiceContext.Context{
+			Db: db,
+			Response: ServiceContext.Response{
+				FrameworkContext: c,
+				Trace:            &trace,
+			},
+		}
+		c.Set("CONTEXT", context)
 		c.Next()
 	}
 }
 
-func AddAuthBackendMiddleware(authClient *AuthService.Client) gin.HandlerFunc {
+// TODO remove
+func AddDatabaseContext(db *bun.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Set("AUTH", authClient)
+		c.Set("DATABASE", db)
+		if context, exists := c.Get("CONTEXT"); !exists {
+			panic("Context not set")
+		} else {
+			context.(*ServiceContext.Context).Db = db
+		}
+		c.Next()
+	}
+}
+
+func AddAuthBackendContext(authClient *AuthService.Client) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Set("AUTH", authClient) // TODO remove
+		if context, exists := c.Get("CONTEXT"); !exists {
+			panic("Context not set")
+		} else {
+			context.(*ServiceContext.Context).Auth = authClient
+		}
 		c.Next()
 	}
 }
@@ -56,13 +84,22 @@ func (s *ApiServer) BuildRouter() (*gin.Engine, error) {
 
 	s.addErrorHandling(r)
 
-	r.Use(AddDatabaseMiddleware(s.db))
+	s.addServiceContext(r)
 
-	r.Use(AddAuthBackendMiddleware(s.authClient))
+	r.Use(AddAuthBackendContext(s.authClient))
 
-	AddApiRoutes(r)
+	AddRoutes(r)
 
 	return r, nil
+}
+
+func (s *ApiServer) addServiceContext(r *gin.Engine) {
+	r.Use(AddContextMiddleware(s.db))
+
+	// TODO remove
+	r.Use(AddDatabaseContext(s.db))
+
+	r.Use(AddAuthBackendContext(s.authClient))
 }
 
 func (s *ApiServer) addNetworkConfig(r *gin.Engine) {

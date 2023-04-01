@@ -1,6 +1,7 @@
 package FeesReports
 
 import (
+	"context"
 	"database/sql"
 	"github.com/pkg/errors"
 	"github.com/uptrace/bun"
@@ -74,11 +75,13 @@ func UpdateFeesReport(c *gin.Context) {
 		log.Println(errors.WithStack(err))
 		panic(err.Error())
 	}
+	defer tx.Rollback()
 
 	// FilePtr has been removed or changed; remove old relationship
 	var toDelete *Entities.FilePtr
 	if (body.File != nil && feesReport.FilePtr != nil && body.File.Uid != feesReport.FilePtr.File.Uid) || (body.File == nil && feesReport.FilePtr != nil) {
-		if err := auth.RemoveFileFromClientAndOrg(path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
+		ctx := context.Background()
+		if err := auth.RemoveFileFromClientAndOrg(&ctx, &tx, path.ClientId, session.Org.Uid, feesReport.FilePtr.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()
@@ -87,7 +90,8 @@ func UpdateFeesReport(c *gin.Context) {
 		toDelete = feesReport.FilePtr
 	}
 	if body.File != nil {
-		if err := auth.CreateClientFile(path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
+		ctx := context.Background()
+		if err := auth.CreateClientFile(&ctx, &tx, path.ClientId, session.Org.Uid, body.File.Uid); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			log.Printf("%+v", err)
 			_ = tx.Rollback()

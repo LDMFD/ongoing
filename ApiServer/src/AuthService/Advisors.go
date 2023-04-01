@@ -1,18 +1,20 @@
 package AuthService
 
 import (
+	"context"
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/uptrace/bun"
 )
 
-func (c *Client) CreateAdvisor(orgId, userId, role string) error {
-	if err := c.createRelationship("organisation", orgId, role, "user", userId); err != nil {
+func (c *Client) CreateAdvisor(ctx *context.Context, tx *bun.Tx, orgId, userId, role string) error {
+	if err := c.createRelationship(ctx, tx, "organisation", orgId, role, "user", userId); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) UpdateAdvisorRole(orgId, userId, newRole string) (err error) {
+func (c *Client) UpdateAdvisorRole(ctx *context.Context, tx *bun.Tx, orgId, userId, newRole string) (err error) {
 	var oldRole string
 	if oldRole, err = c.getRole(orgId, userId); err != nil {
 		return err
@@ -22,7 +24,7 @@ func (c *Client) UpdateAdvisorRole(orgId, userId, newRole string) (err error) {
 		return nil
 	}
 
-	if err := c.mutateRelationship("organisation", orgId, oldRole, "user", userId, newRole); err != nil {
+	if err := c.mutateRelationship(ctx, tx, "organisation", orgId, oldRole, "user", userId, newRole); err != nil {
 		return err
 	}
 	return nil
@@ -45,13 +47,13 @@ func (c *Client) getRole(orgId string, userId string) (string, error) {
 	return oldRole, nil
 }
 
-func (c *Client) RemoveMember(orgId, userId string) (err error) {
+func (c *Client) RemoveMember(ctx *context.Context, tx *bun.Tx, orgId, userId string) (err error) {
 	var role string
 	if role, err = c.getRole(orgId, userId); err != nil {
 		return err
 	}
 
-	if err := c.removeRelationship("organisation", orgId, role, "user", userId); err != nil {
+	if err := c.removeRelationship(ctx, tx, "organisation", orgId, role, "user", userId); err != nil {
 		return err
 	}
 	return nil

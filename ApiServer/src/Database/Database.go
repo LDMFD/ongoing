@@ -33,6 +33,8 @@ func New() (*bun.DB, error) {
 
 	SeedUserTable(db)
 
+	GetRelationships(db)
+
 	log.Println("DB: Connected.")
 
 	DB = db
@@ -89,7 +91,12 @@ func Truncate(appdb *bun.DB) {
 		spicedb.Close()
 	}()
 	spicedb.Exec("DELETE FROM relation_tuple")
-	spicedb.Exec("DELETE FROM relation_tuple_transaction WHERE id > 2;")
+	spicedb.Exec(`
+		DELETE FROM relation_tuple_transaction
+		WHERE id NOT IN (
+			SELECT id
+			FROM relation_tuple_transaction ORDER BY id LIMIT 2
+	);`)
 }
 
 func SeedUserTable(db *bun.DB) {
@@ -124,7 +131,8 @@ func insertSuperuser(db *bun.DB, email string) {
 func RowCount(db *bun.DB) int {
 	app := AppDbRows(db)
 	auth := AuthDbRows()
-	return app + auth
+	txs := OpenTransactions(db)
+	return app + auth + txs
 }
 
 func AuthDbRows() int {
@@ -166,6 +174,17 @@ func AppDbRows(db *bun.DB) int {
 		total += count
 	}
 	return total
+}
+
+func OpenTransactions(db *bun.DB) int {
+	var txCount int
+	sql := `SELECT count(*)
+			FROM pg_stat_activity
+			WHERE (state = 'idle in transaction') AND xact_start is not null;`
+	if err := db.QueryRow(sql).Scan(&txCount); err != nil {
+		panic(err)
+	}
+	return txCount
 }
 
 func GetSuperusers() []string {
