@@ -16,23 +16,26 @@ func testClientReviews(t *testing.T, e *httpexpect.Expect) {
 }
 
 func testReviews(e *httpexpect.Expect) {
-	testCreateReview(e)
+	setupForReviewTests(e)
 	testUpdateReviewModules(e)
 	testUpdateReview(e)
 	testPublishReview(e)
 	testReviewSecurity(e)
 }
 
-func testCreateReview(e *httpexpect.Expect) {
-	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
+func setupForReviewTests(e *httpexpect.Expect) {
+	obj := e.GET("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG1_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
-	review1Id = resp.Value("Id").String().Raw()
 
-	resp = e.POST("/api/advisor/clients/"+org2ClientId+"/reviews").
+	review1Id = obj.Value("Draft").Object().Value("Id").String().Raw()
+
+	// org 2
+	obj = e.GET("/api/advisor/clients/"+org2ClientId).
 		WithHeader("Authentication", ORG2_OWNER).
 		Expect().Status(http.StatusOK).JSON().Object()
-	review2Id = resp.Value("Id").String().Raw()
+
+	review2Id = obj.Value("Draft").Object().Value("Id").String().Raw()
 }
 
 func testUpdateReview(e *httpexpect.Expect) {
@@ -89,13 +92,13 @@ func testReviewSecurity(e *httpexpect.Expect) {
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG1_CLIENT).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 
 	// Create review as the owner of another org - forbidden
 	e.POST("/api/advisor/clients/"+org1ClientId+"/reviews").
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
-		Expect().Status(http.StatusForbidden)
+		Expect().Status(http.StatusNotFound)
 
 	// Other org advisor
 	request := ClientProfile.UpdateReviewRequestBody{

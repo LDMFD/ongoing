@@ -27,7 +27,7 @@ func ClientFromUID(c *gin.Context, db bun.IDB, uid string) (*Entities.Client, er
 	}
 
 	// Clients can only be looked up by advisors in the same org
-	if client.Organisation.Uid != *session.OrgId {
+	if session.Role != Entities.UserTypeSuperuser && client.Organisation.Uid != *session.OrgId {
 		msg := fmt.Sprintf("Unauthorized access attempt by: %v", session.Email)
 		if !(Config.OFFLINE_AUTH && c.GetHeader("X-Ongoing-ExpectForbidden") == "true") {
 			log.Println(msg)
