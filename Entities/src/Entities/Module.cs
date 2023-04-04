@@ -10,19 +10,23 @@ namespace Ongoing.Entities
     public enum ModuleType
     {
         Introduction,
+        
         Profile,
         ProfileFactFind,
         ProfileRisk,
         ProfileObjectives,
+        
         PolicyValuations,
-        PolicyValuationsValuation,
-        PolicyValuationsContributions,
-        Fees,
-        FeesAdviceFee,
-        FeesPolicyFees,
-        FeesFundLevel,
-        FeesPortfolioLevel,
-        FeesDim,
+        
+        PolicyValuationsValuation,      // Deprecated
+        PolicyValuationsContributions,  // Deprecated
+        Fees,                           // Fees -> Totals
+        FeesAdviceFee,                  // Fees -> Details -> Advice
+        FeesPolicyFees,                 // Fees -> Details -> Platform             
+        FeesFundLevel,                  // Fees -> Details -> Fund-Level
+        FeesPortfolioLevel,             // Fees -> Details -> Portfolio-Level
+        FeesDim,                        // Fees -> Details -> DIM
+
         Conclusions,
         ConclusionsGoals,
         ConclusionsAdviceGiven,
@@ -30,6 +34,8 @@ namespace Ongoing.Entities
         ConclusionsDueDiligence,
         ConclusionsOngoingSuitability,
         ConclusionsActionPoints,
+        
+        FeesImpact,
     }
     
     [Table("modules")]

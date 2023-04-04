@@ -7,6 +7,8 @@ import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 
 import './RiskQuestionnaire.css';
+import { ModuleTypeRisk } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 
 const renderRowSubComponent = row => {
     return (
@@ -96,6 +98,7 @@ const RiskQuestionnaire = () => {
 
     return (
         <div className='ongoing-riskassessmentList'>
+            <Module module={ModuleTypeRisk} />
             <br />
             <Table columns               = {columnsMemo}
                    data                  = {assessments}

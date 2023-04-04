@@ -1,7 +1,7 @@
 import * as ReactDOMServer from 'react-dom/server';
 // import PropTypes from 'prop-types';
 
-import { ModuleTypePolicyFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
+import { ModuleTypePlatformFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { FormatCurrencyPence, PercentageFormatter } from 'Utils/Strings';
@@ -111,7 +111,7 @@ const PlatformFees = () => {
 
     return (
         <div>
-            <Module client={null} module={ModuleTypePolicyFees} />
+            <Module client={null} module={ModuleTypePlatformFees} />
 
             <PlatformFeesSummary blocks         = {view.Providers}
                                  total          = {view.Total}

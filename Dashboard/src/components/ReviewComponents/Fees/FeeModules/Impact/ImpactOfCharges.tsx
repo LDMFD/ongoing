@@ -11,6 +11,8 @@ import ImpactModel, { Limits } from './ImpactModel';
 import PersistenceControls from './ControlsContainer';
 
 import './Impact.css';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
+import { ModuleTypeFeesImpact } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 
 const ImpactOfGrowthChart = () => {
     const [ state ]: any = useContext(Context);
@@ -57,6 +59,8 @@ const ImpactOfGrowthChart = () => {
 
     return (
         <div className='impactChart'>
+            <Module module={ModuleTypeFeesImpact} client={null} />
+
             <Paper
                 variant="outlined"
                 sx={{

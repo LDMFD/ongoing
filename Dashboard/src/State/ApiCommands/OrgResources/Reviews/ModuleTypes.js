@@ -7,17 +7,15 @@ export const ModuleTypeRisk               = "profile_risk";
 export const ModuleTypeGoals              = "profile_objectives";
 
 export const ModuleTypePolicyValuations   = "policy_valuations";
-export const ModuleTypeValuation          = "policy_valuations_valuation";
-export const ModuleTypeContributions      = "policy_valuations_contributions";
 
-export const ModuleTypeFees               = "fees";
+export const ModuleTypeFeeTotals          = "fees";
 export const ModuleTypeAdviceFee          = "fees_advice_fee";
-export const ModuleTypePolicyFees         = "fees_policy_fees";
+export const ModuleTypePlatformFees       = "fees_policy_fees";
 export const ModuleTypeFundLevelFees      = "fees_fund_level";
 export const ModuleTypePortfolioLevelFees = "fees_portfolio_level";
 export const ModuleTypeDimFee             = "fees_dim";
+export const ModuleTypeFeesImpact         = "fees_impact";
 
-export const ModuleTypeConclusions        = "conclusions";
 export const ModuleTypeObjectives         = "conclusions_goals";
 export const ModuleTypeAdviceGiven        = "conclusions_advice_given";
 export const ModuleTypeDueDiligence       = "conclusions_due_diligence";
@@ -32,15 +30,13 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypeRisk,               label: "Profile - Attitude To Risk Questionnaire" },
     { id: ModuleTypeGoals,              label: "Profile - Goals" },
     { id: ModuleTypePolicyValuations,   label: "Policy Valuations page" },
-    { id: ModuleTypeValuation,          label: "Policy Valuations - Policy Valuation" },
-    { id: ModuleTypeContributions,      label: "Policy Valuations - Policy Contributions" },
-    { id: ModuleTypeFees,               label: "Fees page" },
+    { id: ModuleTypeFeeTotals,          label: "Fees - Totals" },
     { id: ModuleTypeAdviceFee,          label: "Fees - Advice" },
-    { id: ModuleTypePolicyFees,         label: "Fees - Platform" },
+    { id: ModuleTypePlatformFees,       label: "Fees - Platform" },
     { id: ModuleTypeFundLevelFees,      label: "Fees - Funds Level" },
     { id: ModuleTypePortfolioLevelFees, label: "Fees - Portfolio Level" },
     { id: ModuleTypeDimFee,             label: "Fees - DIM" },
-    { id: ModuleTypeConclusions,        label: "Assessments page" },
+    { id: ModuleTypeFeesImpact,         label: "Fees - Impact of Charges" },
     { id: ModuleTypeObjectives,         label: "Assessments - Objectives" },
     { id: ModuleTypeAdviceGiven,        label: "Assessments - Advice Given" },
     { id: ModuleTypeDueDiligence,       label: "Assessments - Due Digilence" },

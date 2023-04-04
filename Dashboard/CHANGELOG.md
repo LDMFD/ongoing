@@ -1,3 +1,7 @@
+# 1.10.3 2023-04-03
+
+- Add missing module presets
+
 # 1.10.1 2023-03-31
 
 - Add Sentry trace

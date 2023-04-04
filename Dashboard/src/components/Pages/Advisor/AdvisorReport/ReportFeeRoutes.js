@@ -4,7 +4,6 @@ import { useLocation, useRouteMatch, Switch, Route } from "react-router-dom";
 import { Context } from 'State';
 import ReportFeeDetailsRoutes from 'Components/Pages/Advisor/AdvisorReport/ReportFeeDetailsRoutes';
 import FeeTotals from 'Components/ReviewComponents/Fees/FeeModules/FeeTotals';
-import FeesIntroduction from 'Components/ReviewComponents/Fees/FeeModules/FeesIntroduction';
 import FeeTabs from 'Components/ReviewComponents/Fees/FeeTabs';
 import ImpactOfGrowthChart from 'Components/ReviewComponents/Fees/FeeModules/Impact/ImpactOfCharges';
 
@@ -27,7 +26,6 @@ const ReportFeeRoutes = () => {
                 <Route path={`${path}`}>
                     <FeeTabs basePath={basePath} baseTarget={baseTarget}>
                         <Switch>
-                            <Route path={`${basePath}/intro`}            component={FeesIntroduction} />
                             <Route path={`${basePath}/totals`}           component={FeeTotals} />
                             <Route path={`${basePath}/details/:feepage`} component={ReportFeeDetailsRoutes} />
                             <Route path={`${basePath}/impact`}           component={ImpactOfGrowthChart} />

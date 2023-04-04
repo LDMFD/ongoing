@@ -10,7 +10,6 @@ const FeeTabs = ({ basePath, baseTarget, children }) => {
     const { pathname } = useLocation();
 
     let routeMatch = RouteMatch(pathname, [
-        `${basePath}/intro`,
         `${basePath}/totals`,
         `${basePath}/details`,
         `${basePath}/impact`,
@@ -20,7 +19,6 @@ const FeeTabs = ({ basePath, baseTarget, children }) => {
     return (
         <>
             <Tabs value={currentTab}>
-                <Tab label="Fees intro" value={`${basePath}/intro`}   to={`${baseTarget}/intro`}          component={Link} />
                 <Tab label="Totals"     value={`${basePath}/totals`}  to={`${baseTarget}/totals`}         component={Link} />
                 <Tab label="Details"    value={`${basePath}/details`} to={`${baseTarget}/details/advice`} component={Link} />
                 <Tab label="Impact"     value={`${basePath}/impact`}  to={`${baseTarget}/impact`}         component={Link} />

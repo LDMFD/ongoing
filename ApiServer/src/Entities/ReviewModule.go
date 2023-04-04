@@ -14,19 +14,18 @@ var (
 	ModuleTypeObjectives = "profile_objectives"
 
 	ModuleTypePolicyValuations = "policy_valuations"
-	ModuleTypeValuation        = "policy_valuations_valuation"
-	ModuleTypeContributions    = "policy_valuations_contributions"
 
-	ModuleTypeFees               = "fees"
+	ModuleTypeFeeTotals          = "fees"
 	ModuleTypeAdviceFee          = "fees_advice_fee"
-	ModuleTypePolicyFees         = "fees_policy_fees"
+	ModuleTypePlatformFees       = "fees_policy_fees"
 	ModuleTypeFundLevelFees      = "fees_fund_level"
 	ModuleTypePortfolioLevelFees = "fees_portfolio_level"
 	ModuleTypeDimFee             = "fees_dim"
 
-	ModuleTypeConclusions        = "conclusions"
-	ModuleTypeAdviceGiven        = "conclusions_advice_given"
+	ModuleTypeFeesImpact = "fees_impact"
+
 	ModuleTypeGoals              = "conclusions_goals"
+	ModuleTypeAdviceGiven        = "conclusions_advice_given"
 	ModuleTypeDueDiligence       = "conclusions_due_diligence"
 	ModuleTypeForecast           = "conclusions_forecast"
 	ModuleTypeOngoingSuitability = "conclusions_ongoing_suitability"

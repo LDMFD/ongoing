@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import FeesIntroduction from 'Components/ReviewComponents/Fees/FeeModules/FeesIntroduction';
 import FeeTotals from 'Components/ReviewComponents/Fees/FeeModules/FeeTotals';
 import ClientSpaceFeeDetailsRoutes from './ClientSpaceFeeDetailsRoutes';
 import FeeTabs from 'Components/ReviewComponents/Fees/FeeTabs';
@@ -26,7 +25,6 @@ const ClientSpaceFeeRoutes = () => {
                 <Route path={`${path}`}>
                     <FeeTabs basePath={basePath} baseTarget={baseTarget}>
                         <Switch>
-                            <Route path={`${basePath}/intro`}            component={FeesIntroduction} />
                             <Route path={`${basePath}/totals`}           component={FeeTotals} />
                             <Route path={`${basePath}/details/:feepage`} component={ClientSpaceFeeDetailsRoutes} />
                             <Route path={`${basePath}/impact`}           component={ImpactOfGrowthChart} />
