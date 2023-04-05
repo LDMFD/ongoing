@@ -45,10 +45,13 @@ export const PortfolioDialog = (props: {
         };
     });
 
-    let models = props.state.Resources.Models.map((t: Model) => ({
-        Id: t.Id,
-        Name: t.Name
-    }));
+    let models = props.state.Resources.Models.map((t: Model) => {
+        let operator = props.state.Resources.Operators.find(o => o.Id === t.OperatorId)!;
+        return {
+            Id: t.Id,
+            Name: `${operator.Name}: ${t.Name}`,
+        };
+    });
 
     return (
         <Dialog
