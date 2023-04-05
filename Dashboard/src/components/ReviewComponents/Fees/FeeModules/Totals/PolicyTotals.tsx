@@ -38,7 +38,7 @@ const PolicyTotals = (props: {
     let portfolioLevelExAntes:          any = { header: 'Portfolio level, Transactional' }
     let dims:                           any = { header: 'DIM' }
     let clientFees:                     any = { header: 'Advice fees' };
-    let totalCharges:                   any = { header: 'Total' }
+    let totalCharges:                   any = { header: <b><i>Total</i></b> }
 
     let data = [
         endValues,
@@ -93,7 +93,7 @@ const PolicyTotals = (props: {
                 + (dimFee?.Charge ?? 0)
             )
 
-            totalCharges[pol.Id] = <u>{FormatCharge(percent, charge)}</u>;
+            totalCharges[pol.Id] = <b><i>{FormatCharge(percent, charge)}</i></b>;
         });
     });
 

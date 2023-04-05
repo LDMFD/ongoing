@@ -58,8 +58,8 @@ const PolicyBlock = (props: {
 
     fees.push({
         id: 'charge',
-        Name: 'Estimated charge',
-        Fee: <u>{FormatCurrencyPence(props.fees.Charge)}</u>,
+        Name: <b><i>Estimated charge</i></b>,
+        Fee: <b><i>{FormatCurrencyPence(props.fees.Charge)}</i></b>,
     } as FeeTableRow);
 
     return (

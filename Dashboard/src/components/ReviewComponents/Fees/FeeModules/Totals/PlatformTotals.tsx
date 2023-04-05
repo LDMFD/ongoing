@@ -36,7 +36,7 @@ const PlatformTotals = (props: {
     let portfolioLevelExAntes:          any = { header: 'Portfolio level, Transactional' }
     let dims:                           any = { header: 'DIM charges' }
     let clientFees:                     any = { header: 'Total advice fees' };
-    let totalCharges:                   any = { header: 'Total of all charges on this platform' }
+    let totalCharges:                   any = { header: <b><i>Total of all charges on this platform</i></b> }
 
     let data = [
         endValues,
@@ -79,7 +79,7 @@ const PlatformTotals = (props: {
         portfolioLevelExAntes[prov.Id!] = FormatCharge(portfolioExAntePercent, charges.PortfolioLevelExAnte);
         dims[prov.Id!]                  = FormatCharge(dimPercent, charges.DimCharges);
         clientFees[prov.Id!]            = FormatCharge(advicePercent, charges.AdviceCharge);
-        totalCharges[prov.Id!]          = <u>{FormatCharge(totalPercent, charges.TotalCharge)}</u>;
+        totalCharges[prov.Id!]          = <b><i>{FormatCharge(totalPercent, charges.TotalCharge)}</i></b>;
     });
 
     return (

@@ -108,9 +108,9 @@ const PolicyBlock = (props: {
     });
     rows.push({
         id: 'charges',
-        Fund: 'Estimated charges',
-        ChargeOcf: <u>{FormatCurrencyPence(props.fees.ChargeOcf)}</u>,
-        ChargeExAnte: <u>{FormatCurrencyPence(props.fees.ChargeExAnte)}</u>,
+        Fund: <b><i>Estimated charge</i></b>,
+        ChargeOcf: <b><i>{FormatCurrencyPence(props.fees.ChargeOcf)}</i></b>,
+        ChargeExAnte: <b><i>{FormatCurrencyPence(props.fees.ChargeExAnte)}</i></b>,
         Include: false,
     });
 

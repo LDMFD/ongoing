@@ -30,7 +30,7 @@ const GrandTotals = (props: {
     let portfolioLevelExAnte: any = { header: 'Portfolio level, Transactional' }
     let dimFee:               any = { header: 'DIM' }
     let clientFee:            any = { header: 'Advice fee' };
-    let totalCharge:          any = { header: 'Total of all charges' }
+    let totalCharge:          any = { header: <b><i>Total of all charges</i></b> }
 
     let data = [
         endValues,
@@ -83,7 +83,7 @@ const GrandTotals = (props: {
         + charges.AdviceCharge
     );
 
-    totalCharge['total']          = <u>{FormatCharge(totalPercent, tc)}</u>;
+    totalCharge['total']          = <b><i>{FormatCharge(totalPercent, tc)}</i></b>;
          // props.view.GrandTotalCharge);
 
     return (
