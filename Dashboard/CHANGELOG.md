@@ -1,3 +1,10 @@
+# 1.10.4 2023-04-05
+
+- Rename "Preview" tab to "Prepare"
+- Add operator name to model dropdown in portfolio dialog
+- Change fee pages totals back to bold + italic
+- Add platform and type to policy valuations table
+
 # 1.10.3 2023-04-03
 
 - Add missing module presets
