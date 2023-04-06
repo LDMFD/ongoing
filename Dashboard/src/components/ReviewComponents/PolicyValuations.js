@@ -21,9 +21,19 @@ const PolicyValuations = () => {
 
     let columns = [
         {
+            Header: 'Platform',
+            accessor: 'platform',
+            width: 8,
+        },
+        {
+            Header: 'Type',
+            accessor: 'type',
+            width: 8,
+        },
+        {
             Header: 'Policy',
             accessor: 'policy',
-            width: 8,
+            width: 12,
         },
         {
             Header: 'Start value',
@@ -38,7 +48,7 @@ const PolicyValuations = () => {
         {
             Header: 'Regular Contributions',
             accessor: 'contributions',
-            width: 12,
+            width: 20,
         },
     ];
     if (includeNotes) {
@@ -72,15 +82,19 @@ const PolicyValuations = () => {
             <div className='ong-policyCell'>
                 {p.File?.Uid ? (
                     <button className='ong-openFileIcon' onClick={downloadFile(p.File?.Uid)} title="Download policy factsheet">
-                        {p.ExternalId}
-                        <DownloadIcon />
+                        {p.ExternalId}&nbsp;<DownloadIcon />
                     </button>
                 ) : p.ExternalId}
             </div>
         )
 
+        let platform = report.PolicyProviders.find(pp => pp.Id === p.PolicyProviderId)?.Name;
+        let type = report.PolicyTypes.find(pt => pt.Id === p.PolicyTypeId)?.Name;
+
         let col = {
             id:            p.Id,
+            platform:      platform,
+            type:          type,
             externalId:    p.ExternalId,
             policy:        policyCell,
             startValue:    FormatCurrencyPence(p.StartValue),
