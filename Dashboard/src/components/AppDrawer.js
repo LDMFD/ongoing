@@ -207,13 +207,12 @@ export default function PermanentDrawerLeft() {
                  sx        = {{
                     flexGrow: 1,
                     bgcolor: 'background.default',
-                    p: 3,
-                    maxWidth: 1000
+                    padding: 3,
+                    maxWidth: 1200
                 }}
             >
                 <Toolbar />
 
-                {/* The app... */}
                 <InitialState>
                     <Routes />
                 </InitialState>

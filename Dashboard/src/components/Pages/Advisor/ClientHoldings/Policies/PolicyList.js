@@ -41,6 +41,14 @@ const PolicyList = () => {
     }, []);
 
     const columns = [{
+        accessor: 'provider',
+        Header: 'Platform',
+        width: 1,
+    }, {
+        accessor: 'type',
+        Header: 'Type',
+        width: 1,
+    }, {
         accessor: 'policyNumber',
         Header: 'Policy',
         width: 1,
@@ -69,14 +77,6 @@ const PolicyList = () => {
     }, {
         accessor: 'endValue',
         Header: 'End Value',
-        width: 1,
-    }, {
-        accessor: 'type',
-        Header: 'Type',
-        width: 1,
-    }, {
-        accessor: 'provider',
-        Header: 'Provider',
         width: 1,
     }];
 

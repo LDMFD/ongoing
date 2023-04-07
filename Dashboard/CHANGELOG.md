@@ -1,3 +1,7 @@
+# 1.10.5 2023-04-07
+
+- Increase width by 200px.
+
 # 1.10.4 2023-04-05
 
 - Rename "Preview" tab to "Prepare"

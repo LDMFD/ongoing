@@ -1,19 +1,22 @@
-import React, { Fragment } from 'react'
-import { useTable, useFlexLayout, useExpanded } from 'react-table'
+import React, { Fragment, useEffect, useRef } from 'react'
+import { useTable, useExpanded } from 'react-table'
 
 import {
     Table,
     TableBody,
     TableCell,
     TableHead,
-    TableRow 
+    TableRow,
+    TableContainer,
 } from '@mui/material';
 
 import './Table.css';
 
-function OgTable({ columns, data, renderRowSubComponent }) {
+function OgTable({ columns, data, renderRowSubComponent, stickyHeader = false }) {
     columns = React.useMemo(() => columns, [columns]);
     data = React.useMemo(() => data, [data]);
+    
+    let [ height, setHeight ] = React.useState(0);
 
     const {
         getTableProps,
@@ -28,13 +31,27 @@ function OgTable({ columns, data, renderRowSubComponent }) {
             columns,
             data
         },
-        useFlexLayout,
+        // useFlexLayout,
         useExpanded
     );
 
+    const ref = useRef(null)
+
+    useEffect(() => {
+        if (!height) {
+            setHeight(window.innerHeight - ref.current.getBoundingClientRect().top - 24)
+        }
+    }, [ height ])
+    
+    let sx = {};
+    if (stickyHeader && height) {
+        sx.maxHeight = height;
+        sx.width = '100%';
+    }
+
     return (
-        <div className="tableWrap">
-            <Table {...getTableProps()}>
+        <TableContainer sx={sx} ref={ref}>
+            <Table stickyHeader {...getTableProps()}>
                 <TableHead>
                     {headerGroups.map(headerGroup => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -70,7 +87,7 @@ function OgTable({ columns, data, renderRowSubComponent }) {
                     })}
                 </TableBody>
             </Table>
-        </div>
+        </TableContainer>
     )
 }
 
