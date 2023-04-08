@@ -32,6 +32,10 @@ const ClientList = () => {
             Header: 'Email',
             width: .5,
         }, {
+            accessor: 'advisor',
+            Header: 'Advisor',
+            width: 0.3,
+        }, {
             accessor: 'fee',
             Header: 'Fee',
             width: 0.3,
@@ -50,12 +54,14 @@ const ClientList = () => {
     ];
 
     let clients = state.Clients.map(c => {
+        let advisor = state.Advisors.find(a => a.Id === c.AdvisorId);
         return {
             id:       c.Id,
             idLabel:  `#${c.Id}`,
             name:     `${c.Identity.Surname}, ${c.Identity.Forenames}`,
             email:    c.Identity.Email,
             fee:      `${c.Fee}%`,
+            advisor:  `${advisor.Forenames} ${advisor.Surname}`,
         };
     });
 

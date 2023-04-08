@@ -61,7 +61,7 @@ func GetClientInternal(c *gin.Context, dbClient *Entities.Client) (*Entities.Exp
 		Report:   *report,
 		Reviews:  GetReviews(c, dbClient),
 	}
-	if advisorId, err := context.Auth.GetAdvisor(dbClient.Uid, &dbClient.User.Uid); err != nil {
+	if advisorId, err := context.Auth.GetAdvisor(dbClient.Uid); err != nil {
 		context.Panic(err)
 	} else {
 		exportClient.Metadata.AdvisorId = advisorId

@@ -13,15 +13,18 @@ const InitialState = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     // Advisors
+    const getAdvisors     = useCallback(() => { return Api.Staff.Advisors.Read(dispatch); }, [ dispatch ]);
     const getClients      = useCallback(() => { return Api.Advisor.Clients.Read(dispatch); }, [ dispatch ]);
     const getOrgResources = useCallback(() => { return Api.OrgResources.Entities.Read(dispatch); }, [ dispatch ]);
     
     const getAdvisorDependencies = useCallback(async () => {
+        // TODO merge into one call
+        await getAdvisors();
         await getOrgResources();
         await getClients();
-
         setLoaded(true);
     }, [
+        getAdvisors,
         getOrgResources,
         getClients,
     ]);

@@ -8,6 +8,7 @@ import {
 
 import { Context } from 'State'
 import SendSignInLink from "Components/Library/Auth/AuthEmailer";
+import Panel from 'Components/Library/Panel/Panel';
 
 const ClientAccountPage = () => {
     const [state] = useContext(Context);
@@ -16,9 +17,13 @@ const ClientAccountPage = () => {
 
     let client = state.Clients.find(c => c.Id === clientId);
 
+    let advisor = state.Advisors.find(a => a.Id === client.AdvisorId);
+
     return (
-        <div>
-            <h1>{client.Identity.Surname}, {client.Identity.Forenames}</h1>
+        <Panel>
+            <p>
+                Client: {client.Identity.Surname}, {client.Identity.Forenames}
+            </p>
             <p>
                 Email:&nbsp;
                 <MuiLink
@@ -28,8 +33,12 @@ const ClientAccountPage = () => {
                 >
                     {client.Identity.Email}
                 </MuiLink>
-                <br /><br />
+            </p>
+            <p>
                 Fee: {client.Fee}%
+            </p>
+            <p>
+                Advisor: {advisor.Surname}, {advisor.Forenames}
             </p>
 
             <Toolbar className="breadcrumb-action">
@@ -39,8 +48,8 @@ const ClientAccountPage = () => {
                     Send sign-in link
                 </Button>
             </Toolbar>
-        </div>
+        </Panel>
     );
-}
+}   
 
 export default ClientAccountPage;

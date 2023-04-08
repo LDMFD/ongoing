@@ -7,12 +7,20 @@ export interface ClientIdentity {
 	Surname: string,
 }
 
+export interface Advisor {
+    Id: string,
+    Email: string,
+    Forenames: string,
+    Surname: string,
+    Role: string,
+}
+
 export interface Client {
     Id: string,
 	UserId: string,
 	Identity: ClientIdentity,
 	Fee: number,
-	AdvisorId: string,
+	Advisor: Advisor,
 }
 
 export interface Policy {

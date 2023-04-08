@@ -1,6 +1,7 @@
 # 1.10.5 2023-04-07
 
 - Increase width by 200px.
+- Add client advisor label
 
 # 1.10.4 2023-04-05
 

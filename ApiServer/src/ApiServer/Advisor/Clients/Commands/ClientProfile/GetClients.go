@@ -3,25 +3,24 @@ package ClientProfile
 import (
 	"net/http"
 	"ongoing/Entities"
-
-	"github.com/uptrace/bun"
+	"ongoing/ServiceContext"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetClients(c *gin.Context) {
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 
 	c.JSON(200, gin.H{
-		"Clients": GetClientsInternal(c, *session.OrgId),
+		"Clients": GetClientsInternal(c, *context.Session.OrgId),
 	})
 }
 
 func GetClientsInternal(c *gin.Context, orgId string) []Entities.ClientReport {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 
 	var clients []Entities.Client
-	if err := db.NewSelect().
+	if err := context.Db.NewSelect().
 		Model(&clients).
 		Relation("User").
 		Relation("Organisation").
@@ -33,7 +32,14 @@ func GetClientsInternal(c *gin.Context, orgId string) []Entities.ClientReport {
 
 	var reportClients = []Entities.ClientReport{}
 	for _, c := range clients {
-		reportClients = append(reportClients, c.ToReport())
+		rep := c.ToReport()
+
+		if advisorId, err := context.Auth.GetAdvisor(c.Uid); err != nil {
+			context.Panic(err)
+		} else {
+			rep.AdvisorId = advisorId
+		}
+		reportClients = append(reportClients, rep)
 	}
 
 	return reportClients

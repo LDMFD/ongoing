@@ -51,7 +51,7 @@ function OgTable({ columns, data, renderRowSubComponent, stickyHeader = false })
 
     return (
         <TableContainer sx={sx} ref={ref}>
-            <Table stickyHeader {...getTableProps()}>
+            <Table /*stickyHeader*/ {...getTableProps()}>
                 <TableHead>
                     {headerGroups.map(headerGroup => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>

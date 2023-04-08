@@ -38,7 +38,7 @@ func (c *Client) RemoveClient(ctx *context.Context, tx *bun.Tx, orgId, advisorId
 	return nil
 }
 
-func (c *Client) GetAdvisor(clientId string, userId *string) (advisorId string, err error) {
+func (c *Client) GetAdvisor(clientId string) (advisorId string, err error) {
 	if rels, err := c.readRelationships("client", clientId, nil); err != nil {
 		return "", err
 	} else {
