@@ -1,3 +1,7 @@
+# 1.10.4 2023-04-07
+
+- Add client advisor label
+
 # 1.10.3 2023-04-03
 
 - Add missing module presets
