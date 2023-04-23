@@ -24,10 +24,10 @@ const RiskLevelRoutes = () => {
             <Route path={`${path}/add`}>
                 <AddRiskLevel />
             </Route>
-            <Route path={`${path}/:levelId/edit`}>
+            <Route path={`${path}/id/:levelId/edit`}>
                 <EditRiskLevel />
             </Route>
-            <Route path={`${path}/:levelId/delete`}>
+            <Route path={`${path}/id/:levelId/delete`}>
                 <DeleteRiskLevel />
             </Route>
         </div>

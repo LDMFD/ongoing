@@ -12,11 +12,18 @@ import { GoBack } from 'Utils/Routing';
 
 export const ConfirmationDialog = (props: {
     label: string,
-    okCallback: (e: any) => {},
+    okCallback: (e: any) => Promise<boolean>,
     content?: any
 }) => {
     let history = useHistory();
     let goBack = GoBack(history);
+
+    const callback = async (e: any) => {
+        e.preventDefault();
+        let res = await props.okCallback(e);
+        goBack();
+        return res;
+    };
 
     return (
         <Dialog open={true} onClose={goBack}>
@@ -27,7 +34,7 @@ export const ConfirmationDialog = (props: {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={goBack}>Cancel</Button>
-                    <Button type='submit' onClick={props.okCallback} autoFocus>Confirm</Button>
+                    <Button type='submit' onClick={callback} autoFocus>Confirm</Button>
                 </DialogActions>
             </form>
         </Dialog>

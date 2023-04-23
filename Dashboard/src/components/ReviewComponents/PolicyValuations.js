@@ -1,61 +1,54 @@
-import React, { useCallback } from 'react';
-import DownloadIcon from '@mui/icons-material/Download';
-
-import { ModuleTypePolicyValuations } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import Table from 'Components/Library/Table/Table';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
+import { ModuleTypePolicyValuations } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { FormatCurrencyPence } from 'Utils/Strings';
 import { GetReport } from './GetReport';
-import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import Table from 'Components/Library/Table/Table';
 
 import './PolicyValuations.css';
 
 const PolicyValuations = () => {
     let report = GetReport();
 
-    const downloadFile = useCallback(uid => () => {
-        Download(uid);
-    }, []);
-
     let includeNotes = report.Policies.some(p => p.Notes?.length && p.Notes !== '<p><br></p>');
 
-    let columns = [
-        {
-            Header: 'Platform',
-            accessor: 'platform',
-            width: 8,
-        },
-        {
-            Header: 'Type',
-            accessor: 'type',
-            width: 8,
-        },
-        {
-            Header: 'Policy',
-            accessor: 'policy',
-            width: 12,
-        },
-        {
-            Header: 'Start value',
-            accessor: 'startValue',
-            width: 8,
-        },
-        {
-            Header: 'End value',
-            accessor: 'endValue',
-            width: 8,
-        },
-        {
-            Header: 'Regular Contributions',
-            accessor: 'contributions',
-            width: 20,
-        },
-    ];
+    let columns = [{
+        id: 'policy',
+        header: 'Policy',
+        width: 200,
+        Cell: ({ row }) => (
+            <DownloadChip
+                title  = {row.original.policy}
+                fileId = {row.original.fileId}
+            />
+        ),
+    }, {
+        id: 'type',
+        header: 'Type',
+        width: 60,
+    // TODO Confirm include or not
+    // }, {
+    //     id:     'fee',
+    //     header: 'Fee',
+    //     width:  60,
+    }, {
+        id: 'contributions',
+        header: 'Contributions',
+        width: 150,
+    }, {
+        id: 'startValue',
+        header: 'Start value',
+        width: 150,
+    }, {
+        id: 'endValue',
+        header: 'End value',
+        width: 150,
+    }];
+
     if (includeNotes) {
         columns.push({
-            Header: 'Notes',
-            accessor: 'notes',
-            width: 40,
+            id: 'notes',
+            header: 'Notes',
             Cell: ({ row }) => (
                 row.original.notes && (
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.notes }} />
@@ -64,46 +57,38 @@ const PolicyValuations = () => {
         });
     }
     
-    let valuations = report.Policies.map(p => {
+    let valuations = report.Policies.map(policy => {
         let contributions;
-        switch (p.MonthlyContributions) {
+        switch (policy.MonthlyContributions) {
             case null: 
-                contributions = `Data not provided`;
+                contributions = `No data`;
                 break;
             case 0:
-                contributions = `No regular contributions`;
+                contributions = `No regular`;
                 break;
             default:
-                contributions = `Monthly regular (${FormatCurrencyPence(p.MonthlyContributions)})`;
+                contributions = `Monthly (${FormatCurrencyPence(policy.MonthlyContributions)})`;
                 break;
         }
 
-        let policyCell = (
-            <div className='ong-policyCell'>
-                {p.File?.Uid ? (
-                    <button className='ong-openFileIcon' onClick={downloadFile(p.File?.Uid)} title="Download policy factsheet">
-                        {p.ExternalId}&nbsp;<DownloadIcon />
-                    </button>
-                ) : p.ExternalId}
-            </div>
-        )
-
-        let platform = report.PolicyProviders.find(pp => pp.Id === p.PolicyProviderId)?.Name;
-        let type = report.PolicyTypes.find(pt => pt.Id === p.PolicyTypeId)?.Name;
+        let platform = report.PolicyProviders.find(pp => pp.Id === policy.PolicyProviderId)?.Name;
+        // let providerDiscount = report.ProviderDiscounts.find(t => t.PolicyProviderId === policy.PolicyProviderId);
+        let type = report.PolicyTypes.find(pt => pt.Id === policy.PolicyTypeId)?.Name;
 
         let col = {
-            id:            p.Id,
+            id:            policy.Id,
             platform:      platform,
             type:          type,
-            externalId:    p.ExternalId,
-            policy:        policyCell,
-            startValue:    FormatCurrencyPence(p.StartValue),
-            endValue:      FormatCurrencyPence(p.EndValue),
+            policy:        `${platform} ${policy.ExternalId}`,
+            // fee:           providerDiscount ? `${providerDiscount.Discount}%`: '-',
+            startValue:    FormatCurrencyPence(policy.StartValue),
+            endValue:      FormatCurrencyPence(policy.EndValue),
             contributions: `${contributions}`,
-            fileUid:       p.File?.Uid,
+            fileId:        policy.File?.Uid,
+            notes:         policy.notes,
         };
         if (includeNotes) {
-            col.notes = p.Notes;
+            col.notes = policy.Notes;
         }
         return col;
     }).sort((p,q) => (p.externalId < q.externalId) ? -1 : ((p.externalId > q.externalId) ? 1 : 0));
@@ -113,7 +98,13 @@ const PolicyValuations = () => {
             <Module module = {ModuleTypePolicyValuations} />
             <br />
 
-            <Table columns={columns} data={valuations} />
+            <Table
+                flexibleColumn   = {6}
+                columns          = {columns}
+                data             = {valuations}
+                label            = 'POLICY VALUATIONS'
+                enableRowActions = {false}
+            />
 
             {/* <DataGrid autoHeight {...data} /> */}
         </>

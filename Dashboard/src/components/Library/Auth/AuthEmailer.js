@@ -3,7 +3,7 @@ import { OFFLINE_AUTH } from "App";
 
 function SendSignInLink(email) {
     if (OFFLINE_AUTH) {
-        console.log("Auth: would send email to", email);
+        alert("Auth: would send email to", email);
         return;
     }
     const actionCodeSettings = {

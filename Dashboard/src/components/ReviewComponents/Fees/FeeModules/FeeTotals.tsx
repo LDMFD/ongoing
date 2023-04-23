@@ -20,21 +20,28 @@ const FeeTotals = () => {
     return (
         <>
             <Module module={ModuleTypeFeeTotals} client={null} />
+            <br />
 
             {report.Policies.length > 1 &&
-                <GrandTotals
-                    report         = {report}
-                    view           = {view}
-                    weightedAvgFee = {view.WeightedFees * 100}
-                    totalCharges   = {view.TotalPlatformCharge}
-                />
+                <>
+                    <GrandTotals
+                        report         = {report}
+                        view           = {view}
+                        weightedAvgFee = {view.WeightedFees * 100}
+                        totalCharges   = {view.TotalPlatformCharge}
+                    />
+                    <br />
+                </>
             }
 
             {view.Providers.length > 1 &&
-                <PlatformTotals
-                    report = {report}
-                    view   = {view}
-                />
+                <>
+                    <PlatformTotals
+                        report = {report}
+                        view   = {view}
+                    />
+                    <br />
+                </>
             }
 
             {report.Policies.length > 0 &&

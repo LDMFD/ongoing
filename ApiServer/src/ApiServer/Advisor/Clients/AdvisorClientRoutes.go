@@ -26,7 +26,7 @@ func AddRoutes(r *gin.RouterGroup) {
 	optionsGroup := r.Group("/:ClientId/options")
 	optionsGroup.PUT("", ClientOptions.SetOptions)
 
-	providerDiscountGroup := r.Group("/:ClientId/provider-discounts")
+	providerDiscountGroup := r.Group("/:ClientId/platform-discounts")
 	providerDiscountGroup.POST("", ProviderDiscount.CreateProviderDiscount)
 	providerDiscountGroup.PUT("/:ProviderDiscountId", ProviderDiscount.UpdateProviderDiscount)
 	providerDiscountGroup.DELETE("/:ProviderDiscountId", ProviderDiscount.DeleteProviderDiscount)

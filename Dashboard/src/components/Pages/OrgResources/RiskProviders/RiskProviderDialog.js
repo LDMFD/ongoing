@@ -1,5 +1,3 @@
-import React, {  } from 'react';
-import { useHistory, Link } from "react-router-dom";
 import {
     Button,
     Dialog,
@@ -9,6 +7,7 @@ import {
     DialogTitle,
     TextField,
 } from '@mui/material';
+import { useHistory } from "react-router-dom";
 
 import { GoBack } from 'Utils/Routing';
 
@@ -38,10 +37,6 @@ export const RiskProviderDialog = ({ riskProvider, setRiskProvider, submitLabel,
                                    label    = "Name"
                                    type     = "text"
                                    autoFocus fullWidth />
-
-                        {submitLabel.toLowerCase() === 'update' &&  // hack
-                            <Link to={{ pathname: `/risk-providers/id/${riskProvider.Id}/risk-levels` }}>Risk Provider Levels</Link>
-                        }
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={goBack}>Cancel</Button>

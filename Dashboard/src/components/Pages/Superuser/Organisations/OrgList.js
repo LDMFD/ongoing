@@ -1,69 +1,26 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
+import { useContext } from 'react';
 
-import { Context } from 'State/StateProvider'
+import { Context } from 'State/StateProvider';
 import Table from 'Components/Library/Table/Table';
-import { Api } from 'State';
 
 const OrgList = () => {
-    let history = useHistory();
-
-    const [ state, dispatch ] = useContext(Context);
-
-    const editOrg = useCallback(id => () => {
-        history.push(`/admin/organisations/id/${id}/edit`);
-    }, [ history ]);
-
-    const deleteOrg = useCallback(id => async () => {
-        if (window.confirm(`Delete organisation?`)) {
-            await Api.Superuser.Organisations.Delete(id);
-            await Api.Superuser.Organisations.Read(dispatch);
-        }
-    }, [ dispatch ]);
+    const [ state ] = useContext(Context);
 
     const columns = [
         {
-            accessor: 'name',
-            Header: 'Name',
-            width: 1,
-            Cell: ({ row }) => (
-                <>
-                    <Link to={{ pathname: `/admin/organisations/id/${row.original.id}/users`}}>
-                        {row.original.name}
-                    </Link>
-                </>
-            ),
+            id: 'name',
+            header: 'Name',
+            width: 300,
         },
         {
-            accessor: 'owner',
-            Header: 'Owner',
-            width: 1,
+            id: 'owner',
+            header: 'Owner',
+            width: 300,
         },
         {
-            accessor: 'creator',
-            Header: 'Creator',
-            width: 1,
-        },
-        {
-            accessor: 'actions',
-            Header: '',
-            width: 0.2,
-            Cell: ({ row }) => (
-                <>
-                    <button onClick={editOrg(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={deleteOrg(row.original.id)} className='ong-openFileIcon'>
-                        <DeleteIcon />
-                    </button>
-                </>
-            ),
+            id: 'creator',
+            header: 'Creator',
+            width: 300,
         },
     ];
 
@@ -80,12 +37,14 @@ const OrgList = () => {
 
     return (
         <div className='ongoing-orgList'>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/admin/organisations/add` }}><Button>Add organisation</Button></Link>
-            </Toolbar>
-
             {orgs &&
-                <Table columns={columns} data={orgs} />
+                <Table
+                    columns       = {columns}
+                    data          = {orgs}
+                    resource      = 'admin/organisations'
+                    label         = 'Organisation'
+                    defaultAction = {id => `/admin/organisations/id/${id}/users`}
+                />
             }
         </div>
     );

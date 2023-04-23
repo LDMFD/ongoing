@@ -64,10 +64,12 @@ func UpdateProviderDiscount(c *gin.Context) {
 	}
 
 	providerDiscount.Discount = body.Discount
+	providerDiscount.PolicyProviderId = provider.Id
 
 	if _, err := db.NewUpdate().
 		Model(&providerDiscount).
 		WherePK().
+		Column("policy_provider_id").
 		Column("discount").
 		Exec(c); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

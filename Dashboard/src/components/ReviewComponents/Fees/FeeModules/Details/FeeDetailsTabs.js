@@ -32,10 +32,10 @@ const FeeDetailsTabs = ({ children, basePath, baseTarget }) => {
                 {includeFundLevel &&
                     <Tab label="Fund-Level"      value={`${basePath}/fund-level`}      to={`${baseTarget}/fund-level`}      component={Link} />
                 }
+                <Tab label="DIM"                 value={`${basePath}/dim`}             to={`${baseTarget}/dim`}             component={Link} />
                 {includePortfolioLevel &&
                     <Tab label="Portfolio-Level" value={`${basePath}/portfolio-level`} to={`${baseTarget}/portfolio-level`} component={Link} />
                 }
-                <Tab label="DIM"                 value={`${basePath}/dim`}             to={`${baseTarget}/dim`}             component={Link} />
             </Tabs>
 
             {children}

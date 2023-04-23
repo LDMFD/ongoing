@@ -1,28 +1,20 @@
 import ConfirmationDialog from 'Components/Library/Confirmation/ConfirmationDialog';
-import React, { useContext, useState } from 'react';
-import { useHistory, useParams } from "react-router-dom";
+import { useContext, useState } from 'react';
+import { useParams } from "react-router-dom";
 
 import { Api } from 'State';
-import { Context } from 'State/StateProvider'
-import { GoBack } from 'Utils/Routing';
+import { Context } from 'State/StateProvider';
 
 const DeleteClient = () => {
-    let history = useHistory();
-    let goBack = GoBack(history);
-
     const [ state, dispatch ] = useContext(Context);
     let [ client, setClient ] = useState(null);
 
     let { clientId } = useParams();
 
     const onDelete = async (e) => {
-        e.preventDefault();
-
-        await Api.Advisor.ClientDetail.Delete(clientId)
+        let res = await Api.Advisor.ClientDetail.Delete(clientId)
         await Api.Advisor.Clients.Read(dispatch);
-
-        goBack();
-        return false;
+        return res;
     };
 
     if (!client) {

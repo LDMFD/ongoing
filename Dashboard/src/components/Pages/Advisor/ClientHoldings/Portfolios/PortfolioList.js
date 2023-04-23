@@ -1,25 +1,14 @@
-import React, { useContext, useCallback, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import DownloadIcon from '@mui/icons-material/Download';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
+import { useCallback, useContext, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { Context, Api } from 'State'
-import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
-import IconGroup from 'Components/Library/IconGroup/IconGroup';
-import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
+// import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Api, Context } from 'State';
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 
 const PortfolioList = () => {
-    const [state, dispatch ] = useContext(Context);
-    let {
-        Metadata: client,
-    } = state;
+    const [ , dispatch ] = useContext(Context);
 
     let { clientId } = useParams();
 
@@ -33,95 +22,68 @@ const PortfolioList = () => {
 
     let report = GetReport();
 
-    const downloadFile = useCallback(fileUid => () => {
-        Download(fileUid);
-    }, []);
-
     const columns = [{
-        accessor: 'policy',
-        Header: 'Policy',
-        type: 'actions',
-        width: 15,
+        id: 'policy',
+        header: 'Policy',
+        width: 200,
         Cell: ({ row }) => (
-            <>
-                {row.original.policy.ExternalId}
-                {row.original.policy.File?.Uid && 
-                    <button onClick={downloadFile(row.original.policy.File.Uid)} className='ong-openFileIcon'>
-                        <DownloadIcon />
-                    </button>
-                }
-            </>
+            <DownloadChip
+                title  = {row.original.policy}
+                fileId = {row.original.policyFileId}
+            />
         ),
     }, {
-        accessor: 'operator',
-        Header: 'Operator',
-        type: 'actions',
-        width: 15,
+        id: 'operator',
+        header: 'Operator',
+        width: 200,
     }, {
-        accessor: 'model',
-        Header: 'Model',
-        type: 'actions',
-        width: 15,
+        id: 'model',
+        header: 'Model',
+        width: 200,
         Cell: ({ row }) => (
-            <>
-                {row.original.model.Name}
-                {row.original.model.File?.Uid && 
-                    <button onClick={downloadFile(row.original.model.File.Uid)} className='ong-openFileIcon'>
-                        <DownloadIcon />
-                    </button>
-                }
-            </>
+            <DownloadChip
+                title  = {row.original.model}
+                fileId = {row.original.modelFileId}
+            />
         ),
     }, {
-        accessor: 'proportion',
-        Header: '% of policy',
-        width: 10,
+        id: 'proportion',
+        header: '% of policy',
+        width: 100,
     }, {
-        accessor: 'includeInFee',
-        Header: 'Include in fee?',
-        width: 5,
-    }, {
-        accessor: 'actions',
-        Header: '',
-        width: 10,
-        Cell: ({ row }) => (
-            <IconGroup>
-                <Link to={`/clients/id/${client.Id}/holdings/portfolios/id/${row.original.id}/delete`}>
-                    <DeleteIcon />
-                </Link>
-                <Link to={`/clients/id/${client.Id}/holdings/portfolios/id/${row.original.id}/edit`}>
-                    <EditIcon />
-                </Link>
-            </IconGroup>
-        ),
+        id: 'includeInFee',
+        header: 'Include in fee?',
+        width: 100,
     }];
 
     let portfolios = report.Portfolios.map(portfolio => {
         let policy = report.Policies.find(p => p.Id === portfolio.PolicyId);
+        let provider = report.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
         let model = report.Models.find(p => p.Id === portfolio.ModelId);
         let operator = report.Operators.find(o => o.Id === model.OperatorId);
         return {
             id:           portfolio.Id,
             idLabel:      `#${portfolio.Id}`,
-            model:        model,
+            model:        model.Name,
             operator:     operator.Name,
-            policy:       policy,
+            policy:       `${provider} ${policy.ExternalId}`,
             proportion:   `${portfolio.Proportion * 100}%`,
             includeInFee: portfolio.IncludeInFee ? 'Y' : 'N',
+            policyFileId: policy.File?.Uid,
+            modelFileId:  model.File?.Uid,
         };
     }).reverse();
 
     return (
-        <div className='ongoing-portfolioList'>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/holdings/portfolios/add` }}><Button>Add portfolio</Button></Link>
-            </Toolbar>
-
-            <Table columns={columns} data={portfolios} />
-
-            <ProportionWarning data={report.Portfolios} property='Proportion' />
-        </div>
+        <Table
+            flexibleColumn        = {1}
+            columns               = {columns}
+            data                  = {portfolios}
+            resource              = {`clients/id/${clientId}/holdings/portfolios`}
+            label                 = 'Portfolio'
+        />
     );
+    // <ProportionWarning data={report.Portfolios} property='Proportion' />
 }
 
 export default PortfolioList;

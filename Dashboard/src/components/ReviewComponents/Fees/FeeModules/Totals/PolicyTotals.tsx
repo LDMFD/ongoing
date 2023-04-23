@@ -1,13 +1,10 @@
-import React from 'react';
 
-import { FormatCurrencyPence, FormatCharge } from 'Utils/Strings';
+import Table, { Row } from 'Components/Library/Table/Table';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { PlatformView, ProviderBlockView } from '../../Model/FeeTypes';
 import { Policy, Report } from 'Types/ClientResources';
-import Table from 'Components/Library/Table/Table';
 import { PolicyType } from 'Types/OrgResources';
-import Panel from 'Components/Library/Panel/Panel';
-import { Row } from '../Details/DetailModules/PlatformFees/CalculatedCharges';
+import { FormatCharge, FormatCurrencyPence } from 'Utils/Strings';
+import { PlatformView, ProviderBlockView } from '../../Model/FeeTypes';
 
 const PolicyTotals = (props: {
     report: Report,
@@ -16,13 +13,13 @@ const PolicyTotals = (props: {
     let columns = props.report.Policies.map((pol: Policy) => {
         let provider = props.report.PolicyProviders.find(p => p.Id === pol.PolicyProviderId);
         return {
-            accessor: pol.Id,
-            Header: `${provider!.Name}: ${pol.ExternalId}`,
+            id: pol.Id,
+            header: `${provider!.Name}: ${pol.ExternalId}`,
         };
     });
     columns.unshift({
-        accessor: 'header',
-        Header: '',
+        id: 'header',
+        header: '',
         // @ts-ignore as other rows don't have this property
         Cell: ({ row }: { row: Row }) => (
             row.original.header
@@ -38,7 +35,7 @@ const PolicyTotals = (props: {
     let portfolioLevelExAntes:          any = { header: 'Portfolio level, Transactional' }
     let dims:                           any = { header: 'DIM' }
     let clientFees:                     any = { header: 'Advice fees' };
-    let totalCharges:                   any = { header: <b><i>Total</i></b> }
+    let totalCharges:                   any = { header: <b>Total</b> }
 
     let data = [
         endValues,
@@ -93,15 +90,18 @@ const PolicyTotals = (props: {
                 + (dimFee?.Charge ?? 0)
             )
 
-            totalCharges[pol.Id] = <b><i>{FormatCharge(percent, charge)}</i></b>;
+            totalCharges[pol.Id] = <b>{FormatCharge(percent, charge)}</b>;
         });
     });
 
     return (
-        <Panel>
-            <h3>Policy Totals</h3>
-            <Table columns={columns} data={data} renderRowSubComponent={null} />
-        </Panel>
+        <Table
+            label            = 'Policy totals'
+            columns          = {columns}
+            data             = {data}
+            enableTableHead  = {false}
+            enableRowActions = {false}
+        />
     );
 };
 

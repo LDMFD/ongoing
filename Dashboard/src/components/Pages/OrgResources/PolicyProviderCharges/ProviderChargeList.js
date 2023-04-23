@@ -1,64 +1,32 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
 import {
     Button,
-    Toolbar,
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
+    DialogTitle
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { GoBack } from 'Utils/Routing';
+import { useContext } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
-import { Context, Api } from 'State'
 import Table from 'Components/Library/Table/Table';
+import { Context } from 'State';
+import { GoBack } from 'Utils/Routing';
 import { FormatCurrencyPence } from 'Utils/Strings';
 
 const ProviderChargeList = () => {
     let history = useHistory();
-    let goBack = GoBack(history);
-    const [ state, dispatch] = useContext(Context);
+    let goBack = GoBack(history, 3);
+    const [ state ] = useContext(Context);
 
     let { policyProviderId } = useParams();
 
-    const onDelete = useCallback(id => async () => {
-        if (window.confirm(`Delete charge?`)) {
-            await Api.OrgResources.ProviderCharges.Delete(id);
-            await Api.OrgResources.Entities.Read(dispatch);
-        }
-    }, [ dispatch ]);
-
-    const onEdit = useCallback(id => () => {
-        history.push(`/platforms/id/${policyProviderId}/provider-charges/${id}/edit`);
-    }, [ history, policyProviderId ]);
-
-    const columns = [
-        {
-            accessor: 'boundary',
-            Header: 'Range',
-            width: 300,
-        }, {
-            accessor: 'charge',
-            Header: 'Annual Fee',
-            width: 150,
-        }, {
-            accessor: 'actions',
-            Header: '',
-            width: 100,
-            Cell: ({ row }) => (
-                <>
-                    <button onClick={onEdit(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={onDelete(row.original.id)} className='ong-openFileIcon'>
-                        <DeleteIcon />
-                    </button>
-                </>
-            ),
-        },
-    ];
+     const columns = [{
+        id: 'boundary',
+        header: 'Range',
+    }, {
+        id: 'charge',
+        header: 'Annual Fee',
+    }];
     
     let charges = state.Resources.ProviderCharges;
 
@@ -78,22 +46,24 @@ const ProviderChargeList = () => {
     });
 
     return (
-        <Dialog open={true} onClose={goBack}>
+        <Dialog
+            open      = {true}
+            onClose   = {goBack}
+            fullWidth = {true}
+        >
             <DialogTitle>Provider charges</DialogTitle>
                 <DialogContent>
 
-                    {/* <DialogContentText> */}
-                        
-                    <Toolbar className="breadcrumb-action">
-                        <Link to={{ pathname: `/platforms/id/${policyProviderId}/provider-charges/add` }}><Button>Add new charge</Button></Link>
-                    </Toolbar>
-
-                    <Table columns   = {columns}
-                           data      = {charges} />
+                    <Table
+                        columns  = {columns}
+                        data     = {charges}
+                        label    = "provider charge"
+                        resource = {`platforms/id/${policyProviderId}/provider-charges`}
+                    />
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={goBack}>Return to provider</Button>
+                    <Button onClick={goBack}>Close</Button>
                 </DialogActions>
         </Dialog>
     );

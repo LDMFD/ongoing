@@ -1,17 +1,14 @@
-import React, { useCallback } from 'react';
-import DownloadIcon from '@mui/icons-material/Download';
 
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import Panel from 'Components/Library/Panel/Panel';
+import Table, { Row } from 'Components/Library/Table/Table';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { CalculatePlatformModel } from 'Components/ReviewComponents/Fees/Model/FeeModel';
-import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
+import { PolicyPortfolioFees, PortfolioFee, ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { ModuleTypePortfolioLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { Policy, Report } from 'Types/ClientResources';
-import { PolicyPortfolioFees, PortfolioFee, ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
-import { Row } from './PlatformFees/CalculatedCharges';
-import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import Panel from 'Components/Library/Panel/Panel';
-import Table from 'Components/Library/Table/Table';
+import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 
 interface PortfolioFeeRow {
     id?: string,
@@ -28,30 +25,28 @@ const PolicyBlock = (props: {
     policy: Policy
     fees: PolicyPortfolioFees
 }) => {
-    const downloadFile = useCallback((fileUid: string) => () => {
-        Download(fileUid);
-    }, []);
-
     const columns = [
         {
-            accessor: 'Model',
-            Header: 'Model',
-            width: 1,
+            id: 'Model',
+            header: 'Model',
+            Cell: ({ row }: { row: Row }) => row.original.FileId ? (
+                <DownloadChip
+                    title  = {row.original.Model}
+                    fileId = {row.original.FileId}
+                />
+            ) : row.original.Model,
+            }, {
+            id: 'ChargeOcf',
+            header: 'OCF Fee (%)',
         }, {
-            accessor: 'ChargeOcf',
-            Header: 'OCF Fee (%)',
-            width: 1,
+            id: 'ChargeExAnte',
+            header: 'Transactional fee (%)',
         }, {
-            accessor: 'ChargeExAnte',
-            Header: 'Transactional fee (%)',
-            width: 1,
+            id: 'Percentage',
+            header: 'Percentage of policy',
         }, {
-            accessor: 'Percentage',
-            Header: 'Percentage of policy',
-            width: 1,
-        }, {
-            accessor: 'Include',
-            Header: 'Include in total?',
+            id: 'Include',
+            header: 'Include in total?',
             width: 1,
             Cell: ({ row }: { row: Row }) => (
                 (row.original.id !== 'avg' && row.original.id !== 'charges') ? 
@@ -59,27 +54,13 @@ const PolicyBlock = (props: {
                 : ''
             ),
         // }, {
-        //     accessor: 'WeightedOcf',
-        //     Header: 'Weighted OCF (%)',
+        //     id: 'WeightedOcf',
+        //     header: 'Weighted OCF (%)',
         //     width: 1,
         // }, {
-        //     accessor: 'WeightedExAnte',
-        //     Header: 'Weighted Transactional (%)',
+        //     id: 'WeightedExAnte',
+        //     header: 'Weighted Transactional (%)',
         //     width: 1,
-        }, {
-            accessor: 'actions',
-            Header: 'Factsheet',
-            type: 'actions',
-            width: .5,
-            Cell: ({ row }: { row: Row }) => (
-                <>
-                    {row.original.FileUid &&
-                        <button onClick={downloadFile(row.original.FileUid)} className='ong-openFileIcon'>
-                            <DownloadIcon />
-                        </button>
-                    }
-                </>
-            ),
         },
     ];
 
@@ -87,7 +68,7 @@ const PolicyBlock = (props: {
         id: p.Id,
         ...p,
         Model: p.Model.Name,
-        FileUid: p.Model.File?.Uid,
+        FileId: p.Model.File?.Uid,
         ChargeOcf: FormatPercent(p.ChargeOcf),
         ChargeExAnte: FormatPercent(p.ChargeExAnte),
         WeightedOcf: FormatPercent(p.WeightedOcf),
@@ -113,12 +94,17 @@ const PolicyBlock = (props: {
 
     return (
        <Panel>
-            <h3>Policy: {props.policy.ExternalId}</h3>
+            <h4>Policy: {props.policy.ExternalId}</h4>
             <p>
                 Value at end of period: {FormatCurrencyPence(props.policy.EndValue)}
             </p>
 
-            <Table columns={columns} data={rows} renderRowSubComponent={null} />
+            <Table
+                label            = {'Portfolio level fees'}
+                columns          = {columns}
+                data             = {rows}
+                enableRowActions = {false}
+            />
 
             {/* <ProportionWarning data={rows} property='Percentage' /> */}
         </Panel>

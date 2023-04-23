@@ -43,7 +43,6 @@ export const DeletionConfirmation = (props: {
     }, []);
 
     const onDelete = async (e: any) => {
-        e.preventDefault();
         await props.handler(true);
         goBack();
         return false;

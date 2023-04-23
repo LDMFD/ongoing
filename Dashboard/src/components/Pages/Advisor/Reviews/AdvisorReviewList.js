@@ -1,24 +1,13 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-import { Api } from 'State';
-import { Context } from 'State/StateProvider'
-import { FromCanonical } from 'Utils/DateTime';
-import IconGroup from 'Components/Library/IconGroup/IconGroup';
 import Table from 'Components/Library/Table/Table';
+import { Api } from 'State';
+import { Context } from 'State/StateProvider';
+import { FromCanonical } from 'Utils/DateTime';
 
 const AdvisorReviewList = () => {
     const [ state, dispatch ] = useContext(Context);
-    let {
-        Metadata: client,
-    } = state;
 
     let { clientId } = useParams();
 
@@ -28,27 +17,16 @@ const AdvisorReviewList = () => {
     };
 
     const columns = [{
-        accessor: 'startDate',
-        Header: 'Review period start', 
+        id: 'startDate',
+        header: 'Review period start', 
+        width: 300,
     }, {
-        accessor: 'endDate',
-        Header: 'Review period end', 
+        id: 'endDate',
+        header: 'Review period end', 
+        width: 300,
     }, {
-        accessor: 'finalizedDate',
-        Header: 'Time of publish', 
-    }, {
-        accessor: 'actions',
-        Header: '',
-        Cell: ({ row }) => (
-            <IconGroup>
-                <Link to={`/clients/id/${client.Id}/reviews/id/${row.original.id}/modules/introduction`}>
-                    <InventoryIcon />
-                </Link>
-                <Link to={`/clients/id/${client.Id}/reviews/delete/${row.original.id}`}>
-                    <DeleteIcon />
-                </Link>
-            </IconGroup>
-        ),
+        id: 'finalizedDate',
+        header: 'Time of publish', 
     }];
 
     let ix = 1;
@@ -66,21 +44,16 @@ const AdvisorReviewList = () => {
     }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));
 
     return (
-        <>
-            <Toolbar className="breadcrumb-action">
-                <Button onClick={publishReview}>Publish review</Button>
-            </Toolbar>
-
-            <br />
-
-            {reviews.length ?
-                <Table columns={columns} data={reviews} />
-            :
-                <p>
-                    No reviews - press publish to create a new review.
-                </p>
-            }
-        </>
+        <Table
+            flexibleColumn  = {3}
+            columns         = {columns}
+            data            = {reviews}
+            label           = 'Publish Draft'
+            enableEdit      = {false}
+            defaultAction   = {id => `/clients/id/${clientId}/reviews/id/${id}/modules/introduction`}
+            deleteAction    = {row => `/clients/id/${clientId}/reviews/delete/${row.id}`}
+            toolbarCallback = {publishReview}
+        />
     );
 }
 

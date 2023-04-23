@@ -1,57 +1,38 @@
 import React, { useContext } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import {
     Button,
-    Toolbar,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { GoBack } from 'Utils/Routing';
 
 import { Context } from 'State'
 import Table from 'Components/Library/Table/Table';
-import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
 const RiskLevelList = () => {
     let history = useHistory();
-    let goBack = GoBack(history);
+    let goBack = GoBack(history, 3);
     const [ state ] = useContext(Context);
 
     let { riskProviderId } = useParams();
 
     const columns = [
         {
-            accessor: 'level',
-            Header: 'Level',
+            id: 'level',
+            header: 'Level',
             width: 100,
         }, {
-            accessor: 'label',
-            Header: 'Label',
-            width: 100,
+            id: 'label',
+            header: 'Label',
+            width: 220,
         }, {
-            accessor: 'desc',
-            Header: 'Description',
-            width: 400,
+            id: 'desc',
+            header: 'Description',
             Cell: ({ row }) => (
                 <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.desc }} />
-            ),
-        }, {
-            accessor: 'actions',
-            Header: '',
-            width: 100,
-            Cell: ({ row }) => (
-                <IconGroup>
-                    <Link to={`/risk-providers/id/${riskProviderId}/risk-levels/${row.original.id}/delete`}>
-                        <DeleteIcon />
-                    </Link>
-                    <Link to={`/risk-providers/id/${riskProviderId}/risk-levels/${row.original.id}/edit`}>
-                        <EditIcon />
-                    </Link>
-                </IconGroup>
             ),
         },
     ];
@@ -67,21 +48,25 @@ const RiskLevelList = () => {
         ).sort((p, q) => (p.level < q.level) ? -1 : ((p.level > q.level) ? 1 : 0));
 
     return (
-        <Dialog open={true} onClose={goBack} fullWidth={true} maxWidth='lg'>
-            <DialogTitle>Provider risk levels</DialogTitle>
-                <DialogContent>
+        <div className='ong-riskLevels'>
+            <Dialog open={true} onClose={goBack} fullWidth={true} maxWidth='lg'>
+                <DialogTitle>Provider risk levels</DialogTitle>
+                    <DialogContent>
 
-                    <Toolbar className="breadcrumb-action">
-                        <Link to={{ pathname: `/risk-providers/id/${riskProviderId}/risk-levels/add` }}><Button>Add new level</Button></Link>
-                    </Toolbar>
+                            <Table
+                                flexibleColumn = {3}
+                                columns        = {columns}
+                                data           = {riskLevels}
+                                resource       = {`risk-providers/id/${riskProviderId}/risk-levels`}
+                                label          = 'Risk Level'
+                            />
 
-                    <Table columns={columns} data={riskLevels} />
-
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={goBack}>Return to provider</Button>
-                </DialogActions>
-        </Dialog>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={goBack}>Return to provider</Button>
+                    </DialogActions>
+            </Dialog>
+        </div>
     );
 }
 

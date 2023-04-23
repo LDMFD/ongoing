@@ -1,3 +1,7 @@
+# 1.11.0 2023-04-22
+
+- Routing update
+
 # 1.10.4 2023-04-07
 
 - Add client advisor label

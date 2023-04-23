@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from "react-router-dom";
 
 import { State } from 'Types/Types';
 import Dialog from 'Components/Library/Dialog/Dialog';
@@ -8,7 +7,7 @@ import { TextInput } from 'Components/Library/FormControls/TextInput';
 import { RichTextEditor2 } from 'Components/Library/RichTextEditor/RichTextEditor2';
 import { UniqueViolation } from 'Errors';
 
-import './PolicyProviderDialog.css';
+import './Platforms.css';
 import { PolicyProvider } from 'Types/OrgResources';
 
 interface PolicyProviderFormInput {
@@ -67,14 +66,6 @@ export const PolicyProviderDialog = (props: {
                             control   = {control}
                         />
                         <small>Use <code>{'{ charge }'}</code> to embed the discount.</small>
-
-                        {props.submitLabel === 'Add' ?
-                            <p>Create provider first to edit charges</p>
-                        :
-                            <p>
-                                Switch to <Link to={{ pathname: `/platforms/id/${props.provider.Id}/provider-charges` }}>Charges table</Link>.
-                            </p>
-                        }
                     </>
                 }
             />

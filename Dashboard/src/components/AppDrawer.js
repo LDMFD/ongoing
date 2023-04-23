@@ -163,6 +163,9 @@ export default function PermanentDrawerLeft() {
     };
 
     let titleRole = state.Session.Role[0].toUpperCase() + state.Session.Role.substring(1);
+    if (titleRole === 'Owner') {
+        titleRole = 'Advisor';
+    }
     
     return (
         <Box sx={{ display: 'flex' }}>

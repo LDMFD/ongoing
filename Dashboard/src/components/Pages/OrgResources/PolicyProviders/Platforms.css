@@ -1,0 +1,6 @@
+.ql-editor {
+    min-height: 15em;
+}
+
+.ong-platforms td:nth-child(2) { width: 50%; }
+.ong-platforms td:nth-child(3) { width: 50%; }

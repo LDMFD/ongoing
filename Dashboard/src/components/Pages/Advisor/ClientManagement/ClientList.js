@@ -1,14 +1,7 @@
-import React, { useContext, useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconGroup from 'Components/Library/IconGroup/IconGroup';
+import { useContext, useCallback, useEffect } from 'react';
 
-import { Context, Api } from 'State'
-import OgTable from 'Components/Library/Table/Table';
+import { Context, Api } from 'State';
+import Table from 'Components/Library/Table/Table';
 
 const ClientList = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -23,33 +16,20 @@ const ClientList = () => {
 
     const columns = [
         {
-            accessor: 'name',
-            Header: 'Name',
-            width: .5,
-            Cell: ({ row }) => <Link to={`/clients/id/${row.original.id}`}>{row.original.name}</Link>
+            id: 'name',
+            header: 'Name',
         }, {
-            accessor: 'email',
-            Header: 'Email',
-            width: .5,
+            id: 'email',
+            header: 'Email',
+            width: 300,
         }, {
-            accessor: 'advisor',
-            Header: 'Advisor',
-            width: 0.3,
+            id: 'advisor',
+            header: 'Advisor',
+            width: 300,
         }, {
-            accessor: 'fee',
-            Header: 'Fee',
-            width: 0.3,
-        }, {
-            accessor: 'actions',
-            Header: '',
-            width: .1,
-            Cell: ({ row }) => (
-                <IconGroup>
-                    <Link to={`/clients/delete/id/${row.original.id}`}>
-                        <DeleteIcon />
-                    </Link>
-                </IconGroup>
-            ),
+            id: 'fee',
+            header: 'Fee',
+            width: 100,
         },
     ];
 
@@ -61,18 +41,21 @@ const ClientList = () => {
             name:     `${c.Identity.Surname}, ${c.Identity.Forenames}`,
             email:    c.Identity.Email,
             fee:      `${c.Fee}%`,
-            advisor:  `${advisor.Forenames} ${advisor.Surname}`,
+            advisor:  advisor ? `${advisor.Forenames} ${advisor.Surname}` : 'Unknown',
         };
     });
 
     return (
-        <>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/clients/add' }}><Button>Add new client</Button></Link>
-            </Toolbar>
-
-            <OgTable columns={columns} data={clients} />
-        </>
+        <div className='ong-clientList'>
+            <Table
+                columns          = {columns}
+                data             = {clients}
+                resource         = 'clients'
+                label            = 'Client'
+                defaultAction    = {id => `/clients/id/${id}`}
+                enableRowActions = {false}
+            />
+        </div>
     );
 }
 

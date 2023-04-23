@@ -36,7 +36,7 @@ const ModulePresetDialog = (props: {
 
     let submitRef = React.createRef();
 
-    let errorMsg = 'This module preset already exists. Choose another from the drop-down menu.'
+    let errorMsg = 'This module preset already exists. Choose another from the drop-down menu or edit the existing from the list behind this dialog.'
     
     return (
         <Dialog

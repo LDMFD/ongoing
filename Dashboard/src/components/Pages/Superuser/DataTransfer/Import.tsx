@@ -26,8 +26,8 @@ const ImportDialog = () => {
             return;
         }
         await Api.Superuser.Import(form.File.Uid);
-        alert("Import complete, page will reload.");
-        window.location.reload();
+        // @ts-ignore
+        window.location = '/admin/organisations';
     };
 
     let submitRef = React.createRef();

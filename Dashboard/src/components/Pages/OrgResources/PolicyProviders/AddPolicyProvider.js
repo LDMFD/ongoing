@@ -4,12 +4,10 @@ import { useHistory } from "react-router-dom";
 import { Api } from 'State';
 import { Context } from 'State/StateProvider'
 import { DefaultPolicyProvider } from './DefaultPolicyProvider';
-import { GoBack } from 'Utils/Routing';
 import PolicyProviderDialog from './PolicyProviderDialog';
 
 const AddPolicyProvider = () => {
     let history = useHistory();
-    let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
 
@@ -21,7 +19,7 @@ const AddPolicyProvider = () => {
             setError(response.error);
         } else {
             await Api.OrgResources.Entities.Read(dispatch);
-            goBack();
+            history.push(`id/${response.data.Id}/provider-charges`);
         }
     };
 

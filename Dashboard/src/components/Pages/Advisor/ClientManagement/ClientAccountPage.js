@@ -1,14 +1,13 @@
-import React, { useContext } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import {
-    Button,
-    Toolbar,
-    Link as MuiLink,
+    Link as MuiLink
 } from '@mui/material';
 
-import { Context } from 'State'
+import { Context } from 'State';
 import SendSignInLink from "Components/Library/Auth/AuthEmailer";
 import Panel from 'Components/Library/Panel/Panel';
+import Dropdown from 'Components/Library/Dropdown/Dropdown';
 
 const ClientAccountPage = () => {
     const [state] = useContext(Context);
@@ -21,8 +20,28 @@ const ClientAccountPage = () => {
 
     return (
         <Panel>
+            <div style={{ float: 'right' }}>
+                <Dropdown
+                    title = 'Client actions'
+                    items = {[
+                        {
+                            label: 'Send sign-in link',
+                            onClick: () => SendSignInLink(client.Identity.Email),
+                        },
+                        {
+                            label: 'Edit client details',
+                            link: `/clients/id/${client.Id}/edit`,
+                        },
+                        {
+                            label: 'Delete client',
+                            link: `/clients/id/${client.Id}/delete`,
+                        },
+                    ]}
+                />
+            </div>
+
             <p>
-                Client: {client.Identity.Surname}, {client.Identity.Forenames}
+                Client: <b>{client.Identity.Surname}, {client.Identity.Forenames}</b>
             </p>
             <p>
                 Email:&nbsp;
@@ -40,14 +59,6 @@ const ClientAccountPage = () => {
             <p>
                 Advisor: {advisor.Surname}, {advisor.Forenames}
             </p>
-
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${client.Id}/edit` }}><Button>Edit client</Button></Link>
-                
-                <Button onClick={SendSignInLink.bind(null, client.Identity.Email)}>
-                    Send sign-in link
-                </Button>
-            </Toolbar>
         </Panel>
     );
 }   

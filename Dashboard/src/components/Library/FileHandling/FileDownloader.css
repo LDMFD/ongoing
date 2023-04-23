@@ -1,0 +1,4 @@
+.ong-table-default-action-link,
+.ong-table-default-action-link * {
+    cursor: pointer !important;
+}

@@ -15,7 +15,7 @@ import RichTextEditor from 'Components/Library/RichTextEditor/RichTextEditor';
 
 export const RiskLevelDialog = ({ riskLevel, setRiskLevel, submitLabel, submitHandler }) => {
     let history = useHistory();
-    let goBack = GoBack(history);
+    let goBack = GoBack(history, 3);
 
     const handlers = {
         EditLevel: (event) => { setRiskLevel({ ...riskLevel, Level: parseInt(event.target.value) }); },

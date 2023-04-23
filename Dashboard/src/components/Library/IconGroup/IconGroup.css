@@ -1,5 +1,6 @@
 .iconGroup .MuiSvgIcon-root {
-    margin-right: 2rem;
+    /* margin-right: 2rem; */
+    /* margin: 0 16px; */
     color: grey;
 }
 .iconGroup .MuiSvgIcon-root:hover {

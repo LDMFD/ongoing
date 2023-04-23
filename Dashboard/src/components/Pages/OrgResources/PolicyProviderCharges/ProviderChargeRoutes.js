@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import ProviderChargeList from './ProviderChargeList';
 import AddProviderCharge from './AddProviderCharge';
 import EditProviderCharge from './EditProviderCharge';
+import DeletePlatformCharge from './DeletePlatformCharge';
 
 const ProviderChargeRoutes = () => {
     let { path } = useRouteMatch();
@@ -23,8 +24,11 @@ const ProviderChargeRoutes = () => {
             <Route path={`${path}/add`}>
                 <AddProviderCharge />
             </Route>
-            <Route path={`${path}/:chargeId/edit`}>
+            <Route path={`${path}/id/:chargeId/edit`}>
                 <EditProviderCharge />
+            </Route>
+            <Route path={`${path}/id/:chargeId/delete`}>
+                <DeletePlatformCharge />
             </Route>
         </div>
     );

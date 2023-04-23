@@ -148,7 +148,7 @@ func deletePolicy(e *httpexpect.Expect, policyId string) {
 }
 
 func TestDeleteProviderDiscounts(t *testing.T, e *httpexpect.Expect) {
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/platform-discounts/"+providerDiscountId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		Expect().Status(http.StatusOK)
 }

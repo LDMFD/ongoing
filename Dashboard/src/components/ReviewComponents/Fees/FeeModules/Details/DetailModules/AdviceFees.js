@@ -1,5 +1,4 @@
-import React, { useContext, useCallback } from 'react';
-import DownloadIcon from '@mui/icons-material/Download';
+import { useContext, useCallback } from 'react';
 import Day from 'dayjs';
 
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
@@ -7,7 +6,7 @@ import { FormatCurrencyPence } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import { Download, DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 import Panel from 'Components/Library/Panel/Panel';
 
@@ -18,13 +17,14 @@ const AdviceFees = () => {
     let report = GetReport();
     
     let policies = [];
-    report.Policies.forEach(p => {
-        if (!policies.some(pol => pol.Id === p.Id)) {
+    report.Policies.forEach(policy => {
+        let provider = report.PolicyProviders.find(t => t.Id === policy.PolicyProviderId).Name;
+        if (!policies.some(pol => pol.Id === policy.Id)) {
             policies.push({
-                id:               p.Id,
-                policyNumber:     p.ExternalId,
-                fee:              FormatCurrencyPence(client.Fee * p.EndValue / 100),
-                fileUid:          p.File?.Uid,
+                id:     policy.Id,
+                policy: `${provider} ${policy.ExternalId}`,
+                fee:    FormatCurrencyPence(client.Fee * policy.EndValue / 100),
+                fileId: policy.File?.Uid,
             });
         }
     });
@@ -33,31 +33,21 @@ const AdviceFees = () => {
         Download(uid);
     }, []);
 
-    const columns = [
-        {
-            accessor: 'policyNumber',
-            Header: 'Policy Number',
-            width: 1,
-        }, {
-            accessor: 'fee',
-            Header: 'Fee',
-            width: 1,
-        }, {
-            accessor: 'actions',
-            Header: 'Policy file',
-            type: 'actions',
-            width: .2,
-            Cell: ({ row }) => (
-                <>
-                    {row.original.fileUid &&
-                        <button onClick={downloadFile(row.original.fileUid)} className='ong-openFileIcon'>
-                            <DownloadIcon />
-                        </button>
-                    }
-                </>
-            ),
-        },
-    ];
+    const columns = [{
+        id: 'policy',
+        header: 'Policy',
+        width: 200,
+        Cell: ({ row }) => row.original.fileId ? (
+            <DownloadChip
+                title  = {row.original.policy}
+                fileId = {row.original.fileId}
+            />
+        ) : row.original.policy,
+    }, {
+        id: 'fee',
+        header: 'Fee',
+        width: 200,
+    }];
 
     let feesReport = report.FeesReports?.map(fr => {
         return {
@@ -77,19 +67,23 @@ const AdviceFees = () => {
                     
                     {feesReport && (
                         <p>
-                            Fees report: <button onClick={downloadFile(feesReport.file.Uid)} className='ong-openFileIcon'>
-                                {feesReport.file.Filename}
-                                <DownloadIcon />
-                            </button>
+                            Download your fees report:
+                            <DownloadChip
+                                title={`Fees report ${feesReport.submitted}`}
+                                fileId={feesReport.file.Uid}
+                            />
                         </p>
                     )}
                 </p>
             </Panel>
 
             {policies.length > 0 &&
-                <Panel>
-                    <Table columns={columns} data={policies} />
-                </Panel>
+                <Table
+                    label            = 'Policies'
+                    columns          = {columns}
+                    data             = {policies}
+                    enableRowActions = {false}
+                />
             }
         </>
     );

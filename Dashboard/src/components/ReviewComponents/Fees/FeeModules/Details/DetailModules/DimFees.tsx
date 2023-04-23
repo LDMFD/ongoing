@@ -21,25 +21,19 @@ const PolicyBlock = (props: {
     policy: string,
     fees: PolicyDimFees,
 }) => {
-    const columns = [
-        {
-            accessor: 'Name',
-            Header: 'Name',
-            width: .5,
-        }, {
-            accessor: 'Fee',
-            Header: 'Fee',
-            width: .5,
-        }, {
-            accessor: 'Percentage',
-            Header: 'Percentage of policy',
-            width: .5,
-        // }, {
-        //     accessor: 'WeightedFee',
-        //     Header: 'Weighted DIM Fee',
-        //     width: 0.5,
-        }
-    ];
+    const columns = [{
+        id: 'Name',
+        header: 'Name',
+    }, {
+        id: 'Fee',
+        header: 'Fee',
+    }, {
+        id: 'Percentage',
+        header: 'Percentage of policy',
+    // }, {
+    //     id: 'WeightedFee',
+    //     header: 'Weighted DIM Fee',
+    }];
 
     let fees: FeeTableRow[];
     fees = props.fees.DimFees.map(f => ({
@@ -68,7 +62,12 @@ const PolicyBlock = (props: {
                 Policy: {props.policy}
             </h4>
             
-            <Table columns={columns} data={fees} renderRowSubComponent={null} />
+            <Table
+                label            = 'DIM Fees'
+                columns          = {columns}
+                data             = {fees}
+                enableRowActions = {false}
+            />
         </Panel>
     )
 };

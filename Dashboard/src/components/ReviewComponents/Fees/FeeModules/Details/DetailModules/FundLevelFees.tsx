@@ -1,17 +1,14 @@
-import React, { useCallback } from 'react';
-import DownloadIcon from '@mui/icons-material/Download';
 
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import Panel from 'Components/Library/Panel/Panel';
+import Table, { Row } from 'Components/Library/Table/Table';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { CalculatePlatformModel } from 'Components/ReviewComponents/Fees/Model/FeeModel';
-import { Download } from 'Components/Library/FileHandling/FileDownloader';
-import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
+import { FundFee, PolicyFundFees, ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { ModuleTypeFundLevelFees } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { Policy, Report } from 'Types/ClientResources';
-import { PolicyFundFees, FundFee, ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
-import { Row } from './PlatformFees/CalculatedCharges';
-import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import Panel from 'Components/Library/Panel/Panel';
-import Table from 'Components/Library/Table/Table';
+import { FormatCurrencyPence, FormatPercent } from 'Utils/Strings';
 
 interface FundFeeRow {
     id?: string,
@@ -28,61 +25,40 @@ const PolicyBlock = (props: {
     policy: Policy
     fees: PolicyFundFees
 }) => {
-    const downloadFile = useCallback((fileUid: string) => () => {
-        Download(fileUid);
-    }, []);
-
-    const columns = [
-        {
-            accessor: 'Fund',
-            Header: 'Fund name',
-            width: 1,
-        },
-        {
-            accessor: 'ChargeOcf',
-            Header: 'OCF (%)',
-            width: 1,
-        },
-        {
-            accessor: 'ChargeExAnte',
-            Header: 'Transactional fee (%)',
-            width: 1,
-        },
-        {
-            accessor: 'Percentage',
-            Header: 'Percentage of policy',
-            width: 1,
-        }, {
-            accessor: 'Include',
-            Header: 'Include in total?',
-            width: 1,
-            Cell: ({ row }: { row: Row }) => (
-                (row.original.id !== 'avg' && row.original.id !== 'charges') ? 
-                    row.original.Include ? 'Y' : 'N'
-                : ''
-            ),
-        }, {
-        //     accessor: 'WeightedOcf',
-        //     Header: 'Weighted OCF (%)',
-        //     width: 1,
+    const columns = [{
+        id: 'Fund',
+        header: 'Fund name',
+        Cell: ({ row }: { row: Row }) => row.original.FileId ? (
+            <DownloadChip
+                title  = {row.original.Fund}
+                fileId = {row.original.FileId}
+            />
+        ) : row.original.Fund,
+    },
+    {
+        id: 'ChargeOcf',
+        header: 'OCF (%)',
+    },
+    {
+        id: 'ChargeExAnte',
+        header: 'Transactional fee (%)',
+    },
+    {
+        id: 'Percentage',
+        header: 'Percentage of policy',
+    }, {
+        id: 'Include',
+        header: 'Include in total?',
+        Cell: ({ row }: { row: Row }) => (
+            (row.original.id !== 'avg' && row.original.id !== 'charges') ? 
+                row.original.Include ? 'Y' : 'N'
+            : ''
+        ),
+        //     id: 'WeightedOcf',
+        //     header: 'Weighted OCF (%)',
         // }, {
-        //     accessor: 'WeightedExAnte',
-        //     Header: 'Weighted Transactional (%)',
-        //     width: 1,
-        // }, {
-            accessor: 'actions',
-            Header: 'Factsheet',
-            type: 'actions',
-            width: .5,
-            Cell: ({ row }: { row: Row }) => (
-                <>
-                    {row.original.FileUid &&
-                        <button onClick={downloadFile(row.original.FileUid)} className='ong-openFileIcon'>
-                            <DownloadIcon />
-                        </button>
-                    }
-                </>
-            ),
+        //     id: 'WeightedExAnte',
+        //     header: 'Weighted Transactional (%)',
         },
     ];
 
@@ -90,7 +66,7 @@ const PolicyBlock = (props: {
         id: p.Id,
         ...p,
         Fund: p.Fund.Name,
-        FileUid: p.Fund.File?.Uid,
+        FileId: p.Fund.File?.Uid,
         ChargeOcf: FormatPercent(p.ChargeOcf),
         ChargeExAnte: FormatPercent(p.ChargeExAnte),
         WeightedOcf: FormatPercent(p.WeightedOcf),
@@ -116,14 +92,19 @@ const PolicyBlock = (props: {
 
     return (
         <Panel>
-             <h3>Policy: {props.policy.ExternalId}</h3>
-             <p>
-                 Value at end of period: {FormatCurrencyPence(props.policy.EndValue)}
-             </p>
+            <h4>Policy: {props.policy.ExternalId}</h4>
+            <p>
+                Value at end of period: {FormatCurrencyPence(props.policy.EndValue)}
+            </p>
  
-             <Table columns={columns} data={rows} renderRowSubComponent={null} />
- 
-             {/* <ProportionWarning data={rows} property='Percentage' /> */}
+            <Table
+                label            = 'Fund level fees'
+                columns          = {columns}
+                data             = {rows}
+                enableRowActions = {false}
+            />
+
+            {/* <ProportionWarning data={rows} property='Percentage' /> */}
          </Panel>
      );
  }

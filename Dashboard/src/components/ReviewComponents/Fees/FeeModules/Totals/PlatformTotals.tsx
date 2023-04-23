@@ -1,11 +1,8 @@
-import React from 'react';
 
-import { FormatCurrencyPence, FormatCharge } from 'Utils/Strings';
-import { PlatformView, ProviderBlockView } from '../../Model/FeeTypes';
+import Table, { Row } from 'Components/Library/Table/Table';
 import { Report } from 'Types/ClientResources';
-import Table from 'Components/Library/Table/Table';
-import Panel from 'Components/Library/Panel/Panel';
-import { Row } from '../Details/DetailModules/PlatformFees/CalculatedCharges';
+import { FormatCharge, FormatCurrencyPence } from 'Utils/Strings';
+import { PlatformView, ProviderBlockView } from '../../Model/FeeTypes';
 
 const PlatformTotals = (props: {
     report: Report,
@@ -13,15 +10,15 @@ const PlatformTotals = (props: {
 }) => {
     let columns = props.view.Providers.map((prov: ProviderBlockView) => {
         return {
-            accessor: prov.Id,
-            Header: prov.Provider!.Name,
-            width: 1,
+            id: prov.Id,
+            header: prov.Provider!.Name,
+            width: 200,
         };
     });
     columns.unshift({
-        accessor: 'header',
-        Header: '',
-        width: 1,
+        id: 'header',
+        header: '',
+        width: 200,
         // @ts-ignore as other rows don't have this property
         Cell: ({ row }: { row: Row }) => (
             row.original.header
@@ -36,7 +33,7 @@ const PlatformTotals = (props: {
     let portfolioLevelExAntes:          any = { header: 'Portfolio level, Transactional' }
     let dims:                           any = { header: 'DIM charges' }
     let clientFees:                     any = { header: 'Total advice fees' };
-    let totalCharges:                   any = { header: <b><i>Total of all charges on this platform</i></b> }
+    let totalCharges:                   any = { header: <b>Total of all charges on this platform</b> }
 
     let data = [
         endValues,
@@ -79,14 +76,17 @@ const PlatformTotals = (props: {
         portfolioLevelExAntes[prov.Id!] = FormatCharge(portfolioExAntePercent, charges.PortfolioLevelExAnte);
         dims[prov.Id!]                  = FormatCharge(dimPercent, charges.DimCharges);
         clientFees[prov.Id!]            = FormatCharge(advicePercent, charges.AdviceCharge);
-        totalCharges[prov.Id!]          = <b><i>{FormatCharge(totalPercent, charges.TotalCharge)}</i></b>;
+        totalCharges[prov.Id!]          = <b>{FormatCharge(totalPercent, charges.TotalCharge)}</b>;
     });
 
     return (
-        <Panel>
-            <h3>Platform Totals</h3>
-            <Table columns={columns} data={data} renderRowSubComponent={null} />
-        </Panel>
+        <Table
+            label            = {'Platform Totals'}
+            columns          = {columns}
+            data             = {data}
+            enableTableHead  = {false}
+            enableRowActions = {false}
+        />
     );
 };
 

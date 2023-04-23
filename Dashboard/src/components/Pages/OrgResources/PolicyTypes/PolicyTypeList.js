@@ -1,15 +1,7 @@
 import React, { useContext, useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import IconGroup from 'Components/Library/IconGroup/IconGroup';
 
 import { Context, Api } from 'State'
-import OgTable from 'Components/Library/Table/Table';
+import Table from 'Components/Library/Table/Table';
 
 const PolicyTypeList = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -24,23 +16,8 @@ const PolicyTypeList = () => {
 
     const columns = [
         { 
-            accessor: 'name',
-            Header: 'Name',
-            width: 1,
-        },
-        {
-            accessor: 'actions',
-            width: .2,
-            Cell: ({ row }) => (
-                <IconGroup>
-                    <Link to={`/policy-types/id/${row.original.id}/delete`}>
-                        <DeleteIcon />
-                    </Link>
-                    <Link to={`/policy-types/id/${row.original.id}/edit`}>
-                        <EditIcon />
-                    </Link>
-                </IconGroup>
-            ),
+            id: 'name',
+            header: 'Name',
         },
     ];
 
@@ -52,13 +29,13 @@ const PolicyTypeList = () => {
     });
 
     return (
-        <>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/policy-types/add' }}><Button>Add new policy type</Button></Link>
-            </Toolbar>
-
-            <OgTable columns={columns} data={policyTypes} />
-        </>
+        <Table
+            flexibleColumn = {1}
+            columns        = {columns}
+            data           = {policyTypes}
+            resource       = 'policy-types'
+            label          = 'Policy Type'
+        />
     );
 }
 

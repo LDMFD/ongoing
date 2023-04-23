@@ -28,7 +28,7 @@ func testCreateProviderDiscountBasic(e *httpexpect.Expect) {
 		PolicyProviderId: policyProviderId1Aviva,
 		Discount:         0.00000001,
 	}
-	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/provider-discounts").
+	resp := e.POST("/api/advisor/clients/"+org1ClientId+"/platform-discounts").
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK).
@@ -37,7 +37,7 @@ func testCreateProviderDiscountBasic(e *httpexpect.Expect) {
 
 	request.Discount = 0.12 // TODO where does this come from?
 
-	e.PUT("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/platform-discounts/"+providerDiscountId).
 		WithHeader("Authentication", ORG1_ADVISOR).
 		WithJSON(request).
 		Expect().Status(http.StatusOK)
@@ -48,13 +48,13 @@ func testCreateProviderDiscountSecurity(e *httpexpect.Expect) {
 		PolicyProviderId: policyProviderId1Aviva,
 		Discount:         0.00000001,
 	}
-	e.PUT("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+	e.PUT("/api/advisor/clients/"+org1ClientId+"/platform-discounts/"+providerDiscountId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		WithJSON(request).
 		Expect().Status(http.StatusForbidden)
 
-	e.DELETE("/api/advisor/clients/"+org1ClientId+"/provider-discounts/"+providerDiscountId).
+	e.DELETE("/api/advisor/clients/"+org1ClientId+"/platform-discounts/"+providerDiscountId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
 		Expect().Status(http.StatusForbidden)

@@ -1,126 +1,64 @@
-import React, { useContext, useCallback } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import DownloadIcon from '@mui/icons-material/Download';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
+import { useContext } from 'react';
 import Day from 'dayjs';
 
-import { Api } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Context } from 'State/StateProvider'
-import { Download } from 'Components/Library/FileHandling/FileDownloader';
+import { Context } from 'State/StateProvider';
+import { BuildDownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 
 const RiskAssessmentList = () => {
-    let history = useHistory();
-
-    const [state, dispatch ] = useContext(Context);
-    let {
-        Metadata: client,
-    } = state;
+    const [ state ] = useContext(Context);
 
     let report = GetReport();
 
-    const deleteRiskAssessment = useCallback(id => async () => {
-        if (window.confirm(`Delete assessment?`)) {
-            await Api.Advisor.RiskAssessments.Delete(client.Id, id);
-            await Api.Advisor.ClientDetail.Read(dispatch, client.Id);
-        }
-    }, [ dispatch, client.Id ]);
-
-    const editRiskAssessment = useCallback(id => () => {
-        history.push(`/clients/id/${client.Id}/documents/risk-assessments/id/${id}/edit`);
-    }, [ history, client.Id ]);
-
-    const downloadFile = useCallback(fileUid => () => {
-        Download(fileUid);
-    }, []);
-
-    const columns = [
-        {
-            accessor: 'provider',
-            Header: 'Provider',
-            width: 1,
-        },
-        {
-            accessor: 'level',
-            Header: 'Level',
-            width: 1,
-        },
-        {
-            accessor: 'label',
-            Header: 'Label',
-            width: 1,
-        },
-        {
-            accessor: 'desc',
-            Header: 'Description',
-            width: 10,
-            Cell: ({ row }) => (
-                row.original.desc && (
-                    <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.desc }} />
-                )
-            ),
-        },
-        {
-            accessor: 'completed',
-            Header: 'Completed',
-            width: 1,
-        },
-        {
-            accessor: 'questionnaire',
-            Header: 'Questionnaire',
-            width: 2,
-            Cell: ({ row }) => row.original.questionnaire?.Uid ? (
-                <button onClick={downloadFile(row.original.questionnaire.Uid)} className='ong-openFileIcon'>
-                    {row.original.questionnaire.Filename}
-                    <DownloadIcon />
-                </button>
-            ) : null,
-        },
-        {
-            accessor: 'actions',
-            Header: '',
-            width: 1,
-            Cell: ({ row }) => (
-                <>
-                    <button onClick={editRiskAssessment(row.original.id)} className='ong-openFileIcon'>
-                        <EditIcon />
-                    </button>
-                    <button onClick={deleteRiskAssessment(row.original.id)} className='ong-openFileIcon'>
-                        <DeleteIcon />
-                    </button>
-                </>
-            ),
-        },
-    ];
+    const columns = [{
+        id: 'provider',
+        header: 'Provider',
+    }, {
+        id: 'level',
+        header: 'Level',
+        width: 200,
+    }, {
+        id: 'label',
+        header: 'Label',
+        width: 200,
+    }, {
+        id: 'completed',
+        header: 'Completed',
+        width: 200,
+    }];
 
     let assessments = report.RiskAssessments.map(ra => {
         let level = report.RiskLevels.find(l => l.Id === ra.RiskLevelId);
         let provider = report.RiskProviders.find(t => t.Id === level.RiskProviderId);
         return {
-            id:                   ra.Id,
-            provider:             provider.Name,
-            level:                level.Level,
-            label:                level.Label,
-            desc:                 level.Desc,
-            completed:            Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
-            questionnaire:        ra.File,
+            id:        ra.Id,
+            provider:  provider.Name,
+            level:     level.Level,
+            label:     level.Label,
+            desc:      level.Desc,
+            completed: Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
+            fileId:    ra.File.Uid,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
 
     return (
-        <div className='ongoing-riskassessmentList'>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: `/clients/id/${state.Metadata.Id}/documents/risk-assessments/add` }}><Button>Add assessment</Button></Link>
-            </Toolbar>
-
-            <Table columns={columns} data={assessments} />
-        </div>
+        <Table
+            flexibleColumn        = {2}
+            columns               = {columns}
+            data                  = {assessments}
+            resource              = {`clients/id/${state.Metadata.Id}/documents/risk-assessments`}
+            label                 = 'Risk Assessment'
+            defaultActionHeader   = 'Download'
+            defaultActionRenderer = {BuildDownloadChip('Assessment')}
+            detailId              = 'desc'
+            detailRenderer = {({ row }) => (
+                <div
+                    className               = 'ong-notes'
+                    dangerouslySetInnerHTML = {{ __html: row.original.desc }}
+                />
+            )}
+        />
     );
 }
 

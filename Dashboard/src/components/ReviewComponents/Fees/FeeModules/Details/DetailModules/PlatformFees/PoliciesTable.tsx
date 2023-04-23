@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
-import Table from 'Components/Library/Table/Table';
-import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
-import { ProviderChargesPropType, Row } from './CalculatedCharges';
-import { Policy } from 'Types/ClientResources';
+
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import Table, { Row } from 'Components/Library/Table/Table';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { PolicyType } from 'Types/OrgResources';
+import { Policy } from 'Types/ClientResources';
+import { PolicyProvider, PolicyType } from 'Types/OrgResources';
+import { FormatCurrency, FormatCurrencyPence } from 'Utils/Strings';
+import { ProviderChargesPropType } from './CalculatedCharges';
 
 const PoliciesTable = (props: {
     policies: Policy[],
@@ -12,40 +14,55 @@ const PoliciesTable = (props: {
     totalMoneyCharge: number,
 }) => {
     let columns = [{
-        accessor: 'ExternalId',
-        Header: 'Policy number',
+        id:     'policy',
+        header: 'Policy number',
+        Cell: ({ row }: { row: Row }) => row.original.fileId ? (
+            <DownloadChip
+                title  = {row.original.policy}
+                fileId = {row.original.fileId}
+            />
+        ) : row.original.policy,
     }, {
-        accessor: 'Type',
-        Header: 'Type',
+        id:     'type',
+        header: 'Type',
     }, {
-        accessor: 'EndValue',
-        Header: 'End value',
+        id:     'endValue',
+        header: 'End value',
     }, {
-        accessor: 'Percentage',
-        Header: '% of holdings on this platform'
+        id:     'percentage',
+        header: '% of holdings on this platform'
     }, {
-        accessor: 'PlatformFee',
-        Header: 'Platform Fee',
-        Cell: ({ row }: { row: Row }) => FormatCurrencyPence(row.original.PlatformFee),
+        id:     'platformFee',
+        header: 'Platform Fee',
+        Cell:   ({ row }: { row: Row }) => (
+            FormatCurrencyPence(row.original.platformFee)
+        ),
     }];
 
     let report = GetReport();
 
-    let data = props.policies.map(p => {
-        let type = report.PolicyTypes.find((pt: PolicyType) => pt.Id === p.PolicyTypeId).Name;
-        let proportion = p.EndValue / props.providerTotal;
+    let data = props.policies.map(policy => {
+        let type = report.PolicyTypes.find((pt: PolicyType) => pt.Id === policy.PolicyTypeId).Name;
+        let provider = report.PolicyProviders.find((t: PolicyProvider) => t.Id === policy.PolicyProviderId).Name;
+        let proportion = policy.EndValue / props.providerTotal;
 
         return {
-            ...p,
-            EndValue: FormatCurrency(p.EndValue),
-            Type: type,
-            Percentage: `${(proportion * 100).toPrecision(4)}%`,
-            PlatformFee: props.totalMoneyCharge * proportion,
+            policy:      `${provider} ${policy.ExternalId}`,
+            endValue:    FormatCurrency(policy.EndValue),
+            type:        type,
+            percentage:  `${(proportion * 100).toPrecision(4)}%`,
+            platformFee: props.totalMoneyCharge * proportion,
+            fileId:      policy.File ? policy.File.Uid : null,
         };
     });
 
     return (
-        <Table columns={columns} data={data} renderRowSubComponent={null} />
+        <Table
+            label            = 'Policies'
+            columns          = {columns}
+            data             = {data}
+            enableRowActions = {false}
+        />
     );
 }
 

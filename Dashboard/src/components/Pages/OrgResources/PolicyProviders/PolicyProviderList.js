@@ -1,15 +1,9 @@
 import React, { useContext, useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-    Button,
-    Toolbar,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 
 import { Api, Context } from 'State'
 import Table from 'Components/Library/Table/Table';
-import IconGroup from 'Components/Library/IconGroup/IconGroup';
+
+import './Platforms.css';
 
 const PolicyProviderList = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -24,40 +18,24 @@ const PolicyProviderList = () => {
 
     const columns = [
         {
-            accessor: 'name',
-            Header: 'Name',
-            width: 1,
+            id: 'name',
+            header: 'Name',
+            width: 200,
         }, {
-            accessor: 'pricing',
-            Header: 'Pricing',
-            width: 3,
+            id: 'pricing',
+            header: 'Pricing',
             Cell: ({ row }) => (
                 row.original.pricing && (
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.pricing }} />
                 )
             ),
         }, {
-            accessor: 'customPricing',
-            Header: 'Custom Pricing',
-            width: 3,
+            id: 'customPricing',
+            header: 'Custom Pricing',
             Cell: ({ row }) => (
                 row.original.pricing && (
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.customPricing }} />
                 )
-            ),
-        }, {
-            accessor: 'actions',
-            Header: '',
-            width: 1,
-            Cell: ({ row }) => (
-                <IconGroup>
-                    <Link to={`/platforms/id/${row.original.id}/delete`}>
-                        <DeleteIcon />
-                    </Link>
-                    <Link to={`/platforms/id/${row.original.id}/edit`}>
-                        <EditIcon />
-                    </Link>
-                </IconGroup>
             ),
         },
     ];
@@ -72,13 +50,28 @@ const PolicyProviderList = () => {
     });
 
     return (
-        <>
-            <Toolbar className="breadcrumb-action">
-                <Link to={{ pathname: '/platforms/add' }}><Button>Add new platform</Button></Link>
-            </Toolbar>
-
-            <Table columns={columns} data={policyProviders} />
-        </>
+        <div className='ong-platforms'>
+            <Table
+                columns     = {columns}
+                data        = {policyProviders}
+                resource    = 'platforms'
+                label       = 'Platform'
+                customRowActions = {[
+                    {
+                        label: 'Edit text',
+                        link: (id) => `/platforms/id/${id}/edit`,
+                    },
+                    {
+                        label: 'Edit charges',
+                        link: (id) => `/platforms/id/${id}/provider-charges`,
+                    },
+                    {
+                        label: 'Delete',
+                        link: (id) => `/platforms/id/${id}/delete`,
+                    },
+                ]}
+            />
+        </div>
     );
 }
 

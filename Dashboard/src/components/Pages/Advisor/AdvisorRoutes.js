@@ -46,9 +46,8 @@ const AdvisorClientRoutes = () => {
                 </Route>
                 <Route path={path} component={ClientList} />
             </Switch>
-    
+            <Route path={`${path}/id/:clientId/delete`} component={DeleteClient} />
             <Route path={`${path}/add`} component={AddClient} />
-            <Route path={`${path}/delete/id/:clientId`} component={DeleteClient} />
         </div>
     );
 }

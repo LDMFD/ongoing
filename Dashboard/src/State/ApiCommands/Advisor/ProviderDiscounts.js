@@ -1,17 +1,17 @@
 const Create = (clientId, providerDiscount) => {
-    return window.ApiClient.post(`advisor/clients/${clientId}/provider-discounts`, {
+    return window.ApiClient.post(`advisor/clients/${clientId}/platform-discounts`, {
         ...providerDiscount,
     });
 }
 
 const Update = (clientId, providerDiscount) => {
-    return window.ApiClient.put(`advisor/clients/${clientId}/provider-discounts/${providerDiscount.Id}`, {
+    return window.ApiClient.put(`advisor/clients/${clientId}/platform-discounts/${providerDiscount.Id}`, {
         ...providerDiscount
     })
 }
 
 const Delete = (clientId, providerDiscountId) => {
-    return window.ApiClient.delete(`advisor/clients/${clientId}/provider-discounts/${providerDiscountId}`);
+    return window.ApiClient.delete(`advisor/clients/${clientId}/platform-discounts/${providerDiscountId}`);
 }
 
 const defaults = {

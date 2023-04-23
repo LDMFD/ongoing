@@ -75,9 +75,11 @@ const Block = (props: {
                 The table below shows the portion of the total platform charge which arises from each policy held on the platform.
             </p>
             
-            <PoliciesTable policies         = {policies}
-                           totalMoneyCharge = {platformCharge}
-                           providerTotal    = {props.block.ProviderTotal} />
+            <PoliciesTable
+                policies         = {policies}
+                totalMoneyCharge = {platformCharge}
+                providerTotal    = {props.block.ProviderTotal}
+            />
         </Panel>
     );
 };

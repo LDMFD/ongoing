@@ -22,7 +22,7 @@ export const ModuleEditor = () => {
     let goBack = GoBack(history, 3);
 
     let checkGoBack = () => {
-        if (moduleState.editCount < 1 || window.confirm('Discard unsaved changes?')) {
+        if (moduleState.editCount < 2 || window.confirm('Discard unsaved changes?')) {
             goBack();
         }
     }

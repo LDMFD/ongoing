@@ -4,7 +4,8 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import OrgList from './OrgList';
 import AddOrg from './AddOrg';
 import EditOrg from './EditOrg';
-import OrgUserList from '../Organisation/OrgUserList';
+import OrgUserList from './OrgUserList';
+import DeleteOrg from './DeleteOrg';
 
 const OrgRoutes = () => {
     let { path } = useRouteMatch();
@@ -26,6 +27,9 @@ const OrgRoutes = () => {
             </Route>
             <Route path={`${path}/id/:orgId/edit`}>
                 <EditOrg />
+            </Route>
+            <Route path={`${path}/id/:orgId/delete`}>
+                <DeleteOrg />
             </Route>
             <Route path={`${path}/id/:orgId/users`}>
                 <OrgUserList />

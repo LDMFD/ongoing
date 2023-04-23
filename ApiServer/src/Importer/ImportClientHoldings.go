@@ -70,7 +70,7 @@ func importPolicies(clientId string, report Entities.ReportDetail, advisorId str
 func importProviderDiscounts(clientId string, report Entities.ReportDetail, advisorId string) {
 	for _, pd := range report.ProviderDiscounts {
 		requestJson, _ := json.Marshal(pd)
-		url := fmt.Sprintf(API+"/advisor/clients/%v/provider-discounts", clientId)
+		url := fmt.Sprintf(API+"/advisor/clients/%v/platform-discounts", clientId)
 		request, err := http.NewRequest("POST", url, bytes.NewBuffer(requestJson))
 		if err != nil {
 			panic(err)

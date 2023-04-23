@@ -2,3 +2,38 @@
     position: relative;
     top: 13px;
 }
+
+.ong-table-header {
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px;
+    cursor: default;
+}
+
+
+.ong-table-default-action-link {
+    /* position: relative; */
+    /* left: 40px; */
+    /* color: rgba(0, 0, 0, 0.54); */
+    border: 0;
+    background: none;
+    color: #004400;  /*from App.js*/
+}
+.ong-table-menu-action-link {
+    width: 110px;
+}
+.ong-table-menu-action-link svg {
+    margin-right: 10px;
+}
+
+.ong-table-flexible-column-1 td:nth-child(1) { width: inherit; }
+.ong-table-flexible-column-2 td:nth-child(2) { width: inherit; }
+.ong-table-flexible-column-3 td:nth-child(3) { width: inherit; }
+.ong-table-flexible-column-4 td:nth-child(4) { width: inherit; }
+.ong-table-flexible-column-5 td:nth-child(5) { width: inherit; }
+.ong-table-flexible-column-6 td:nth-child(6) { width: inherit; }
+.ong-table-flexible-column-7 td:nth-child(7) { width: inherit; }
+.ong-table-flexible-column-8 td:nth-child(8) { width: inherit; }
+.ong-table-flexible-column-9 td:nth-child(9) { width: inherit; }
+
+/* See also Platforms.css for multi-column balancing */

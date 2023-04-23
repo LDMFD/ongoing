@@ -5,6 +5,7 @@ import AddPolicy from './Policies/AddPolicy';
 import AddPolicyFund from './PolicyFunds/AddPolicyFund';
 import AddPortfolio from './Portfolios/AddPortfolio';
 import AddProviderDiscount from './ProviderDiscounts/AddProviderDiscount';
+import DeletePlatformDiscount from './ProviderDiscounts/DeletePlatformDiscount';
 import DeletePolicy from './Policies/DeletePolicy';
 import DeletePolicyFund from './PolicyFunds/DeletePolicyFund';
 import DeletePortfolio from './Portfolios/DeletePortfolio';
@@ -16,7 +17,7 @@ import HoldingsTabs from './HoldingsTabs';
 import PolicyFundList from './PolicyFunds/PolicyFundList';
 import PolicyList from './Policies/PolicyList';
 import PortfolioList from './Portfolios/PortfolioList';
-import ProviderDiscountList from './ProviderDiscounts/ProviderDiscountList';
+import PlatformDiscountList from './ProviderDiscounts/ProviderDiscountList';
 
 const ReportRoutes = () => {
     let { path } = useRouteMatch();
@@ -33,15 +34,16 @@ const ReportRoutes = () => {
                 <Route path={`${path}`}>
                     <HoldingsTabs>
                         <Switch>
-                            <Route path={`${basePath}/provider-discounts`} component={ProviderDiscountList} />
+                            <Route path={`${basePath}/platform-discounts`} component={PlatformDiscountList} />
                             <Route path={`${basePath}/portfolios`}         component={PortfolioList} />
                             <Route path={`${basePath}/policy-funds`}       component={PolicyFundList} />
                             <Route path={`${basePath}/policies`}           component={PolicyList} />
                         </Switch>
                     </HoldingsTabs>
 
-                    <Route path={`${basePath}/provider-discounts/add`}                         component={AddProviderDiscount} />
-                    <Route path={`${basePath}/provider-discounts/id/:providerDiscountId/edit`} component={EditProviderDiscount} />
+                    <Route path={`${basePath}/platform-discounts/add`}                           component={AddProviderDiscount} />
+                    <Route path={`${basePath}/platform-discounts/id/:providerDiscountId/delete`} component={DeletePlatformDiscount} />
+                    <Route path={`${basePath}/platform-discounts/id/:providerDiscountId/edit`}   component={EditProviderDiscount} />
 
                     <Route path={`${basePath}/portfolios/add`}                       component={AddPortfolio} />
                     <Route path={`${basePath}/portfolios/id/:portfolioId/delete`}    component={DeletePortfolio} />

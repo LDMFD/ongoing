@@ -45,10 +45,10 @@ const ClientWrapper = ({ children }) => {
         let rootTo = `/clients/id/${clientId}`;
         return (
             <Tabs value={currentTab}>
-                <Tab label="Account"    value={`${rootValue}`}           to={`${rootTo}`}                      component={Link} />
+                <Tab label="Client"     value={`${rootValue}`}           to={`${rootTo}`}                      component={Link} />
                 <Tab label="Holdings"   value={`${rootValue}/holdings`}  to={`${rootTo}/holdings/policies`}    component={Link} />
                 <Tab label="Documents"  value={`${rootValue}/documents`} to={`${rootTo}/documents/fact-finds`} component={Link} />
-                <Tab label="Prepare"    value={`${rootValue}/modules`}   to={`${rootTo}/modules/dates`}        component={Link} />
+                <Tab label="Draft"      value={`${rootValue}/modules`}   to={`${rootTo}/modules/dates`}        component={Link} />
                 <Tab label="Reviews"    value={`${rootValue}/reviews`}   to={`${rootTo}/reviews`}              component={Link} />
             </Tabs>
         );

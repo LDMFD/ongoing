@@ -1,3 +1,11 @@
+# 1.11.0 2023-04-22
+
+- Switch from react-table to material-react-table
+- Adds default action buttons, action menu to rows, common toolbar, sorting
+- Tidies file download links
+- Bunch of related UX polish
+- Rename "Account" tab to "Client"
+
 # 1.10.5 2023-04-07
 
 - Increase width by 200px.

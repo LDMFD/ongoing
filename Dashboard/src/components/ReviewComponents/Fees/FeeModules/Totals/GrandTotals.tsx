@@ -1,10 +1,7 @@
-import React from 'react';
-
-import { FormatCurrencyPence, FormatCharge } from 'Utils/Strings';
-import { PlatformView } from '../../Model/FeeTypes';
-import { Report } from 'Types/ClientResources';
 import Table from 'Components/Library/Table/Table';
-import Panel from 'Components/Library/Panel/Panel';
+import { Report } from 'Types/ClientResources';
+import { FormatCharge, FormatCurrencyPence } from 'Utils/Strings';
+import { PlatformView } from '../../Model/FeeTypes';
 
 const GrandTotals = (props: {
     report: Report,
@@ -13,13 +10,11 @@ const GrandTotals = (props: {
     totalCharges: number,
 }) => {
     let columns = [{
-        accessor: 'header',
-        Header: '',
-        width: 0.8,
+        id: 'header',
+        width: 200,
     }, {
-        accessor: 'total',
-        Header: '',
-        width: 1,
+        id: 'total',
+        width: 200,
     }];
 
     let endValues:            any = { header: 'Total invested' + (props.view.Providers.length > 1 ? ' across all platforms' : '') };
@@ -30,7 +25,7 @@ const GrandTotals = (props: {
     let portfolioLevelExAnte: any = { header: 'Portfolio level, Transactional' }
     let dimFee:               any = { header: 'DIM' }
     let clientFee:            any = { header: 'Advice fee' };
-    let totalCharge:          any = { header: <b><i>Total of all charges</i></b> }
+    let totalCharge:          any = { header: <b>Total of all charges</b> }
 
     let data = [
         endValues,
@@ -83,14 +78,17 @@ const GrandTotals = (props: {
         + charges.AdviceCharge
     );
 
-    totalCharge['total']          = <b><i>{FormatCharge(totalPercent, tc)}</i></b>;
+    totalCharge['total']          = <b>{FormatCharge(totalPercent, tc)}</b>;
          // props.view.GrandTotalCharge);
 
     return (
-        <Panel>
-            <h3>Grand Totals</h3>
-            <Table columns={columns} data={data} renderRowSubComponent={null} />
-        </Panel>
+        <Table
+            label            = {'Grand Totals'}
+            columns          = {columns}
+            data             = {data}
+            enableTableHead  = {false}
+            enableRowActions = {false}
+        />
     );
 }
 
