@@ -13,7 +13,7 @@ _deploy-spice: import-env
 		--cpu=2 \
 		--memory=4Gi \
 		--min-instances=1 \
-		--max-instances=8 \
+		--max-instances=3 \
 		--port=50051 \
 		--use-http2 \
 		--command=spicedb \
@@ -28,7 +28,7 @@ _deploy-api: import-env
 	$(eval URI := $(shell gcloud run services describe ongoing-spice \
 		--platform managed --region ${REGION} --format 'value(status.url)' | sed s/https:\\/\\/// ))
 
-	gcloud beta run deploy ${SERVICE} \
+	gcloud run deploy ${SERVICE} \
 		--execution-environment=gen2 \
 		--project=ongoing-${ENV} \
 		--service-account=ongoing-${ENV}-cloud-run@ongoing-${ENV}.iam.gserviceaccount.com \
@@ -40,7 +40,7 @@ _deploy-api: import-env
 		--cpu=2 \
 		--memory=4Gi \
 		--min-instances=1 \
-		--max-instances=5 \
+		--max-instances=3 \
 		--port=8000 \
 		--update-env-vars=FIREBASE_CONFIG=/app/Config/Firebase/config.json \
 		--update-env-vars=ONGOING_API_HOST=${DOMAIN_${ENV}} \
@@ -72,7 +72,8 @@ _deploy-dashboard: import-env
 		--add-cloudsql-instances=${DB_INSTANCE_${ENV}}:${REGION}:${DB_INSTANCE_${ENV}} \
 		--cpu=2 \
 		--memory=4Gi \
-		--max-instances=5 \
+		--min-instances=1 \
+		--max-instances=3 \
 		--port=8080 \
 		--update-env-vars=ONGOING_API_HOST=https://${DOMAIN_${ENV}}/api \
 		--update-env-vars=ONGOING_DASHBOARD_HOST=https://${DOMAIN_${ENV}} \
