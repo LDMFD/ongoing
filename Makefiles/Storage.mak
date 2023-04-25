@@ -1,6 +1,7 @@
 _gcp-storage-setup:
 	make _gcp-storage-create-service-account
-	make _gcp-storage-create-bucket
+	make _gcp-storage-create-docs-bucket
+	make _gcp-storage-create-static-bucket
 	make _gcp-storage-create-principle
 	make _gcp-storage-set-cors
 	make _gcp-storage-create-key
@@ -9,8 +10,17 @@ _gcp-storage-setup:
 _gcp-storage-create-service-account:
 	gcloud iam service-accounts create storage
 
-_gcp-storage-create-bucket: import-env
+# For storing user-submitted documents
+_gcp-storage-create-docs-bucket: import-env
 	gsutil mb -l ${REGION} gs://ongoing-${ENV}-docs
+
+# For hosting static files, such as javascript and css bundles
+_gcp-storage-create-static-bucket: import-env
+	gsutil mb -l ${REGION} gs://ongoing-${ENV}-static
+	gcloud storage buckets add-iam-policy-binding \
+		gs://ongoing-${ENV}-static \
+			--member=allUsers \
+			--role=roles/storage.objectViewer
 
 _gcp-storage-create-principle: import-env
 	gsutil iam ch \
@@ -19,6 +29,7 @@ _gcp-storage-create-principle: import-env
 
 _gcp-storage-set-cors: import-env
 	gsutil cors set Config/Storage/CORS.json gs://ongoing-${ENV}-docs
+	gsutil cors set Config/Storage/CORS.json gs://ongoing-${ENV}-static
 
 # Commands from ApiServer/pkg/mod/cloud.google.com/go/storage@v1.18.2/storage.go
 _gcp-storage-create-key: import-env

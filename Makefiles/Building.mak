@@ -2,17 +2,20 @@
 build-image:
 	docker-compose build --build-arg RELEASE=${RELEASE} --no-cache ${SERVICE}
 
-build-dashboard:
+build-dashboard: import-env
 	rm -rf DashboardServer/build
 
 	docker-compose -f docker-compose.prod.yml build --no-cache \
 		--build-arg RELEASE=${RELEASE} \
 		react-dashboard-builder
 	
-	docker-compose -f docker-compose.prod.yml run react-dashboard-builder
+	docker-compose -f docker-compose.prod.yml run \
+		--env PUBLIC_URL=${STATIC_FILE_SERVER}/${RELEASE}/ \
+		react-dashboard-builder
 	
 	mv Dashboard/build/index.html DashboardServer/
 	mv Dashboard/build DashboardServer/
+
 	find DashboardServer/build/ -name *.map -delete
 
 	docker-compose -f docker-compose.prod.yml build --no-cache \

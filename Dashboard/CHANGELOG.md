@@ -1,3 +1,7 @@
+# 1.11.1 2023-04-25
+
+- Use bucket for static file hosting to improve page load speed
+
 # 1.11.0 2023-04-22
 
 - Switch from react-table to material-react-table

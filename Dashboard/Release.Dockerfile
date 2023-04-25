@@ -1,7 +1,7 @@
 FROM node:16-alpine AS base
 
 ARG RELEASE dev
-ENV RELEASE $RELEASE
+ENV RELEASE ${RELEASE}
 
 WORKDIR /app
 
@@ -13,5 +13,8 @@ ADD scripts scripts
 ADD src src
 ADD .sentryclirc .
 ADD tsconfig.json .
+
+ARG PUBLIC_URL
+ENV PUBLIC_URL ${PUBLIC_URL}
 
 CMD npm run release

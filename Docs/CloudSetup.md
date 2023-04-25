@@ -65,10 +65,16 @@ Create Firebase project.
 
 ## GCP setup
 
-    # If required:
+Set up static file serving for the React app bundles:
+
+- Follow the steps in https://cloud.google.com/storage/docs/hosting-static-website
+
+If required:
+
     make gcp-create-artifact_registry
 
-    # Run this, then enter db password twice when prompted
+Run this, then enter db password twice when prompted:
+
     make gcp-setup
 
 Then:

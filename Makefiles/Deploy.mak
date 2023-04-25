@@ -84,6 +84,9 @@ _deploy-dashboard: import-env
 		--update-secrets=ONGOING_SENTRY_DSN=sentry-dsn-dashboard:${SECRET_SENTRY_DSN_DASHBOARD_${ENV}}
 	make cloudrun-update-traffic SERVICE=${SERVICE}
 
+deploy-dashboard-static: import-env
+	gcloud storage cp -Z -r DashboardServer/build/static gs://ongoing-${ENV}-static/${RELEASE}/static
+
 cloudrun-update-traffic:
 	gcloud run services update-traffic ${SERVICE} \
 		--region=${REGION} \
@@ -118,6 +121,7 @@ up-dashboard:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
 	@echo "*** DEPLOYING DASHBOARD ${UUID}"
 	make build-dashboard RELEASE=${UUID}
+	make deploy-dashboard-static RELEASE=${UUID}
 	make docker-push-dashboard RELEASE=${UUID}
 	make deploy-dashboard RELEASE=${UUID}
 	@echo "*** DEPLOYED DASHBOARD ${UUID}"
