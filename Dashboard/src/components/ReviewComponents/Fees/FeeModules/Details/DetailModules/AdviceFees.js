@@ -1,4 +1,4 @@
-import { useContext, useCallback } from 'react';
+import { useContext } from 'react';
 import Day from 'dayjs';
 
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
@@ -6,7 +6,7 @@ import { FormatCurrencyPence } from 'Utils/Strings';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { Context } from 'State';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import { Download, DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 import Panel from 'Components/Library/Panel/Panel';
 
@@ -28,10 +28,6 @@ const AdviceFees = () => {
             });
         }
     });
-
-    const downloadFile = useCallback(uid => () => {
-        Download(uid);
-    }, []);
 
     const columns = [{
         id: 'policy',
