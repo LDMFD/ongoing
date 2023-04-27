@@ -7,6 +7,7 @@ import (
 	"ongoing/ApiServer/Advisor/OrgResources/Funds"
 	"ongoing/ApiServer/Advisor/OrgResources/Models"
 	"ongoing/ApiServer/Advisor/OrgResources/Operators"
+	"ongoing/ApiServer/Advisor/OrgResources/PolicyGroups"
 	"ongoing/ApiServer/Advisor/OrgResources/PolicyProviders"
 	"ongoing/ApiServer/Advisor/OrgResources/PolicyTypes"
 	"ongoing/ApiServer/Advisor/OrgResources/ProviderCharges"
@@ -22,8 +23,9 @@ func AddRoutes(r *gin.RouterGroup) {
 	Funds.AddRoutes(r.Group("/funds"))
 	Operators.AddRoutes(r.Group("/operators"))
 	Models.AddRoutes(r.Group("/models"))
-	PolicyTypes.AddRoutes(r.Group("/policy-types"))
+	PolicyGroups.AddRoutes(r.Group("/policy-groups"))
 	PolicyProviders.AddRoutes(r.Group("/policy-providers"))
+	PolicyTypes.AddRoutes(r.Group("/policy-types"))
 	ProviderCharges.AddRoutes(r.Group("/provider-charges"))
 	RiskProviders.AddRoutes(r.Group("/risk-providers"))
 	RiskLevels.AddRoutes(r.Group("/risk-levels"))

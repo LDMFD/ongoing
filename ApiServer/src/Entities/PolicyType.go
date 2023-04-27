@@ -11,11 +11,13 @@ type PolicyType struct {
 
 	Id        int64     `bun:"id,pk,autoincrement"`
 	Uid       string    `bun:"uid,notnull"`
+	GroupId   *string   `bin:"group_id"`
 	OrgId     int64     `bun:"org_id"`
 	Name      string    `bun:"name,notnull"`
 	Timestamp time.Time `bun:",nullzero,notnull,default:current_timestamp"`
 
 	Org      *Organisation `bun:"rel:has-one,join:org_id=id"`
+	Group    *PolicyGroup  `bun:"rel:has-one,join:group_id=id"`
 	Policies []*Policy     `bun:"rel:has-many,join:id=policy_type_id"`
 }
 

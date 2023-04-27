@@ -6,8 +6,9 @@ import AdvisorClientRoutes  from './Pages/Advisor/AdvisorRoutes';
 import OperatorRoutes       from './Pages/OrgResources/Operators/OperatorRoutes';
 import FundRoutes           from './Pages/OrgResources/Funds/FundRoutes';
 import ModelRoutes          from './Pages/OrgResources/Models/ModelRoutes';
-import PolicyTypeRoutes     from './Pages/OrgResources/PolicyTypes/PolicyTypeRoutes';
+import PolicyGroupRoutes    from "./Pages/OrgResources/PolicyGroups/PolicyGroupRoutes";
 import PolicyProviderRoutes from './Pages/OrgResources/PolicyProviders/PolicyProviderRoutes';
+import PolicyTypeRoutes     from './Pages/OrgResources/PolicyTypes/PolicyTypeRoutes';
 import RiskProviderRoutes   from './Pages/OrgResources/RiskProviders/RiskProviderRoutes';
 import ModulePresetRoutes   from './Pages/OrgResources/Reviews/ModulePresets/ModulePresetRoutes';
 
@@ -23,8 +24,9 @@ const routes = () => (
         <Route path="/operators"                      component={OperatorRoutes} />
         <Route path="/funds"                          component={FundRoutes} />
         <Route path="/models"                         component={ModelRoutes} />
+        <Route path="/policy-groups"                  component={PolicyGroupRoutes} />
+        <Route path="/policy-providers"               component={PolicyProviderRoutes} />
         <Route path="/policy-types"                   component={PolicyTypeRoutes} />
-        <Route path="/platforms"                      component={PolicyProviderRoutes} />
         <Route path="/risk-providers"                 component={RiskProviderRoutes} />
         <Route path="/review-config/module-presets"   component={ModulePresetRoutes} />
 

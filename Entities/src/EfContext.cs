@@ -40,6 +40,7 @@ namespace Ongoing
         public virtual DbSet<Job> Job { get; set; } = null!;
         public virtual DbSet<Policy> Policies { get; set; } = null!;
         public virtual DbSet<PolicyFund> PolicyFunds { get; set; } = null!;
+        public virtual DbSet<PolicyGroup> PolicyGroups { get; set; } = null!;
         public virtual DbSet<PolicyProvider> PolicyProviders { get; set; } = null!;
         public virtual DbSet<PolicyType> PolicyTypes { get; set; } = null!;
         public virtual DbSet<Portfolio> Portfolios { get; set; } = null!;
@@ -87,6 +88,7 @@ namespace Ongoing
             builder.ApplyConfiguration(new JobConfig());
             builder.ApplyConfiguration(new PolicyConfig());
             builder.ApplyConfiguration(new PolicyFundConfig());
+            builder.ApplyConfiguration(new PolicyGroupConfig());
             builder.ApplyConfiguration(new PolicyProviderConfig());
             builder.ApplyConfiguration(new PolicyTypeConfig());
             builder.ApplyConfiguration(new PortfolioConfig());

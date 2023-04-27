@@ -25,6 +25,7 @@ func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesRespons
 		Models:          make([]Entities.ReportModel, 0),
 		ModulePresets:   make([]Entities.ReportModulePreset, 0),
 		Operators:       make([]Entities.ReportOperator, 0),
+		PolicyGroups:    make([]Entities.ReportPolicyGroup, 0),
 		PolicyProviders: make([]Entities.ReportPolicyProvider, 0),
 		PolicyTypes:     make([]Entities.ReportPolicyType, 0),
 		ProviderCharges: make([]Entities.ReportProviderCharge, 0),
@@ -128,6 +129,20 @@ func GetOrgResourcesInternal(c *gin.Context, orgId *string) *OrgResourcesRespons
 	}
 	for _, rl := range riskLevels {
 		entities.RiskLevels = append(entities.RiskLevels, rl.ToReport())
+	}
+
+	var policyGroups []Entities.PolicyGroup
+	if err := db.NewSelect().
+		Model(&policyGroups).
+		Relation("Org").
+		Where("Org.Uid = ?", orgId).
+		OrderExpr("name ASC").
+		Scan(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(err.Error())
+	}
+	for _, pt := range policyGroups {
+		entities.PolicyGroups = append(entities.PolicyGroups, pt.ToReport())
 	}
 
 	var policyTypes []Entities.PolicyType

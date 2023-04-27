@@ -62,6 +62,9 @@ namespace Ongoing.Entities
         public virtual ICollection<RiskProvider> RiskProviders { get; set; } = null!;
 
         [InverseProperty("Org")]
+        public virtual ICollection<PolicyGroup> PolicyGroups { get; set; } = null!;
+        
+        [InverseProperty("Org")]
         public virtual ICollection<PolicyType> PolicyTypes { get; set; } = null!;
 
         [InverseProperty("Org")]
@@ -86,6 +89,7 @@ class OrganisationConfig : IEntityTypeConfiguration<Organisation>
         builder.HasMany(b => b.Models).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(b => b.ModulePresets).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(b => b.Operators).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);
+        builder.HasMany(b => b.PolicyGroups).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(b => b.RiskProviders).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(b => b.PolicyTypes).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);
         builder.HasMany(b => b.PolicyProviders).WithOne(p => p.Org).HasForeignKey(p => p.OrgId).OnDelete(DeleteBehavior.Restrict);

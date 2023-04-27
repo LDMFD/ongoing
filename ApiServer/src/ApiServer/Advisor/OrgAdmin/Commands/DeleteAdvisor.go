@@ -4,28 +4,19 @@ import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/uptrace/bun"
 	"log"
 	"net/http"
-	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
-	"ongoing/Entities"
+	"ongoing/Operators/OrgResourceDeletion"
+	"ongoing/ServiceContext"
 )
 
 func DeleteAdvisor(c *gin.Context) {
-	auth := c.MustGet("AUTH").(*AuthService.Client)
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path UpdateOrDeleteAdvisorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var err error
-	var advisor *Entities.Advisor
-	if advisor, err = Helpers.AdvisorFromUserUID(c, db, path.AdvisorId); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No such advisor exists."})
+		context.Response.InvalidInput()
 		return
 	}
 
@@ -37,44 +28,13 @@ func DeleteAdvisor(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
-	var orgId string
-	if orgs, err := auth.LookupOrganisations(advisor.User.Uid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	} else {
-		orgId = orgs[0]
-	}
-
-	ctx := c.Request.Context()
-	if err := auth.RemoveMember(&ctx, &tx, orgId, advisor.User.Uid); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Printf("%+v", err)
-		_ = tx.Rollback()
-		return
-	}
-
-	if _, err := tx.NewDelete().
-		Model(advisor).
-		WherePK().
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
-
-	var user Entities.User
-	if _, err := tx.NewDelete().
-		Model(&user).
-		Where("id = ?", advisor.UserId).
-		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
-	}
+	ok := OrgResourceDeletion.DeleteAdvisor(context, &tx, path.AdvisorId)
 
 	if err := tx.Commit(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		log.Println(errors.WithStack(err))
-		return
+		context.Panic(err)
 	}
 
-	c.JSON(200, gin.H{})
+	if ok {
+		c.Status(http.StatusOK)
+	}
 }

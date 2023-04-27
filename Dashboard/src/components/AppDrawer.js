@@ -50,6 +50,10 @@ const tier1Items = [
         link: '/review-config/module-presets',
     },
     {
+        label: 'Policy Groups',
+        link: '/policy-groups',
+    },
+    {
         label: 'Policy Types',
         link: '/policy-types',
     },

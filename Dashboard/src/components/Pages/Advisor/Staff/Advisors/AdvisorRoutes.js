@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, useRouteMatch } from "react-router-dom";
 import AdvisorList from './AdvisorList';
 import AddAdvisor from './AddAdvisor';
 import EditAdvisor from './EditAdvisor';
+import DeleteAdvisor from './DeleteAdvisor';
 
 const Advisor = () => {
     let { path } = useRouteMatch();
@@ -22,6 +23,9 @@ const Advisor = () => {
 
             <Route path={`${path}/add`}>
                 <AddAdvisor />
+            </Route>
+            <Route path={`${path}/id/:advisorId/delete`}>
+                <DeleteAdvisor />
             </Route>
             <Route path={`${path}/id/:advisorId/edit`}>
                 <EditAdvisor />

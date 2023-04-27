@@ -2,6 +2,7 @@ import Entities           from './Entities';
 import Funds              from './Funds';
 import Models             from './Models';
 import Operators          from './Operators';
+import PolicyGroups       from './PolicyGroups';
 import PolicyProviders    from './PolicyProviders';
 import PolicyTypes        from './PolicyTypes';
 import ProviderCharges    from './ProviderCharges';
@@ -14,6 +15,7 @@ const defaults = {
     Funds,
     Models,
     Operators,
+    PolicyGroups,
     PolicyProviders,
     PolicyTypes,
     ProviderCharges,

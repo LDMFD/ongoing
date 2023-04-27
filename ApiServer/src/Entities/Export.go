@@ -18,6 +18,7 @@ type OrgResources struct {
 	Models          []ReportModel
 	ModulePresets   []ReportModulePreset
 	Operators       []ReportOperator
+	PolicyGroups    []ReportPolicyGroup
 	PolicyProviders []ReportPolicyProvider
 	PolicyTypes     []ReportPolicyType
 	ProviderCharges []ReportProviderCharge

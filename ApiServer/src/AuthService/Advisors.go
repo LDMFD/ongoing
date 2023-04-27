@@ -53,7 +53,8 @@ func (c *Client) RemoveMember(ctx *context.Context, tx *bun.Tx, orgId, userId st
 		return err
 	}
 
-	if err := c.removeRelationship(ctx, tx, "organisation", orgId, role, "user", userId); err != nil {
+	cccc := context.TODO()
+	if err := c.removeRelationship(&cccc, tx, "organisation", orgId, role, "user", userId); err != nil {
 		return err
 	}
 	return nil

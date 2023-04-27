@@ -30,6 +30,9 @@ namespace Ongoing.Entities
         [Column("name")]
         public string Name { get; set; } = null!;
         
+        [Column("group_id")]
+        public int? GroupId { get; set; }
+
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
 
@@ -40,6 +43,10 @@ namespace Ongoing.Entities
 
         [InverseProperty("PolicyType")]
         public virtual ICollection<Policy> Policies { get; set; }
+
+        [ForeignKey("GroupId")]
+        [InverseProperty("PolicyTypes")]
+        public virtual PolicyGroup? PolicyGroup { get; set; }
     }
 }
 
@@ -56,6 +63,12 @@ class PolicyTypeConfig : IEntityTypeConfiguration<PolicyType>
             .HasForeignKey(d => d.OrgId)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("fk_policytype_org");
+
+        builder.HasOne(d => d.PolicyGroup)
+            .WithMany(p => p.PolicyTypes)
+            .HasForeignKey(d => d.GroupId)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("fk_policytype_group");
 
         builder.HasAlternateKey(e => e.Uid);
         builder.HasAlternateKey(e => new { e.OrgId, e.Name });

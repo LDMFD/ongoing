@@ -50,3 +50,23 @@ func (c *Client) GetAdvisor(clientId string) (advisorId string, err error) {
 	}
 	return "", nil
 }
+
+func (c *Client) GetClients(advisorId string) (clientIds []string, err error) {
+	if rels, err := c.readRelationships("advisor", advisorId, nil); err != nil {
+		return clientIds, err
+	} else {
+		for _, rel := range rels {
+			if rel.Role == "client" {
+				clientIds = append(clientIds, rel.UserId)
+			}
+		}
+		return clientIds, nil
+	}
+}
+
+func (c *Client) DetachAdvisor(ctx *context.Context, tx *bun.Tx, advisorId, clientId string) error {
+	if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", advisorId); err != nil {
+		return err
+	}
+	return nil
+}

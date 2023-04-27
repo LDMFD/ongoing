@@ -11,7 +11,7 @@ import (
 	"ongoing/Entities"
 )
 
-func AdvisorFromUserUID(c *gin.Context, db *bun.DB, uid string) (*Entities.Advisor, error) {
+func AdvisorFromUserUID(c *gin.Context, db bun.IDB, uid string) (*Entities.Advisor, error) {
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	var advisor = Entities.Advisor{}
