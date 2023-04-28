@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import './AppDrawer.css';
+import './Framework.css';
 
 import Routes from './Routes';
 import AuthControl, { UserType } from './AuthControl';
@@ -119,7 +119,7 @@ const Sidebars = {
     [ UserType.Client ]:    clientSpaceItem,
 };
 
-export default function PermanentDrawerLeft() {
+const Framework = () => {
     const [state] = useContext(Context);
 
     let location = useLocation();
@@ -231,3 +231,5 @@ export default function PermanentDrawerLeft() {
         </Box>
     );
 }
+
+export default Framework;

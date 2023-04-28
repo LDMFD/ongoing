@@ -15,7 +15,7 @@ import { BrowserTracing } from "@sentry/tracing";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
-import AppDrawer from 'Components/AppDrawer'
+import Framework from 'Components/Framework'
 import StateProvider from 'State/StateProvider'
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -100,7 +100,7 @@ if (window.location.search) {
 
 let ConcurrentRequestCount = 0;
 
-// TODO Refactor to Spinner.js and .css (see AppDrawer.js & .css)
+// TODO Refactor to Spinner.js and .css (see Framework.js & .css)
 function ShowSpinner() {
     if (++ConcurrentRequestCount > 0) {
         document.querySelectorAll('.request-spinner')?.forEach(element => {
@@ -207,7 +207,7 @@ function App() {
                 <StateProvider>
                     <Router>
                         <ThemeProvider theme={theme}>
-                            <AppDrawer />
+                            <Framework />
                         </ThemeProvider>
                     </Router>
 
