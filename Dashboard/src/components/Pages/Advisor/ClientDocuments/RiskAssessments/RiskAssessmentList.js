@@ -38,7 +38,7 @@ const RiskAssessmentList = () => {
             label:     level.Label,
             desc:      level.Desc,
             completed: Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
-            fileId:    ra.File.Uid,
+            fileId:    ra.File?.Uid,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
 

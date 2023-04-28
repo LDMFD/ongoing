@@ -1,3 +1,7 @@
+# 1.11.2 2023-04-28
+
+- Fix risk assessments crash when no file attached
+
 # 1.11.1 2023-04-25
 
 - Use bucket for static file hosting to improve page load speed
