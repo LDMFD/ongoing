@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Npgsql;
 using Ongoing.Entities;
 using File = System.IO.File;
@@ -7,6 +8,8 @@ namespace Ongoing
 {
     public partial class EfContext : DbContext
     {
+        private string connection;
+        
         static EfContext()
         {
             // Enums - keep in sync with list in OnModelCreating
@@ -16,8 +19,9 @@ namespace Ongoing
             NpgsqlConnection.GlobalTypeMapper.MapEnum<UserType>();
         }
 
-        public EfContext()
+        public EfContext(string connection)
         {
+            this.connection = connection;
         }
 
         public EfContext(DbContextOptions<EfContext> options)
@@ -60,7 +64,9 @@ namespace Ongoing
                 // string connection = File.ReadAllText($"{home}/.homedog/secrets/cloud-sql/db-connection-dotnet");
                 // optionsBuilder.UseNpgsql(connection);
             }
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ongoing-local;Username=postgres;Password=p");
+
+            optionsBuilder.UseNpgsql(connection);
+            // "Host=localhost;Port=5432;Database=ongoing-local;Username=postgres;Password=p");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
