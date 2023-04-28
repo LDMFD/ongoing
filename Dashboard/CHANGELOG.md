@@ -1,6 +1,10 @@
+# 1.11.3 2023-04-28
+
+- Fix risk assessments crash when no file attached (review component)
+
 # 1.11.2 2023-04-28
 
-- Fix risk assessments crash when no file attached
+- Fix risk assessments crash when no file attached (document tab)
 
 # 1.11.1 2023-04-25
 
