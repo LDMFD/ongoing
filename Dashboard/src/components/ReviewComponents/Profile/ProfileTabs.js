@@ -1,14 +1,15 @@
-import React, { useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import {
     Tab,
     Tabs,
 } from '@mui/material';
+import React, { useContext } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-import { RouteMatch } from 'Utils/Routing';
+import TabContent from 'Components/Library/TabContent/TabContent';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { ModuleTypeProfile } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { Context } from 'State';
+import { ModuleTypeProfile } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
+import { RouteMatch } from 'Utils/Routing';
 
 const ProfileTabs = ({ basePath, baseTarget, children }) => {
     const [state,  ] = useContext(Context);
@@ -24,10 +25,9 @@ const ProfileTabs = ({ basePath, baseTarget, children }) => {
     let currentTab = routeMatch?.path;
 
     return (
-        <>
+        <TabContent>
             <Module client = {client}
                     module = {ModuleTypeProfile} />
-            <br />
 
             <Tabs value={currentTab}>
                 <Tab label="Fact find"          value={`${basePath}/fact-find`}          to={`${baseTarget}/fact-find`}          component={Link} />
@@ -36,7 +36,7 @@ const ProfileTabs = ({ basePath, baseTarget, children }) => {
             </Tabs>
 
             {children}
-        </>
+        </TabContent>
     );
 };
 

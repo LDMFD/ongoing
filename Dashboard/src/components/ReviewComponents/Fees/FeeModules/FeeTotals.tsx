@@ -3,12 +3,12 @@ import React, { useContext } from 'react';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { CalculatePlatformModel } from '../Model/FeeModel';
 import { Context } from 'State';
-
 import GrandTotals from './Totals/GrandTotals';
 import PlatformTotals from './Totals/PlatformTotals';
 import PolicyTotals from './Totals/PolicyTotals';
 import { ModuleTypeFeeTotals } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
+import TabContent from 'Components/Library/TabContent/TabContent';
 
 const FeeTotals = () => {
     const [ state ]: any = useContext(Context);    
@@ -18,7 +18,7 @@ const FeeTotals = () => {
     let view = CalculatePlatformModel(report, state);
 
     return (
-        <>
+        <TabContent>
             <Module module={ModuleTypeFeeTotals} client={null} />
             <br />
 
@@ -50,7 +50,7 @@ const FeeTotals = () => {
                     report = {report}
                 />
             }
-        </>
+        </TabContent>
     );
 }
 

@@ -142,7 +142,6 @@ const FundLevelFees = () => {
     return (
         <>
             <Module module={ModuleTypeFundLevelFees} client={null} />
-            <br />
 
             {view.Providers.map((b: ProviderBlockView, ix: number) => (
                 <ProviderBlock key={ix} block={b} total={view.Total} />

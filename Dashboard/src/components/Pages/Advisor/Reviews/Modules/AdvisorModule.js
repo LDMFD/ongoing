@@ -1,15 +1,14 @@
-import React, { useContext, useState } from 'react';
-import { Link  } from 'react-router-dom';
+import { useContext, useState } from 'react';
 import {
-    Button,
     Card,
     CardContent,
-    CardHeader,
+    CardHeader
 } from '@mui/material';
 
 import './AdvisorModule.css';
-import { Context } from 'State/StateProvider'
+import { Context } from 'State/StateProvider';
 import { DefaultModule } from './DefaultModule';
+import Dropdown from 'Components/Library/Dropdown/Dropdown';
 
 export const AdvisorModule = ({ module }) => {
     const [ state,  ] = useContext(Context);
@@ -47,50 +46,37 @@ export const AdvisorModule = ({ module }) => {
     let basePath = window.location.pathname;
 
     return (
-        <div className='ong-EditModule'>
-            <br />
+        <Card variant='outlined'>
+            <div style={{ float: 'right', margin: '1rem' }}>
+                <Dropdown
+                    title = 'Customise'
+                    items = {[
+                        {
+                            label: 'Customise introduction',
+                            link: `${basePath}/edit/${module}/intro`,
+                        },
+                        {
+                            label: 'Add further information',
+                            link: `${basePath}/edit/${module}/text`,
+                        },
+                    ]}
+                />
+            </div>
 
-            {preset &&
-                <Card variant='outlined'>
-                    <CardHeader subheader="Preset Introduction" />
-                    <CardContent>
-                        <div dangerouslySetInnerHTML={{ __html: preset.Text }} />
-                    </CardContent>
-                </Card>
-            }
-
-            {moduleState.Intro.length ? 
-                <Card variant='outlined'>
-                    <CardHeader subheader="Custom Introduction" />
-                    <CardContent>
-                        <div dangerouslySetInnerHTML={{ __html: moduleState.Intro }} />
-                        <Link to={{ pathname: `${basePath}/edit/${module}/intro` }}><Button>Edit</Button></Link>
-                    </CardContent>
-                </Card>
-            :
-                <Link to={{ pathname: `${basePath}/edit/${module}/intro` }}>
-                    <Button>
-                        Override preset introduction
-                    </Button>
-                </Link>
-            }
-
-            {moduleState.Text.length ?
-                <Card variant='outlined'>
-                    <CardHeader subheader="Custom Body" />
-                    <CardContent>
-                        <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
-
-                        <Link to={{ pathname: `${basePath}/edit/${module}/text` }}><Button>Edit</Button></Link>
-                    </CardContent>
-                </Card>
-            :
-                <Link to={{ pathname: `${basePath}/edit/${module}/text` }}>
-                    <Button>
-                        Add custom paragraph
-                    </Button>
-                </Link>
-            }
-        </div>
+            <CardHeader subheader="Section introduction" />
+            <CardContent>
+                {preset && !moduleState.Intro.length ?
+                    <div dangerouslySetInnerHTML={{ __html: preset.Text }} className='ong-EditModule-y-adjust' />
+                : null}
+                {moduleState.Intro.length ?
+                    <div dangerouslySetInnerHTML={{ __html: moduleState.Intro }} />
+                : null}
+                {moduleState.Text.length ? 
+                    <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
+                : null}
+    
+            </CardContent>
+        </Card>
     );
 }
+

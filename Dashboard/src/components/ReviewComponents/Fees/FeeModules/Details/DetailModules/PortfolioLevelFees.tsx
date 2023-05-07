@@ -94,13 +94,8 @@ const PolicyBlock = (props: {
 
     return (
        <Panel>
-            <h4>Policy: {props.policy.ExternalId}</h4>
-            <p>
-                Value at end of period: {FormatCurrencyPence(props.policy.EndValue)}
-            </p>
-
             <Table
-                label            = {'Portfolio level fees'}
+                label            = {`Portfolio ${props.policy.ExternalId} (value at end of period: ${FormatCurrencyPence(props.policy.EndValue)})`}
                 columns          = {columns}
                 data             = {rows}
                 enableRowActions = {false}
@@ -144,7 +139,6 @@ const PortfolioLevelFees = () => {
     return (
         <>
             <Module module={ModuleTypePortfolioLevelFees} client={null} />
-            <br />
 
             {view.Providers.map((b: ProviderBlockView, ix: number) => (
                 <ProviderBlock key={ix} block={b} total={view.Total} />

@@ -20,7 +20,7 @@ const ClientAccountPage = () => {
 
     return (
         <Panel>
-            <div style={{ float: 'right' }}>
+            <div style={{ float: 'right', margin: '1rem' }}>
                 <Dropdown
                     title = 'Client actions'
                     items = {[

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import './ClientModule.css';
 import { Context } from 'State/StateProvider'
 import { DefaultModule } from './DefaultModule';
+import Panel from 'Components/Library/Panel/Panel';
 
 export const ClientModule = ({ module }) => {
     const [ state,  ] = useContext(Context);
@@ -36,14 +37,13 @@ export const ClientModule = ({ module }) => {
         intro = preset.Text;
     }
 
-    return (
-        <>
-            <br />
+    return (intro.length || moduleState.Text.length) ? (
+        <Panel>
             <div dangerouslySetInnerHTML={{ __html: intro }} />
 
             {moduleState.Text &&
                 <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
             }
-        </>
-    );
+        </Panel>
+    ) : null;
 }

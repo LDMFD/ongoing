@@ -1,10 +1,12 @@
 import React from 'react';
 
+import TabContent from 'Components/Library/TabContent/TabContent';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { ModuleTypeIntroduction } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
+import { FromCanonical } from 'Utils/DateTime';
 import { FormatCurrency } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
-import { FromCanonical } from 'Utils/DateTime';
+import Panel from 'Components/Library/Panel/Panel';
 
 const Introduction = () => {
     let report = GetReport();
@@ -18,16 +20,19 @@ const Introduction = () => {
     let endDate =   FromCanonical(meta.EndDate)?.toLocaleDateString('en-GB');
 
     return (
-        <div>
+        <TabContent>
             <Module module = {ModuleTypeIntroduction} />
 
+            <Panel>
             <p>This review covers the period from {startDate} to {endDate}.</p>
 
             <p>
                 Total start value: {FormatCurrency(totalStarting)}<br />
                 Total end value: {FormatCurrency(totalEnding)}
             </p>
-        </div>
+            </Panel>
+            
+        </TabContent>
     );
 }
 export default Introduction;

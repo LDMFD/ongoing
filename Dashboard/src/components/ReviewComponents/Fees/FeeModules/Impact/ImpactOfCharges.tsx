@@ -1,18 +1,17 @@
+import { Paper } from '@mui/material';
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
-import { Paper } from '@mui/material';
 
-import { CalculatePlatformModel } from '../../Model/FeeModel';
-import { Context } from 'State';
+import TabContent from 'Components/Library/TabContent/TabContent';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Context } from 'State';
+import { ModuleTypeFeesImpact } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
+import { CalculatePlatformModel } from '../../Model/FeeModel';
+import PersistenceControls from './ControlsContainer';
 import { ImpactForm } from './Form';
 import ImpactGraph from './ImpactGraph';
 import ImpactModel, { Limits } from './ImpactModel';
-import PersistenceControls from './ControlsContainer';
-
-import './Impact.css';
-import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { ModuleTypeFeesImpact } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 
 const ImpactOfGrowthChart = () => {
     const [ state ]: any = useContext(Context);
@@ -58,7 +57,7 @@ const ImpactOfGrowthChart = () => {
     let data = ImpactModel(view, report, input, false);
 
     return (
-        <div className='impactChart'>
+        <TabContent>
             <Module module={ModuleTypeFeesImpact} client={null} />
 
             <Paper
@@ -84,7 +83,7 @@ const ImpactOfGrowthChart = () => {
                 />
                 <div className='impactChart-xAxisLabel'>Year</div>
             </Paper>
-        </div>
+        </TabContent>
     );
 }
 

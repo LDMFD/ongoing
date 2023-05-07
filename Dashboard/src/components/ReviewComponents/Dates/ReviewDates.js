@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useContext } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import TabContent from 'Components/Library/TabContent/TabContent';
 import { Api } from 'State';
-import { Context } from 'State/StateProvider'
+import { Context } from 'State/StateProvider';
 import { FromCanonical } from 'Utils/DateTime';
 
 const Dates = () => {
@@ -24,8 +25,7 @@ const Dates = () => {
     let endDate =   FromCanonical(draft.EndDate)?.toLocaleDateString('en-GB');
 
     return (
-        <div>
-            <br />
+        <TabContent>
             <Link to={`/clients/id/${clientId}/modules/dates/edit`}>
                 Edit dates
             </Link>
@@ -34,7 +34,7 @@ const Dates = () => {
                 Start date: {startDate} <br />
                 End date: {endDate} <br />
             </p>
-        </div>
+        </TabContent>
     );
 }
 export default Dates;

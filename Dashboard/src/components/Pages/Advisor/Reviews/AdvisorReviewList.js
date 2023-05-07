@@ -5,6 +5,7 @@ import Table from 'Components/Library/Table/Table';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
 import { FromCanonical } from 'Utils/DateTime';
+import TabContent from 'Components/Library/TabContent/TabContent';
 
 const AdvisorReviewList = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -44,16 +45,18 @@ const AdvisorReviewList = () => {
     }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));
 
     return (
-        <Table
-            flexibleColumn  = {3}
-            columns         = {columns}
-            data            = {reviews}
-            label           = 'Publish Draft'
-            enableEdit      = {false}
-            defaultAction   = {id => `/clients/id/${clientId}/reviews/id/${id}/modules/introduction`}
-            deleteAction    = {row => `/clients/id/${clientId}/reviews/delete/${row.id}`}
-            toolbarCallback = {publishReview}
-        />
+        <TabContent>
+            <Table
+                flexibleColumn  = {3}
+                columns         = {columns}
+                data            = {reviews}
+                label           = 'Publish Draft'
+                enableEdit      = {false}
+                defaultAction   = {id => `/clients/id/${clientId}/reviews/id/${id}/modules/introduction`}
+                deleteAction    = {row => `/clients/id/${clientId}/reviews/delete/${row.id}`}
+                toolbarCallback = {publishReview}
+            />
+        </TabContent>
     );
 }
 

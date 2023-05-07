@@ -44,6 +44,7 @@ const ReportTabs = ({ children }) => {
     return (
         <div className='review'>
             <ReportTabsComponent />
+
             {children}
         </div>
     );

@@ -1,3 +1,7 @@
+# 1.11.4 2023-05-07
+
+- Move module editing into its own dialog, tidy up whitespace
+
 # 1.11.3 2023-04-28
 
 - Fix risk assessments crash when no file attached (review component)

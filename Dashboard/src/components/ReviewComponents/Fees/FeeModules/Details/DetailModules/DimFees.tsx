@@ -58,12 +58,8 @@ const PolicyBlock = (props: {
 
     return (
         <Panel>
-            <h4>
-                Policy: {props.policy}
-            </h4>
-            
             <Table
-                label            = 'DIM Fees'
+                label            = {`Policy ${props.policy}`}
                 columns          = {columns}
                 data             = {fees}
                 enableRowActions = {false}
@@ -103,7 +99,6 @@ const DimFees = () => {
     return (
         <div>
             <Module module={ModuleTypeDimFee} client={null} />
-            <br />
 
             {view.Providers.map((b: ProviderBlockView, ix: number) => (
                 <ProviderBlock key={ix} block={b} total={view.Total} />

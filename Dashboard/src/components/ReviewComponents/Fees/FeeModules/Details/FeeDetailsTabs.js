@@ -7,6 +7,7 @@ import {
 import { RouteMatch } from 'Utils/Routing';
 
 import { GetReport } from '../../../GetReport';
+import TabContent from 'Components/Library/TabContent/TabContent';
 
 const FeeDetailsTabs = ({ children, basePath, baseTarget }) => {
     const { pathname } = useLocation();
@@ -38,7 +39,9 @@ const FeeDetailsTabs = ({ children, basePath, baseTarget }) => {
                 }
             </Tabs>
 
-            {children}
+            <TabContent>
+                {children}
+            </TabContent>
         </>
     );
 };

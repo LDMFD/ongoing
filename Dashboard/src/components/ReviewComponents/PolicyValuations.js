@@ -1,4 +1,5 @@
 import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import TabContent from 'Components/Library/TabContent/TabContent';
 import Table from 'Components/Library/Table/Table';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { ModuleTypePolicyValuations } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
@@ -94,7 +95,7 @@ const PolicyValuations = () => {
     }).sort((p,q) => (p.externalId < q.externalId) ? -1 : ((p.externalId > q.externalId) ? 1 : 0));
 
     return (
-        <>
+        <TabContent>
             <Module module = {ModuleTypePolicyValuations} />
             <br />
 
@@ -107,7 +108,7 @@ const PolicyValuations = () => {
             />
 
             {/* <DataGrid autoHeight {...data} /> */}
-        </>
+        </TabContent>
     );
 }
 

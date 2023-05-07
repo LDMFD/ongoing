@@ -38,6 +38,7 @@ const DocumentsTabs = ({ children }) => {
     return (
         <div className='review'>
             <DocumentsTabsComponent />
+            <br />
             {children}
         </div>
     );
