@@ -1,3 +1,19 @@
+# Public interface:
+
+release-api:
+	make create-release-api RELEASE=${RELEASE}
+	make work-on-prod
+	make deploy-api RELEASE=${RELEASE}
+	make work-on-staging
+
+release-dashboard:
+	make create-release-dashboard RELEASE=${RELEASE}
+	make work-on-prod
+	make deploy-dashboard RELEASE=${RELEASE}
+	make work-on-staging
+
+# ---
+
 _docker_push:
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:${RELEASE}
 	docker tag ${IMAGE} ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:latest
@@ -11,11 +27,11 @@ _tag_for_release:
 	docker push ${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}/${IMAGE}:${RELEASE}
 
 # Usage: make release-api RELEASE=1.2.3
-release-api:
+create-release-api:
 	make _tag_for_release SERVICE=api IMAGE=ongoing-api
 
 # Usage: make release-dashboard RELEASE=1.2.3
-release-dashboard:
+create-release-dashboard:
 	make _tag_for_release SERVICE=dashboard IMAGE=ongoing-dashboard-server
 
 # Usage: make docker-push-api RELEASE=1.2.3

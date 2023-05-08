@@ -16,9 +16,17 @@
 
 # Release
 
-### Version the current build (tags and pushes Git and Docker tags)
+    # Run:
 
     make release-{api|dashboard} RELEASE=1.2.3
+
+Which does the following:
+
+- Versions the current build (tags and pushes Git and Docker tags)
+- Switches to Prod env
+- Deploys
+- Switches back to Staging env
+
 
 ### Deploy to Prod
 
