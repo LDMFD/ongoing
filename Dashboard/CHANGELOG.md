@@ -1,3 +1,7 @@
+# 1.11.6 2023-05-07
+
+- Fix impact graph bug when no portfolios
+
 # 1.11.5 2023-05-07
 
 - UI polish

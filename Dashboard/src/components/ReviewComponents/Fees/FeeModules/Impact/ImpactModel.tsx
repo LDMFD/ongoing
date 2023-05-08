@@ -90,12 +90,12 @@ const ImpactModel = (view: PlatformView, report: Report, input: ImpactForm, calc
             // @ts-ignore
             row[policy.ExternalId] = last[policy.ExternalId]
                 * (1 + input.InvestmentGrowthRate / 100)
-                * (input.IncludeInflation ? 1 - inflation.get(policy.ExternalId)!     / 100 : 1)
-                * (input.IncludeAdvice    ? 1 - advice.get(policy.ExternalId)!        / 100 : 1)
-                * (input.IncludeFees      ? 1 - platformFees.get(policy.ExternalId)!  / 100 : 1)
-                * (input.IncludeFees      ? 1 - fundFees.get(policy.ExternalId)!      / 100 : 1)
-                * (input.IncludeFees      ? 1 - portfolioFees.get(policy.ExternalId)! / 100 : 1)
-                * (input.IncludeFees      ? 1 - dimFees.get(policy.ExternalId)!       / 100 : 1);
+                * (input.IncludeInflation ? 1 - (inflation.get(policy.ExternalId)     ?? 0) / 100 : 1)
+                * (input.IncludeAdvice    ? 1 - (advice.get(policy.ExternalId)        ?? 0) / 100 : 1)
+                * (input.IncludeFees      ? 1 - (platformFees.get(policy.ExternalId)  ?? 0) / 100 : 1)
+                * (input.IncludeFees      ? 1 - (fundFees.get(policy.ExternalId)      ?? 0) / 100 : 1)
+                * (input.IncludeFees      ? 1 - (portfolioFees.get(policy.ExternalId) ?? 0) / 100 : 1)
+                * (input.IncludeFees      ? 1 - (dimFees.get(policy.ExternalId)       ?? 0) / 100 : 1);
         });
         report.Policies.forEach((policy: Policy) => {
             // @ts-ignore

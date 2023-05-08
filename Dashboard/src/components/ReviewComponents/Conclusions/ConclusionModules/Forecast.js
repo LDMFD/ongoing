@@ -1,5 +1,5 @@
 import Day from 'dayjs';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Panel from 'Components/Library/Panel/Panel';
