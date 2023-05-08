@@ -2,6 +2,8 @@ import { SliderControl } from 'Components/Library/FormControls/SliderControl';
 import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
 import { Limits } from './ImpactModel';
 
+import './Impact.css';
+
 export const CheckboxControls = (props: {
     control: any,
     includeFees: boolean,

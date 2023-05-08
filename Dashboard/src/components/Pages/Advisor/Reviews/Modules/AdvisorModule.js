@@ -46,37 +46,38 @@ export const AdvisorModule = ({ module }) => {
     let basePath = window.location.pathname;
 
     return (
-        <Card variant='outlined'>
-            <div style={{ float: 'right', margin: '1rem' }}>
-                <Dropdown
-                    title = 'Customise'
-                    items = {[
-                        {
-                            label: 'Customise introduction',
-                            link: `${basePath}/edit/${module}/intro`,
-                        },
-                        {
-                            label: 'Add further information',
-                            link: `${basePath}/edit/${module}/text`,
-                        },
-                    ]}
-                />
-            </div>
+        <div className='ong-advisor-module'>
+            <Card variant='outlined'>
+                <div style={{ float: 'right', margin: '1rem' }}>
+                    <Dropdown
+                        title = 'Customise'
+                        items = {[
+                            {
+                                label: 'Customise introduction',
+                                link: `${basePath}/edit/${module}/intro`,
+                            },
+                            {
+                                label: 'Add further information',
+                                link: `${basePath}/edit/${module}/text`,
+                            },
+                        ]}
+                    />
+                </div>
 
-            <CardHeader subheader="Section introduction" />
-            <CardContent>
-                {preset && !moduleState.Intro.length ?
-                    <div dangerouslySetInnerHTML={{ __html: preset.Text }} className='ong-EditModule-y-adjust' />
-                : null}
-                {moduleState.Intro.length ?
-                    <div dangerouslySetInnerHTML={{ __html: moduleState.Intro }} />
-                : null}
-                {moduleState.Text.length ? 
-                    <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
-                : null}
-    
-            </CardContent>
-        </Card>
+                <CardHeader subheader="Section introduction" />
+                <CardContent>
+                    {preset && !moduleState.Intro.length ?
+                        <div dangerouslySetInnerHTML={{ __html: preset.Text }} className='ong-EditModule-y-adjust' />
+                    : null}
+                    {moduleState.Intro.length ?
+                        <div dangerouslySetInnerHTML={{ __html: moduleState.Intro }} />
+                    : null}
+                    {moduleState.Text.length ? 
+                        <div dangerouslySetInnerHTML={{ __html: moduleState.Text }} />
+                    : null}
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 

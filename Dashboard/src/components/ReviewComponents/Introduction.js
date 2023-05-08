@@ -24,12 +24,12 @@ const Introduction = () => {
             <Module module = {ModuleTypeIntroduction} />
 
             <Panel>
-            <p>This review covers the period from {startDate} to {endDate}.</p>
+                <p>This review covers the period from {startDate} to {endDate}.</p>
 
-            <p>
-                Total start value: {FormatCurrency(totalStarting)}<br />
-                Total end value: {FormatCurrency(totalEnding)}
-            </p>
+                <p>
+                    Total start value: {FormatCurrency(totalStarting)}<br />
+                    Total end value: {FormatCurrency(totalEnding)}
+                </p>
             </Panel>
             
         </TabContent>

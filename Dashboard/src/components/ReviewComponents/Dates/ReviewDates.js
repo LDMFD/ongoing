@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import Panel from 'Components/Library/Panel/Panel';
 import TabContent from 'Components/Library/TabContent/TabContent';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
@@ -26,14 +27,15 @@ const Dates = () => {
 
     return (
         <TabContent>
-            <Link to={`/clients/id/${clientId}/modules/dates/edit`}>
-                Edit dates
-            </Link>
+            <Panel>
+                <p>
+                    This review covers the period from {startDate} to {endDate}.
+                </p>
 
-            <p>
-                Start date: {startDate} <br />
-                End date: {endDate} <br />
-            </p>
+                <Link to={`/clients/id/${clientId}/modules/dates/edit`}>
+                    Edit
+                </Link> the date range for this review.
+            </Panel>
         </TabContent>
     );
 }

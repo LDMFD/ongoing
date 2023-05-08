@@ -11,6 +11,7 @@ import {
 import { Context } from 'State/StateProvider'
 import { RouteMatch } from 'Utils/Routing';
 import { Api } from 'State';
+import BreadcrumbBar from 'Components/Library/BreadcrumbBar/BreadcrumbBar';
 
 const ClientWrapper = ({ children }) => {
     let { clientId } = useParams();
@@ -56,14 +57,18 @@ const ClientWrapper = ({ children }) => {
 
     return loaded ? (
         <div>
-            <Breadcrumbs aria-label="breadcrumb">
-                <Link underline="hover" color="inherit" to='/clients'>
-                    Clients
-                </Link>
-                <Link underline="hover" color="inherit" to={window.location}>
-                    {client.Identity.Surname}, {client.Identity.Forenames}
-                </Link>
-            </Breadcrumbs>
+            <BreadcrumbBar>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Link underline="hover" color="inherit" to='/clients'>
+                        Clients
+                    </Link>
+                    <b>
+                        <Link underline="hover" color="inherit" to={window.location}>
+                            {client.Identity.Forenames} {client.Identity.Surname}
+                        </Link>
+                    </b>
+                </Breadcrumbs>
+            </BreadcrumbBar>
 
             <ClientTabs />
 

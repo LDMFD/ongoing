@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './TabContent.css';
+
 const TabContent = ({ children }: {
     children: React.ReactNode;
 }) => {

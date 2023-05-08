@@ -41,6 +41,7 @@ let Graph = (props: {
                 <Bar
                     key     = {policy.Id}
                     dataKey = {policy.ExternalId}
+                    name    = {'Policy ' + policy.ExternalId}
                     stackId = "a"
                     fill    = {palette[palIx++].hex()}
                 />

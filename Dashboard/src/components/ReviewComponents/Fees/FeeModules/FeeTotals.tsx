@@ -20,8 +20,7 @@ const FeeTotals = () => {
     return (
         <TabContent>
             <Module module={ModuleTypeFeeTotals} client={null} />
-            <br />
-
+        
             {report.Policies.length > 1 &&
                 <>
                     <GrandTotals

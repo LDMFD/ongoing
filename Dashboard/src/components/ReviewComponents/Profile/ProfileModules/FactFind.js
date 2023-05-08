@@ -4,6 +4,7 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import { ModuleTypeFactFind } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
+import TabContent from 'Components/Library/TabContent/TabContent';
 
 const FactFind = () => {
     let report = GetReport();
@@ -17,7 +18,7 @@ const FactFind = () => {
     }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0))[0];
 
     return (
-        <>
+        <TabContent>
             <Module module={ModuleTypeFactFind} />
  
             {factFind &&
@@ -28,7 +29,7 @@ const FactFind = () => {
                     />
                 </p>
             }
-        </>
+        </TabContent>
     );
 }
 

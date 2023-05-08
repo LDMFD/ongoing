@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import {
     Link as MuiLink
 } from '@mui/material';
+// import EmailIcon from '@mui/icons-material/Email';
 
 import { Context } from 'State';
 import SendSignInLink from "Components/Library/Auth/AuthEmailer";
@@ -41,23 +42,20 @@ const ClientAccountPage = () => {
             </div>
 
             <p>
-                Client: <b>{client.Identity.Surname}, {client.Identity.Forenames}</b>
-            </p>
-            <p>
                 Email:&nbsp;
                 <MuiLink
                     href   = {`mailto:${client.Identity.Email}`}
                     target = '_blank'
                     rel    = 'noreferrer'
                 >
-                    {client.Identity.Email}
+                    {client.Identity.Forenames} {client.Identity.Surname} &lt;{client.Identity.Email}&gt;
                 </MuiLink>
             </p>
             <p>
                 Fee: {client.Fee}%
             </p>
             <p>
-                Advisor: {advisor.Surname}, {advisor.Forenames}
+                Advisor: {advisor.Forenames} {advisor.Surname}
             </p>
         </Panel>
     );

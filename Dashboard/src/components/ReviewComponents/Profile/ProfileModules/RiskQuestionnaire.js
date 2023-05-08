@@ -1,13 +1,14 @@
-import { useMemo } from 'react';
 import Day from 'dayjs';
+import { useMemo } from 'react';
 
-import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { BuildDownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import TabContent from 'Components/Library/TabContent/TabContent';
 import Table from 'Components/Library/Table/Table';
+import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { ModuleTypeRisk } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 
 import './RiskQuestionnaire.css';
-import { ModuleTypeRisk } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
-import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
-import { BuildDownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 
 const RiskQuestionnaire = () => {
     let report = GetReport();
@@ -48,7 +49,7 @@ const RiskQuestionnaire = () => {
     ];
 
     return (
-        <div className='ongoing-riskassessmentList'>
+        <TabContent>
             <Module module={ModuleTypeRisk} />
 
             <br />
@@ -67,7 +68,7 @@ const RiskQuestionnaire = () => {
                     />
                 )}
             />
-        </div>
+        </TabContent>
     );
 }
 
