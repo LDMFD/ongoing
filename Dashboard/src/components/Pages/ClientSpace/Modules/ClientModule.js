@@ -19,14 +19,18 @@ export const ClientModule = ({ module }) => {
 
     preset = review.ModulePresets.find(p => p.ModuleType === module);
 
-    if (!moduleState) {
+    if (!moduleState || reviewId !== moduleState.ReviewId) {
         // First load
         if (draft) {
-            setModuleState(draft);
+            setModuleState({
+                ...draft,
+                ReviewId: reviewId,
+            });
         } else {
             setModuleState({
                 ...DefaultModule,
                 Type: module,
+                ReviewId: reviewId,
             });
         }
         return;

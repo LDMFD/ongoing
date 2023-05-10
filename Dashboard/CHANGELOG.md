@@ -1,3 +1,7 @@
+# 1.11.7 2023-05-09
+
+- Fix client space module refresh bug
+
 # 1.11.6 2023-05-07
 
 - Fix impact graph bug when no portfolios
