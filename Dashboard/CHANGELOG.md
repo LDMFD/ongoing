@@ -1,3 +1,7 @@
+# 1.11.10 2023-05-13
+
+- Remove "profile intro" module section to streamline tabs.
+
 # 1.11.9 2023-05-13
 
 - Sentry tag "ongoing.superuser" for the user who invoked "view as".

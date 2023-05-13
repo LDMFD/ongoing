@@ -8,7 +8,6 @@ import (
 var (
 	ModuleTypeIntroduction = "introduction"
 
-	ModuleTypeProfile    = "profile"
 	ModuleTypeFactFind   = "profile_fact_find"
 	ModuleTypeRisk       = "profile_risk"
 	ModuleTypeObjectives = "profile_objectives"

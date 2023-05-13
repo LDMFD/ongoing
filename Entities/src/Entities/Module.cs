@@ -11,7 +11,7 @@ namespace Ongoing.Entities
     {
         Introduction,
         
-        Profile,
+        Profile,                        // Deprecated
         ProfileFactFind,
         ProfileRisk,
         ProfileObjectives,

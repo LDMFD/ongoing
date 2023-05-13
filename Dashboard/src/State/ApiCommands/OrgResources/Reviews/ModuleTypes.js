@@ -1,7 +1,6 @@
 // This list also found in ReviewModule.go and Entities/Module.cs
 export const ModuleTypeIntroduction       = "introduction";
 
-export const ModuleTypeProfile            = "profile";
 export const ModuleTypeFactFind           = "profile_fact_find";
 export const ModuleTypeRisk               = "profile_risk";
 export const ModuleTypeGoals              = "profile_objectives";
@@ -25,7 +24,6 @@ export const ModuleTypeActionPoints       = "conclusions_action_points";
 
 export const ModuleTypeSelectSpec = [
     { id: ModuleTypeIntroduction,       label: "Introduction" },
-    { id: ModuleTypeProfile,            label: "Profile (Fact find, Risk profile & Objectives page)" },
     { id: ModuleTypeFactFind,           label: "Profile - Fact-Find" },
     { id: ModuleTypeRisk,               label: "Profile - Attitude To Risk Questionnaire" },
     { id: ModuleTypeGoals,              label: "Profile - Goals" },

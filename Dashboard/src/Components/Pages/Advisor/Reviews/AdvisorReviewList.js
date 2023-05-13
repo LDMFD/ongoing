@@ -27,7 +27,7 @@ const AdvisorReviewList = () => {
         width: 300,
     }, {
         id: 'finalizedDate',
-        header: 'Time of publish', 
+        header: 'Published', 
     }];
 
     let ix = 1;
