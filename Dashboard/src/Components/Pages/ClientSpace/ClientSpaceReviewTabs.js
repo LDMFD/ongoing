@@ -29,11 +29,11 @@ const ReviewTabs = ({ children }) => {
 
         return (
             <Tabs value={currentTab}>
-                <Tab label="Introduction"      value={`${basePath}/introduction`}      to={`${baseTarget}/introduction`}               component={Link} />
-                <Tab label="Your Profile"      value={`${basePath}/profile`}           to={`${baseTarget}/profile/risk-questionnaire`} component={Link} />
-                <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`}          component={Link} />
-                <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/totals`}                 component={Link} />
-                <Tab label="Assessments"       value={`${basePath}/assessments`}       to={`${baseTarget}/assessments/objectives`}     component={Link} />
+                <Tab label="Introduction"      value={`${basePath}/introduction`}      to={`${baseTarget}/introduction`}           component={Link} />
+                <Tab label="Your Profile"      value={`${basePath}/profile`}           to={`${baseTarget}/profile/fact-find`}      component={Link} />
+                <Tab label="Policy Valuations" value={`${basePath}/policy-valuations`} to={`${baseTarget}/policy-valuations`}      component={Link} />
+                <Tab label="Fees"              value={`${basePath}/fees`}              to={`${baseTarget}/fees/totals`}            component={Link} />
+                <Tab label="Assessments"       value={`${basePath}/assessments`}       to={`${baseTarget}/assessments/objectives`} component={Link} />
             </Tabs>
         );
     }

@@ -1,6 +1,7 @@
-# 1.11.10 2023-05-13
+# 1.11.11 2023-05-13
 
 - Remove "profile intro" module section to streamline tabs.
+- Make "Fact fact" default tab under "Profile"
 
 # 1.11.9 2023-05-13
 
