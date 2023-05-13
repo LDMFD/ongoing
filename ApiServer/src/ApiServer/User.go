@@ -12,10 +12,11 @@ func getUserInfo(c *gin.Context) {
 	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
 
 	res := Entities.ClientSessionContext{
-		UserId: session.UserUid,
-		Email:  session.Email,
-		OrgId:  session.OrgId,
-		Role:   session.Role,
+		UserId:    session.UserUid,
+		Email:     session.Email,
+		OrgId:     session.OrgId,
+		Role:      session.Role,
+		Superuser: session.Superuser,
 	}
 
 	var client = Entities.Client{}

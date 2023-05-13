@@ -1,3 +1,7 @@
+# 1.11.2 2023-05-13
+
+- Sentry tag "ongoing.superuser" for the user who invoked "view as".
+
 # 1.11.0 2023-04-22
 
 - Routing update

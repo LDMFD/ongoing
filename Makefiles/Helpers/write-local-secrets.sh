@@ -2,7 +2,7 @@
 
 CLIENT_ID=`gcloud secrets versions access --secret=firebase-client-key latest|base64`
 CLIENT_KEY=`gcloud secrets versions access --secret=firebase-client-id latest`
-SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn-dashboard latest`
+SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn latest`
 SENTRY_CLIRC=`gcloud secrets versions access --secret=sentry-clirc latest`
 API_KEY=`gcloud secrets versions access --secret=ongoing-api-key latest`
 

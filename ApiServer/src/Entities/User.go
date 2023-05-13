@@ -42,19 +42,21 @@ func (u *User) ToReport() ReportUser {
 }
 
 type ServerSessionContext struct {
-	UserId  int64
-	UserUid string
-	Email   string
-	OrgId   *string
-	Org     *Organisation
-	Role    string
-	IsHuman bool
+	UserId    int64
+	UserUid   string
+	Email     string
+	OrgId     *string
+	Org       *Organisation
+	Role      string
+	IsHuman   bool
+	Superuser *string `json:",omitempty"`
 }
 
 type ClientSessionContext struct {
-	ClientId string
-	UserId   string
-	Email    string
-	OrgId    *string
-	Role     string
+	ClientId  string
+	UserId    string
+	Email     string
+	OrgId     *string
+	Role      string
+	Superuser *string
 }

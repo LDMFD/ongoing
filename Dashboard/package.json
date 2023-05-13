@@ -36,7 +36,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "release": "(react-scripts build && node scripts/sentry.js)"
+    "release": "(react-scripts build && node scripts/sentry-release-maker.js)"
   },
   "eslintConfig": {
     "extends": [

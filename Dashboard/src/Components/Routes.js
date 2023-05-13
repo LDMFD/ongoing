@@ -13,6 +13,7 @@ import ModulePresetRoutes   from './Pages/OrgResources/Reviews/ModulePresets/Mod
 
 import ClientSpaceRoutes from "./Pages/ClientSpace/ClientSpaceRoutes";
 import NoMatch from "./Pages/404/404";
+import { Api } from "State";
   
 const routes = () => (
     <Switch>
@@ -29,6 +30,16 @@ const routes = () => (
         <Route path="/review-config/module-presets"   component={ModulePresetRoutes} />
 
         <Route path="/client-space"                   component={ClientSpaceRoutes} />
+
+        <Route path="/throw"                          component={() => {
+            throw new Error("Test error"); }}
+        />
+        <Route path="/throw-server"                   component={() => {
+            const _throw = async () => {
+                await Api.Superuser.Throw.Throw();
+            };
+            _throw();
+        }} />
         
         <Route path="*">
             <NoMatch />

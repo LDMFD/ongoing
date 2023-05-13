@@ -15,8 +15,6 @@
     - Sender Authentication
         - Set up DNS
 
-Permissions:
-
 ## Firebase setup
 
 Visit https://console.firebase.google.com
@@ -87,3 +85,21 @@ Then:
       and possibly `http://localhost` or `http://localhost:5000`
     - Add `Authorized redirect URIs` -> `https://example.com/__/auth/handler`
 - Set up Prod -> Staging daily copying using Data Transfer service on Prod.
+
+## Sentry setup
+
+- Create an org
+- Create a project
+- Run `make work-on-staging`
+- Run `make sentry-create-secrets`
+- For the first secret, `sentry-dsn`, use the DSN from Project Settings -> Client Keys (DSN)
+- For the second secret, `sentry-clirc`, visit User Settings -> Auth Tokens, create an 
+  auth token with the scope `project:releases`, and then use the following template:
+
+    [defaults]
+    project=<your project>
+    org=<your org>
+
+    [auth]
+    token=<your oauth token>
+- Run `make work-on-staging` once again to pull the secret to a local cache in `Dashboard/.sentryclirc`

@@ -1,3 +1,8 @@
+# 1.11.9 2023-05-13
+
+- Sentry tag "ongoing.superuser" for the user who invoked "view as".
+- Fix sourcemaps
+
 # 1.11.7 2023-05-09
 
 - Fix client space module refresh bug

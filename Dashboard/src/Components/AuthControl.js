@@ -62,6 +62,11 @@ function AuthControl() {
             Sentry.setUser({ email: res.data.Context.Email });
             Sentry.setTag("ongoing.org", res.data.Context.OrgId);
 
+            let superuser = res.data.Context.Superuser;
+            if (superuser) {
+                Sentry.setTag("ongoing.superuser", superuser);
+            }
+
             dispatch({
                 type: LOGIN,
                 payload: {

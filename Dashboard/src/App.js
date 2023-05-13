@@ -41,9 +41,10 @@ if (window.Config === '__CONFIG_EMBED__') {
 
 if (window.Config.Env !== 'dev') {
     Sentry.init({
-        dsn: window.Config.SentryDsn,
-        release: window.Config.Release,
-        integrations: [new BrowserTracing()],
+        dsn:              window.Config.SentryDsn,
+        environment:      window.Config.Env,
+        release:          window.Config.Release,
+        integrations:     [ new BrowserTracing() ],
         tracesSampleRate: 1.0,
     });
 }
@@ -162,7 +163,7 @@ window.ApiClient.interceptors.response.use((response) => {
             case InternalError:
                 console.log("Internal error: " + responseError.trace);
                 Sentry.setTag('ongoing.trace', responseError.trace);
-                alert("An internal error has occurred (this has been reported - trace ID: " + responseError.trace + ").");
+                alert("An internal error has occurred (" + responseError.trace + ").");
                 break;
             case UniqueViolation:
             case IntegrityViolation:

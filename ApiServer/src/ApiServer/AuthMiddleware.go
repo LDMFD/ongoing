@@ -2,13 +2,6 @@ package ApiServer
 
 import (
 	"context"
-	firebase "firebase.google.com/go"
-	"firebase.google.com/go/auth"
-	"github.com/getsentry/sentry-go"
-	sentrygin "github.com/getsentry/sentry-go/gin"
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
-	"google.golang.org/api/option"
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Helpers"
@@ -18,6 +11,14 @@ import (
 	"ongoing/ServiceContext"
 	"os"
 	"strings"
+
+	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
+	"github.com/getsentry/sentry-go"
+	sentrygin "github.com/getsentry/sentry-go/gin"
+	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
+	"google.golang.org/api/option"
 )
 
 func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
@@ -112,16 +113,20 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 
 		var role string
 		var orgId *string
+		var superuser *string
 
 		viewAsId := c.GetHeader("X-ViewAs")
 		if Helpers.IsSuperuser(user.Email) && viewAsId != "" && viewAsId != "null" {
 			var subject Entities.User
 			if err = db.NewSelect().Model(&subject).Where("uid = ?", viewAsId).Scan(c); err != nil {
-				//c.AbortWithStatus(http.StatusBadRequest)
 				//log.Println("Ignoring X-ViewAs as user doesn't exist:", viewAsId)
 			} else {
+				if hub := sentrygin.GetHubFromContext(c); hub != nil {
+					scope := hub.Scope()
+					scope.SetTag("ongoing.superuser", user.Email)
+				}
+				superuser = &user.Email
 				user = &subject
-				//log.Println("Viewing as:", user.Email)
 			}
 		}
 
@@ -170,12 +175,13 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		}
 
 		sessionContext := &Entities.ServerSessionContext{
-			UserId:  user.Id,
-			UserUid: user.Uid,
-			Email:   user.Email,
-			OrgId:   orgId,
-			Role:    role,
-			IsHuman: !authBypass,
+			UserId:    user.Id,
+			UserUid:   user.Uid,
+			Email:     user.Email,
+			OrgId:     orgId,
+			Role:      role,
+			IsHuman:   !authBypass,
+			Superuser: superuser,
 		}
 
 		if orgId != nil { // no org if superuser
@@ -194,6 +200,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 		if os.Getenv("ONGOING_SENTRY_DSN") != "" {
 			if hub := sentrygin.GetHubFromContext(c); hub != nil {
 				scope := hub.Scope()
+				scope.SetTag("environment", os.Getenv("ONGOING_ENV"))
 				scope.SetUser(sentry.User{Email: user.Email})
 				if orgId != nil {
 					scope.SetTag("ongoing.org", *orgId)

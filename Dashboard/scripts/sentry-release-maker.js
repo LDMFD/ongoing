@@ -1,5 +1,4 @@
 const SentryCli = require('@sentry/cli');
-const crypto = require('crypto');
 
 async function createReleaseAndUpload() {
     const release = process.env.RELEASE;
@@ -9,8 +8,6 @@ async function createReleaseAndUpload() {
     }
 
     try {
-        // const release = crypto.randomUUID();
-
         const cli = new SentryCli();
 
         console.log('Creating sentry release ' + release);
@@ -19,7 +16,7 @@ async function createReleaseAndUpload() {
         console.log('Uploading source maps');
         await cli.releases.uploadSourceMaps(release, {
             include: ['build/static/js'],
-            urlPrefix: '~/static/js',
+            urlPrefix: `~/${release}/static/js`,
             rewrite: false,
         });
 

@@ -2,10 +2,9 @@ package ClientProfile
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
-	"net/http"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 )
 
 type GetClientRequestPath struct {
@@ -20,20 +19,19 @@ type GetClientResponse struct {
 }
 
 func GetClient(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
 
 	var path GetClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		context.Response.InvalidInput()
+		return
 	}
 
 	var client *Entities.Client
 	var err error
 	if client, err = Helpers.ClientFromUID(c, db, path.ClientId); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "no such client exists"})
-		// TODO implement levelled logging, so this stacktrace can be printed as a warning
-		//panic(err.Error())
+		context.Response.NotFound()
 		return
 	}
 
