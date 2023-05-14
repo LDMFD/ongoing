@@ -31,13 +31,17 @@ const ModulePresetList = () => {
     ];
 
     let modulePresets = state.Resources.ModulePresets.map(p => {
+        let type = ModuleTypeSelectSpec.find(t => t.id === p.ModuleType);
+        if (!type) {
+            return null;
+        }
         return {
             // TODO multiple entries per module presets?
-            id:  ModuleTypeSelectSpec.find(t => t.id === p.ModuleType).id,
+            id:  type.id,
             label:  ModuleTypeSelectSpec.find(t => t.id === p.ModuleType).label,
             text:  p.Text,
         };
-    });
+    }).filter(p => p);
 
     return (
         <Table

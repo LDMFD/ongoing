@@ -1,3 +1,7 @@
+# 1.11.12 2023-05-14
+
+- Fix deprecated module preset causing crash
+
 # 1.11.11 2023-05-13
 
 - Remove "profile intro" module section to streamline tabs.
