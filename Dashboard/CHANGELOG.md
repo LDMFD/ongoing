@@ -1,3 +1,7 @@
+# 1.11.13 2023-07-15
+
+- Fix portfolio and policy fund proportion rounding
+
 # 1.11.12 2023-05-14
 
 - Fix deprecated module preset causing crash

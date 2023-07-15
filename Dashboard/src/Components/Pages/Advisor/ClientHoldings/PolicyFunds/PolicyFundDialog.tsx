@@ -1,38 +1,40 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import Dialog from 'Components/Library/Dialog/Dialog';
+import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
-import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
-
-import Dialog from 'Components/Library/Dialog/Dialog';
-import { State } from 'Types/Types';
+import { PolicyFund } from 'Types/ClientResources';
 import { Fund } from 'Types/OrgResources';
+import { State } from 'Types/Types';
+import { PercentageFormatter } from 'Utils/Strings';
 
 interface PolicyFundForm {
+    Id: string,
     PolicyId: string,
     FundId: string,
-    Proportion: number,
+    Proportion: string,
     IncludeInFee: boolean,
 }
 
-const PolicyFund = (props: {
+const PolicyFundDialog = (props: {
     state: State,
-    policyFund: PolicyFundForm,
+    policyFund: PolicyFund,
     submitLabel: string,
-    submitHandler: (policy: PolicyFundForm) => void,
+    submitHandler: (policy: PolicyFund) => void,
 }) => {
     const { handleSubmit, control } = useForm<PolicyFundForm>({
         defaultValues: {
             ...props.policyFund,
-            Proportion: props.policyFund.Proportion * 100,
+            Proportion: PercentageFormatter.format(props.policyFund.Proportion * 100),
         },
     });
 
     const onSubmit = (policyFund: PolicyFundForm) => {
         props.submitHandler({
             ...policyFund,
-            Proportion: parseFloat((policyFund.Proportion / 100) as unknown as string),
+            Proportion: parseFloat(policyFund.Proportion) / 100,
         });
     };
 
@@ -70,4 +72,4 @@ const PolicyFund = (props: {
     );
 }
 
-export default PolicyFund;
+export default PolicyFundDialog;

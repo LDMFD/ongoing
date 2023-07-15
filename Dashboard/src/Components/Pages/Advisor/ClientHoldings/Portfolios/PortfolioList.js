@@ -3,9 +3,10 @@ import { useParams } from 'react-router-dom';
 
 import Table from 'Components/Library/Table/Table';
 // import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Api, Context } from 'State';
-import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import { PercentageFormatter } from 'Utils/Strings';
 
 const PortfolioList = () => {
     const [ , dispatch ] = useContext(Context);
@@ -67,7 +68,7 @@ const PortfolioList = () => {
             model:        model.Name,
             operator:     operator.Name,
             policy:       `${provider} ${policy.ExternalId}`,
-            proportion:   `${portfolio.Proportion * 100}%`,
+            proportion:   `${PercentageFormatter.format(portfolio.Proportion * 100)}%`,
             includeInFee: portfolio.IncludeInFee ? 'Y' : 'N',
             policyFileId: policy.File?.Uid,
             modelFileId:  model.File?.Uid,

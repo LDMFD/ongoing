@@ -1,38 +1,40 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
+import Dialog from 'Components/Library/Dialog/Dialog';
+import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
-import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
-
-import Dialog from 'Components/Library/Dialog/Dialog';
-import { State } from 'Types/Types';
+import { Portfolio } from 'Types/ClientResources';
 import { Model } from 'Types/OrgResources';
+import { State } from 'Types/Types';
+import { PercentageFormatter } from 'Utils/Strings';
 
 interface PortfolioForm {
+    Id: string,
     PolicyId: string,
     ModelId: string,
-    Proportion: number
+    Proportion: string
     IncludeInFee: boolean,
 }
 
 export const PortfolioDialog = (props: {
     state: State,
-    portfolio: PortfolioForm,
+    portfolio: Portfolio,
     submitLabel: string,
-    submitHandler: (policy: PortfolioForm) => void,
+    submitHandler: (policy: Portfolio) => void,
 }) => {
     const { handleSubmit, control } = useForm<PortfolioForm>({
         defaultValues: {
             ...props.portfolio,
-            Proportion: props.portfolio.Proportion * 100,
+            Proportion: PercentageFormatter.format(props.portfolio.Proportion * 100),
         },
     });
 
     const onSubmit = (portfolio: PortfolioForm) => {
         props.submitHandler({
             ...portfolio,
-            Proportion: parseFloat((portfolio.Proportion / 100) as unknown as string),
+            Proportion: parseFloat(portfolio.Proportion) / 100,
         });
     };
 

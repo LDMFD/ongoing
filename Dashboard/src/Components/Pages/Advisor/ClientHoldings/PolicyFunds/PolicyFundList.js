@@ -1,11 +1,12 @@
-import { useContext, useCallback, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Context, Api } from 'State';
-import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning';
-import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
+import { GetReport } from 'Components/ReviewComponents/GetReport';
+import { Api, Context } from 'State';
+import { PercentageFormatter } from 'Utils/Strings';
 
 const PolicyFundList = () => {
     const [state, dispatch ] = useContext(Context);
@@ -64,7 +65,7 @@ const PolicyFundList = () => {
             idLabel:      `#${policyFund.Id}`,
             policy:       `${provider} ${policy.ExternalId} (${type})`,
             fund:         fund.Name,
-            proportion:   `${policyFund.Proportion * 100}%`,
+            proportion:   `${PercentageFormatter.format(policyFund.Proportion * 100)}%`,
             includeInFee: policyFund.IncludeInFee ? 'Y' : 'N',
             policyFileId: policy.File?.Uid,
             fundFileId:   fund.File?.Uid,
