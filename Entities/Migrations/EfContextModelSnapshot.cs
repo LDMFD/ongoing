@@ -1033,7 +1033,7 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("PolicyProviderId");
+                    b.HasAlternateKey("PolicyProviderId", "Boundary", "Charge");
 
                     b.HasIndex(new[] { "Uid" }, "provider_charges_uid_key")
                         .IsUnique();
@@ -1206,14 +1206,17 @@ namespace Ongoing.Migrations
                         .HasColumnName("desc");
 
                     b.Property<string>("Label")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("label");
 
                     b.Property<int?>("Level")
+                        .IsRequired()
                         .HasColumnType("integer")
                         .HasColumnName("level");
 
                     b.Property<int?>("RiskProviderId")
+                        .IsRequired()
                         .HasColumnType("integer")
                         .HasColumnName("risk_provider_id");
 
@@ -1232,7 +1235,9 @@ namespace Ongoing.Migrations
 
                     b.HasAlternateKey("Uid");
 
-                    b.HasIndex("RiskProviderId");
+                    b.HasAlternateKey("RiskProviderId", "Label");
+
+                    b.HasAlternateKey("RiskProviderId", "Level");
 
                     b.HasIndex(new[] { "Uid" }, "risk_levels_uid_key")
                         .IsUnique();
@@ -1772,6 +1777,7 @@ namespace Ongoing.Migrations
                         .WithMany("RiskLevels")
                         .HasForeignKey("RiskProviderId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
                         .HasConstraintName("fk_risk_provider");
 
                     b.Navigation("RiskProvider");

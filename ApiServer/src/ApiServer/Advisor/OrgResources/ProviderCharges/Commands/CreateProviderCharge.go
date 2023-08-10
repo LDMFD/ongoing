@@ -3,6 +3,7 @@ package Commands
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
 
@@ -42,9 +43,9 @@ func CreateProviderCharge(c *gin.Context) {
 		ProviderId: provider.Id,
 	}
 	if _, err := db.NewInsert().Model(&providerCharge).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
+
 	c.JSON(200, gin.H{
 		"Id": uid,
 	})

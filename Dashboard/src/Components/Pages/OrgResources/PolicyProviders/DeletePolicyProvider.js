@@ -28,7 +28,7 @@ const DeletePolicyProvider = () => {
             handler    = {onDelete}
             label      = {`Delete platform ${policyProvider.Name}?`}
             warning    = 'This platform is currently in use by the following clients:'
-            prompt     = 'Are you sure you want to delete this platform'
+            prompt     = {<>Are you sure you want to delete this platform <b>{policyProvider.Name}</b></>}
             dependents = 'and all dependent holdings held by these clients'
         />
     );

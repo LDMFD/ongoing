@@ -82,7 +82,6 @@ func CreateModel(c *gin.Context) {
 	if _, err := tx.NewInsert().Model(&model).Exec(c); err != nil {
 		_ = tx.Rollback()
 		Errors.Unexpected(c, err)
-		return
 	}
 
 	if body.File != nil {

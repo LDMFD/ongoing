@@ -5,6 +5,7 @@ import (
 	"github.com/uptrace/bun"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Config"
 	"ongoing/Entities"
 )
@@ -61,8 +62,7 @@ func UpdateProviderCharge(c *gin.Context) {
 		Column("boundary").
 		Column("charge").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 
 	c.JSON(200, gin.H{})

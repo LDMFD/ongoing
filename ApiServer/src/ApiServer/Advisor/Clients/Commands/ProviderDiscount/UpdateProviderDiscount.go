@@ -2,6 +2,7 @@ package ProviderDiscount
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
@@ -72,8 +73,7 @@ func UpdateProviderDiscount(c *gin.Context) {
 		Column("policy_provider_id").
 		Column("discount").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 
 	c.JSON(200, gin.H{})

@@ -28,7 +28,7 @@ const DeletePolicyType = () => {
             handler    = {onDelete}
             label      = {`Delete policy type ${policyType.Name}?`}
             warning    = 'This policy type is currently in use by the following clients:'
-            prompt     = 'The policies held by these clients will also be deleted if this policy type is deleted. Are you sure you want to delete this policy type'
+            prompt     = {<>The policies held by these clients will also be deleted if this policy type is deleted. Are you sure you want to delete this policy type <b>{policyType.Name}</b></>}
             dependents = 'and all linked holdings'
         />
     );

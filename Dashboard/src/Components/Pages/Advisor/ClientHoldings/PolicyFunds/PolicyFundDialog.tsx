@@ -60,12 +60,38 @@ const PolicyFundDialog = (props: {
             onSubmit    = {handleSubmit(onSubmit)}
             content = {
                 <>
-                    <SelectControl name='PolicyId' options={policies} label='Policy' control={control} required />
-                    <SelectControl name='FundId'   options={funds}    label='Fund'   control={control} required />
-                    
-                    <TextInput name='Proportion' label='Proportion (%)' control={control} required type='numeric' />
+                    <SelectControl
+                        name    = 'PolicyId'
+                        options = {policies}
+                        label   = 'Policy'
+                        control = {control} required
+                    />
 
-                    <CheckboxControl name='IncludeInFee' label='Include in fee calculation?' control={control} />
+                    <SelectControl
+                        name    = 'FundId'
+                        options = {funds}
+                        label   = 'Fund'
+                        control = {control} required
+                    />
+
+                    
+                    <TextInput
+                        name    = 'Proportion'
+                        label   = 'Proportion (%)'
+                        control = {control}
+                        required
+                        type='numeric'
+                        pattern = {{
+                            value: /^[0-9]*[1-9][0-9]*$/,   // Must be a positive integer
+                            message: 'Proportion must be a number greater than 0.'
+                        }}
+                    />
+
+                    <CheckboxControl
+                        name    = 'IncludeInFee'
+                        label   = 'Include in fee calculation?'
+                        control = {control}
+                    />
                 </>
             }
         />

@@ -28,7 +28,7 @@ const DeleteModel = () => {
             handler    = {onDelete}
             label      = {`Delete model ${model.Name}?`}
             warning    = 'This model is currently in use by client holdings (portfolios), which will also be deleted if this model is deleted. The clients are:'
-            prompt     = 'Are you sure you want to delete this model'
+            prompt     = {<>Are you sure you want to delete this model <b>{model.Name}</b></>}
             dependents = 'and all linked holdings'
         />
     );

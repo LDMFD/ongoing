@@ -4,27 +4,35 @@ import { useHistory } from "react-router-dom";
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
 import { DefaultRiskProvider } from './DefaultRiskProvider';
+import { GoBack } from 'Utils/Routing';
 import RiskProviderDialog from './RiskProviderDialog';
 
 const AddRiskProvider = () => {
     let history = useHistory();
+    let goBack = GoBack(history);
 
-    const [ , dispatch] = useContext(Context);
-    let [ riskProvider, setRiskProvider ] = useState(DefaultRiskProvider);
+    const [ state, dispatch] = useContext(Context);
 
-    const submitHandler = async (e) => {
-        e.preventDefault();
+    const [ error, setError ] = useState(null);
+
+    const submitHandler = async (riskProvider) => {
         let response = await Api.OrgResources.RiskProviders.Create(riskProvider);
-        await Api.OrgResources.Entities.Read(dispatch);
-        history.push(`id/${response.data.Id}/risk-levels`);
-        return false;
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     return (
-        <RiskProviderDialog riskProvider    = {riskProvider}
-                            setRiskProvider = {setRiskProvider}
-                            submitLabel     = 'Add'
-                            submitHandler   = {submitHandler} />
+        <RiskProviderDialog
+            state           = {state}
+            riskProvider    = {DefaultRiskProvider}
+            submitLabel     = 'Add'
+            submitHandler   = {submitHandler}
+            error           = {error}
+        />
     );
 }
 

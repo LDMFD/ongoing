@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -15,18 +15,27 @@ const AddProviderCharge = () => {
 
     let { policyProviderId } = useParams();
     
+    const [ error, setError ] = useState(null);
+
     const submitHandler = async (providerCharge) => {
         providerCharge.ProviderId = policyProviderId;
-        await Api.OrgResources.ProviderCharges.Create(providerCharge);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
+        let response = await Api.OrgResources.ProviderCharges.Create(providerCharge);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     return (
-        <ProviderChargeDialog state             = {state}
-                              providerCharge    = {DefaultProviderCharge}
-                              submitLabel       = 'Add'
-                              submitHandler     = {submitHandler}  />
+        <ProviderChargeDialog
+            state          = {state}
+            providerCharge = {DefaultProviderCharge}
+            submitLabel    = 'Add'
+            submitHandler  = {submitHandler}
+            error          = {error}
+        />
     );
 }
 

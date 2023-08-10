@@ -5,6 +5,7 @@ import { State } from 'Types/Types';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 import Dialog from 'Components/Library/Dialog/Dialog';
 import { CurrencyFromString, CurrencyToString } from 'Utils/Strings';
+import { UniqueViolation } from 'Errors';
 
 interface ProviderChargeForm {
     Id: string,
@@ -17,6 +18,7 @@ const ProviderChargeDialog = (props: {
     providerCharge: ProviderChargeForm,
     submitLabel: string,
     submitHandler: (providerCharge: ProviderChargeForm) => void,
+    error: string,
 }) => {
     let boundary = CurrencyToString(props.providerCharge.Boundary);
     if (/\.\d$/.test(boundary)) {
@@ -48,6 +50,7 @@ const ProviderChargeDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
+            error       = {props.error === UniqueViolation ? 'This provider charge (range boundary and fee) already exists.' : ''}
             content = {
                 <>
                     <TextInput

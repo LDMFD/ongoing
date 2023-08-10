@@ -68,7 +68,6 @@ func UpdateClient(c *gin.Context) {
 		Exec(c); err != nil {
 		tx.Rollback()
 		Errors.Unexpected(c, err)
-		return
 	}
 
 	if err := tx.NewSelect().
@@ -94,7 +93,6 @@ func UpdateClient(c *gin.Context) {
 			Exec(c); err != nil {
 			tx.Rollback()
 			Errors.Unexpected(c, err)
-			return
 		}
 	}
 

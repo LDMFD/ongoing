@@ -28,7 +28,7 @@ const DeleteRiskProvider = () => {
             handler    = {onDelete}
             label      = {`Delete risk provider ${riskProvider.Name}?`}
             warning    = 'This risk provider is currently in use by client risk assessments, which will also be deleted if the provider is deleted. The clients are:'
-            prompt     = 'Are you sure you want to delete this risk provider'
+            prompt     = {<>Are you sure you want to delete this risk provider <b>{riskProvider.Name}</b></>}
             dependents = 'and all linked assessments'
         />
     );

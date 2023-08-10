@@ -3,6 +3,7 @@ package Commands
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
 
@@ -40,8 +41,7 @@ func CreateRiskProviderInternal(c *gin.Context, orgId int64, body CreateRiskProv
 		OrgId: orgId,
 	}
 	if _, err := db.NewInsert().Model(&riskProvider).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 	return uid
 }

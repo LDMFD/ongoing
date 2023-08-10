@@ -5,6 +5,7 @@ import Dialog from 'Components/Library/Dialog/Dialog';
 import { CheckboxControl } from 'Components/Library/FormControls/CheckboxControl';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
+import { UniqueViolation } from 'Errors';
 import { Portfolio } from 'Types/ClientResources';
 import { Model } from 'Types/OrgResources';
 import { State } from 'Types/Types';
@@ -23,6 +24,7 @@ export const PortfolioDialog = (props: {
     portfolio: Portfolio,
     submitLabel: string,
     submitHandler: (policy: Portfolio) => void,
+    error: string,
 }) => {
     const { handleSubmit, control } = useForm<PortfolioForm>({
         defaultValues: {
@@ -61,14 +63,41 @@ export const PortfolioDialog = (props: {
             intro       = 'Enter portfolio details:'
             submitLabel = {props.submitLabel}
             onSubmit    = {handleSubmit(onSubmit)}
+            error       = {props.error === UniqueViolation ? <p>This portfolio (policy and model pairing) already exists.</p> : ''}
             content = {
                 <>
-                    <SelectControl name='PolicyId' options={policies} label='Policy' control={control} required />
-                    <SelectControl name='ModelId'  options={models}   label='Model'  control={control} required />
+                    <SelectControl
+                        name    = 'PolicyId'
+                        options = {policies}
+                        label   = 'Policy'
+                        control = {control}
+                        required
+                    />
+                    
+                    <SelectControl
+                        name    = 'ModelId'
+                        options = {models}
+                        label   = 'Model'
+                        control = {control}
+                        required
+                    />
 
-                    <TextInput name='Proportion' label='Proportion (%)' control={control} required type='numeric' />
+                    <TextInput
+                        name    = 'Proportion'
+                        label   = 'Proportion (%)'
+                        control = {control} required
+                        type    = 'numeric'
+                        pattern = {{
+                            value: /^[0-9]*[1-9][0-9]*$/,   // Must be a positive integer
+                            message: 'Proportion must be a number greater than 0.'
+                        }}
+                    />
 
-                    <CheckboxControl name='IncludeInFee' label='Include in fee calculation?' control={control} />
+                    <CheckboxControl
+                        name    = 'IncludeInFee'
+                        label   = 'Include in fee calculation?'
+                        control = {control}
+                    />
                 </>
             }
         />

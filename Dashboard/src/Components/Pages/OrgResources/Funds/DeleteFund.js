@@ -28,7 +28,7 @@ const DeleteFund = () => {
             handler    = {onDelete}
             label      = {`Delete fund ${fund.Name}?`}
             warning    = 'This policy is currently in use by client holdings (policy funds), which will also be deleted if this fund is deleted. The clients are:'
-            prompt     = 'Are you sure you want to delete this fund'
+            prompt     = {<>Are you sure you want to delete this fund <b>{fund.Name}</b></>}
             dependents = 'and all linked holdings'
         />
     );

@@ -2,6 +2,7 @@ package Portfolios
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
@@ -92,8 +93,7 @@ func UpdatePortfolio(c *gin.Context) {
 		Column("proportion").
 		Column("include_in_fee").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 
 	c.JSON(200, gin.H{

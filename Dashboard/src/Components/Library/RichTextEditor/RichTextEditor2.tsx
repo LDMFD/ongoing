@@ -85,7 +85,7 @@ export const RichTextEditor2 = (props: FormInputProps) => {
     let rules: any = {
         required: {
             value: props.required,
-            message: 'Required field (minimum two words)',
+            message: 'Required field - enter some text',
         },
     };
     if (props.required) {

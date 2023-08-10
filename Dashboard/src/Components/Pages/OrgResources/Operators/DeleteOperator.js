@@ -28,7 +28,7 @@ const DeleteOperator = () => {
             handler    = {onDelete}
             label      = {`Delete operator ${operator.Name}?`}
             warning    = 'This operator is currently in use by models or portfolios, which will also be deleted if this operator is deleted. The dependent clients and models are:'
-            prompt     = 'Are you sure you want to delete this operator'
+            prompt     = {<>Are you sure you want to delete this operator <b>{operator.Name}</b></>}
             dependents = 'and all its dependents'
         />
     );

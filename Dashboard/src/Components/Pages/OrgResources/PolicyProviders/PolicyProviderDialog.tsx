@@ -41,7 +41,9 @@ export const PolicyProviderDialog = (props: {
                 submitLabel = {props.submitLabel}
                 submitRef   = {submitRef}
                 onSubmit    = {handleSubmit(onSubmit)}
-                error       = {props.error === UniqueViolation ? 'A platform with this name already exists.' : ''}
+                error       = {props.error === UniqueViolation
+                    ? <p>A platform with this name already exists.</p>
+                    : ''}
                 fullWidth   = {true}
                 content = {
                     <>

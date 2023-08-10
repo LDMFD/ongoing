@@ -60,7 +60,7 @@ namespace Ongoing
                 // string connection = File.ReadAllText($"{home}/.homedog/secrets/cloud-sql/db-connection-dotnet");
                 // optionsBuilder.UseNpgsql(connection);
             }
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ongoing-local;Username=postgres;Password=p");
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ongoing-local;Username=postgres;Password=p;Include Error Detail=True");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -135,7 +135,6 @@ func UpdatePolicy(c *gin.Context) {
 		Column("file_ptr_id").
 		Exec(c); err != nil {
 		Errors.Unexpected(c, err)
-		return
 	}
 
 	if err := tx.Commit(); err != nil {

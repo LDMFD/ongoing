@@ -99,7 +99,7 @@ Create the database network by running `docker-compose up postgres` and then hit
     Terminal #2: make spicedb-init                    # create spicedb tables 
     Terminal #2: make spicedb-init-local              # create SpiceDB DB
     Terminal #3: docker-compose up spicedb            # run SpiceDB
-    Terminal #2: make spicedb-write-schema            # write SpiceDB relations and permissions
+    Terminal #2: make spicedb-write-schema-local      # write SpiceDB relations and permissions
     Terminal #4: make work-on-prod                    # write env.goland
     Terminal #4: make db-update                       # create service tables
 

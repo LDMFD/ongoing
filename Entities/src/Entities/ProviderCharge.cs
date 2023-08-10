@@ -53,5 +53,6 @@ class ProviderChargeConfig : IEntityTypeConfiguration<ProviderCharge>
             .HasConstraintName("fk_policy_provider");
         
         builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => new { e.PolicyProviderId, e.Boundary, e.Charge });
     }
 }

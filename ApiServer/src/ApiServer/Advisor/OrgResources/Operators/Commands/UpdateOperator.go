@@ -3,6 +3,7 @@ package Commands
 import (
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Config"
 	"ongoing/Entities"
 
@@ -56,8 +57,7 @@ func UpdateOperator(c *gin.Context) {
 		Column("type").
 		Column("name").
 		Column("fee").Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 
 	c.JSON(200, gin.H{})

@@ -4,9 +4,10 @@ import { useForm } from 'react-hook-form';
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
 import Dialog from 'Components/Library/Dialog/Dialog';
-import { State } from 'Types/Types';
-import { ProviderDiscount } from 'Types/OrgResources';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
+import { UniqueViolation } from 'Errors';
+import { ProviderDiscount } from 'Types/OrgResources';
+import { State } from 'Types/Types';
 
 interface ProviderDiscountForm {
 	PolicyProviderId: string,
@@ -18,6 +19,7 @@ const ProviderDiscountDialog = (props: {
     providerDiscount: ProviderDiscount,
     submitLabel: string,
     submitHandler: (providerDiscount: ProviderDiscountForm) => void,
+    error: string,
 }) => {
     const { handleSubmit, control } = useForm<ProviderDiscountForm>({
         defaultValues: props.providerDiscount,
@@ -37,10 +39,11 @@ const ProviderDiscountDialog = (props: {
 
     return (
         <Dialog
-            title       = {`${props.submitLabel} Provider Discount`}
-            intro       = 'Enter provider discount:'
+            title       = {`${props.submitLabel} Platform Discount`}
+            intro       = 'Enter platform discount:'
             onSubmit    = {handleSubmit(onSubmit)}
             submitLabel = {props.submitLabel}
+            error       = {props.error === UniqueViolation ? 'This platform discount already exists.' : ''}
             content = {
                 <>
                     <SelectControl
@@ -57,6 +60,10 @@ const ProviderDiscountDialog = (props: {
                         control = {control}
                         required
                         type    = 'numeric'
+                        pattern = {{
+                            value: /^[0-9]*[1-9][0-9]*$/,   // Must be a positive integer
+                            message: 'Proportion must be a number greater than 0.'
+                        }}
                     />
                 </>
             }

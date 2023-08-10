@@ -22,6 +22,7 @@ func (c *Client) CreateOrgFile(ctx *context.Context, tx *bun.Tx, orgId, fileId s
 	return nil
 }
 
+// Adds a file to the outbox table
 func (c *Client) CreateFile(ctx *context.Context, tx *bun.Tx, clientId, orgId *string, fileId string) error {
 	if clientId == nil && orgId == nil {
 		panic("clientId and orgId may not both be nil")

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory } from "react-router-dom";
 
 import { Context } from 'State/StateProvider'
@@ -13,17 +13,26 @@ const AddOperator = () => {
 
     const [ state, dispatch] = useContext(Context);
 
+    const [ error, setError ] = useState(null);
+
     const submitHandler = async (operator) => {
-        await Api.OrgResources.Operators.Create(operator);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
+        let response = await Api.OrgResources.Operators.Create(operator);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     return (
-        <OperatorDialog state         = {state}
-                        operator      = {DefaultOperator}
-                        submitLabel   = 'Add'
-                        submitHandler = {submitHandler} />
+        <OperatorDialog
+            state         = {state}
+            operator      = {DefaultOperator}
+            submitLabel   = 'Add'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { Context } from 'State/StateProvider'
@@ -12,10 +12,16 @@ const EditProviderCharge = () => {
 
     const [ state, dispatch ] = useContext(Context);
 
+    const [ error, setError ] = useState(null);
+
     const submitHandler = async (pc) => {
-        await Api.OrgResources.ProviderCharges.Update(pc);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
+        let response = await Api.OrgResources.ProviderCharges.Update(pc);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
     };
 
     let { chargeId } = useParams();
@@ -23,10 +29,13 @@ const EditProviderCharge = () => {
     let providerCharge = state.Resources.ProviderCharges.find(p => p.Id === chargeId);
 
     return (
-        <ProviderChargeDialog state             = {state}
-                              providerCharge    = {providerCharge}
-                              submitLabel       = 'Update'
-                              submitHandler     = {submitHandler} />
+        <ProviderChargeDialog
+            state          = {state}
+            providerCharge = {providerCharge}
+            submitLabel    = 'Update'
+            submitHandler  = {submitHandler}
+            error          = {error}
+        />
     );
 }
 

@@ -3,6 +3,7 @@ package Commands
 import (
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Config"
 	"ongoing/Entities"
 
@@ -15,9 +16,9 @@ type UpdateRiskLevelPath struct {
 }
 
 type UpdateRiskLevelBody struct {
-	Level int64  `binding:"required"`
+	Level int64
 	Label string `binding:"required"`
-	Desc  string `binding:"required"`
+	Desc  string
 }
 
 func UpdateRiskLevel(c *gin.Context) {
@@ -65,8 +66,7 @@ func UpdateRiskLevel(c *gin.Context) {
 		Column("label").
 		Column("desc").
 		Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 
 	c.JSON(200, gin.H{})

@@ -39,10 +39,10 @@ namespace Ongoing.Entities
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
 
-        
+
         [ForeignKey("RiskProviderId")]
         [InverseProperty("RiskLevels")]
-        public virtual RiskProvider? RiskProvider { get; set; }
+        public virtual RiskProvider? RiskProvider { get; set; } = null;
         
         [InverseProperty("RiskLevel")]
         public virtual ICollection<RiskAssessment> RiskAssessments { get; set; }
@@ -64,5 +64,7 @@ class RiskLevelConfig : IEntityTypeConfiguration<RiskLevel>
             .HasConstraintName("fk_risk_provider");
         
         builder.HasAlternateKey(e => e.Uid);
+        builder.HasAlternateKey(e => new { e.RiskProviderId, e.Level });
+        builder.HasAlternateKey(e => new { e.RiskProviderId, e.Label });
     }
 }

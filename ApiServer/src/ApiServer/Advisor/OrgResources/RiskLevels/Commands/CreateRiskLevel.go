@@ -3,6 +3,7 @@ package Commands
 import (
 	"github.com/uptrace/bun"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/Entities"
 	"ongoing/Utils/UUID"
 
@@ -12,7 +13,7 @@ import (
 type CreateRiskLevelRequestBody struct {
 	RiskProviderId string `binding:"required"`
 	Level          int64
-	Label          string
+	Label          string `binding:"required"`
 	Desc           string
 }
 
@@ -54,8 +55,7 @@ func CreateRiskLevelInternal(c *gin.Context, orgId int64, body CreateRiskLevelRe
 		Desc:           body.Desc,
 	}
 	if _, err := db.NewInsert().Model(&riskLevel).Exec(c); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		panic(err.Error())
+		Errors.Unexpected(c, err)
 	}
 	return uid
 }

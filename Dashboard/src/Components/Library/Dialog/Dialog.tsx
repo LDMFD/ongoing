@@ -21,7 +21,7 @@ const Dialog = (props: {
     submitLabel: string,
     submitRef?: any,
     content: any,
-    error?: string,
+    error?: string | any,
     sx?: any,
     fullWidth?: boolean,
 }) => {

@@ -11,29 +11,31 @@ const EditRiskLevel = () => {
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ riskLevel, setRiskLevel ] = useState(null);
+
+    const [ error, setError ] = useState(null);
+
+    const submitHandler = async (riskLevel) => {
+        let response = await Api.OrgResources.RiskLevels.Update(riskLevel);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.OrgResources.Entities.Read(dispatch);
+            goBack();
+        }
+    };
 
     let { levelId } = useParams();
 
-    if (!riskLevel) {
-        let p = state.Resources.RiskLevels.find(p => p.Id === levelId);
-        setRiskLevel(p)
-        return;
-    }
-
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.OrgResources.RiskLevels.Update(riskLevel);
-        await Api.OrgResources.Entities.Read(dispatch);
-        goBack();
-        return false;
-    };
+    let riskLevel = state.Resources.RiskLevels.find(p => p.Id === levelId);
 
     return (
-        <RiskLevelDialog riskLevel     = {riskLevel}
-                         setRiskLevel  = {setRiskLevel}
-                         submitLabel   = 'Update'
-                         submitHandler = {submitHandler} />
+        <RiskLevelDialog
+            state         = {state}
+            riskLevel     = {riskLevel}
+            submitLabel   = 'Update'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

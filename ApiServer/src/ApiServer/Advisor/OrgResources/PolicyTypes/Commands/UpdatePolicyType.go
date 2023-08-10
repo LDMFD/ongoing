@@ -58,7 +58,6 @@ func UpdatePolicyType(c *gin.Context) {
 		Column("name").
 		Exec(c); err != nil {
 		Errors.Unexpected(c, err)
-		return
 	}
 
 	c.JSON(200, gin.H{

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
-import { State } from 'Types/Types';
-import { TextInput } from 'Components/Library/FormControls/TextInput';
 import Dialog from 'Components/Library/Dialog/Dialog';
-
-import { OPERATOR_TYPES } from './OperatorTypes';
 import { SelectControl } from 'Components/Library/FormControls/SelectControl';
+import { TextInput } from 'Components/Library/FormControls/TextInput';
+import { UniqueViolation } from 'Errors';
+import { State } from 'Types/Types';
+import { OPERATOR_TYPES } from './OperatorTypes';
 
 interface OperatorFormInput {
     Name: string,
@@ -19,6 +19,7 @@ export const OperatorDialog = (props: {
     operator: OperatorFormInput,
     submitLabel: string,
     submitHandler: (operator: OperatorFormInput) => void,
+    error: string,
 }) => {
     const { handleSubmit, control } = useForm<OperatorFormInput>({
         defaultValues: props.operator
@@ -45,7 +46,9 @@ export const OperatorDialog = (props: {
             submitLabel = {props.submitLabel}
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
-            content = {
+            error       = {props.error === UniqueViolation ?
+                'An operator with this name already exists.' : ''}
+        content = {
                 <>
                     <TextInput
                         name='Name'
