@@ -34,9 +34,10 @@ const AdvisorReportRoutes = () => {
                             <Route path={`${basePath}/dates`}                    component={Dates} />
                         </Switch>
                     </ReportTabs>
-                    <Route path={`${basePath}/:page/edit/:rmod/:field`}          component={ModuleEditor} />
-                    <Route path={`${basePath}/:page/:subpage/edit/:rmod/:field`} component={ModuleEditor} />
-                    <Route path={`${basePath}/dates/edit`}                       component={EditDatesDialog} />
+                    <Route path={`${basePath}/:p1/edit/:rmod/:field`}         component={ModuleEditor} />
+                    <Route path={`${basePath}/:p1/:p2/edit/:rmod/:field`}     component={ModuleEditor} />
+                    <Route path={`${basePath}/:p1/:p2/:p3/edit/:rmod/:field`} component={ModuleEditor} />
+                    <Route path={`${basePath}/dates/edit`}                    component={EditDatesDialog} />
                 </Route>
             </Switch>
         </div>

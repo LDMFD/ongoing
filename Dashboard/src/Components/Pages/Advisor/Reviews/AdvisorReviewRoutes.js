@@ -35,7 +35,9 @@ const AdvisorReviewRoutes = () => {
                             <Route path={`${basePath}/assessments`}       component={ConclusionRoutes} />
                         </Switch>
                     </ReviewTabs>
-                    <Route path={`${basePath}/:page/edit/:rmod/:field`} component={ModuleEditor} />
+                    <Route path={`${basePath}/:p1/edit/:rmod/:field`}         component={ModuleEditor} />
+                    <Route path={`${basePath}/:p1/:p2/edit/:rmod/:field`}     component={ModuleEditor} />
+                    <Route path={`${basePath}/:p1/:p2/:p3/edit/:rmod/:field`} component={ModuleEditor} />
                     <Route path={`${basePath}/state/edit`}              component={EditReviewStateDialog} />
                 </Route>
             </Switch>
