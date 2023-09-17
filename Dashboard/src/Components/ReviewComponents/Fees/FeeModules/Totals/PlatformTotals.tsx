@@ -25,7 +25,7 @@ const PlatformTotals = (props: {
         ),
     });
 
-    let endValues:                      any = { header: 'Total invested on this platform' };
+    let endValues:                      any = { header: <b>Total invested on this platform</b> };
     let policyFeePercents:              any = { header: 'Total platform charges' };
     let fundLevelOcfs:                  any = { header: 'Fund level, OCF' }
     let fundLevelExAntes:               any = { header: 'Fund level, Transactional' }
