@@ -31,6 +31,7 @@ const EditClient = () => {
 
     return (
         <ClientDialog
+            state         = {state}
             client        = {client}
             submitLabel   = 'Update'
             submitHandler = {submitHandler}

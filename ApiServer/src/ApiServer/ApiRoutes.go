@@ -75,7 +75,7 @@ func addAdvisorRoutes(r *gin.Engine) {
 	routes.Use(AuthMiddleware(&[]string{
 		Entities.UserTypeOrgOwner,
 		Entities.UserTypeOrgAdmin,
-		Entities.UserTypeAdvisor,
+		Entities.UserTypeAdvisor, // if the user is an advisor, they can access their own clients only
 	}))
 	Advisor.AddRoutes(routes)
 }

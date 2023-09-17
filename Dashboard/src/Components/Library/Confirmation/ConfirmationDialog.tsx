@@ -21,7 +21,9 @@ export const ConfirmationDialog = (props: {
     const callback = async (e: any) => {
         e.preventDefault();
         let res = await props.okCallback(e);
-        goBack();
+        if (res) {
+            goBack();
+        }
         return res;
     };
 

@@ -11,7 +11,7 @@ const AddClient = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
-    const [, dispatch] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     const [ error, setError ] = useState(null);
 
@@ -27,6 +27,7 @@ const AddClient = () => {
 
     return (
         <ClientDialog
+            state         = {state}
             client        = {DefaultClient}
             submitLabel   = 'Add'
             submitHandler = {submitHandler}

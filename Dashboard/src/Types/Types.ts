@@ -1,9 +1,18 @@
 import { ClientIdentity, Report } from "./ClientResources";
 import { OrgResources } from "./OrgResources";
 
+export interface Advisor {
+    Id: string,
+    Email: string,
+    Forenames: string,
+    Surname: string,
+    Role: string,
+}
+
 export interface State {
     // Clients
     // Draft
+    Advisors: Advisor[],
     Metadata: Metadata,
     Report: Report,
     Resources: OrgResources,

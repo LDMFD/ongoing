@@ -20,7 +20,7 @@ export interface Client {
 	UserId: string,
 	Identity: ClientIdentity,
 	Fee: number,
-	Advisor: Advisor,
+	AdvisorId: string,//Advisor,
 }
 
 export interface Policy {

@@ -30,7 +30,7 @@ const ClientAccountPage = () => {
                             onClick: () => SendSignInLink(client.Identity.Email),
                         },
                         {
-                            label: 'Edit client details',
+                            label: 'Edit client',
                             link: `/clients/id/${client.Id}/edit`,
                         },
                         {
@@ -54,9 +54,13 @@ const ClientAccountPage = () => {
             <p>
                 Fee: {client.Fee}%
             </p>
-            <p>
-                Advisor: {advisor.Forenames} {advisor.Surname}
-            </p>
+            {advisor ?
+                <p>
+                    Advisor: {advisor.Forenames} {advisor.Surname}
+                </p>
+                :
+                'No advisor assigned'
+            }
         </Panel>
     );
 }   

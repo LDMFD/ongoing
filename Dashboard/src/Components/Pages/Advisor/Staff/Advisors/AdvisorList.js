@@ -45,7 +45,6 @@ const AdvisorList = () => {
             data           = {advisors}
             resource       = 'staff'
             label          = 'Advisor'
-            enableDelete   = {false}
         />
     );
 }

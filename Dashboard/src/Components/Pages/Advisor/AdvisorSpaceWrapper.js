@@ -55,6 +55,14 @@ const ClientWrapper = ({ children }) => {
         );
     }
 
+    if (!client) {
+        return (
+            <div>
+                <p>Client not found.</p>
+            </div>
+        );
+    }
+
     return loaded ? (
         <div>
             <BreadcrumbBar>

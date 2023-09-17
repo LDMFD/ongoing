@@ -3,6 +3,7 @@ package Advisor
 import (
 	"github.com/gin-gonic/gin"
 	"ongoing/ApiServer/Advisor/Clients"
+	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
 	OrgResources "ongoing/ApiServer/Advisor/OrgResources"
 	"ongoing/ApiServer/Advisor/OrgResources/Funds"
 	"ongoing/ApiServer/Advisor/OrgResources/Models"
@@ -18,6 +19,7 @@ import (
 
 func AddRoutes(r *gin.RouterGroup) {
 	r.GET("/org-resources", OrgResources.GetOrgResources)
+	r.GET("/team", Commands.GetAdvisors)
 	Clients.AddRoutes(r.Group("/clients"))
 	Funds.AddRoutes(r.Group("/funds"))
 	Operators.AddRoutes(r.Group("/operators"))

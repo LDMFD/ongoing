@@ -2,6 +2,7 @@ package ClientProfile
 
 import (
 	"net/http"
+	"ongoing/ApiServer/Helpers"
 	"ongoing/Entities"
 	"ongoing/ServiceContext"
 
@@ -31,13 +32,29 @@ func GetClientsInternal(c *gin.Context, orgId string) []Entities.ClientReport {
 	}
 
 	var reportClients = []Entities.ClientReport{}
-	for _, c := range clients {
-		rep := c.ToReport()
+	for _, client := range clients {
+		rep := client.ToReport()
 
-		if advisorId, err := context.Auth.GetAdvisor(c.Uid); err != nil {
+		var userAsAdvisor *Entities.Advisor
+		var err error
+
+		listAll := context.Session.Role == "superuser" ||
+			context.Session.Role == "owner" ||
+			context.Session.Role == "administrator"
+
+		if !listAll {
+			if userAsAdvisor, err = Helpers.AdvisorFromUserUID(c, context.Db, context.Session.UserUid); err != nil {
+				context.Panic(err)
+			}
+		}
+
+		if clientAdvisorId, err := context.Auth.GetAdvisor(client.Uid); err != nil {
 			context.Panic(err)
 		} else {
-			rep.AdvisorId = advisorId
+			if !listAll && (userAsAdvisor != nil && userAsAdvisor.User.Uid != clientAdvisorId) {
+				continue
+			}
+			rep.AdvisorId = clientAdvisorId
 		}
 		reportClients = append(reportClients, rep)
 	}

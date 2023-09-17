@@ -13,12 +13,23 @@ const InitialState = ({ children }) => {
     let [ loaded, setLoaded ] = useState(false);
 
     // Advisors
-    const getAdvisors     = useCallback(() => { return Api.Staff.Advisors.Read(dispatch); }, [ dispatch ]);
-    const getClients      = useCallback(() => { return Api.Advisor.Clients.Read(dispatch); }, [ dispatch ]);
-    const getOrgResources = useCallback(() => { return Api.OrgResources.Entities.Read(dispatch); }, [ dispatch ]);
+    const getAdvisors       = useCallback(() => { return Api.Advisor.Team.Read(dispatch); }, [ dispatch ]);
+    const getAdminResources = useCallback(() => { return Api.Staff.Advisors.Read(dispatch); }, [ dispatch ]);
+    const getClients        = useCallback(() => { return Api.Advisor.Clients.Read(dispatch); }, [ dispatch ]);
+    const getOrgResources   = useCallback(() => { return Api.OrgResources.Entities.Read(dispatch); }, [ dispatch ]);
     
+    const getAdminDependencies = useCallback(async () => {
+        await getAdminResources();
+        await getOrgResources();
+        await getClients();
+        setLoaded(true);
+    }, [
+        getAdminResources,
+        getOrgResources,
+        getClients,
+    ]);
+
     const getAdvisorDependencies = useCallback(async () => {
-        // TODO merge into one call
         await getAdvisors();
         await getOrgResources();
         await getClients();
@@ -51,8 +62,8 @@ const InitialState = ({ children }) => {
 
     let dependencyFetcher = {
         [UserType.Superuser]: getSuperuserDependencies,
-        [UserType.OrgOwner]: getAdvisorDependencies,
-        [UserType.OrgAdmin]: getAdvisorDependencies,
+        [UserType.OrgOwner]: getAdminDependencies,
+        [UserType.OrgAdmin]: getAdminDependencies,
         [UserType.Advisor]: getAdvisorDependencies,
         [UserType.Client]: getClientSpaceDependencies,
     };

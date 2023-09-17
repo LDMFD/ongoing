@@ -1,37 +1,41 @@
 import React, { useContext, useState } from 'react';
 import { useHistory, useParams } from "react-router-dom";
 
-import { Context } from 'State/StateProvider'
-import AdvisorDialog from './AdvisorDialog';
-import { GoBack } from 'Utils/Routing';
 import { Api } from 'State';
+import { Context } from 'State/StateProvider';
+import { GoBack } from 'Utils/Routing';
+import AdvisorDialog from './AdvisorDialog';
 
 const EditAdvisor = () => {
     let history = useHistory();
     let goBack = GoBack(history);
 
     const [ state, dispatch] = useContext(Context);
-    let [ advisor, setAdvisor ] = useState(null);
 
     let { advisorId } = useParams();
 
-    if (!advisor) {
-        setAdvisor(state.Advisors.find(o => o.Id === advisorId))
-        return;
-    }
-    const submitHandler = async (e) => {
-        e.preventDefault();
-        await Api.Staff.Advisors.Update(advisor)
-        await Api.Staff.Advisors.Read(dispatch);
-        goBack();
-        return false;
+    const [ error, setError ] = useState(null);
+
+    const submitHandler = async (advisor) => {
+        let response = await Api.Staff.Advisors.Update(advisor);
+        if (response.error) {
+            setError(response.error);
+        } else {
+            await Api.Staff.Advisors.Read(dispatch);
+            goBack();
+        }
     };
 
+    let advisor = state.Advisors.find(o => o.Id === advisorId);
+
     return (
-        <AdvisorDialog advisor       = {advisor}
-                       setAdvisor    = {setAdvisor}
-                       submitLabel   = 'Update'
-                       submitHandler = {submitHandler}  />
+        <AdvisorDialog
+            advisor       = {advisor}
+            state         = {state}
+            submitLabel   = 'Update'
+            submitHandler = {submitHandler}
+            error         = {error}
+        />
     );
 }
 

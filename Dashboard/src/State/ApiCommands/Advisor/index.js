@@ -11,6 +11,7 @@ import Portfolios        from './Portfolios';
 import ReviewModules     from './ReviewModules';
 import Reviews           from './Reviews';
 import RiskAssessments   from '../Advisor/RiskAssessments';
+import Team              from './Team';
 
 const defaults = {
     ClientDetail,
@@ -26,5 +27,6 @@ const defaults = {
     ReviewModules,
     Reviews,
     RiskAssessments,
+    Team,
 };
 export default defaults;

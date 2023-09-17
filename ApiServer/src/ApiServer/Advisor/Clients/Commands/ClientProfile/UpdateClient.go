@@ -3,13 +3,13 @@ package ClientProfile
 import (
 	"database/sql"
 	"github.com/pkg/errors"
-	"github.com/uptrace/bun"
 	"log"
 	"net/http"
 	"ongoing/ApiServer/Advisor/Errors"
 	"ongoing/ApiServer/Helpers"
 	"ongoing/Config"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -25,11 +25,14 @@ type CreateOrUpdateClientRequestBody struct {
 		Surname   string `binding:"required"`
 		Email     string `binding:"required"`
 	} `binding:"required"`
-	Fee float64 // allow 0 - `binding:"required"`
+	Fee       float64 // allow 0 - `binding:"required"`
+	AdvisorId string
 }
 
 func UpdateClient(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
+	auth := context.Auth
 
 	var path UpdateClientRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
@@ -92,6 +95,17 @@ func UpdateClient(c *gin.Context) {
 			Column("surname").
 			Exec(c); err != nil {
 			tx.Rollback()
+			Errors.Unexpected(c, err)
+		}
+	}
+
+	exportClient, _ := GetClientInternal(c, client)
+	oldAdvisorId := exportClient.Metadata.AdvisorId
+
+	if body.AdvisorId != "" {
+		ctx := c.Request.Context()
+		if err := auth.UpdateClientAdvisor(&ctx, &tx, oldAdvisorId, body.AdvisorId, client.Uid); err != nil {
+			_ = tx.Rollback()
 			Errors.Unexpected(c, err)
 		}
 	}

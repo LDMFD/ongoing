@@ -3,18 +3,22 @@ import { useForm } from 'react-hook-form';
 
 import { TextInput } from 'Components/Library/FormControls/TextInput';
 
-import { Client } from 'Types/ClientResources';
 import Dialog from 'Components/Library/Dialog/Dialog';
+import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { UniqueViolation } from 'Errors';
+import { Client } from 'Types/ClientResources';
+import { State } from 'Types/Types';
 
 interface ClientFormInput {
     Surname: string,
     Forenames: string,
     Email: string,
     Fee: number,
+    AdvisorId: string,
 }
 
 const ClientDialog = (props: {
+    state: State,
     client: Client,
     submitLabel: string,
     submitHandler: (client: Client) => void,
@@ -30,6 +34,7 @@ const ClientDialog = (props: {
     const onSubmit = (data: ClientFormInput) => {
         props.submitHandler({
             ...props.client,
+            AdvisorId: data.AdvisorId,
             Fee: parseFloat(data.Fee as unknown as string),
             Identity: {
                 Forenames: data.Forenames,
@@ -38,6 +43,11 @@ const ClientDialog = (props: {
             }
         });
     };
+
+    let advisors = props.state.Advisors.map(a => ({
+        Id: a.Id,
+        Name: `${a.Forenames} ${a.Surname}`,
+    }));
 
     return (
         <Dialog
@@ -48,10 +58,45 @@ const ClientDialog = (props: {
             error       = {props.error === UniqueViolation ? 'A client with this email address already exists in the system.' : ''}
             content = {
                 <>
-                    <TextInput name='Email'     label='Email'          control={control} required type='email' />
-                    <TextInput name='Surname'   label='Surname'        control={control} required />
-                    <TextInput name='Forenames' label='Forenames'      control={control} required />
-                    <TextInput name='Fee'       label='Advice Fee (%)' control={control} required type='numeric' />
+                    <TextInput
+                        name    = 'Email'
+                        label   = 'Email'
+                        control = {control}
+                        required
+                        type    = 'email'
+                    />
+
+                    <TextInput
+                        name    = 'Surname'
+                        label   = 'Surname'
+                        control = {control}
+                        required
+                    />
+
+                    <TextInput
+                        name    = 'Forenames'
+                        label   = 'Forenames'
+                        control = {control}
+                        required
+                    />
+
+                    <TextInput
+                        name    = 'Fee'
+                        label   = 'Advice Fee (%)'
+                        control = {control}
+                        required
+                        type    = 'numeric'
+                    />
+
+                    {props.submitLabel == 'Update' &&
+                        <SelectControl
+                            name     = 'AdvisorId'
+                            label    = 'Advisor'
+                            options  = {advisors}
+                            control  = {control}
+                            required
+                        />
+                    }
                 </>
             }
         />

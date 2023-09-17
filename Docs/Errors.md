@@ -1,4 +1,18 @@
-2022-03-28
+2023-08-02
+
+Duplicate key violation:
+
+	if _, err := db.NewInsert().Model(&policyType).Exec(c); err != nil {
+		Errors.Unexpected(c, err)
+		return
+	}
+
+
+Front-end:
+
+See Errors.js, PolicyTypeDialog.tsx, AddPolicyType.js for example
+
+2023-03-28
 
 It's possible to send a particular code and also raise a local error as follows (Policies.go):
 
@@ -6,7 +20,7 @@ It's possible to send a particular code and also raise a local error as follows 
 		panic(err)
 
 
-2022-03-26
+2023-03-26
 
 	Every transaction is opened with a deferred rollback
 
