@@ -3,12 +3,10 @@ package Commands
 import (
 	"database/sql"
 	"github.com/pkg/errors"
-	"github.com/uptrace/bun"
 	"log"
 	"net/http"
-	"ongoing/ApiServer/Advisor/Errors"
-	"ongoing/AuthService"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 	"ongoing/Utils/UUID"
 	"strings"
 
@@ -23,9 +21,11 @@ type CreateAdvisorRequestBody struct {
 }
 
 func CreateAdvisor(c *gin.Context) {
-	db := c.MustGet("DATABASE").(*bun.DB)
-	auth := c.MustGet("AUTH").(*AuthService.Client)
-	session := c.MustGet("SESSION").(*Entities.ServerSessionContext)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	db := context.Db
+	auth := context.Auth
+	session := context.Session
+	response := context.Response
 
 	var body CreateAdvisorRequestBody
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -38,7 +38,7 @@ func CreateAdvisor(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
 	} else if exists {
-		c.JSON(http.StatusBadRequest, gin.H{"error": Errors.UserAlreadyExists})
+		response.UniqueViolation()
 		return
 	}
 

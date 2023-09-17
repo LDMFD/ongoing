@@ -55,7 +55,7 @@ const ClientDialog = (props: {
             intro       = 'Enter new client details:'
             submitLabel = {props.submitLabel}
             onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation ? 'A client with this email address already exists in the system.' : ''}
+            error       = {props.error === UniqueViolation ? 'A user with this email already exists.' : ''}
             content = {
                 <>
                     <TextInput

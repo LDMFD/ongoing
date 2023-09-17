@@ -51,7 +51,7 @@ export const AdvisorDialog = (props: {
             submitRef   = {submitRef}
             onSubmit    = {handleSubmit(onSubmit)}
             error       = {props.error === UniqueViolation ?
-                'A staff member with this email already exists.' : ''}
+                'A user with this email already exists.' : ''}
         content = {
                 <>
                     <TextInput
