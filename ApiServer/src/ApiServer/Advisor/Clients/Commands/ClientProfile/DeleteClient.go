@@ -16,6 +16,7 @@ type DeleteClientRequestPath struct {
 
 func DeleteClient(c *gin.Context) {
 	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	auth := context.Auth
 	db := context.Db
 
 	var path DeleteClientRequestPath
@@ -41,8 +42,22 @@ func DeleteClient(c *gin.Context) {
 
 	ClientDeletion.DeleteClient(c, tx, dbClient, dtoClient, exportClient)
 
+	ctx := c.Request.Context()
+
 	var advisor *Entities.Advisor
-	if advisor, err = Helpers.AdvisorFromUserUID(c, db, exportClient.Metadata.AdvisorId); err != nil {
+	advisorUserId := ""
+
+	if exportClient.Metadata.AdvisorId != "" {
+		if advisor, err = Helpers.AdvisorFromUserUID(c, db, exportClient.Metadata.AdvisorId); err != nil {
+			context.Panic(err)
+		}
+		if err := auth.RemoveClientAdvisor(&ctx, &tx, exportClient.Metadata.Id, advisor.User.Uid); err != nil {
+			context.Panic(err)
+		}
+		advisorUserId = advisor.User.Uid
+	}
+
+	if err := context.Auth.RemoveClient(&ctx, &tx, *context.Session.OrgId, advisorUserId, path.ClientId, dtoClient.User.Uid); err != nil {
 		context.Panic(err)
 	}
 
@@ -58,11 +73,6 @@ func DeleteClient(c *gin.Context) {
 		Model(&user).
 		Where("id = ?", dtoClient.UserId).
 		Exec(c); err != nil {
-		context.Panic(err)
-	}
-
-	ctx := c.Request.Context()
-	if err := context.Auth.RemoveClient(&ctx, &tx, *context.Session.OrgId, advisor.User.Uid, path.ClientId, dtoClient.User.Uid); err != nil {
 		context.Panic(err)
 	}
 

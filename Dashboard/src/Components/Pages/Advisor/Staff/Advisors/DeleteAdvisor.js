@@ -11,8 +11,8 @@ const DeleteAdvisor = () => {
 
     let { advisorId } = useParams();
 
-    const onDelete = async () => {
-        let res = await Api.Staff.Advisors.Delete(advisorId)
+    const onDelete = async (execute) => {
+        let res = await Api.Staff.Advisors.Delete(advisorId, execute)
         await Api.Staff.Advisors.Read(dispatch);
         return res;
     };
@@ -25,10 +25,10 @@ const DeleteAdvisor = () => {
 
     return (
         <DeletionConfirmation
-            dryRun    = {false}
-            handler    = {onDelete}
-            label      = {`Staff member deletion`}
-            prompt      = {`Delete staff member ${advisor.Forenames} ${advisor.Surname}`}
+            handler = {onDelete}
+            label   = {`Staff member deletion`}
+            warning = {`This will delete the staff member, but not their clients. The following clients will need assigning a new advisor:`}
+            prompt  = {`Delete staff member ${advisor.Forenames} ${advisor.Surname}`}
         />
     );
 }

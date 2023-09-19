@@ -24,7 +24,7 @@ export const OrgUserList = () => {
 
     let org = state.Organisations?.find(o => o.Id === orgId);
 
-    let users = org.Members.map(m => {
+    let users = org.Members?.map(m => {
         let u = state.Users.find(u => u.Id === m.UserId);
         return {
             id: m.UserId,
@@ -37,7 +37,7 @@ export const OrgUserList = () => {
         (p.role === 'advisor') ? -1 : 
         (q.role === 'advisor') ? 1 : 
         (p.email < q.email) ? -1 : ((p.email > q.email) ? 1 : 0)
-    );
+    ) || [];
 
     return (
         <Dialog

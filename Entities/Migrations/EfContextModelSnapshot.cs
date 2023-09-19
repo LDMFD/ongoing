@@ -668,7 +668,7 @@ namespace Ongoing.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CreatorId")
+                    b.Property<int?>("CreatorId")
                         .HasColumnType("integer")
                         .HasColumnName("creator_id");
 
@@ -677,7 +677,7 @@ namespace Ongoing.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
                         .HasColumnType("integer")
                         .HasColumnName("owner_id");
 
@@ -1560,14 +1560,12 @@ namespace Ongoing.Migrations
                         .WithMany("CreatedOrgs")
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired()
                         .HasConstraintName("fk_org_creator");
 
                     b.HasOne("Ongoing.Entities.User", "Owner")
                         .WithMany("OwnedOrgs")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired()
                         .HasConstraintName("fk_org_owner");
 
                     b.Navigation("Creator");

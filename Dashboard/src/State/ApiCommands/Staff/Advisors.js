@@ -23,8 +23,8 @@ const Update = (advisor) => {
     })
 }
 
-const Delete = (advisorId) => {
-    return window.ApiClient.delete(`staff/${advisorId}`)
+const Delete = (advisorId, execute) => {
+    return window.ApiClient.delete(`staff/${advisorId}?execute=${execute}`)
 }
 
 const defaults = {

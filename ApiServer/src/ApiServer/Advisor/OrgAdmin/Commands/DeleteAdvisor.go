@@ -4,22 +4,30 @@ import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/uptrace/bun"
 	"log"
 	"net/http"
+	"ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/ApiServer/Helpers"
-	"ongoing/AuthService"
 	"ongoing/Entities"
+	"ongoing/ServiceContext"
 )
 
 func DeleteAdvisor(c *gin.Context) {
-	auth := c.MustGet("AUTH").(*AuthService.Client)
-	db := c.MustGet("DATABASE").(*bun.DB)
+	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
+	auth := context.Auth
+	db := context.Db
+	response := &context.Response
 
 	var path UpdateOrDeleteAdvisorRequestPath
 	if err := c.ShouldBindUri(&path); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		panic(err.Error())
+	}
+
+	var query Helpers.ExecuteQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
+		context.Response.InvalidInput()
+		return
 	}
 
 	var err error
@@ -37,6 +45,22 @@ func DeleteAdvisor(c *gin.Context) {
 	}
 	defer tx.Rollback()
 
+	for _, client := range ClientProfile.GetClientsInternal(c, *context.Session.OrgId) {
+		if client.AdvisorId == "" {
+			continue
+		}
+		if advisor, err := Helpers.AdvisorFromUserUID(c, db, client.AdvisorId); err != nil {
+			response.Panic(err)
+		} else if advisor.User.Uid == client.AdvisorId {
+			response.AddResource(client.Identity.Surname + ", " + client.Identity.Forenames)
+		}
+	}
+
+	if !query.Execute {
+		response.CheckIntegrity()
+		return
+	}
+
 	var orgId string
 	if orgs, err := auth.LookupOrganisations(advisor.User.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -46,6 +70,13 @@ func DeleteAdvisor(c *gin.Context) {
 	}
 
 	ctx := c.Request.Context()
+
+	for _, client := range ClientProfile.GetClientsInternal(c, *context.Session.OrgId) {
+		if err := auth.RemoveClientAdvisor(&ctx, &tx, client.Id, advisor.User.Uid); err != nil {
+			response.Panic(err)
+		}
+	}
+
 	if err := auth.RemoveMember(&ctx, &tx, orgId, advisor.User.Uid); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		log.Printf("%+v", err)

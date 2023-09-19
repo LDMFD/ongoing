@@ -29,11 +29,13 @@ func (c *Client) RemoveClient(ctx *context.Context, tx *bun.Tx, orgId, advisorId
 	if err := c.removeRelationship(ctx, tx, "client", clientId, "org", "organisation", orgId); err != nil {
 		return err
 	}
-	if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", advisorId); err != nil {
-		return err
-	}
 	if err := c.removeRelationship(ctx, tx, "client", clientId, "subject", "user", clientUserId); err != nil {
 		return err
+	}
+	if advisorId != "" {
+		if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", advisorId); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -43,6 +45,13 @@ func (c *Client) UpdateClientAdvisor(ctx *context.Context, tx *bun.Tx, oldAdviso
 		return err
 	}
 	if err := c.createRelationship(ctx, tx, "client", clientId, "advisor", "user", newAdvisorId); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) RemoveClientAdvisor(ctx *context.Context, tx *bun.Tx, clientId, advisorId string) error {
+	if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", advisorId); err != nil {
 		return err
 	}
 	return nil

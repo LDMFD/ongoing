@@ -62,7 +62,7 @@ export const DeletionConfirmation = (props: {
                         ))}
                     </ul>
                 )}
-                {props.prompt} {props.dependents}?
+                {props.prompt}{props.dependents && <> {props.dependents}</>}?
             </>
         ) : (  // no dependencies
             <>

@@ -22,10 +22,10 @@ namespace Ongoing.Entities
         public string Name { get; set; } = null!;
         
         [Column("owner_id")]
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
 
         [Column("creator_id")]
-        public int CreatorId { get; set; }
+        public int? CreatorId { get; set; }
 
         [Column("timestamp", TypeName = "timestamp without time zone")]
         public DateTime Timestamp { get; set; }
@@ -33,11 +33,11 @@ namespace Ongoing.Entities
 
         [ForeignKey("OwnerId")]
         [InverseProperty("OwnedOrgs")]
-        public virtual User Owner { get; set; } = null!;
+        public virtual User? Owner { get; set; } = null!;
         
         [ForeignKey("CreatorId")]
         [InverseProperty("CreatedOrgs")]
-        public virtual User Creator { get; set; } = null!;
+        public virtual User? Creator { get; set; } = null!;
         
         
         [InverseProperty("Org")]
