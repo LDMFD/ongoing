@@ -45,13 +45,14 @@ const AdviceFees = () => {
         width: 200,
     }];
 
-    let feesReport = report.FeesReports?.map(fr => {
+    let feesReports = report.FeesReports?.map(fr => {
         return {
             id:        fr.Id,
             submitted: Day(fr.Submitted).utc(false).format('DD-MM-YYYY'),
             file:      fr.File,
         };
-    }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0))[0];
+    }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0));
+    console.log(feesReports)
 
     return (
         <>
@@ -61,15 +62,29 @@ const AdviceFees = () => {
                 <p>
                     Your advice fee is: {client.Fee}%
                     
-                    {feesReport && (
+                    {feesReports.length == 1 ?
                         <p>
                             Download your fees report:
                             <DownloadChip
-                                title={`Fees report ${feesReport.submitted}`}
-                                fileId={feesReport.file.Uid}
+                                title={`Fees report ${feesReports[0].submitted}`}
+                                fileId={feesReports[0].file.Uid}
                             />
                         </p>
-                    )}
+                    :
+                        <>
+                            <p>Download your fees reports:</p>
+                            <ul>
+                                {feesReports.map(feesReport => (
+                                    <li>
+                                        <DownloadChip
+                                            title={`Fees report ${feesReport.submitted}`}
+                                            fileId={feesReport.file.Uid}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    }
                 </p>
             </Panel>
 
