@@ -1,3 +1,12 @@
+# 1.12.0 2023-09-19
+
+- Error handling for duplicate entities
+- Remove "profile intro" module
+- Fix policy fund proportion rounding
+- Reassign client advisor
+- Advisor deletion
+- Fees module editor fix
+
 # 1.11.13 2023-07-15
 
 - Fix portfolio and policy fund proportion rounding

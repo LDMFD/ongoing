@@ -1,3 +1,11 @@
+# 1.12.0 2023-09-19
+
+- Error handling for duplicate entities
+- Remove "profile intro" module
+- Fix policy fund proportion rounding
+- Reassign client advisor
+- Advisor deletion
+
 # 1.11.2 2023-05-13
 
 - Sentry tag "ongoing.superuser" for the user who invoked "view as".
