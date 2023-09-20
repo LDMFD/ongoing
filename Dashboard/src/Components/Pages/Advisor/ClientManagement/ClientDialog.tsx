@@ -8,6 +8,7 @@ import { SelectControl } from 'Components/Library/FormControls/SelectControl';
 import { UniqueViolation } from 'Errors';
 import { Client } from 'Types/ClientResources';
 import { State } from 'Types/Types';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 interface ClientFormInput {
     Surname: string,
@@ -50,56 +51,60 @@ const ClientDialog = (props: {
     }));
 
     return (
-        <Dialog
-            title       = {`${props.submitLabel} Client`}
-            intro       = 'Enter new client details:'
-            submitLabel = {props.submitLabel}
-            onSubmit    = {handleSubmit(onSubmit)}
-            error       = {props.error === UniqueViolation ? 'A user with this email already exists.' : ''}
-            content = {
-                <>
-                    <TextInput
-                        name    = 'Email'
-                        label   = 'Email'
-                        control = {control}
-                        required
-                        type    = 'email'
-                    />
+        <>
+            <PageTitle title={`Edit client: ${props.client.Identity.Forenames} ${props.client.Identity.Surname} | Amplifa`} />
 
-                    <TextInput
-                        name    = 'Surname'
-                        label   = 'Surname'
-                        control = {control}
-                        required
-                    />
+            <Dialog
+                title       = {`${props.submitLabel} Client`}
+                intro       = 'Enter new client details:'
+                submitLabel = {props.submitLabel}
+                onSubmit    = {handleSubmit(onSubmit)}
+                error       = {props.error === UniqueViolation ? 'A user with this email already exists.' : ''}
+                content = {
+                    <>
+                        <TextInput
+                            name    = 'Email'
+                            label   = 'Email'
+                            control = {control}
+                            required
+                            type    = 'email'
+                        />
 
-                    <TextInput
-                        name    = 'Forenames'
-                        label   = 'Forenames'
-                        control = {control}
-                        required
-                    />
-
-                    <TextInput
-                        name    = 'Fee'
-                        label   = 'Advice Fee (%)'
-                        control = {control}
-                        required
-                        type    = 'numeric'
-                    />
-
-                    {props.submitLabel == 'Update' &&
-                        <SelectControl
-                            name     = 'AdvisorId'
-                            label    = 'Advisor'
-                            options  = {advisors}
-                            control  = {control}
+                        <TextInput
+                            name    = 'Surname'
+                            label   = 'Surname'
+                            control = {control}
                             required
                         />
-                    }
-                </>
-            }
-        />
+
+                        <TextInput
+                            name    = 'Forenames'
+                            label   = 'Forenames'
+                            control = {control}
+                            required
+                        />
+
+                        <TextInput
+                            name    = 'Fee'
+                            label   = 'Advice Fee (%)'
+                            control = {control}
+                            required
+                            type    = 'numeric'
+                        />
+
+                        {props.submitLabel == 'Update' &&
+                            <SelectControl
+                                name     = 'AdvisorId'
+                                label    = 'Advisor'
+                                options  = {advisors}
+                                control  = {control}
+                                required
+                            />
+                        }
+                    </>
+                }
+            />
+        </>
     );
 }
 

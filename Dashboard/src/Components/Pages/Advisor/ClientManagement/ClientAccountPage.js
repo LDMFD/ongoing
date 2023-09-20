@@ -9,6 +9,7 @@ import { Context } from 'State';
 import SendSignInLink from "Components/Library/Auth/AuthEmailer";
 import Panel from 'Components/Library/Panel/Panel';
 import Dropdown from 'Components/Library/Dropdown/Dropdown';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const ClientAccountPage = () => {
     const [state] = useContext(Context);
@@ -21,6 +22,8 @@ const ClientAccountPage = () => {
 
     return (
         <Panel>
+            <PageTitle title={`Client: ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
             <div style={{ float: 'right', margin: '1rem' }}>
                 <Dropdown
                     title = 'Client actions'

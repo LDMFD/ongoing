@@ -1,4 +1,5 @@
 import { useContext, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
     Card,
     CardContent,
@@ -9,6 +10,8 @@ import './AdvisorModule.css';
 import { Context } from 'State/StateProvider';
 import { DefaultModule } from './DefaultModule';
 import Dropdown from 'Components/Library/Dropdown/Dropdown';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
+import { ModuleTypeSelectSpec } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 
 export const AdvisorModule = ({ module }) => {
     const [ state,  ] = useContext(Context);
@@ -19,6 +22,11 @@ export const AdvisorModule = ({ module }) => {
     let draft = state.Report.Modules.find(m => m.Type === module);
 
     preset = state.Report.ModulePresets.find(p => p.ModuleType === module);
+
+    // Page title
+    let { clientId } = useParams();
+    let client = state.Clients.find(c => c.Id === clientId);
+    let type = ModuleTypeSelectSpec.find(t => t.id === module);
 
     if (!moduleState) {
         // First load
@@ -47,6 +55,8 @@ export const AdvisorModule = ({ module }) => {
 
     return (
         <div className='ong-advisor-module'>
+            <PageTitle title={`Review - ${type.label} | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
             <Card variant='outlined'>
                 <div style={{ float: 'right', margin: '1rem' }}>
                     <Dropdown

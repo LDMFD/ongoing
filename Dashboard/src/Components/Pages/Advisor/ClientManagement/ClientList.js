@@ -2,6 +2,7 @@ import { useContext, useCallback, useEffect } from 'react';
 
 import { Context, Api } from 'State';
 import Table from 'Components/Library/Table/Table';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const ClientList = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -47,6 +48,8 @@ const ClientList = () => {
 
     return (
         <div className='ong-clientList'>
+            <PageTitle title='Clients | Amplifa' />
+            
             <Table
                 columns          = {columns}
                 data             = {clients}

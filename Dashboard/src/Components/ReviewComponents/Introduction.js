@@ -7,6 +7,7 @@ import { FromCanonical } from 'Utils/DateTime';
 import { FormatCurrency } from 'Utils/Strings';
 import { GetMeta, GetReport } from './GetReport';
 import Panel from 'Components/Library/Panel/Panel';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const Introduction = () => {
     let report = GetReport();
@@ -21,6 +22,8 @@ const Introduction = () => {
 
     return (
         <TabContent>
+            <PageTitle title='Review introduction | Amplifa' />
+
             <Module module = {ModuleTypeIntroduction} />
 
             <Panel>

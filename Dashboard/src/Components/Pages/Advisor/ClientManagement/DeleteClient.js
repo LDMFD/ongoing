@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import ConfirmationDialog from 'Components/Library/Confirmation/ConfirmationDialog';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const DeleteClient = () => {
     let history = useHistory();
@@ -27,8 +28,12 @@ const DeleteClient = () => {
     }
 
     return (
-        <ConfirmationDialog label      = {`Delete client ${client.Identity.Forenames} ${client.Identity.Surname}?`}
-                            okCallback = {onDelete}  />
+        <>
+            <PageTitle title={`Delete client: ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
+            <ConfirmationDialog label      = {`Delete client ${client.Identity.Forenames} ${client.Identity.Surname}?`}
+                                okCallback = {onDelete}  />
+        </>
     );
 }
 

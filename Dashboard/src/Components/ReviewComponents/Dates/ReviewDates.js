@@ -6,11 +6,13 @@ import TabContent from 'Components/Library/TabContent/TabContent';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
 import { FromCanonical } from 'Utils/DateTime';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const Dates = () => {
-    let { clientId } = useParams();
-
     const [ state, dispatch ] = useContext(Context);
+
+    let { clientId } = useParams();
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const sync = useCallback(() => {
         Api.Advisor.ClientDetail.Read(dispatch, clientId);
@@ -27,6 +29,8 @@ const Dates = () => {
 
     return (
         <TabContent>
+            <PageTitle title={`Edit review dates | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
             <Panel>
                 <p>
                     This review covers the period from {startDate} to {endDate}.

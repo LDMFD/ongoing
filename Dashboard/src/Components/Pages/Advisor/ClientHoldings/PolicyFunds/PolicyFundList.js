@@ -7,6 +7,7 @@ import { ProportionWarning } from 'Components/Library/Warning/ProportionWarning'
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Api, Context } from 'State';
 import { PercentageFormatter } from 'Utils/Strings';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const PolicyFundList = () => {
     const [state, dispatch ] = useContext(Context);
@@ -74,6 +75,8 @@ const PolicyFundList = () => {
 
     return (
         <>
+            <PageTitle title={`Policy funds | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
             <Table
                 flexibleColumn        = {4}
                 columns               = {columns}

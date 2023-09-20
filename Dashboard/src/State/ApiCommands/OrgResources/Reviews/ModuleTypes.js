@@ -27,7 +27,7 @@ export const ModuleTypeSelectSpec = [
     { id: ModuleTypeFactFind,           label: "Profile - Fact-Find" },
     { id: ModuleTypeRisk,               label: "Profile - Attitude To Risk Questionnaire" },
     { id: ModuleTypeGoals,              label: "Profile - Goals" },
-    { id: ModuleTypePolicyValuations,   label: "Policy Valuations page" },
+    { id: ModuleTypePolicyValuations,   label: "Policy Valuations" },
     { id: ModuleTypeFeeTotals,          label: "Fees - Totals" },
     { id: ModuleTypeAdviceFee,          label: "Fees - Advice" },
     { id: ModuleTypePlatformFees,       label: "Fees - Platform" },

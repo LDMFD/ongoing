@@ -5,6 +5,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 
 import { Context } from 'State/StateProvider'
 import { FromCanonical } from 'Utils/DateTime';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const ReviewList = () => {
     let history = useHistory();
@@ -49,6 +50,8 @@ const ReviewList = () => {
 
     return (
         <>
+            <PageTitle title={`Reviews | ${state.Metadata.Identity.Forenames} ${state.Metadata.Identity.Surname} | Amplifa`} />
+
             <DataGrid autoHeight {...data} />
         </>
     );

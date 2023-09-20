@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { useContext } from 'react';
 import Day from 'dayjs';
 
@@ -5,9 +6,13 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider';
 import { BuildDownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const RiskAssessmentList = () => {
     const [ state ] = useContext(Context);
+
+    let { clientId } = useParams();
+    let client = state.Clients.find(c => c.Id === clientId);
 
     let report = GetReport();
 
@@ -43,22 +48,26 @@ const RiskAssessmentList = () => {
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));
 
     return (
-        <Table
-            flexibleColumn        = {2}
-            columns               = {columns}
-            data                  = {assessments}
-            resource              = {`clients/id/${state.Metadata.Id}/documents/risk-assessments`}
-            label                 = 'Risk Assessment'
-            defaultActionHeader   = 'Download'
-            defaultActionRenderer = {BuildDownloadChip('Assessment')}
-            detailId              = 'desc'
-            detailRenderer = {({ row }) => (
-                <div
-                    className               = 'ong-notes'
-                    dangerouslySetInnerHTML = {{ __html: row.original.desc }}
-                />
-            )}
-        />
+        <>
+            <PageTitle title={`Risk assessments | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
+            <Table
+                flexibleColumn        = {2}
+                columns               = {columns}
+                data                  = {assessments}
+                resource              = {`clients/id/${state.Metadata.Id}/documents/risk-assessments`}
+                label                 = 'Risk Assessment'
+                defaultActionHeader   = 'Download'
+                defaultActionRenderer = {BuildDownloadChip('Assessment')}
+                detailId              = 'desc'
+                detailRenderer = {({ row }) => (
+                    <div
+                        className               = 'ong-notes'
+                        dangerouslySetInnerHTML = {{ __html: row.original.desc }}
+                    />
+                )}
+            />
+        </>
     );
 }
 

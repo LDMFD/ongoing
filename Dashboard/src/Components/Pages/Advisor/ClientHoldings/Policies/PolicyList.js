@@ -9,11 +9,13 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
 import { FormatCurrencyPence } from 'Utils/Strings';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const PolicyList = () => {
-    const [ , dispatch ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     let { clientId } = useParams();
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const sync = useCallback(() => {
         Api.Advisor.ClientDetail.Read(dispatch, clientId);
@@ -99,13 +101,16 @@ const PolicyList = () => {
     }).sort((p,q) => (p.policyNumber < q.policyNumber) ? -1 : ((p.policyNumber > q.policyNumber) ? 1 : 0));
 
     return (
-        <Table
-            flexibleColumn        = {7}
-            columns               = {columns}
-            data                  = {policies}
-            resource              = {`clients/id/${clientId}/holdings/policies`}
-            label                 = 'Policy'
-        />
+        <>
+        <PageTitle title={`Policies | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+            <Table
+                flexibleColumn        = {7}
+                columns               = {columns}
+                data                  = {policies}
+                resource              = {`clients/id/${clientId}/holdings/policies`}
+                label                 = 'Policy'
+            />
+        </>
     );
 }
 

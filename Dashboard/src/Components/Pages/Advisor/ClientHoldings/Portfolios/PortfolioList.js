@@ -7,11 +7,13 @@ import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Api, Context } from 'State';
 import { PercentageFormatter } from 'Utils/Strings';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const PortfolioList = () => {
-    const [ , dispatch ] = useContext(Context);
+    const [ state, dispatch ] = useContext(Context);
 
     let { clientId } = useParams();
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const sync = useCallback(() => {
         Api.Advisor.ClientDetail.Read(dispatch, clientId);
@@ -76,13 +78,17 @@ const PortfolioList = () => {
     }).reverse();
 
     return (
-        <Table
-            flexibleColumn        = {1}
-            columns               = {columns}
-            data                  = {portfolios}
-            resource              = {`clients/id/${clientId}/holdings/portfolios`}
-            label                 = 'Portfolio'
-        />
+        <>
+            <PageTitle title={`Portfolios | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+
+            <Table
+                flexibleColumn        = {1}
+                columns               = {columns}
+                data                  = {portfolios}
+                resource              = {`clients/id/${clientId}/holdings/portfolios`}
+                label                 = 'Portfolio'
+            />
+        </>
     );
     // <ProportionWarning data={report.Portfolios} property='Proportion' />
 }

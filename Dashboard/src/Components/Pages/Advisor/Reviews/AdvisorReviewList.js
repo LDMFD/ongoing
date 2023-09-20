@@ -6,11 +6,13 @@ import { Api } from 'State';
 import { Context } from 'State/StateProvider';
 import { FromCanonical } from 'Utils/DateTime';
 import TabContent from 'Components/Library/TabContent/TabContent';
+import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
 const AdvisorReviewList = () => {
     const [ state, dispatch ] = useContext(Context);
 
     let { clientId } = useParams();
+    let client = state.Clients.find(c => c.Id === clientId);
 
     const publishReview = async () => {
         await Api.Advisor.Reviews.Publish(clientId, state.Draft.Id);
@@ -45,18 +47,22 @@ const AdvisorReviewList = () => {
     }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));
 
     return (
-        <TabContent>
-            <Table
-                flexibleColumn  = {3}
-                columns         = {columns}
-                data            = {reviews}
-                label           = 'Publish Draft'
-                enableEdit      = {false}
-                defaultAction   = {id => `/clients/id/${clientId}/reviews/id/${id}/modules/introduction`}
-                deleteAction    = {row => `/clients/id/${clientId}/reviews/delete/${row.id}`}
-                toolbarCallback = {publishReview}
-            />
-        </TabContent>
+        <>
+            <PageTitle title={`Published reviews | ${client.Identity.Forenames} ${client.Identity.Surname} | Amplifa`} />
+        
+            <TabContent>
+                <Table
+                    flexibleColumn  = {3}
+                    columns         = {columns}
+                    data            = {reviews}
+                    label           = 'Publish Draft'
+                    enableEdit      = {false}
+                    defaultAction   = {id => `/clients/id/${clientId}/reviews/id/${id}/modules/introduction`}
+                    deleteAction    = {row => `/clients/id/${clientId}/reviews/delete/${row.id}`}
+                    toolbarCallback = {publishReview}
+                />
+            </TabContent>
+        </>
     );
 }
 
