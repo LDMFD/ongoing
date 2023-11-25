@@ -41,8 +41,10 @@ func (c *Client) RemoveClient(ctx *context.Context, tx *bun.Tx, orgId, advisorId
 }
 
 func (c *Client) UpdateClientAdvisor(ctx *context.Context, tx *bun.Tx, oldAdvisorId, newAdvisorId, clientId string) error {
-	if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", oldAdvisorId); err != nil {
-		return err
+	if oldAdvisorId != "" { // Advisor was deleted
+		if err := c.removeRelationship(ctx, tx, "client", clientId, "advisor", "user", oldAdvisorId); err != nil {
+			return err
+		}
 	}
 	if err := c.createRelationship(ctx, tx, "client", clientId, "advisor", "user", newAdvisorId); err != nil {
 		return err
