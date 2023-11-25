@@ -32,42 +32,52 @@ func testDeleteAccounts(t *testing.T, e *httpexpect.Expect) {
 	e.DELETE("/api/advisor/clients/"+org2ClientId).
 		WithHeader("Authentication", ORG1_ADMIN).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusForbidden)
 
 	e.DELETE("/api/advisor/clients/xxx").
 		WithHeader("Authentication", ORG1_ADMIN).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusBadRequest)
 
 	e.DELETE("/api/advisor/clients/"+org2ClientId).
 		WithHeader("Authentication", ORG2_OWNER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/staff/"+org1AdvisorId).
 		WithHeader("Authentication", ORG2_OWNER).
 		WithHeader("X-Ongoing-ExpectForbidden", "true").
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusForbidden)
 
 	e.DELETE("/api/advisor/clients/"+org1ClientId).
 		WithHeader("Authentication", ORG1_OWNER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/staff/"+org1AdvisorId).
 		WithHeader("Authentication", ORG1_OWNER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/staff/"+org1AdminId).
 		WithHeader("Authentication", ORG1_OWNER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/admin/organisations/"+org2Id).
 		WithHeader("Authentication", SUPERUSER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.DELETE("/api/admin/organisations/"+org1Id).
 		WithHeader("Authentication", SUPERUSER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK)
 
 	e.GET("/api/admin/stats").
 		WithHeader("Authentication", SUPERUSER).
+		WithQuery("execute", "true").
 		Expect().Status(http.StatusOK).JSON().Object().ValueEqual("Total", 2) // 2 superusers
 }
