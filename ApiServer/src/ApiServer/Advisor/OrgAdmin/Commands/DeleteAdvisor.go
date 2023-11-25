@@ -51,7 +51,7 @@ func DeleteAdvisor(c *gin.Context) {
 		}
 		if advisor, err := Helpers.AdvisorFromUserUID(c, db, client.AdvisorId); err != nil {
 			response.Panic(err)
-		} else if advisor.User.Uid == client.AdvisorId {
+		} else if advisor.User.Uid == path.AdvisorId {
 			response.AddResource(client.Identity.Surname + ", " + client.Identity.Forenames)
 		}
 	}
