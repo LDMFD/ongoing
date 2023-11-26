@@ -21,7 +21,7 @@ const PolicyTotals = (props: {
         id: 'header',
         header: '',
         // @ts-ignore as other rows don't have this property
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             row.original.header
         ),
     });

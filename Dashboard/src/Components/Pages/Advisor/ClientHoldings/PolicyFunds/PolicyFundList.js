@@ -31,7 +31,7 @@ const PolicyFundList = () => {
         id: 'policy',
         header: 'Policy',
         width: 300,
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             <DownloadChip
                 title  = {row.original.policy}
                 fileId = {row.original.policyFileId}
@@ -41,7 +41,7 @@ const PolicyFundList = () => {
         id: 'fund',
         header: 'Fund',
         width: 300,
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             <DownloadChip
                 title  = {row.original.fund}
                 fileId = {row.original.fundFileId}

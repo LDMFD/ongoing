@@ -10,7 +10,7 @@ const CalculatedChargesTable = (props: {
     let columns = [{
         id: 'Boundary',
         header: 'Tier',
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             <>  
                 {FormatCurrencyPence(row.original.Boundary)}
                 {row.original.UpperBoundary === Number.MAX_VALUE
@@ -21,19 +21,19 @@ const CalculatedChargesTable = (props: {
     }, {
         id: 'Amount',
         header: 'Amount held in tier',
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             FormatCurrencyPence(row.original.Amount)
         ),
     }, {
         id: 'Charge',
         header: 'Charge (%)',
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             FormatPercent(row.original.Charge)
         ),
     }, {
         id: 'MoneyCharge',
         header: 'Charge (£)',
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             FormatCurrencyPence(row.original.MoneyCharge)
         ),
     }];

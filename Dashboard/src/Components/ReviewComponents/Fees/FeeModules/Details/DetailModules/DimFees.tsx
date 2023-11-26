@@ -2,7 +2,7 @@ import React from 'react';
 import { ModuleTypeDimFee } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import { GetReport } from 'Components/ReviewComponents/GetReport';
-import Table from 'Components/Library/Table/Table';
+import Table, { ColumnType } from 'Components/Library/Table/Table';
 import Panel from 'Components/Library/Panel/Panel';
 import { PolicyDimFees, ProviderBlockView } from 'Components/ReviewComponents/Fees/Model/FeeTypes';
 import { CalculatePlatformModel } from 'Components/ReviewComponents/Fees/Model/FeeModel';
@@ -21,7 +21,7 @@ const PolicyBlock = (props: {
     policy: string,
     fees: PolicyDimFees,
 }) => {
-    const columns = [{
+    const columns: ColumnType[] = [{
         id: 'Name',
         header: 'Name',
     }, {

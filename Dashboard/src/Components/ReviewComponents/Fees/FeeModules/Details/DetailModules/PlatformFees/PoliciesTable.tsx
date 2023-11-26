@@ -16,7 +16,7 @@ const PoliciesTable = (props: {
     let columns = [{
         id:     'policy',
         header: 'Policy number',
-        Cell: ({ row }: { row: Row }) => row.original.fileId ? (
+        cell: ({ row }: { row: Row }) => row.original.fileId ? (
             <DownloadChip
                 title  = {row.original.policy}
                 fileId = {row.original.fileId}
@@ -34,7 +34,7 @@ const PoliciesTable = (props: {
     }, {
         id:     'platformFee',
         header: 'Platform Fee',
-        Cell:   ({ row }: { row: Row }) => (
+        cell:   ({ row }: { row: Row }) => (
             FormatCurrencyPence(row.original.platformFee)
         ),
     }];

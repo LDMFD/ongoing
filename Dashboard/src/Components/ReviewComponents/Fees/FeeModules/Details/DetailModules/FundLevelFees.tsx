@@ -28,7 +28,7 @@ const PolicyBlock = (props: {
     const columns = [{
         id: 'Fund',
         header: 'Fund name',
-        Cell: ({ row }: { row: Row }) => row.original.FileId ? (
+        cell: ({ row }: { row: Row }) => row.original.FileId ? (
             <DownloadChip
                 title  = {row.original.Fund}
                 fileId = {row.original.FileId}
@@ -49,7 +49,7 @@ const PolicyBlock = (props: {
     }, {
         id: 'Include',
         header: 'Include in total?',
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             (row.original.id !== 'avg' && row.original.id !== 'charges') ? 
                 row.original.Include ? 'Y' : 'N'
             : ''

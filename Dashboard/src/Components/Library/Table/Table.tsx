@@ -11,6 +11,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import Launch from '@mui/icons-material/Launch';
 
 import './Table.css';
+import { FromCanonical } from 'Utils/DateTime';
+
+export type ColumnType = {
+    id: string,
+    header?: string,
+    width?: number,
+    type?: 'date' | 'default',
+    cell?: (data: any) => React.ReactNode,
+}
 
 export type Row = {
     original: any,
@@ -28,13 +37,14 @@ function Table(props: {
     className?: string,
 
     // Array of column definitions, e.g. [{ id: 'name', header: 'Name', width: 200 }]
-    columns: any, // TODO type
+    // `type` property can be used to set a date formatter for a date column, e.g. { id: 'date', header: 'Date', type: 'date' }
+    columns: ColumnType[],
 
     // Array of custom row actions, e.g. [{ label: 'Edit', 
     customRowActions?: RowAction[],
 
     // Array of row data, e.g. [{ id: 1, name: 'Policy 1' }]
-    data: any,
+    data: any[],
 
     // String to link to, string transformation function (for single rest entity id substitution), or function to invoke custom action
     defaultAction?: (id: string) => string | (() => string),
@@ -98,7 +108,7 @@ function Table(props: {
             id: 'defaultAction',
             header: props.defaultActionHeader || '',
             width: 0,
-            Cell: ({ row }: { row: any }) => {
+            cell: ({ row }: { row: any }) => {
 
                 // Custom renderer
                 if (props.defaultActionRenderer) {
@@ -124,12 +134,20 @@ function Table(props: {
         });
     }
 
-    columns = columns.map((c: any) => ({
-        ...c,
-        accessorKey: c.id,
-        Header: c.header,
-        size: c.width,
-    }));
+    // MaterialReactTable columns
+    let mrtColumns = columns.map((c: any) => {
+        let col = {
+            ...c,
+            accessorKey: c.id,
+            Cell: c.cell,
+            Header: c.header,
+            size: c.width,
+        };
+        if (c.type === 'date') {
+            col.Cell = (value: any) => FromCanonical(value.cell.getValue())
+        }
+        return col;
+    });
 
     let className = props.flexibleColumn ? `ong-table-flexible-column-${props.flexibleColumn}` : props.className;
 
@@ -155,7 +173,7 @@ function Table(props: {
                             </div>
                 )}
 
-                columns = {columns}
+                columns = {mrtColumns}
                 data    = {data}
 
                 initialState = {{

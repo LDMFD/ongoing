@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useContext } from 'react';
-import Day from 'dayjs';
 
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { Context } from 'State/StateProvider';
@@ -31,6 +30,7 @@ const RiskAssessmentList = () => {
         id: 'completed',
         header: 'Completed',
         width: 200,
+        type: 'date',
     }];
 
     let assessments = report.RiskAssessments.map(ra => {
@@ -42,7 +42,7 @@ const RiskAssessmentList = () => {
             level:     level.Level,
             label:     level.Label,
             desc:      level.Desc,
-            completed: Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
+            completed: ra.Completed,
             fileId:    ra.File?.Uid,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0));

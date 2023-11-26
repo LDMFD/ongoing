@@ -10,7 +10,7 @@ import Panel from 'Components/Library/Panel/Panel';
 // import { FromCanonical } from 'Utils/DateTime';
 
 export const ClientModule = ({ module }) => {
-    let { clientId } = useParams();
+    // let { clientId } = useParams();
 
     const [ state,  ] = useContext(Context);
 
@@ -47,7 +47,7 @@ export const ClientModule = ({ module }) => {
     }
 
     // let type = ModuleTypeSelectSpec.find(t => t.id === module);
-    // let endDate = FromCanonical(state.Reviews.find(r => r.Id == reviewId).Meta.EndDate)?.toLocaleDateString('en-GB')
+    // let endDate = FromCanonical(state.Reviews.find(r => r.Id == reviewId).Meta.EndDate)
 
     return (intro.length || moduleState.Text.length) ? (
         <Panel>

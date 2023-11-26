@@ -31,7 +31,7 @@ const PolicyList = () => {
         id: 'policy',
         header: 'Policy',
         width: 150,
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             <DownloadChip
                 title  = {row.original.policy}
                 fileId = {row.original.fileId}
@@ -60,7 +60,7 @@ const PolicyList = () => {
     }, {
         id: 'notes',
         header: 'Notes',
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             row.original.notes && (
                 <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.notes }} />
             )

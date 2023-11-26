@@ -17,7 +17,7 @@ const PolicyValuations = () => {
         id: 'policy',
         header: 'Policy',
         width: 200,
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             <DownloadChip
                 title  = {row.original.policy}
                 fileId = {row.original.fileId}
@@ -50,7 +50,7 @@ const PolicyValuations = () => {
         columns.push({
             id: 'notes',
             header: 'Notes',
-            Cell: ({ row }) => (
+            cell: ({ row }) => (
                 row.original.notes && (
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.notes }} />
                 )

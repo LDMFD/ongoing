@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import Day from 'dayjs';
 
 import { BuildDownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
@@ -19,12 +18,13 @@ const FeesReportList = () => {
     const columns = [{
         id: 'submitted',
         header: 'Submitted',
+        type: 'date',
     }];
 
     let feesReports = report.FeesReports.map(ff => {
         return {
             id:        ff.Id,
-            submitted: Day(ff.Submitted).utc(false).format('DD-MM-YYYY'),
+            submitted: ff.Submitted,
             fileId:    ff.File.Uid,
         };
     }).sort((p,q) => (p.submitted < q.submitted) ? -1 : ((p.submitted > q.submitted) ? 1 : 0));

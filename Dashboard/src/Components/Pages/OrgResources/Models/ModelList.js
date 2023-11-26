@@ -3,7 +3,6 @@ import { useCallback, useContext, useEffect } from 'react';
 import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import Table from 'Components/Library/Table/Table';
 import { Api, Context } from 'State';
-import { FromCanonical } from 'Utils/DateTime';
 
 const ModelList = () => {
     const [ state, dispatch ] = useContext(Context);
@@ -20,7 +19,7 @@ const ModelList = () => {
         {
             id: 'name',
             header: 'Name',
-            Cell: ({ row }) => (
+            cell: ({ row }) => (
                 <DownloadChip
                     title  = {row.original.name}
                     fileId = {row.original.fileId}
@@ -42,6 +41,7 @@ const ModelList = () => {
             id: 'modified',
             header: 'Last updated',
             width: 150,
+            type: 'date',
         },
     ];
 
@@ -53,7 +53,7 @@ const ModelList = () => {
             operator:          op,
             weightedOcfFee:    `${m.WeightedOcfFee}%`,
             weightedExAnteFee: `${m.WeightedExAnteFee}%`,
-            modified:          FromCanonical(m.Modified)?.toLocaleDateString('en-GB'),
+            modified:          m.Modified,
             filename:          m.File?.Filename,
             fileId:            m.File?.Uid,
         };

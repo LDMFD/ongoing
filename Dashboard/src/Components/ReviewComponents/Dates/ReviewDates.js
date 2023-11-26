@@ -24,8 +24,8 @@ const Dates = () => {
 
     let draft = state.Draft;
 
-    let startDate = FromCanonical(draft.StartDate)?.toLocaleDateString('en-GB');
-    let endDate =   FromCanonical(draft.EndDate)?.toLocaleDateString('en-GB');
+    let startDate = FromCanonical(draft.StartDate);
+    let endDate =   FromCanonical(draft.EndDate);
 
     return (
         <TabContent>

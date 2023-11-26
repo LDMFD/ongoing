@@ -24,7 +24,7 @@ const PolicyProviderList = () => {
         }, {
             id: 'pricing',
             header: 'Pricing',
-            Cell: ({ row }) => (
+            cell: ({ row }) => (
                 row.original.pricing && (
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.pricing }} />
                 )
@@ -32,7 +32,7 @@ const PolicyProviderList = () => {
         }, {
             id: 'customPricing',
             header: 'Custom Pricing',
-            Cell: ({ row }) => (
+            cell: ({ row }) => (
                 row.original.pricing && (
                     <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.customPricing }} />
                 )

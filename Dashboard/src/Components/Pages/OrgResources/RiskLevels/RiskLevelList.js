@@ -31,7 +31,7 @@ const RiskLevelList = () => {
         }, {
             id: 'desc',
             header: 'Description',
-            Cell: ({ row }) => (
+            cell: ({ row }) => (
                 <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.desc }} />
             ),
         },

@@ -17,8 +17,8 @@ const Introduction = () => {
 
     let meta = GetMeta();
 
-    let startDate = FromCanonical(meta.StartDate)?.toLocaleDateString('en-GB');
-    let endDate =   FromCanonical(meta.EndDate)?.toLocaleDateString('en-GB');
+    let startDate = FromCanonical(meta.StartDate);
+    let endDate =   FromCanonical(meta.EndDate);
 
     return (
         <TabContent>

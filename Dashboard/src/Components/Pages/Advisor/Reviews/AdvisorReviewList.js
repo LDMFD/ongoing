@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import Table from 'Components/Library/Table/Table';
 import { Api } from 'State';
 import { Context } from 'State/StateProvider';
-import { FromCanonical } from 'Utils/DateTime';
 import TabContent from 'Components/Library/TabContent/TabContent';
 import PageTitle from 'Components/Library/PageTitle/PageTitle';
 
@@ -23,13 +22,16 @@ const AdvisorReviewList = () => {
         id: 'startDate',
         header: 'Review period start', 
         width: 300,
+        type: 'date',
     }, {
         id: 'endDate',
         header: 'Review period end', 
         width: 300,
+        type: 'date',
     }, {
         id: 'finalizedDate',
         header: 'Published', 
+        type: 'date',
     }];
 
     let ix = 1;
@@ -39,9 +41,9 @@ const AdvisorReviewList = () => {
             ix:            ix++,
             idLabel:       `#${review.Id}`,
             date:          review.Meta.FinalizedDate,
-            startDate:     FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
-            endDate:       FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB'),
-            finalizedDate: FromCanonical(review.Meta.FinalizedDate)?.toLocaleString('en-GB'),
+            startDate:     review.Meta.StartDate,
+            endDate:       review.Meta.EndDate,
+            finalizedDate: review.Meta.FinalizedDate,
             // state:         review.Meta.State,
         };
     }).sort((p,q) => (p.ix < q.ix) ? 1 : ((p.ix > q.ix) ? -1 : 0));

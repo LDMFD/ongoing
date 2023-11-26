@@ -1,3 +1,5 @@
+// Removed this page
+
 import React, { useContext, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
@@ -36,8 +38,8 @@ const ReviewList = () => {
             ix:            ix++,
             idLabel:          `#${review.Id}`,
             date:             review.Meta.FinalizedDate,
-            startDate:        FromCanonical(review.Meta.StartDate)?.toLocaleDateString('en-GB'),
-            endDate:          FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB'),
+            startDate:        FromCanonical(review.Meta.StartDate),
+            endDate:          FromCanonical(review.Meta.EndDate),
             // no finalizedDate
             // state:      review.Meta.State,
         };

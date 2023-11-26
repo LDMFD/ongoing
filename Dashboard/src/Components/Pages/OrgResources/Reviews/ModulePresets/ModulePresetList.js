@@ -24,7 +24,7 @@ const ModulePresetList = () => {
         {
             id: 'text',
             header: 'Module Preset',
-            Cell: ({ row }) => (
+            cell: ({ row }) => (
                 <div className='ong-notes' dangerouslySetInnerHTML={{ __html: row.original.text }} />
             )
         },

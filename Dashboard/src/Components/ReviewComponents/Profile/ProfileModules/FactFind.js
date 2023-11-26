@@ -1,10 +1,9 @@
-import Day from 'dayjs';
-
 import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { DownloadChip } from 'Components/Library/FileHandling/FileDownloader';
 import { ModuleTypeFactFind } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import Module from 'Components/Pages/Advisor/Reviews/Modules/Module';
 import TabContent from 'Components/Library/TabContent/TabContent';
+import { FromCanonical } from 'Utils/DateTime';
 
 const FactFind = () => {
     let report = GetReport();
@@ -24,7 +23,7 @@ const FactFind = () => {
             {factFind &&
                 <p>
                     <DownloadChip
-                        title={`Fact find ${Day(factFind.submitted).utc(false).format('DD-MM-YYYY')}`}
+                        title={`Fact find ${FromCanonical(factFind.submitted)}`}
                         fileId={factFind.file.Uid}
                     />
                 </p>

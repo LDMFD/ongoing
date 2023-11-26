@@ -1,5 +1,5 @@
 
-import Table, { Row } from 'Components/Library/Table/Table';
+import Table, { ColumnType, Row } from 'Components/Library/Table/Table';
 import { Report } from 'Types/ClientResources';
 import { FormatCharge, FormatCurrencyPence } from 'Utils/Strings';
 import { PlatformView, ProviderBlockView } from '../../Model/FeeTypes';
@@ -8,9 +8,9 @@ const PlatformTotals = (props: {
     report: Report,
     view: PlatformView,
 }) => {
-    let columns = props.view.Providers.map((prov: ProviderBlockView) => {
+    let columns: ColumnType[] = props.view.Providers.map((prov: ProviderBlockView) => {
         return {
-            id: prov.Id,
+            id: prov.Id || '',
             header: prov.Provider!.Name,
             width: 200,
         };
@@ -20,7 +20,7 @@ const PlatformTotals = (props: {
         header: '',
         width: 200,
         // @ts-ignore as other rows don't have this property
-        Cell: ({ row }: { row: Row }) => (
+        cell: ({ row }: { row: Row }) => (
             row.original.header
         ),
     });

@@ -29,7 +29,7 @@ const PortfolioList = () => {
         id: 'policy',
         header: 'Policy',
         width: 200,
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             <DownloadChip
                 title  = {row.original.policy}
                 fileId = {row.original.policyFileId}
@@ -43,7 +43,7 @@ const PortfolioList = () => {
         id: 'model',
         header: 'Model',
         width: 200,
-        Cell: ({ row }) => (
+        cell: ({ row }) => (
             <DownloadChip
                 title  = {row.original.model}
                 fileId = {row.original.modelFileId}

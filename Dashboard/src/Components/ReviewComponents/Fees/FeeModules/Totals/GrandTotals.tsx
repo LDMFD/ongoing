@@ -1,4 +1,4 @@
-import Table from 'Components/Library/Table/Table';
+import Table, { ColumnType } from 'Components/Library/Table/Table';
 import { Report } from 'Types/ClientResources';
 import { FormatCharge, FormatCurrencyPence } from 'Utils/Strings';
 import { PlatformView } from '../../Model/FeeTypes';
@@ -9,7 +9,7 @@ const GrandTotals = (props: {
     weightedAvgFee: number,
     totalCharges: number,
 }) => {
-    let columns = [{
+    let columns: ColumnType[] = [{
         id: 'header',
         width: 200,
     }, {

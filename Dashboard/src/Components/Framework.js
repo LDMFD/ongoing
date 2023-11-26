@@ -105,10 +105,10 @@ const superuserItems = [
 ];
 
 const clientSpaceItem = [
-    {
-        label: 'All reviews',
-        link: '/client-space/reviews',
-    },
+    // {
+    //     label: 'All reviews',
+    //     link: '/client-space/reviews',
+    // },
 ]
 
 const Sidebars = {
@@ -141,7 +141,7 @@ const Framework = () => {
 
     if (state.Session.Role === 'client') {
         items = items.concat(state.Reviews?.map(review => {
-            let to = FromCanonical(review.Meta.EndDate)?.toLocaleDateString('en-GB');
+            let to = FromCanonical(review.Meta.EndDate);
             let tail = res?.groups?.tail || 'modules/introduction';
             return {
                 label: `Review period ending ${to}`,

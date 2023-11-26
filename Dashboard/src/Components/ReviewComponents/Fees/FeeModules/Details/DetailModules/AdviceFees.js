@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import Day from 'dayjs';
 
 import { ModuleTypeAdviceFee } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 import { FormatCurrencyPence } from 'Utils/Strings';
@@ -33,7 +32,7 @@ const AdviceFees = () => {
         id: 'policy',
         header: 'Policy',
         width: 200,
-        Cell: ({ row }) => row.original.fileId ? (
+        cell: ({ row }) => row.original.fileId ? (
             <DownloadChip
                 title  = {row.original.policy}
                 fileId = {row.original.fileId}
@@ -48,7 +47,7 @@ const AdviceFees = () => {
     let feesReports = report.FeesReports?.map(fr => {
         return {
             id:        fr.Id,
-            submitted: Day(fr.Submitted).utc(false).format('DD-MM-YYYY'),
+            // submitted: r.Submitted,
             file:      fr.File,
         };
     }).sort((p,q) => (p.submitted > q.submitted) ? -1 : ((p.submitted < q.submitted) ? 1 : 0));
@@ -62,7 +61,7 @@ const AdviceFees = () => {
                 <p>
                     Your advice fee is: {client.Fee}%
                     
-                    {feesReports.length == 1 ?
+                    {feesReports.length === 1 ?
                         <p>
                             Download your fees report:
                             <DownloadChip

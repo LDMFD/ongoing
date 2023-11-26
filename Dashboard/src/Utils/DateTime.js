@@ -6,7 +6,7 @@ import parseISO from 'date-fns/parseISO';
 Day.extend(utc);
 Day.locale('en-gb')
 
-// Moves the timezone to the local computer's (without changing the time of day)
+// Moves the timezone to the local computer's (without changing the time of day) and returns a string in UK format
 export const FromCanonical = (date) => {
     if (date == null || !date) {  // catch null and empty string
         return null;
@@ -15,7 +15,9 @@ export const FromCanonical = (date) => {
     // Expecting RFC3339 (GetClient.go)
     let t = new Date(parseISO(date));
 
-    return new Date(t.getTime() + t.getTimezoneOffset() * 60000);
+    let adj = new Date(t.getTime() + t.getTimezoneOffset() * 60000);
+
+    return adj.toLocaleDateString('en-GB')
 }
 
 // Moves the date back to UTC without changing the time

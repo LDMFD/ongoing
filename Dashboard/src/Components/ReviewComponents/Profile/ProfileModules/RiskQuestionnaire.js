@@ -1,4 +1,3 @@
-import Day from 'dayjs';
 import { useMemo } from 'react';
 
 import { BuildDownloadChip } from 'Components/Library/FileHandling/FileDownloader';
@@ -9,6 +8,7 @@ import { GetReport } from 'Components/ReviewComponents/GetReport';
 import { ModuleTypeRisk } from 'State/ApiCommands/OrgResources/Reviews/ModuleTypes';
 
 import './RiskQuestionnaire.css';
+import { FromCanonical } from 'Utils/DateTime';
 
 const RiskQuestionnaire = () => {
     let report = GetReport();
@@ -21,7 +21,7 @@ const RiskQuestionnaire = () => {
             provider:  provider.Name,
             label:     level.Label,
             desc:      level.Desc,
-            completed: Day(ra.Completed).utc(false).format('DD-MM-YYYY'),
+            completed: FromCanonical(ra.Completed),
             fileId:    ra.File?.Uid,
         };
     }).sort((p,q) => (p.completed < q.completed) ? -1 : ((p.completed > q.completed) ? 1 : 0)), [
