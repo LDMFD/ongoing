@@ -99,7 +99,6 @@ const PolicyTotals = (props: {
             label            = 'Policy totals'
             columns          = {columns}
             data             = {data}
-            enableTableHead  = {false}
             enableRowActions = {false}
         />
     );

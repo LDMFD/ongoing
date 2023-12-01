@@ -84,7 +84,6 @@ const PlatformTotals = (props: {
             label            = {'Platform Totals'}
             columns          = {columns}
             data             = {data}
-            enableTableHead  = {false}
             enableRowActions = {false}
         />
     );
