@@ -6,7 +6,7 @@
       "POST"
     ],
     "origin": [
-      "http://localhost.ongoing.tp1.org:3000",
+      "http://localhost.amplifa.co.uk:3000",
       "https://staging.amplifa.co.uk",
       "https://portal.amplifa.co.uk"
     ],

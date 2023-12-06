@@ -1,11 +1,12 @@
 package TestSuite
 
 import (
-	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
 	"ongoing/Entities"
 	"testing"
+
+	"github.com/gavv/httpexpect/v2"
 )
 
 func testUpdateStaffRoles(t *testing.T, e *httpexpect.Expect) {
@@ -35,7 +36,7 @@ func testUpdateStaffRolesBasic(t *testing.T, e *httpexpect.Expect) {
 
 	// Change org 1's advisor's name and email
 	request2 := Commands.UpdateAdvisorRequestBody{
-		Email:     "org1.advisor2@tp1.org",
+		Email:     "org1.advisor2@example.com",
 		Forenames: AdvisorFredForename,
 		Surname:   AdvisorFredSurname,
 		Role:      "advisor",

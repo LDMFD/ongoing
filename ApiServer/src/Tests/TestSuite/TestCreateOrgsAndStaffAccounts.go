@@ -1,12 +1,13 @@
 package TestSuite
 
 import (
-	"github.com/gavv/httpexpect/v2"
 	"net/http"
 	ClientProfileCommands "ongoing/ApiServer/Advisor/Clients/Commands/ClientProfile"
 	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
 	"ongoing/Entities"
+
+	"github.com/gavv/httpexpect/v2"
 )
 
 func testCreationOfOrgsAdvisorsClients(e *httpexpect.Expect) {
@@ -88,7 +89,7 @@ func testCreateAdvisorsBasic(e *httpexpect.Expect) {
 
 	// Staff account creation using regular advisor account shouldn't be allowed
 	newAdvisorSpec = Commands.CreateAdvisorRequestBody{
-		Email:     "irrelevant@tp1.org",
+		Email:     "irrelevant@example.com",
 		Forenames: AdvisorEliotForename,
 		Surname:   "None",
 		Role:      Entities.UserTypeAdvisor,

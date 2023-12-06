@@ -112,7 +112,7 @@ Then open ApiServer in GoLand and run the target "Run API" or "Run Tests".
 
 If Go is not installed locally, `docker-compose up api` can be used.
 
-To test the dashboard, visit http://localhost.ongoing.tp1.org:3000/
+To test the dashboard, visit http://localhost.ongoing.amplifa.co.uk:3000/
 
 # Running tests with offline auth
 

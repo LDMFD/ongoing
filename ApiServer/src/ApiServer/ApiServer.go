@@ -2,16 +2,15 @@ package ApiServer
 
 import (
 	sentrygin "github.com/getsentry/sentry-go/gin"
+	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
+	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/AuthService"
 	"ongoing/ServiceContext"
 	"ongoing/Utils/UUID"
 	"os"
 	"time"
-
-	"github.com/gin-gonic/gin"
-	cors "github.com/rs/cors/wrapper/gin"
-	"github.com/uptrace/bun"
 )
 
 var Release string
@@ -109,7 +108,7 @@ func (s *ApiServer) addNetworkConfig(r *gin.Engine) {
 		AllowedOrigins: []string{
 			"https://portal.amplifa.co.uk", // TODO put into configuration
 			"https://staging.amplifa.co.uk",
-			"http://localhost.ongoing.tp1.org:3000",
+			"http://localhost.amplifa.co.uk:3000",
 		},
 		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
 		AllowedHeaders: []string{"Authentication", "Content-Type", "Cache-Control", "Content-Disposition", "X-ViewAs"},
