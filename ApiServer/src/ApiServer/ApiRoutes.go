@@ -3,7 +3,7 @@ package ApiServer
 import (
 	"github.com/gin-gonic/gin"
 	"ongoing/ApiServer/Advisor"
-	"ongoing/ApiServer/Advisor/OrgAdmin"
+	"ongoing/ApiServer/Advisor/Staff"
 	"ongoing/ApiServer/Advisor/Storage"
 	"ongoing/ApiServer/ClientSpace"
 	"ongoing/ApiServer/Superuser"
@@ -67,7 +67,7 @@ func addOrgAdminRoutes(r *gin.Engine) {
 		Entities.UserTypeOrgOwner,
 		Entities.UserTypeOrgAdmin,
 	}))
-	OrgAdmin.AddRoutes(adminRoutes)
+	Staff.AddRoutes(adminRoutes)
 }
 
 func addAdvisorRoutes(r *gin.Engine) {

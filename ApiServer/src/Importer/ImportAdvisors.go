@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/pkg/errors"
 	"net/http"
-	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
+	"ongoing/ApiServer/Advisor/Staff/Commands"
 	"ongoing/Config"
 	"ongoing/Entities"
 )

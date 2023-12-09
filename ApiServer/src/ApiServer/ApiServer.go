@@ -1,16 +1,17 @@
 package ApiServer
 
 import (
-	sentrygin "github.com/getsentry/sentry-go/gin"
-	"github.com/gin-gonic/gin"
-	cors "github.com/rs/cors/wrapper/gin"
-	"github.com/uptrace/bun"
 	"net/http"
 	"ongoing/AuthService"
 	"ongoing/ServiceContext"
 	"ongoing/Utils/UUID"
 	"os"
 	"time"
+
+	sentrygin "github.com/getsentry/sentry-go/gin"
+	"github.com/gin-gonic/gin"
+	cors "github.com/rs/cors/wrapper/gin"
+	"github.com/uptrace/bun"
 )
 
 var Release string

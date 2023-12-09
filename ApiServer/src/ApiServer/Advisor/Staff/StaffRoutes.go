@@ -1,9 +1,8 @@
-package OrgAdmin
+package Staff
 
 import (
 	"github.com/gin-gonic/gin"
-
-	"ongoing/ApiServer/Advisor/OrgAdmin/Commands"
+	"ongoing/ApiServer/Advisor/Staff/Commands"
 )
 
 func AddRoutes(r *gin.RouterGroup) {
