@@ -13,10 +13,11 @@ Install Dotnet and Entity Framework:
 
 Add the following section to /etc/hosts:
 
-    127.0.0.1 ongoing-db
     127.0.0.1 ongoing-api
-    127.0.0.1 localhost.example.com
-
+    127.0.0.1 ongoing-db
+    127.0.0.1 localhost.amplifa.co.uk
+    127.0.0.1 spicedb
+    
 # JetBrains GoLand setup
 
 - Run configurations:

@@ -67,11 +67,13 @@ Set up static file serving for the React app bundles:
 
 - Follow the steps in https://cloud.google.com/storage/docs/hosting-static-website
 
-If required:
+If required, to create the Artifact (container) Registry, and to create a service account used by Digital Ocean.
 
     make gcp-create-artifact_registry
+    make gcp-artifact-create-service-accounts
+    make gcp-artifact-create-sa-key
 
-Run this, then enter db password twice when prompted:
+Then:
 
     make gcp-setup
 
