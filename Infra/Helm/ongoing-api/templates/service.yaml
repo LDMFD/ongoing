@@ -3,9 +3,9 @@ kind: Service
 metadata:
   name: ongoing-api
 spec:
-  type: NodePort
   selector:
     app: ongoing-api
+  type: LoadBalancer
   externalTrafficPolicy: Cluster
   ports:
   - protocol: TCP
