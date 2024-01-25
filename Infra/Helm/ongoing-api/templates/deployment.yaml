@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ongoing-api
+  labels:
+    app: ongoing-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ongoing-api
+  template:
+    metadata:
+      labels:
+        app: ongoing-api
+    spec:
+      imagePullSecrets:
+        - name: artifacts-secret
+      
+      containers:
+      - name: ongoing-api
+
+        image: {{ .Values.image.repository }}
+        tag: "latest"
+        pullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 8000
+
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+          requests:
+            cpu: 200m
+            memory: 100Mi
+
+        env:
+        
+        # Env vars that are env-specific or from secrets (passed in from Terraform)
+        - name: ONGOING_API_HOST
+          value: {{ .Values.env.ONGOING_API_HOST }}
+        - name: ONGOING_ENV
+          value: {{ .Values.env.ONGOING_ENV }}
+        - name: ONGOING_SPICEDB_DB
+          value: {{ .Values.env.ONGOING_SPICEDB_DB }}
+        - name: ONGOING_STORAGE_BUCKET
+          value: {{ .Values.env.ONGOING_STORAGE_BUCKET }}
+        - name: ONGOING_STORAGE_SA
+          value: {{ .Values.env.ONGOING_STORAGE_SA }}
+        - name: POSTGRES_DB
+          value: {{ .Values.env.POSTGRES_DB }}
+
+        # Env vars that aren't env-specific
+        - name: ONGOING_API_PORT
+          value: "8000"
+        - name: FIREBASE_CONFIG
+          value: /app/Config/Firebase/config.json
+        - name: ONGOING_STORAGE_CREDENTIAL
+          value: /app/Config/Storage/Storage.pem
+        - name: ONGOING_SPICEDB_HOST
+          value: "spicedb:443"
+
+        envFrom:
+        - secretRef:
+            name: ongoing-api-key
+        - secretRef:
+            name: sentry-dsn
+        - secretRef:
+            name: spicedb-key
+        - secretRef:
+            name: superusers
+        - secretRef:
+            name: database-connection
+
+        volumeMounts:
+          - name: firebase-config
+            mountPath: /app/Config/Firebase
+            readOnly: true
+          - name: storage-config
+            mountPath: /app/Config/Storage
+            readOnly: true
+
+      volumes:
+      - name: firebase-config
+        secret:
+          secretName: firebase-sa-key
+      - name: storage-config
+        secret:
+          secretName: storage-credential

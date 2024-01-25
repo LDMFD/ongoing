@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# For local dev
+
 CLIENT_ID=`gcloud secrets versions access --secret=firebase-client-key latest|base64`
 CLIENT_KEY=`gcloud secrets versions access --secret=firebase-client-id latest`
 SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn latest`
@@ -39,13 +41,13 @@ ENV=`cat ~/.ongoing/env.txt`
 
 cat << EOF > env.goland
 BUNDEBUG=true
-FIREBASE_CONFIG=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/firebase/key.json
 GOPATH=\$PROJECT_DIR\$
 
 ONGOING_ENV=dev
 
 ONGOING_API_HOST=ongoing-api
 ONGOING_API_PORT=8000
+ONGOING_FIREBASE_CONFIG=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/firebase/key.json
 ONGOING_SPICEDB_HOST=localhost:50051
 ONGOING_SPICEDB_INSECURE=true
 ONGOING_SPICEDB_PSK=spice
@@ -67,3 +69,8 @@ if [ "$ENV" = "staging" ]; then
 $SENTRY_CLIRC
 EOF
 fi
+
+DO_PAT=`gcloud secrets versions access --secret=do-pat latest`
+cat << EOF > ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars
+do_pat = "${DO_PAT}"
+EOF

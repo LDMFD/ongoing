@@ -18,6 +18,7 @@ include Makefiles/Secrets.mak
 include Makefiles/Sentry.mak
 include Makefiles/SpiceDB.mak
 include Makefiles/Storage.mak
+include Makefiles/Terraform.mak
 
 .DEFAULT_GOAL := all
 all:
