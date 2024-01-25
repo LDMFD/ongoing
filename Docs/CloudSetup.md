@@ -105,3 +105,10 @@ Then:
     [auth]
     token=<your oauth token>
 - Run `make work-on-staging` once again to pull the secret to a local cache in `Dashboard/.sentryclirc`
+
+## Digital Ocean setup
+
+To connect to Kubernetes:
+
+    doctl auth init
+    doctl kubernetes cluster kubeconfig save ongoing-cluster

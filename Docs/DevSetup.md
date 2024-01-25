@@ -11,6 +11,11 @@ Install Dotnet and Entity Framework:
 
     dotnet tool install --global dotnet-ef
 
+Install Terraform and Helm CLIs:
+
+    brew install terraform
+    brew install helm
+
 Add the following section to /etc/hosts:
 
     127.0.0.1 ongoing-api

@@ -61,7 +61,7 @@ func AuthMiddleware(roleFilter *[]string) gin.HandlerFunc {
 				email = user.Email
 			}
 		} else {
-			opt := option.WithCredentialsFile(os.Getenv("FIREBASE_CONFIG"))
+			opt := option.WithCredentialsFile(os.Getenv("ONGOING_FIREBASE_CONFIG"))
 			if app, err = firebase.NewApp(context.Background(), nil, opt); err != nil {
 				panic(err)
 			}

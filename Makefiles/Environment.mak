@@ -19,13 +19,16 @@ show-env: import-env
 
 # Creates ~/.ongoing/env with specified environment
 _work-on:
-	mkdir -p ~/.ongoing
+	mkdir -p ~/.ongoing ~/.kube
 	@echo "* Working on env: ${ENV}"
 	@echo ${ENV} > ~/.ongoing/env.txt
 	@gcloud config set project ${GCP_PROJECT_${ENV}}
 	@gcloud auth configure-docker ${REGION}-docker.pkg.dev
 	@gcloud config set run/region ${REGION}
 	make write-local-secrets
+	cd infra/Terraform && \
+		terraform workspace select ${ENV}
+	doctl kubernetes cluster kubeconfig save ongoing-cluster
 
 write-local-secrets: import-env
 	Makefiles/Helpers/write-local-secrets.sh

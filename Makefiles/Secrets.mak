@@ -1,3 +1,4 @@
+# For deploying
 pull-secrets: import-env
 	mkdir -p ~/.ongoing/envs/${ENV}/secrets/cloud-sql
 	gcloud secrets versions access ${SECRET_DB_PROXY_VERSION_${ENV}}    --secret="db-proxy"            > ~/.ongoing/envs/${ENV}/secrets/cloud-sql/credential.json
