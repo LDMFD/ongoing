@@ -13,6 +13,12 @@ import (
 	"ongoing/ServiceContext"
 )
 
+func simpleHealthcheck(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"Version": Release,
+	})
+}
+
 func healthcheck(c *gin.Context) {
 	context := c.MustGet("CONTEXT").(*ServiceContext.Context)
 	db := context.Db

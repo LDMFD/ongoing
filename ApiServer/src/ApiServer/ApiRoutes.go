@@ -21,10 +21,12 @@ func AddRoutes(r *gin.Engine) {
 }
 
 func addUnauthenticatedRoutes(r *gin.Engine) {
+	r.GET("/health", simpleHealthcheck) // 200 OK if the server is up
+
 	routes := r.Group("/api")
 
 	routes.Use(AuthMiddleware(nil))
-	routes.GET("/healthcheck", healthcheck)
+	routes.GET("/healthcheck", healthcheck) // 200 OK if connection tests to dependencies pass
 	routes.GET("/errorcheck", errorcheck)
 }
 
