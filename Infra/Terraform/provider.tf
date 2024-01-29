@@ -1,21 +1,36 @@
 terraform {
   required_providers {
-    digitalocean = {
-      source  = "digitalocean/digitalocean"
-      version = "~> 2.0"
-    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
+      version = "~> 2.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.0"
+    }
+    digitalocean = {
+      source  = "digitalocean/digitalocean"
       version = "~> 2.0"
     }
     google = {
       source  = "hashicorp/google"
       version = "~> 3.0"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.0"
-    }
+  }
+}
+
+provider "digitalocean" {
+  token = var.do_pat
+}
+
+// Dynamically create env-specific kubeconfig in ~/.ongoing
+locals {
+  kubeconfig_path = pathexpand("~/.ongoing/envs/${var.environment}/secrets/digital-ocean/kubeconfig.yaml")
+}
+
+provider "helm" {
+  kubernetes {
+    config_path = local.kubeconfig_path
   }
 }
 
@@ -24,19 +39,3 @@ terraform {
 #   project     = var.gcp_project
 #   region      = var.gcp_region
 # }
-
-provider "digitalocean" {
-  token = var.do_pat
-}
-
-provider "kubernetes" {
-  config_path = local.kubeconfig_path
-  host        = digitalocean_kubernetes_cluster.cluster.endpoint
-  token       = digitalocean_kubernetes_cluster.cluster.kube_config[0].token
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = local.kubeconfig_path
-  }
-}

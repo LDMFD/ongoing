@@ -1,13 +1,18 @@
 resource "helm_release" "ongoing_api" {
-  depends_on = [digitalocean_kubernetes_cluster.cluster]
+  depends_on = [var.kubernetes_cluster]
 
   name      = "ongoing-api"
   chart     = "../Helm/ongoing-api"
   namespace = "default"
 
   set {
-    name  = "image.repository"
+    name  = "image"
     value = "${var.container_registry}/ongoing-api"
+  }
+
+  set {
+    name  = "tag"
+    value = "6e7dc13606fb4ebbbcee90717e95ae86"
   }
 
   // Non-secret env-specific env vars (secret ones and non-env specific ones are found in Deployment.yaml):
@@ -45,7 +50,7 @@ resource "helm_release" "ongoing_api" {
 variable "ongoing_api_host" {
   type = map(string)
   default = {
-    "prod"    = "api.amplifa.co.uk"
-    "staging" = "staging.amplifa.co.uk"
+    "prod"    = "do-api4.amplifa.co.uk"
+    "staging" = "do-api4.amplifa.co.uk"
   }
 }

@@ -61,6 +61,7 @@ namespace Ongoing
                 // optionsBuilder.UseNpgsql(connection);
             }
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ongoing-local;Username=postgres;Password=p;Include Error Detail=True");
+            //optionsBuilder.UseNpgsql("Host=db-do-user-15300922-0.c.db.ondigitalocean.com;Port=25060;Database=ongoing-staging;Username=doadmin;Password=;Include Error Detail=True");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

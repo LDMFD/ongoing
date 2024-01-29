@@ -70,7 +70,16 @@ $SENTRY_CLIRC
 EOF
 fi
 
+# For make tf-apply etc.
 DO_PAT=`gcloud secrets versions access --secret=do-pat latest`
 cat << EOF > ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars
 do_pat = "${DO_PAT}"
 EOF
+
+# So you can cd Infra/Terraform and run terraform apply etc.
+# Should the file in ~/.ongoing be replaced with this one, or a symlink?
+cat << EOF > Infra/Terraform/pat.tfvars
+do_pat = "${DO_PAT}"
+EOF
+
+cp ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars 

@@ -1,6 +1,7 @@
 variable "environment" {
   description = "Environment for the Ongoing application (e.g., prod, staging)"
   type        = string
+  default     = "staging"
 }
 
 variable "project" {
@@ -13,23 +14,12 @@ variable "region" {
   default = "lon1"
 }
 
-variable "gcp_project" {
-  description = "Google Cloud project ID"
-  type        = string
-  default     = "ongoing-staging"
+variable "do_pat" {
+  type = string
 }
 
 variable "gcp_region" {
   description = "Google Cloud region"
   type        = string
   default     = "europe-west2"
-}
-
-variable "container_registry" {
-  description = "URL of container registry"
-  default     = "europe-west2-docker.pkg.dev/ongoing-staging/ongoing"
-}
-
-variable "do_pat" {
-  type = string
 }

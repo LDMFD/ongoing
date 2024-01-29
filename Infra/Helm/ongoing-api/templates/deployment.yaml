@@ -15,14 +15,13 @@ spec:
         app: ongoing-api
     spec:
       imagePullSecrets:
-        - name: artifacts-secret
+        - name: ongoing-artifacts-secret
       
       containers:
       - name: ongoing-api
 
-        image: {{ .Values.image.repository }}
-        tag: "latest"
-        pullPolicy: IfNotPresent
+        image: {{ .Values.image }}:{{ .Values.tag }}
+        imagePullPolicy: IfNotPresent
 
         ports:
         - containerPort: 8000
@@ -65,13 +64,13 @@ spec:
         - secretRef:
             name: ongoing-api-key
         - secretRef:
-            name: sentry-dsn
+            name: ongoing-sentry-dsn
         - secretRef:
-            name: spicedb-key
+            name: ongoing-spicedb-key
         - secretRef:
-            name: superusers
+            name: ongoing-superusers
         - secretRef:
-            name: database-connection
+            name: ongoing-database-connection
 
         volumeMounts:
           - name: firebase-config
@@ -84,7 +83,7 @@ spec:
       volumes:
       - name: firebase-config
         secret:
-          secretName: firebase-sa-key
+          secretName: ongoing-firebase-sa-key
       - name: storage-config
         secret:
-          secretName: storage-credential
+          secretName: ongoing-storage-credential

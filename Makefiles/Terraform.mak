@@ -42,10 +42,10 @@ tf-refresh:
 # Create local state from remote
 tf-import: import-env
 	cd infra/Terraform && \
-		terraform import ${OBJECT} ${ID} \
+		terraform import \
 			-var-file="${HOME}/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars" \
-			-var="container_registry=${REGISTRY_HOST}/${REGISTRY_PROJECT}/${REGISTRY_REPO}" \
-			-var="environment=${ENV}"
+			-var="environment=${ENV}" \
+			 ${ADDR} ${ID}
 
 # Destroys all
 tf-destroy:
@@ -58,6 +58,27 @@ tf-rm:
 	cd infra/Terraform && \
 		terraform state rm ${OBJECT}
 
+
+tf-create-targetted: import-env
+	cd infra/Terraform && \
+		terraform apply -target=${OBJECT} \
+			-var-file="${HOME}/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars" \
+			-var="environment=${ENV}"
+
+tf-destroy-targetted: import-env
+	cd infra/Terraform && \
+		terraform destroy -target=${OBJECT} \
+			-var-file="${HOME}/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars" \
+			-var="environment=${ENV}"
+
+
 # Invoke the Terraform console
 tf-console:
 	make tf-command COMMAND=console
+
+tf-tmp: import-env
+	cd infra/Terraform && \
+		terraform import \
+			-var-file="${HOME}/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars" \
+			-var="environment=${ENV}" \
+			helm_release.nginx_ingress default/nginx-ingress \
