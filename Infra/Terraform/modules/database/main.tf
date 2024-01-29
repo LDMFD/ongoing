@@ -11,3 +11,12 @@ resource "digitalocean_database_db" "ongoing-staging-db" {
   cluster_id = digitalocean_database_cluster.db.id
   name       = "ongoing-staging"
 }
+
+resource "digitalocean_database_firewall" "db-firewall" {
+  cluster_id = digitalocean_database_cluster.db.id
+
+  rule {
+    type  = "k8s"
+    value = var.kubernetes_cluster.id
+  }
+}

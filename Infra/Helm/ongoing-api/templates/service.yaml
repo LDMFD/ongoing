@@ -5,9 +5,13 @@ metadata:
 spec:
   selector:
     app: ongoing-api
-  type: LoadBalancer
-  externalTrafficPolicy: Cluster
+  type: ClusterIP
   ports:
-  - protocol: TCP
+  - name: http
+    protocol: TCP
     port: 8000
+    targetPort: 8000
+  - name: https
+    protocol: TCP
+    port: 443
     targetPort: 8000
