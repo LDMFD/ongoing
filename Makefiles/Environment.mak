@@ -25,9 +25,9 @@ _work-on:
 	@gcloud config set project ${GCP_PROJECT_${ENV}}
 	@gcloud auth configure-docker ${REGION}-docker.pkg.dev
 	@gcloud config set run/region ${REGION}
-	make write-local-secrets
 	cd infra/Terraform && \
 		terraform workspace select ${ENV}
+	make write-local-secrets
 	doctl kubernetes cluster kubeconfig save ongoing-cluster
 
 write-local-secrets: import-env

@@ -14,9 +14,3 @@ terraform {
     }
   }
 }
-
-provider "kubernetes" {
-  config_path = var.kubeconfig_path
-  host        = digitalocean_kubernetes_cluster.cluster.endpoint
-  token       = digitalocean_kubernetes_cluster.cluster.kube_config[0].token
-}

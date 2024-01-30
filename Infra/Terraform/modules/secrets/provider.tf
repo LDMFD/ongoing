@@ -10,13 +10,7 @@ terraform {
     }
     google = {
       source  = "hashicorp/google"
-      version = "~> 3.0"
+      version = "~> 5.0"
     }
   }
-}
-
-provider "kubernetes" {
-  config_path = var.kubeconfig_path
-  host        = var.kubernetes_cluster.endpoint
-  token       = var.kubernetes_cluster.kube_config[0].token
 }

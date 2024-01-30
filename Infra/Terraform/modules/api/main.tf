@@ -18,32 +18,32 @@ resource "helm_release" "ongoing_api" {
   // Non-secret env-specific env vars (secret ones and non-env specific ones are found in Deployment.yaml):
   set {
     name  = "env.ONGOING_API_HOST"
-    value = var.ongoing_api_host[var.environment]
+    value = var.ongoing_api_host[terraform.workspace]
   }
 
   set {
     name  = "env.ONGOING_ENV"
-    value = var.environment
+    value = terraform.workspace
   }
 
   set {
     name  = "env.ONGOING_SPICEDB_DB"
-    value = "spicedb-${var.environment}"
+    value = "spicedb-${terraform.workspace}"
   }
 
   set {
     name  = "env.ONGOING_STORAGE_BUCKET"
-    value = "ongoing-${var.environment}-docs"
+    value = "ongoing-${terraform.workspace}-docs"
   }
 
   set {
     name  = "env.ONGOING_STORAGE_SA"
-    value = "storage@ongoing-${var.environment}.iam.gserviceaccount.com"
+    value = "storage@ongoing-${terraform.workspace}.iam.gserviceaccount.com"
   }
 
   set {
     name  = "env.POSTGRES_DB"
-    value = "ongoing-${var.environment}"
+    value = "ongoing-${terraform.workspace}"
   }
 }
 

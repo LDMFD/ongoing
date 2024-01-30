@@ -22,7 +22,7 @@ resource "local_file" "kubeconfig" {
 
 // Doks can pull images from GCP Artifact Registry
 locals {
-  artifacts_key_path = pathexpand("~/.ongoing/envs/${var.environment}/secrets/image-registry/artifacts-key.json")
+  artifacts_key_path = pathexpand("~/.ongoing/envs/${terraform.workspace}/secrets/image-registry/artifacts-key.json")
 }
 
 // Container registry
@@ -46,4 +46,23 @@ resource "kubernetes_secret" "artifacts_secret" {
   }
 
   type = "kubernetes.io/dockerconfigjson"
+}
+
+// Database firewall rules - cluster IP + workstation IP
+resource "digitalocean_database_firewall" "db-firewall" {
+  cluster_id = var.db_id
+
+  rule {
+    type  = "k8s"
+    value = digitalocean_kubernetes_cluster.cluster.id
+  }
+
+  rule {
+    type  = "ip_addr"
+    value = chomp(data.http.myip.response_body)
+  }
+}
+
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
 }
