@@ -76,10 +76,5 @@ cat << EOF > ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars
 do_pat = "${DO_PAT}"
 EOF
 
-# So you can cd Infra/Terraform and run terraform apply etc.
-# Should the file in ~/.ongoing be replaced with this one, or a symlink?
-cat << EOF > Infra/Terraform/pat.tfvars
-do_pat = "${DO_PAT}"
-EOF
-
-cp ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars 
+# For cd Infra/Terraform ; terraform apply etc.
+cp ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars Infra/Terraform/.auto.tfvars

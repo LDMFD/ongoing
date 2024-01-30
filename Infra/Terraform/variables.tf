@@ -1,9 +1,3 @@
-variable "environment" {
-  description = "Environment for the Ongoing application (e.g., prod, staging)"
-  type        = string
-  default     = "staging"
-}
-
 variable "project" {
   type    = string
   default = "staging"
@@ -19,7 +13,6 @@ variable "do_pat" {
 }
 
 variable "gcp_region" {
-  description = "Google Cloud region"
-  type        = string
-  default     = "europe-west2"
+  type    = string
+  default = "europe-west2"
 }

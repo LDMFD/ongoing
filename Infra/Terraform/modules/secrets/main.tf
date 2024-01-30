@@ -1,12 +1,12 @@
 locals {
   gcp_to_env_var_map = {
-    "firebase-sa-key"     = "config.json"
-    "storage-credential"  = "Storage.pem"
-    "api-key"             = "ONGOING_API_KEY"
-    "sentry-dsn"          = "ONGOING_SENTRY_DSN"
-    "spicedb-key"         = "ONGOING_SPICEDB_PSK"
-    "superusers"          = "ONGOING_SUPERUSERS"
-    "database-connection" = "POSTGRES_DSN"
+    "firebase-sa-key"    = "config.json"
+    "storage-credential" = "Storage.pem"
+    "api-key"            = "ONGOING_API_KEY"
+    "sentry-dsn"         = "ONGOING_SENTRY_DSN"
+    "spicedb-key"        = "ONGOING_SPICEDB_PSK"
+    "superusers"         = "ONGOING_SUPERUSERS"
+    "do-db-connection"   = "POSTGRES_DSN"
   }
 
   secret_names = keys(local.gcp_to_env_var_map)

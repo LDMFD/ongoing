@@ -14,9 +14,14 @@ terraform {
     }
     google = {
       source  = "hashicorp/google"
-      version = "~> 3.0"
+      version = "~> 5.0"
     }
   }
+}
+
+provider "google" {
+  project = "ongoing-${terraform.workspace}"
+  region  = var.gcp_region
 }
 
 provider "digitalocean" {
@@ -25,7 +30,11 @@ provider "digitalocean" {
 
 // Dynamically create env-specific kubeconfig in ~/.ongoing
 locals {
-  kubeconfig_path = pathexpand("~/.ongoing/envs/${var.environment}/secrets/digital-ocean/kubeconfig.yaml")
+  kubeconfig_path = pathexpand("~/.ongoing/envs/${terraform.workspace}/secrets/digital-ocean/kubeconfig.yaml")
+}
+
+provider "kubernetes" {
+  config_path = local.kubeconfig_path
 }
 
 provider "helm" {
@@ -33,9 +42,3 @@ provider "helm" {
     config_path = local.kubeconfig_path
   }
 }
-
-# provider "google" {
-#   credentials = file(var.gcp_credentials_file)
-#   project     = var.gcp_project
-#   region      = var.gcp_region
-# }

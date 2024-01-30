@@ -23,3 +23,8 @@ variable "kubeconfig_path" {
   description = "Path to the kubeconfig file"
   type        = string
 }
+
+variable "db_id" {
+  description = "Database cluster ID"
+  type        = string
+}
