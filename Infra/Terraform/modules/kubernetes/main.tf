@@ -18,6 +18,10 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
 resource "local_file" "kubeconfig" {
   content  = digitalocean_kubernetes_cluster.cluster.kube_config[0].raw_config
   filename = var.kubeconfig_path
+
+  provisioner "local-exec" {
+    command = "cd ../.. && make work-on-${terraform.workspace}"
+  }
 }
 
 // Doks can pull images from GCP Artifact Registry

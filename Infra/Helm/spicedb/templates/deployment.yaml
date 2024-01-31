@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ongoing-spicedb
+  labels:
+    app: ongoing-spicedb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ongoing-spicedb
+  template:
+    metadata:
+      labels:
+        app: ongoing-spicedb
+    spec:
+      imagePullSecrets:
+        - name: ongoing-artifacts-secret
+      
+      containers:
+      - name: ongoing-spicedb
+
+        image: {{ .Values.image }}:{{ .Values.tag }}
+        imagePullPolicy: IfNotPresent
+
+        ports:
+        - containerPort: 50051
+
+        resources:
+          limits:
+            cpu: 200m
+            memory: 100Mi
+          requests:
+            cpu: 200m
+            memory: 100Mi
+
+        env:
+        
+        # Env vars that are env-specific or from Terraform
+        - name: SPICEDB_DATASTORE_ENGINE
+          value: "postgres"
+        - name: SPICEDB_GRPC_ADDR
+          value: 0.0.0.0:50051
+
+        # Env vars from k8s secrets
+        envFrom:
+        - secretRef:
+            name: spicedb-key
+        - secretRef:
+            name: spicedb-dsn
+
+        command: ["spicedb"]
+        args: ["serve", "--log-level=debug"]

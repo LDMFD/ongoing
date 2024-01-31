@@ -2,7 +2,7 @@ resource "helm_release" "ongoing_api" {
   depends_on = [var.kubernetes_cluster]
 
   name      = "ongoing-api"
-  chart     = "../Helm/ongoing-api"
+  chart     = "../Helm/api"
   namespace = "default"
 
   set {
@@ -15,7 +15,9 @@ resource "helm_release" "ongoing_api" {
     value = "6e7dc13606fb4ebbbcee90717e95ae86"
   }
 
-  // Non-secret env-specific env vars (secret ones and non-env specific ones are found in Deployment.yaml):
+  // Non-secret env-specific env vars (secret ones and non-env specific ones are found in Deployment.yaml)
+  // These could be replaced by a single variable `env` passed to Helm
+
   set {
     name  = "env.ONGOING_API_HOST"
     value = var.ongoing_api_host[terraform.workspace]

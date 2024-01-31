@@ -1,6 +1,7 @@
 variable "project" {
-  type    = string
-  default = "staging"
+  type        = string
+  default     = "staging"
+  description = "Digital Ocean project"
 }
 
 variable "region" {
@@ -15,4 +16,10 @@ variable "do_pat" {
 variable "gcp_region" {
   type    = string
   default = "europe-west2"
+}
+
+variable "gcp_project" {
+  description = "Google Cloud project ID"
+  type        = string
+  default     = "ongoing-staging"
 }

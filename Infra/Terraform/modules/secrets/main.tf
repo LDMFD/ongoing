@@ -1,3 +1,5 @@
+// TODO should probably be api-secrets
+
 locals {
   gcp_to_env_var_map = {
     "firebase-sa-key"    = "config.json"
