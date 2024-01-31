@@ -1,9 +1,3 @@
-variable "environment" {
-  description = "Environment for the Ongoing application (e.g., prod, staging)"
-  type        = string
-  default     = "staging"
-}
-
 variable "region" {
   type    = string
   default = "lon1"

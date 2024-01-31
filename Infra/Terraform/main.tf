@@ -20,57 +20,72 @@ module "database" {
 }
 
 module "kubernetes" {
+  depends_on = [
+    module.database
+  ]
   source          = "./modules/kubernetes"
   region          = var.region
   gcp_region      = var.gcp_region
   do_pat          = var.do_pat
   kubeconfig_path = local.kubeconfig_path
   db_id           = module.database.database_id
-
-  depends_on = [module.database]
 }
 
 module "secrets" {
-  # depends_on         = [module.kubernetes]
+  depends_on = [
+    module.kubernetes,
+  ]
   source             = "./modules/secrets"
   do_pat             = var.do_pat
   kubeconfig_path    = local.kubeconfig_path
   kubernetes_cluster = module.kubernetes.kubernetes_cluster
-
-  depends_on = [module.kubernetes]
+  gcp_project        = var.gcp_project
 }
 
 module "cert-manager" {
+  depends_on = [
+    module.kubernetes,
+  ]
   source             = "./modules/cert-manager"
   kubeconfig_path    = local.kubeconfig_path
   kubernetes_cluster = module.kubernetes.kubernetes_cluster
-
-  depends_on = [module.kubernetes]
 }
 
 module "ingress" {
+  depends_on = [
+    module.cert-manager
+  ]
   source             = "./modules/ingress"
   kubeconfig_path    = local.kubeconfig_path
   kubernetes_cluster = module.kubernetes.kubernetes_cluster
-
-  depends_on = [module.cert-manager]
 }
 
 module "dns" {
+  depends_on = [
+    module.ingress // for load balancer ip
+  ]
   source = "./modules/dns"
+}
 
-  depends_on = [module.ingress] // for load balancer ip
+module "spicedb" {
+  depends_on = [
+    module.database,
+    module.secrets,
+  ]
+  source             = "./modules/services/spicedb"
+  kubeconfig_path    = local.kubeconfig_path
+  kubernetes_cluster = module.kubernetes.kubernetes_cluster
 }
 
 module "api" {
-  source             = "./modules/services/api"
-  kubeconfig_path    = local.kubeconfig_path
-  kubernetes_cluster = module.kubernetes.kubernetes_cluster
-
   depends_on = [
     module.database,
     module.dns,
     module.ingress,
     module.secrets,
+    module.spicedb,
   ]
+  source             = "./modules/services/api"
+  kubeconfig_path    = local.kubeconfig_path
+  kubernetes_cluster = module.kubernetes.kubernetes_cluster
 }

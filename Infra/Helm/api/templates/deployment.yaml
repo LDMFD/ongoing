@@ -36,7 +36,7 @@ spec:
 
         env:
         
-        # Env vars that are env-specific or from secrets (passed in from Terraform)
+        # Env vars that are env-specific or from Terraform
         - name: ONGOING_API_HOST
           value: {{ .Values.env.ONGOING_API_HOST }}
         - name: ONGOING_ENV
@@ -50,7 +50,7 @@ spec:
         - name: POSTGRES_DB
           value: {{ .Values.env.POSTGRES_DB }}
 
-        # Env vars that aren't env-specific
+        # Static env vars (not env-specific)
         - name: ONGOING_API_PORT
           value: "8000"
         - name: FIREBASE_CONFIG
@@ -60,6 +60,7 @@ spec:
         - name: ONGOING_SPICEDB_HOST
           value: "spicedb:443"
 
+        # Env vars from k8s secrets
         envFrom:
         - secretRef:
             name: ongoing-api-key

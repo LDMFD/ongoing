@@ -1,6 +1,6 @@
 apiVersion: v2
-name: ongoing-api
-description: A Helm chart for Kubernetes
+name: ongoing-spicedb
+description: Auth service for Amplifa
 
 type: application
 version: 0.1.0
