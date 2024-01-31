@@ -63,9 +63,14 @@ module "dns" {
 }
 
 module "api" {
-  source             = "./modules/api"
+  source             = "./modules/services/api"
   kubeconfig_path    = local.kubeconfig_path
   kubernetes_cluster = module.kubernetes.kubernetes_cluster
 
-  depends_on = [module.ingress, module.secrets, module.database]
+  depends_on = [
+    module.database,
+    module.dns,
+    module.ingress,
+    module.secrets,
+  ]
 }

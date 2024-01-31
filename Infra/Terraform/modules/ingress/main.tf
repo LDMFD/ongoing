@@ -33,7 +33,7 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/do-loadbalancer-hostname"
-    value = "do-api4.amplifa.co.uk"
+    value = "do-api5.amplifa.co.uk"
   }
 
   set {

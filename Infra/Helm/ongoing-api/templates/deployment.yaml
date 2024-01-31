@@ -70,7 +70,7 @@ spec:
         - secretRef:
             name: ongoing-superusers
         - secretRef:
-            name: ongoing-do-db-connection
+            name: ongoing-do-db-dsn-go
 
         volumeMounts:
           - name: firebase-config

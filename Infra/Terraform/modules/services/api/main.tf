@@ -50,7 +50,7 @@ resource "helm_release" "ongoing_api" {
 variable "ongoing_api_host" {
   type = map(string)
   default = {
-    "prod"    = "do-api4.amplifa.co.uk"
-    "staging" = "do-api4.amplifa.co.uk"
+    "prod"    = "do-api5.amplifa.co.uk"
+    "staging" = "do-api5.amplifa.co.uk"
   }
 }

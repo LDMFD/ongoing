@@ -114,8 +114,9 @@ up-api:
 	@echo "*** DEPLOYING API SERVER ${UUID}"
 	make build-image SERVICE=api RELEASE=${UUID}
 	make docker-push-api RELEASE=${UUID}
-	make deploy-api RELEASE=${UUID}
-	@echo "*** DEPLOYED API SERVER ${UUID}"
+
+#	make deploy-api RELEASE=${UUID}
+#	@echo "*** DEPLOYED API SERVER ${UUID}"
 
 up-dashboard:
 	$(eval UUID := $(shell uuidgen | tr [:upper:] [:lower:] | tr -d '-'))
