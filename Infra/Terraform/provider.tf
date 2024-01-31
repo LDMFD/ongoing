@@ -30,11 +30,14 @@ provider "digitalocean" {
 
 // Dynamically create env-specific kubeconfig in ~/.ongoing
 locals {
-  kubeconfig_path = pathexpand("~/.ongoing/envs/${terraform.workspace}/secrets/digital-ocean/kubeconfig.yaml")
+  kubeconfig_path = pathexpand("~/.kube/config")
+  # ~/.ongoing/envs/${terraform.workspace}/secrets/digital-ocean/kubeconfig.yaml")
 }
 
 provider "kubernetes" {
   config_path = local.kubeconfig_path
+  host        = module.kubernetes.kubernetes_cluster_endpoint
+  token       = module.kubernetes.kubernetes_cluster_token
 }
 
 provider "helm" {

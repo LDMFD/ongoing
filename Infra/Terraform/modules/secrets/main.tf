@@ -6,7 +6,9 @@ locals {
     "sentry-dsn"         = "ONGOING_SENTRY_DSN"
     "spicedb-key"        = "ONGOING_SPICEDB_PSK"
     "superusers"         = "ONGOING_SUPERUSERS"
-    "do-db-connection"   = "POSTGRES_DSN"
+    "do-db-dsn-go"       = "POSTGRES_DSN"
+    "do-db-dsn-spicedb"  = "SPICEDB_DATASTORE_CONN_URI"
+    "do-db-dsn-ef"       = "EF_DSN"
   }
 
   secret_names = keys(local.gcp_to_env_var_map)

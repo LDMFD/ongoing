@@ -9,10 +9,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - do-api4.amplifa.co.uk
+    - do-api5.amplifa.co.uk
     secretName: api-tls
   rules:
-    - host: do-api4.amplifa.co.uk
+    - host: do-api5.amplifa.co.uk
       http:
         paths:
           - path: /

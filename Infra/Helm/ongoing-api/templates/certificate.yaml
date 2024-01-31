@@ -9,4 +9,4 @@ spec:
     name: letsencrypt-prod-issuer
     kind: ClusterIssuer
   dnsNames:
-  - do-api4.amplifa.co.uk
+  - do-api5.amplifa.co.uk
