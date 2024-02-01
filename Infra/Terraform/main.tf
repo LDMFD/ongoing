@@ -25,9 +25,6 @@ module "database" {
 }
 
 module "kubernetes" {
-  depends_on = [
-    module.database
-  ]
   db_id           = module.database.database_id
   do_pat          = var.do_pat
   environment     = var.environment

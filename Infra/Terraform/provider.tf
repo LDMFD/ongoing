@@ -30,8 +30,7 @@ provider "digitalocean" {
 
 // Dynamically create env-specific kubeconfig in ~/.ongoing
 locals {
-  kubeconfig_path = pathexpand("~/.kube/config")
-  # ~/.ongoing/envs/${var.environment}/secrets/digital-ocean/kubeconfig.yaml")
+  kubeconfig_path = "${path.module}/.kube/config"
 }
 
 provider "kubernetes" {

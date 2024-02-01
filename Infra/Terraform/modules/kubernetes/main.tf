@@ -18,15 +18,12 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
 resource "local_file" "kubeconfig" {
   content  = digitalocean_kubernetes_cluster.cluster.kube_config[0].raw_config
   filename = var.kubeconfig_path
-
-  provisioner "local-exec" {
-    command = "cd ../.. && make work-on-${var.environment}"
-  }
 }
 
-// Doks can pull images from GCP Artifact Registry
-locals {
-  artifacts_key_path = pathexpand("~/.ongoing/envs/${var.environment}/secrets/image-registry/artifacts-key.json")
+// To allow the DOKS cluster to pull images from GCP Artifact Registry
+data "google_secret_manager_secret_version" "artifacts_key" {
+  secret  = "artifacts-key"
+  version = "latest"
 }
 
 // Container registry
@@ -42,8 +39,8 @@ resource "kubernetes_secret" "artifacts_secret" {
       auths = {
         "${var.gcp_region}-docker.pkg.dev" = {
           username = "_json_key"
-          password = file(local.artifacts_key_path)
-          email    = "null@example.com"
+          password = data.google_secret_manager_secret_version.artifacts_key.secret_data
+          email    = "ops@amplifa.co.uk"
         }
       }
     })
