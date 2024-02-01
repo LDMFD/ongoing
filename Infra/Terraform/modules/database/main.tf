@@ -1,3 +1,7 @@
+variable "environment" {
+  type = string
+}
+
 resource "digitalocean_database_cluster" "db" {
   region     = var.region
   name       = "db"
@@ -39,18 +43,18 @@ resource "google_secret_manager_secret" "db_dsn_ef" {
 
 resource "google_secret_manager_secret_version" "db_dsn_go_version" {
   secret          = google_secret_manager_secret.db_dsn_go.id
-  secret_data     = "postgres://${digitalocean_database_cluster.db.user}:${digitalocean_database_cluster.db.password}@${digitalocean_database_cluster.db.host}:${digitalocean_database_cluster.db.port}/ongoing-${terraform.workspace}"
+  secret_data     = "postgres://${digitalocean_database_cluster.db.user}:${digitalocean_database_cluster.db.password}@${digitalocean_database_cluster.db.host}:${digitalocean_database_cluster.db.port}/ongoing-${var.environment}"
   deletion_policy = "ABANDON"
 }
 
 resource "google_secret_manager_secret_version" "db_dsn_spicedb_version" {
   secret          = google_secret_manager_secret.db_dsn_spicedb.id
-  secret_data     = "postgres://?user=${digitalocean_database_cluster.db.user}&password=${digitalocean_database_cluster.db.password}&host=${digitalocean_database_cluster.db.host}:${digitalocean_database_cluster.db.port}&sslmode=disable&database=spicedb-${terraform.workspace}"
+  secret_data     = "postgres://?user=${digitalocean_database_cluster.db.user}&password=${digitalocean_database_cluster.db.password}&host=${digitalocean_database_cluster.db.host}:${digitalocean_database_cluster.db.port}&sslmode=disable&database=spicedb-${var.environment}"
   deletion_policy = "ABANDON"
 }
 
 resource "google_secret_manager_secret_version" "db_dsn_ef_version" {
   secret          = google_secret_manager_secret.db_dsn_ef.id
-  secret_data     = "Host=${digitalocean_database_cluster.db.host};Port=${digitalocean_database_cluster.db.port};Database=ongoing-${terraform.workspace};Username=${digitalocean_database_cluster.db.user};Password=${digitalocean_database_cluster.db.password};Include Error Detail=True"
+  secret_data     = "Host=${digitalocean_database_cluster.db.host};Port=${digitalocean_database_cluster.db.port};Database=ongoing-${var.environment};Username=${digitalocean_database_cluster.db.user};Password=${digitalocean_database_cluster.db.password};Include Error Detail=True"
   deletion_policy = "ABANDON"
 }

@@ -20,13 +20,13 @@ resource "local_file" "kubeconfig" {
   filename = var.kubeconfig_path
 
   provisioner "local-exec" {
-    command = "cd ../.. && make work-on-${terraform.workspace}"
+    command = "cd ../.. && make work-on-${var.environment}"
   }
 }
 
 // Doks can pull images from GCP Artifact Registry
 locals {
-  artifacts_key_path = pathexpand("~/.ongoing/envs/${terraform.workspace}/secrets/image-registry/artifacts-key.json")
+  artifacts_key_path = pathexpand("~/.ongoing/envs/${var.environment}/secrets/image-registry/artifacts-key.json")
 }
 
 // Container registry
