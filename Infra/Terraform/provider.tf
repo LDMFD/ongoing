@@ -20,7 +20,7 @@ terraform {
 }
 
 provider "google" {
-  project = "ongoing-${terraform.workspace}"
+  project = "ongoing-${var.environment}"
   region  = var.gcp_region
 }
 
@@ -31,7 +31,7 @@ provider "digitalocean" {
 // Dynamically create env-specific kubeconfig in ~/.ongoing
 locals {
   kubeconfig_path = pathexpand("~/.kube/config")
-  # ~/.ongoing/envs/${terraform.workspace}/secrets/digital-ocean/kubeconfig.yaml")
+  # ~/.ongoing/envs/${var.environment}/secrets/digital-ocean/kubeconfig.yaml")
 }
 
 provider "kubernetes" {

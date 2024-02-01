@@ -20,32 +20,32 @@ resource "helm_release" "ongoing_api" {
 
   set {
     name  = "env.ONGOING_API_HOST"
-    value = var.ongoing_api_host[terraform.workspace]
+    value = var.ongoing_api_host[var.environment]
   }
 
   set {
     name  = "env.ONGOING_ENV"
-    value = terraform.workspace
+    value = var.environment
   }
 
   set {
     name  = "env.ONGOING_SPICEDB_DB"
-    value = "spicedb-${terraform.workspace}"
+    value = "spicedb-${var.environment}"
   }
 
   set {
     name  = "env.ONGOING_STORAGE_BUCKET"
-    value = "ongoing-${terraform.workspace}-docs"
+    value = "ongoing-${var.environment}-docs"
   }
 
   set {
     name  = "env.ONGOING_STORAGE_SA"
-    value = "storage@ongoing-${terraform.workspace}.iam.gserviceaccount.com"
+    value = "storage@ongoing-${var.environment}.iam.gserviceaccount.com"
   }
 
   set {
     name  = "env.POSTGRES_DB"
-    value = "ongoing-${terraform.workspace}"
+    value = "ongoing-${var.environment}"
   }
 }
 

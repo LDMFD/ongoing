@@ -1,6 +1,8 @@
+// Digital Ocean project
+
 resource "digitalocean_project" "ongoing" {
   name        = var.project
-  environment = terraform.workspace
+  environment = var.environment
 }
 
 resource "digitalocean_project_resources" "project_resources" {
@@ -14,21 +16,25 @@ resource "digitalocean_project_resources" "project_resources" {
   ]
 }
 
+// Modules
+
 module "database" {
-  source = "./modules/database"
-  region = var.region
+  environment = var.environment
+  source      = "./modules/database"
+  region      = var.region
 }
 
 module "kubernetes" {
   depends_on = [
     module.database
   ]
-  source          = "./modules/kubernetes"
-  region          = var.region
-  gcp_region      = var.gcp_region
-  do_pat          = var.do_pat
-  kubeconfig_path = local.kubeconfig_path
   db_id           = module.database.database_id
+  do_pat          = var.do_pat
+  environment     = var.environment
+  gcp_region      = var.gcp_region
+  kubeconfig_path = local.kubeconfig_path
+  region          = var.region
+  source          = "./modules/kubernetes"
 }
 
 module "secrets" {
@@ -85,6 +91,7 @@ module "api" {
     module.secrets,
     module.spicedb,
   ]
+  environment        = var.environment
   source             = "./modules/services/api"
   kubeconfig_path    = local.kubeconfig_path
   kubernetes_cluster = module.kubernetes.kubernetes_cluster

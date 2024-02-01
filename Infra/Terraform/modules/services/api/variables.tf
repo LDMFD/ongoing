@@ -1,3 +1,7 @@
+variable "environment" {
+  type = string
+}
+
 variable "container_registry" {
   description = "URL of container registry"
   default     = "europe-west2-docker.pkg.dev/ongoing-staging/ongoing"
