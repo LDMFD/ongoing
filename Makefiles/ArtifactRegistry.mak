@@ -1,3 +1,5 @@
+# GCP Artifact Registry SA management for GitHub Actions & Terraform
+
 # Entrypoint
 gcp-artifact-create-registry:
 	gcloud artifacts repositories create ${REGISTRY_REPO} \
@@ -16,6 +18,9 @@ gcp-artifact-grant-sa-role:
 	gcloud projects add-iam-policy-binding ${GCP_PROJECT_staging} \
 		--member=serviceAccount:ongoing-staging-artifacts@ongoing-staging.iam.gserviceaccount.com \
 		--role=roles/artifactregistry.reader
+	gcloud projects add-iam-policy-binding ${GCP_PROJECT_staging} \
+		--member=serviceAccount:ongoing-staging-artifacts@ongoing-staging.iam.gserviceaccount.com \
+		--role=roles/artifactregistry.writer
 
 # Allow Prod to read from Staging's Artifact Registry (CloudSQL - legacy)
 gcp-artifact-grant-staging-access-to-prod:
