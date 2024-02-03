@@ -15,4 +15,20 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the API Server
-      run: docker build ApiServer --file ApiServer/Dockerfile --build-arg RELEASE=${{ github.sha }}
+      run: docker build ApiServer --file ApiServer/Dockerfile --build-arg RELEASE=${{ github.sha }} --tag ongoing-api:${{ github.sha }}
+
+    - uses: google-github-actions/setup-gcloud@v0
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ongoing-staging
+
+    - name: Configure Docker for GCP Artifact Registry
+      run: gcloud auth configure-docker europe-west2-docker.pkg.dev
+
+    - name: Tag and push the API Server image
+      run: |
+        docker tag ongoing-api:${{ github.sha }} europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing-api:${{ github.sha }}
+        docker tag ongoing-api:${{ github.sha }} europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing-api:latest
+        docker push europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing-api:${{ github.sha }}
+        docker push europe-west2-docker.pkg.dev/ongoing-staging/ongoing/ongoing-api:latest
+  
