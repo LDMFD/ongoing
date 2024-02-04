@@ -74,6 +74,7 @@ fi
 DO_PAT=`gcloud secrets versions access --secret=do-pat latest`
 cat << EOF > ~/.ongoing/envs/${ENV}/secrets/digital-ocean/pat.tfvars
 do_pat = "${DO_PAT}"
+environment = "${ENV}"
 EOF
 
 # For cd Infra/Terraform ; terraform apply etc.

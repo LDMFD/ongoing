@@ -14,12 +14,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Build the API Server
       run: docker build ApiServer --file ApiServer/Dockerfile --build-arg RELEASE=${{ github.sha }} --tag ongoing-api:${{ github.sha }}
 
     - uses: google-github-actions/setup-gcloud@v0
       with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        service_account_key: ${{ secrets.GCP_ARTIFACTS_SA_KEY }}
         project_id: ongoing-staging
 
     - name: Configure Docker for GCP Artifact Registry

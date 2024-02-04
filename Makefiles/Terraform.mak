@@ -1,3 +1,18 @@
+# GCP bucket creation for TF state
+
+gcp-tf-state-setup:
+	make work-on-staging
+
+	gcloud iam service-accounts create ongoing-tf-state \
+		--display-name="Ongoing bucket admin for Terraform state"
+
+	gcloud iam service-accounts keys create ${HOME}/.ongoing/envs/staging/secrets/tf-state/tf-state-key.json \
+		--iam-account=ongoing-tf-state@ongoing-staging.iam.gserviceaccount.com
+
+	gcloud projects add-iam-policy-binding ${GCP_PROJECT_staging} \
+		--member=serviceAccount:ongoing-tf-state@ongoing-staging.iam.gserviceaccount.com \
+		--role=roles/storage.admin
+
 # Setup - use this to store a Digital Ocean PAT in GCP Secret Manager
 do-create-pat-secret: import-env
 	gcloud secrets create do-pat \

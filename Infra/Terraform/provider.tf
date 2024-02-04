@@ -17,6 +17,12 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "gcs" {
+    bucket = "ongoing-tf-state"
+    prefix = "state"
+    # credentials = var.gcp_credentials
+  }
 }
 
 provider "google" {
