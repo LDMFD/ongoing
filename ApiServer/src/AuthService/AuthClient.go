@@ -3,6 +3,7 @@ package AuthService
 import (
 	"context"
 	"encoding/json"
+	pb "github.com/authzed/authzed-go/proto/authzed/api/v1"
 	"github.com/authzed/authzed-go/v1"
 	"github.com/authzed/grpcutil"
 	"github.com/uptrace/bun"
@@ -38,9 +39,30 @@ func New(db *bun.DB) *Client {
 		log.Fatalf("unable to initialize Client: %s", err)
 	}
 
+	migrate(context.Background(), client)
+
 	return &Client{
 		Client: client,
 		db:     db,
+	}
+}
+
+func migrate(ctx context.Context, client *authzed.Client) {
+	// read 'schema' string fromthe file pointed to by env var SPICEDB_SCHEMA_FILE
+	filepath := os.Getenv("ONGOING_SPICEDB_SCHEMA")
+	if filepath == "" {
+		log.Fatalf("SPICEDB_SCHEMA not set")
+	}
+
+	schema, err := os.ReadFile(filepath)
+	if err != nil {
+		log.Fatalf("failed to read schema file: %s", err)
+	}
+
+	request := &pb.WriteSchemaRequest{Schema: string(schema)}
+	_, err = client.WriteSchema(context.Background(), request)
+	if err != nil {
+		log.Fatalf("failed to write schema: %s", err)
 	}
 }
 

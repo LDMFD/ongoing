@@ -23,7 +23,9 @@ RUN go build -ldflags="-X main.release=$RELEASE"
 # --
 
 FROM alpine:3.15 AS runtime
+
 COPY --from=builder /go/src/ongoing /go/bin/ongoing
+ADD permissions.zed /go/etc/permissions.zed
 
 ENV GIN_MODE=release
 

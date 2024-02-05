@@ -59,6 +59,8 @@ spec:
           value: /app/Config/Storage/Storage.pem
         - name: ONGOING_SPICEDB_HOST
           value: "spicedb:443"
+        - name: ONGOING_SPICEDB_SCHEMA
+          value: /go/etc/permissions.zed
 
         # Env vars from k8s secrets
         envFrom:
