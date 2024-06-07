@@ -44,9 +44,9 @@ Create Firebase project.
                 - Passwordless link
                 - One account per email address.
             - Google
-    - Authorized domains; add:
-        - `example.com`
-        - `localhost.example.com`
+    - Settings -> Authorized domains; add:
+        - `localhost.amplifa.co.uk`
+        - `portal.amplifa.co.uk`
     - Templates:
         - Email address verification
         - SMTP with SendGrid credentials (see https://app.sendgrid.com/guide/integrate/langs/smtp)
@@ -83,9 +83,8 @@ Then:
     https://console.cloud.google.com/apis/credentials/consent/edit?project=ongoing-prod
 - In APIs & Services -> Credentials https://console.cloud.google.com/apis/credentials?project=ongoing-prod
     - Edit `OAuth 2.0 Client IDs` -> `Web client (auto created by Google Service)`
-    - Add `Authorized JavaScript origins` -> `https://portal.amplifa.co.uk`
-      and possibly `http://localhost` or `http://localhost:5000`
-    - Add `Authorized redirect URIs` -> `https://example.com/__/auth/handler`
+    - Add `Authorized JavaScript origins` -> `https://portal.amplifa.co.uk`.
+    - Add `Authorized redirect URIs` -> ``https://amplifa.co.uk/__/auth/handler`
 - Set up Prod -> Staging daily copying using Data Transfer service on Prod.
 
 ## Sentry setup
@@ -96,7 +95,7 @@ Then:
 - Run `make sentry-create-secrets`
 - For the first secret, `sentry-dsn`, use the DSN from Project Settings -> Client Keys (DSN)
 - For the second secret, `sentry-clirc`, visit User Settings -> Auth Tokens, create an 
-  auth token with the scope `project:releases`, and then use the following template:
+  auth token with the scope `project:releases`, and then create a GCP secret with the following template:
 
     [defaults]
     project=<your project>

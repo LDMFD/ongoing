@@ -5,6 +5,7 @@ gcp-setup:
 	make _gcp-storage-setup
 	make _gcp-firebase-setup
 	make _api-setup
+	make _integration-plannr-setup
 
 _gcp-enable-services:
 	gcloud services enable compute.googleapis.com

@@ -102,7 +102,6 @@ Create the database network by running `docker-compose up postgres` and then hit
 ## Option 2: start from scratch
 
     Terminal #1: docker-compose up postgres dashboard # create databases
-    Terminal #2: make spicedb-init                    # create spicedb tables 
     Terminal #2: make spicedb-init-local              # create SpiceDB DB
     Terminal #3: docker-compose up spicedb            # run SpiceDB
     Terminal #2: make spicedb-write-schema-local      # write SpiceDB relations and permissions

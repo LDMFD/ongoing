@@ -29,11 +29,11 @@ export const UserType = {
 function AuthControl() {
     const [ state, dispatch ] = useContext(Context);
 
-    const sessionViewAsId = localStorage.getItem('ongoing-viewas');
+    const sessionViewAsId = localStorage.getItem('Amplifa-ViewAs');
 
     const _logout = useCallback(() => {
-        if (localStorage.getItem('ongoing-viewas')) {
-            localStorage.removeItem('ongoing-viewas');
+        if (localStorage.getItem('Amplifa-ViewAs')) {
+            localStorage.removeItem('Amplifa-ViewAs');
             window.location = '/admin/organisations/id/' + state.Session.OrgId + '/users';
             return;
         }

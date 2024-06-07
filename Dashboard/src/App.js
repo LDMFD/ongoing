@@ -82,7 +82,7 @@ if (!OFFLINE_AUTH) {
 
 window.ApiClient = axios.create({
     baseURL: window.Config.ApiHost,
-    // withCredentials: true,
+    withCredentials: true,
 });
 
 // <a> -> query param -> localStorage -> http client header
@@ -90,10 +90,10 @@ if (window.location.search) {
     const vid = (new URLSearchParams(window.location.search)).get('view-as');
     if (vid) {
         window.ApiClient.defaults.headers.common['X-ViewAs'] = vid;
-        localStorage.setItem('ongoing-viewas', vid);
+        localStorage.setItem('Amplifa-ViewAs', vid);
     }
 } else {
-    const vid = localStorage.getItem('ongoing-viewas');
+    const vid = localStorage.getItem('Amplifa-ViewAs');
     if (vid) {
         window.ApiClient.defaults.headers.common['X-ViewAs'] = vid;
     }

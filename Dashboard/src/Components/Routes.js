@@ -7,7 +7,9 @@ import ModulePresetRoutes   from './Pages/OrgResources/Reviews/ModulePresets/Mod
 import OperatorRoutes       from './Pages/OrgResources/Operators/OperatorRoutes';
 import PolicyProviderRoutes from './Pages/OrgResources/PolicyProviders/PolicyProviderRoutes';
 import PolicyTypeRoutes     from './Pages/OrgResources/PolicyTypes/PolicyTypeRoutes';
+import Redirect             from './Pages/Settings/Integrations/Redirect';
 import RiskProviderRoutes   from './Pages/OrgResources/RiskProviders/RiskProviderRoutes';
+import SettingsRoutes       from "./Pages/Settings/SettingsRoutes";
 import StaffRoutes          from "./Pages/Advisor/Staff/StaffRoutes";
 import SuperuserRoutes      from './Pages/Superuser/SuperuserRoutes';
 
@@ -19,6 +21,8 @@ const routes = () => (
     <Switch>
         <Route path="/admin"                          component={SuperuserRoutes} />
         <Route path="/staff"                          component={StaffRoutes} />
+        <Route path="/settings"                       component={SettingsRoutes} />
+        <Route path="/redirect"                       component={Redirect} />
 
         <Route path="/clients"                        component={AdvisorClientRoutes} />
         <Route path="/operators"                      component={OperatorRoutes} />

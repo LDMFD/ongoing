@@ -112,7 +112,7 @@ func (s *ApiServer) addNetworkConfig(r *gin.Engine) {
 			"http://localhost.amplifa.co.uk:3000",
 		},
 		AllowedMethods: []string{"GET", "OPTIONS", "POST", "PUT", "DELETE"},
-		AllowedHeaders: []string{"Authentication", "Content-Type", "Cache-Control", "Content-Disposition", "X-ViewAs"},
+		AllowedHeaders: []string{"Authentication", "Content-Type", "Cache-Control", "Content-Disposition", "Origin", "Accept", "X-RequestedWith", "X-ViewAs"},
 
 		AllowCredentials:   true,
 		OptionsPassthrough: false,

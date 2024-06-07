@@ -610,6 +610,70 @@ namespace Ongoing.Migrations
                     b.ToTable("module_presets");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.OAuthSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccessToken")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("access_token");
+
+                    b.Property<string>("Context")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("context");
+
+                    b.Property<int>("CreatorUserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("creator_user_id");
+
+                    b.Property<DateTime>("Expiry")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("expiry");
+
+                    b.Property<int>("OrgId")
+                        .HasColumnType("integer")
+                        .HasColumnName("org_id");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("timestamp")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("OrgId");
+
+                    b.HasAlternateKey("State");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex(new[] { "OrgId" }, "models_org_key")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "State" }, "state")
+                        .IsUnique();
+
+                    b.ToTable("oauth_sessions");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Operator", b =>
                 {
                     b.Property<int>("Id")
@@ -1542,6 +1606,26 @@ namespace Ongoing.Migrations
                     b.Navigation("Org");
                 });
 
+            modelBuilder.Entity("Ongoing.Entities.OAuthSession", b =>
+                {
+                    b.HasOne("Ongoing.Entities.User", "CreatorUser")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Ongoing.Entities.Organisation", "Org")
+                        .WithMany("OAuthSessions")
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_operator_org");
+
+                    b.Navigation("CreatorUser");
+
+                    b.Navigation("Org");
+                });
+
             modelBuilder.Entity("Ongoing.Entities.Operator", b =>
                 {
                     b.HasOne("Ongoing.Entities.Organisation", "Org")
@@ -1866,6 +1950,8 @@ namespace Ongoing.Migrations
                     b.Navigation("Models");
 
                     b.Navigation("ModulePresets");
+
+                    b.Navigation("OAuthSessions");
 
                     b.Navigation("Operators");
 

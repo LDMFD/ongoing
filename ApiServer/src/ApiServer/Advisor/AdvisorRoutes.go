@@ -14,6 +14,7 @@ import (
 	"ongoing/ApiServer/Advisor/OrgResources/RiskLevels"
 	"ongoing/ApiServer/Advisor/OrgResources/RiskProviders"
 	Staff "ongoing/ApiServer/Advisor/Staff/Commands"
+	"ongoing/ApiServer/Integrations/Plannr"
 	"ongoing/ApiServer/Superuser/Commands/Organisation"
 )
 
@@ -21,6 +22,8 @@ func AddRoutes(r *gin.RouterGroup) {
 	r.GET("/org-resources", OrgResources.GetOrgResources)
 	r.GET("/team", Staff.GetAdvisors)
 	r.PUT("/organisations/:OrgId", Organisation.UpdateOrganisation)
+
+	Plannr.AddRoutes(r.Group("/integrations/plannr"))
 
 	Clients.AddRoutes(r.Group("/clients"))
 	Funds.AddRoutes(r.Group("/funds"))

@@ -42,6 +42,8 @@ const NotFound = "not_found"
 // InternalServerError
 const InternalError = "internal_error"
 
+const Expired = "expired"
+
 // Legacy:
 
 const PolicyFundDoesNotBelongToClient = "Policy fund does not belong to client"

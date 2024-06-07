@@ -15,13 +15,23 @@ import {
 } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import './Framework.css';
-
 import Routes from './Routes';
 import AuthControl, { UserType } from './AuthControl';
 import { Context } from 'State/StateProvider';
 import InitialState from "State/InitialState";
 import { FromCanonical } from 'Utils/DateTime';
+
+import './Framework.css';
+
+// Sidebar + content pane containing <InitialState> and <Routes>
+// 
+// <InitialState> is a wrapper for the entire app, and is responsible for
+// initialising the state and loading data from the server.
+// 
+// <Routes> is a wrapper for the content pane, and is responsible for
+// rendering the correct page based on the URL.
+//
+// Should be refactored so this class does not directly contain <InitialState> and <Routes>.
 
 const EnvironmentWarning = () => {
     let style = {
@@ -91,6 +101,10 @@ const staffItem = [
         label: 'Staff users',
         link: '/staff',
     },
+    {
+        label: 'Settings',
+        link: '/settings/integrations',
+    }
 ];
 
 const superuserItems = [

@@ -6,6 +6,7 @@ import (
 	"ongoing/ApiServer/Advisor/Staff"
 	"ongoing/ApiServer/Advisor/Storage"
 	"ongoing/ApiServer/ClientSpace"
+	"ongoing/ApiServer/Integrations/Plannr"
 	"ongoing/ApiServer/Superuser"
 	"ongoing/Entities"
 )
@@ -17,6 +18,7 @@ func AddRoutes(r *gin.Engine) {
 	addSuperuserRoutes(r)
 	addAdvisorRoutes(r)
 	addOrgAdminRoutes(r)
+	addSettingsRoutes(r)
 	addClientSpaceRoutes(r)
 }
 
@@ -80,6 +82,15 @@ func addAdvisorRoutes(r *gin.Engine) {
 		Entities.UserTypeAdvisor, // if the user is an advisor, they can access their own clients only
 	}))
 	Advisor.AddRoutes(routes)
+}
+
+func addSettingsRoutes(r *gin.Engine) {
+	routes := r.Group("/api/integrations/plannr")
+	routes.Use(AuthMiddleware(&[]string{
+		Entities.UserTypeOrgOwner,
+		Entities.UserTypeOrgAdmin,
+	}))
+	Plannr.AddRoutes(routes)
 }
 
 func addClientSpaceRoutes(r *gin.Engine) {

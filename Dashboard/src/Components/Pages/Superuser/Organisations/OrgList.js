@@ -36,7 +36,7 @@ const OrgList = () => {
     }).sort((p,q) => (p.name < q.name) ? -1 : ((p.name > q.name) ? 1 : 0));
 
     return (
-        <div className='ongoing-orgList'>
+        <div>
             {orgs &&
                 <Table
                     columns       = {columns}

@@ -1,4 +1,5 @@
 import { ClientIdentity, Report } from "./ClientResources";
+import { Integrations } from "./Integrations";
 import { OrgResources } from "./OrgResources";
 
 export interface Advisor {
@@ -18,6 +19,7 @@ export interface State {
     Resources: OrgResources,
     // Reviews
     // Session
+    Integrations: Integrations,
 }
 
 export interface Metadata {

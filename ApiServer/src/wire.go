@@ -17,6 +17,7 @@ func buildApp() (*App, error) {
 		AuthService.New,
 		ApiServer.New,
 		Outbox.New,
+		//TokenRefreshService.New,
 
 		newApp,
 	)

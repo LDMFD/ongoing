@@ -32,3 +32,6 @@ Which does the following:
 
     make work-on-prod
     make deploy-{api|dashboard} RELEASE=1.2.3
+
+
+Remember to delete Staging containers to save costs if not needed.

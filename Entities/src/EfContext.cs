@@ -86,6 +86,7 @@ namespace Ongoing
             builder.ApplyConfiguration(new OperatorConfig());
             builder.ApplyConfiguration(new OrganisationConfig());
             builder.ApplyConfiguration(new JobConfig());
+            builder.ApplyConfiguration(new OAuthSessionConfig());
             builder.ApplyConfiguration(new PolicyConfig());
             builder.ApplyConfiguration(new PolicyFundConfig());
             builder.ApplyConfiguration(new PolicyProviderConfig());

@@ -2,10 +2,12 @@
 
 # For local dev
 
+API_KEY=`gcloud secrets versions access --secret=ongoing-api-key latest`
 CLIENT_ID=`gcloud secrets versions access --secret=firebase-client-key latest|base64`
 CLIENT_KEY=`gcloud secrets versions access --secret=firebase-client-id latest`
+PLANNR_CLIENT_ID=`gcloud secrets versions access --secret=integration-plannr-client-id latest`
+PLANNR_CLIENT_SECRET=`gcloud secrets versions access --secret=integration-plannr-client-secret latest`
 SENTRY_DSN=`gcloud secrets versions access --secret=sentry-dsn latest`
-API_KEY=`gcloud secrets versions access --secret=ongoing-api-key latest`
 
 if [ "$ENV" = "staging" ]; then
     SENTRY_CLIRC=`gcloud secrets versions access --secret=sentry-clirc latest`
@@ -28,6 +30,9 @@ REACT_APP_ONGOING_DASHBOARD_HOST=http://localhost.amplifa.co.uk:3000
 REACT_APP_ONGOING_REACT_FIREBASE_CLIENT_ID=$CLIENT_KEY
 REACT_APP_ONGOING_REACT_FIREBASE_CONFIG=$CLIENT_ID
 REACT_APP_ONGOING_SENTRY_DSN=$SENTRY_DSN
+
+ONGOING_INTEGRATIONS_PLANNR_CLIENT_ID=$PLANNR_CLIENT_ID
+ONGOING_INTEGRATIONS_PLANNR_CLIENT_SECRET=$PLANNR_CLIENT_SECRET
 
 ONGOING_STORAGE_BUCKET=ongoing-$ENV-docs
 ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/credential.pem
@@ -60,6 +65,9 @@ POSTGRES_DSN=postgres://postgres:p@localhost:5432/ongoing-local?sslmode=disable
 ONGOING_STORAGE_BUCKET=ongoing-$ENV-docs
 ONGOING_STORAGE_CREDENTIAL=\$USER_HOME\$/.ongoing/envs/$ENV/secrets/storage/credential.pem
 ONGOING_STORAGE_SA=storage@ongoing-$ENV.iam.gserviceaccount.com
+
+ONGOING_INTEGRATIONS_PLANNR_CLIENT_ID=$PLANNR_CLIENT_ID
+ONGOING_INTEGRATIONS_PLANNR_CLIENT_SECRET=$PLANNR_CLIENT_SECRET
 
 ONGOING_API_KEY=$API_KEY
 ONGOING_OFFLINE_AUTH=true

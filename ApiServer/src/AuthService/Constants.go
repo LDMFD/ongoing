@@ -8,3 +8,5 @@ const CommandHealthcheck = "healthcheck"
 const Channel = "ongoing_events"
 
 const AdvisoryLockOutbox = 1
+
+//const AdvisoryLockTokenRefresh = 2
